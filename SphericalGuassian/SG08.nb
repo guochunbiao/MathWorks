@@ -1,0 +1,4325 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    183015,       4317]
+NotebookOptionsPosition[    182377,       4299]
+NotebookOutlinePosition[    182723,       4314]
+CellTagsIndexPosition[    182680,       4311]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Remove", "[", "\"\<Global`*\>\"", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<VectorAnalysis`\>\"", "]"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"skewed", " ", "cosine", " ", "lobe"}], "*)"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"cosine", " ", "lobe"}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"lobeFunc", "[", 
+    RowBox[{"lobeCenter_", ",", "lobeAxis_", ",", "lobeAngle_", ",", "v_"}], 
+    "]"}], ":=", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"Normalize", "[", "lobeAxis", "]"}], ".", 
+       RowBox[{"Normalize", "[", 
+        RowBox[{"v", "-", "lobeCenter"}], "]"}]}], ">", 
+      RowBox[{"Cos", "[", "lobeAngle", "]"}]}], ",", " ", "1", ",", " ", 
+     "0"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"lobeFunc2", "[", 
+     RowBox[{
+     "x_", ",", "y_", ",", "z_", ",", "lobeCenter_", ",", "lobeAxis_", ",", 
+      "lobeAngle_"}], "]"}], ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", "v", "}"}], ",", 
+      RowBox[{
+       RowBox[{"v", "=", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"x", "-", "0.5"}], ",", 
+          RowBox[{"y", "-", "0.5"}], ",", 
+          RowBox[{"z", "-", "0.5"}]}], "}"}]}], ";", 
+       RowBox[{"lobeFunc", "[", 
+        RowBox[{"lobeCenter", ",", "lobeAxis", ",", "lobeAngle", ",", "v"}], 
+        "]"}]}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lobeAxis0", "=", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "1", ",", "1"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lobeAngle0", "=", 
+   RowBox[{"0.25", "Pi"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"lobeCenter0", "=", 
+   RowBox[{"{", 
+    RowBox[{"0.1", ",", "0.1", ",", "0.1"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sgVector", "=", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "8", ",", "1"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lobeFunc", "[", 
+   RowBox[{"lobeAxis0", ",", "lobeAngle0", ",", "sgVector"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"lobeFunc2", "[", 
+    RowBox[{"0", ",", "8", ",", "1", ",", "lobeAxis0", ",", "lobeAngle0"}], 
+    "]"}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Cosine", " ", "Lobe", " ", "Plot"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"myCF1", "=", 
+   RowBox[{"Function", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"Blend", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"0.", ",", 
+            RowBox[{"RGBColor", "[", 
+             RowBox[{"0", ",", "0", ",", "0"}], "]"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"1.", ",", 
+            RowBox[{"RGBColor", "[", 
+             RowBox[{"1", ",", "1", ",", "1"}], "]"}]}], "}"}]}], "}"}], ",", 
+        RowBox[{"lobeFunc2", "[", 
+         RowBox[{"x", ",", "y", ",", "z", ",", 
+          RowBox[{"{", 
+           RowBox[{"0", ",", "0", ",", "0"}], "}"}], ",", "lobeAxis0", ",", 
+          "lobeAngle0"}], "]"}]}], "]"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"SphericalPlot3D", "[", 
+  RowBox[{"1", ",", 
+   RowBox[{"{", 
+    RowBox[{"\[Theta]", ",", "0", ",", "Pi"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\[Phi]", ",", "0", ",", 
+     RowBox[{"2", " ", "Pi"}]}], "}"}], ",", 
+   RowBox[{"BoxRatios", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "1", ",", "1"}], "}"}]}], ",", 
+   RowBox[{"ColorFunction", "\[Rule]", "myCF1"}], ",", 
+   RowBox[{"Mesh", "\[Rule]", "None"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"myCF2", "=", 
+   RowBox[{"Function", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"Blend", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"0.", ",", 
+            RowBox[{"RGBColor", "[", 
+             RowBox[{"0", ",", "0", ",", "0"}], "]"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"1.", ",", 
+            RowBox[{"RGBColor", "[", 
+             RowBox[{"1", ",", "1", ",", "1"}], "]"}]}], "}"}]}], "}"}], ",", 
+        RowBox[{"lobeFunc2", "[", 
+         RowBox[{"x", ",", "y", ",", "z", ",", 
+          RowBox[{"{", 
+           RowBox[{"0.1", ",", "0.1", ",", "0.1"}], "}"}], ",", "lobeAxis0", 
+          ",", "lobeAngle0"}], "]"}]}], "]"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"SphericalPlot3D", "[", 
+  RowBox[{"1", ",", 
+   RowBox[{"{", 
+    RowBox[{"\[Theta]", ",", "0", ",", "Pi"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\[Phi]", ",", "0", ",", 
+     RowBox[{"2", " ", "Pi"}]}], "}"}], ",", 
+   RowBox[{"BoxRatios", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "1", ",", "1"}], "}"}]}], ",", 
+   RowBox[{"ColorFunction", "\[Rule]", "myCF2"}], ",", 
+   RowBox[{"Mesh", "\[Rule]", "None"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"myCF3", "=", 
+   RowBox[{"Function", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"Blend", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"0.", ",", 
+            RowBox[{"RGBColor", "[", 
+             RowBox[{"0", ",", "0", ",", "0"}], "]"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"1.", ",", 
+            RowBox[{"RGBColor", "[", 
+             RowBox[{"1", ",", "1", ",", "1"}], "]"}]}], "}"}]}], "}"}], ",", 
+        RowBox[{"lobeFunc2", "[", 
+         RowBox[{"x", ",", "y", ",", "z", ",", 
+          RowBox[{"{", 
+           RowBox[{"0", ",", "0.15", ",", "0.15"}], "}"}], ",", "lobeAxis0", 
+          ",", "lobeAngle0"}], "]"}]}], "]"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SphericalPlot3D", "[", 
+   RowBox[{"1", ",", 
+    RowBox[{"{", 
+     RowBox[{"\[Theta]", ",", "0", ",", "Pi"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"\[Phi]", ",", "0", ",", 
+      RowBox[{"2", " ", "Pi"}]}], "}"}], ",", 
+    RowBox[{"BoxRatios", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1", ",", "1"}], "}"}]}], ",", 
+    RowBox[{"ColorFunction", "\[Rule]", "myCF3"}], ",", 
+    RowBox[{"Mesh", "\[Rule]", "None"}]}], "]"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Integrating", " ", "skewed", " ", "lobe"}], "*)"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.829452845146515*^9, 3.8294529381295457`*^9}, {
+  3.829453902994384*^9, 3.829454397026497*^9}, {3.82945451011415*^9, 
+  3.8294545104731894`*^9}},
+ CellLabel->
+  "In[2906]:=",ExpressionUUID->"7d310b64-6aaf-4380-8772-d29a777f86e9"],
+
+Cell[BoxData[
+ Graphics3DBox[{{GraphicsComplex3DBox[CompressedData["
+1:eJxlW3lcT9n/zja+Q3Zi7EIyyE706XNjEMmaNYmJtFnCWMpeFKUaYUJJ2SMj
+W1k/h8q+TKnsw5CEkS1rJb97O8/7zP3c3/wxXp3Xu+f9fp5zznPe99xbC7dZ
+I93Lm5iYvJf/V0H+N+FK5N6hTcP1xQeGd3o7Tmfb5Lvy3xup3Lyj8yIXXZNq
+fsj/OeuGv77TUtfX0V3eSAucVzw/m35f6pxx6Pdz5iH6cy3nrTyd/Uo6G+na
+IL4wV3qffnOh48VIfYXUnxzSKr6QfN/22Kj8a/Vqz8i2a6P0vd92OBknx+Vt
+P3lc+b0ew9bomHm0fvpUnxoK7o9DOvwYI+fx0W/yLnXZqneMfLrtd7mOeSW8
+rrbXlXpj9ZVd6na12L1OVwXx0xFvz+PZM+D3BL43x2dzUE8n1NOT18PSUf8n
+1G/C62crwdcWfA2cL2sNfbpAHyuuDyvZMCBB0fNt3le1nuzyp5b3DOahel2F
+ihNTzf31pHM7/10z/RMuS49CSl5MTTkukc5/mX05nFbxruSSMq3i2QaXJNJ5
+jGeeV8bXx9JAb5ePuuGZEuk87WbRqyUhzyTXT68P3j2WI5HOPjtKO2R8fSHZ
+bxqQmS7jkc5XGw/wOtjolXR0mO+aoNr3JdI5e1vH4UqeZqOjzp2T40jna4g/
+hnjSeTrwBwKfdPZEPZNQD+nsjPoHo37S+R74eoAv6ewIfUqhD+lcs/B8mZ7e
+lePUerJBrVddHHwxQL9nhvPmtmuDhc4m5jdqWaeek+aZfehxqd8FoXPrPiFX
+bOQ6HAun2Ct1ks4+DyPdGj2+I80tHP4opssjoXPwLLMJ0fLPTUJ918yJyBU6
+93d3LqfwysibErBU5k06W26vM2Td3Fzp2MGLnTtOfS50dnP4NkH5vYotR/2j
+4JLObRGfjHjSeQDwM4FPOq9BPU1RD+nsi/r9UD/pbAW+Y8GXdK4PfdZBH9LZ
+Wv+xTM+lpc/UerJ71quT/7rhrf89KCuw1CVM6Pz58M+9GzonSIVDh787l35V
+6Hz9vtvXyfL8jalc4/oqef2QzqfrbZ/VQ847KHlOvUiZN+k8+tyCeuflOjpY
+BXyzknUgnQ+Na75kgbwetgwfn6+sR9J5xQe3/gY53+fay+e7er8WOt/bV/dK
+uPxvrRYlLRWfIJ0DEP8F8aQz4UcDn3Qei3o6oh7S+SzqH4L6See74OsGvkLn
+I1wfs2FcH9LZzM4yRdHzxY2AlSo92fUyf/E2DPrkMkKt8+RygUubOCew5mX7
+9D+de1VMs5T3CWs3cXWsWmfPFP8T8vyyrS8rflin0nnX4gYfLva7wIKqRmWp
+dV6affiqvO9YyLsqKWqdr92ce1fOx2at691XrbPFwjI/ZFSH8A3E+yKedF4G
+/FDgk857UM9q1EM6+6D+eNRPOvcD357gSzovhz6/QB/SuWlJcDtFz+1605Fq
+nRecV3w/wJDs/bGq2je8SLfHukMXVb4RE11+puxfzK585fN3VL7hkOM/pPHj
+O6x22Xr7zzeahe5eIf/M7q4rqaP2jZpP6uyX9zXr2qBK8RKVb3zLOFVRXk+s
+dM2IbVYq3/i0oeycYhWBSzpr40lnwu8GfNLZHPXcQz2k8zDU3wD1k847wXcw
++Aqdoc8J6EM6ez/s66foGVK8wlTtG5/LzuNQQ9utk9LPqs7B5VgPvRav8Zii
+OgdvdUiqJp8r7HKTnaEG1TlIvIqv7n1mozoH478n62V/ZJ2+L3K5ozoHFzl0
+XCufU9Dtv3Pwbosuf8nrj12v2+bJStU5aLa7rH9gMxBHOlP8DcSTzouBXwn4
+pPMO1NMF9ZDOdVB/KeonnZ+Abzb4ks5x0Gcc9CGd7Rzb2Sp6DokvVuvJvpf1
+SeEGszEJH/1j7GxIZ0vs05TnpYm1fJbpSOeQiWV9Dhs6ZtoGz/hwHelM6836
+ybq5Vcr/oSOduxeW9VGsQ8Vnnx5sitaRzqRb0T9hy6Zf36YjnZcML+vTWKp/
+98SH3eJ1pLNJ2X9vGdc3Xkc6L0V8GuJJ5/rALwY+6dwT9XREPaRzEeq3Rf2k
+cxT4uoCv6DegzyPoQzqP3FTW1xlqLzP9pNKTfcF6bs3Xs4F0XoH56s7nS/ji
+bczvBT6/TLuev/D1wEjn7Vg/Hfj6YaQzrbdyfL0x0vke1udlvj4Z6Uy6eUEv
+0pniryBeu57LA5903ol6OqIe0rku6i9B/aRzLvhmgi/pHA99RkEf0rkP1rMD
+X8+kJ1sIfz7K/Vno7A3/ieH+w7T+LHG/EjoPhr/V4P4mdG4BP7zN/VDoXAu8
+OnP/FDqXwm9LuN8KnT9jvZUHf9KZ4r8hnnQm/C7AJ51bGp8XQufhqN8M9ZPO
+u8B3EPhq/fk49CGdfeDPq7k/C52fot8YyPsNofM8nKf8ueCq0HkIzt+f+fkr
+dF5A88LPa6HzcZzvq/j5LnTegPWwhvcDQudc9A8zef8gdNZjn3YEH9L5qXF/
+InTeaNzPCJ1Pop5g1EM6+6P+ONRPOo837jeEzhuhT1/oQzp3R78Rz/sNofNR
+9M+RvH8WOmehf/7I+2eh8z70k2N5Pyl03oH+czDvP4XOPdCvWvF+Vei81ri/
+FTo7ox/+yvthofNh9M91eP8sdJ6A+CLEk85hwI8BvvBn1NMJ9ZDOe1D/UNRP
+OieD71TwJZ0LoU8D3j8Lnd9JvH/+l/fPQmcJz4MH+fOg0PlTC/68s4Q/7wid
+G+P5aBR/PhI6T8Tz1FL+PCV0no/nr1b8+UvobIPntTv8eU3o3BTPdwb+fCd0
+HovnwWr8eVDorI0nnXXAvwt80nkh6rFAPaSzG+pfhfpJ51bg6wq+pHM1PA9u
+hj6ksxWeB4P486DQORX3GxP4/YbQuRWe30v487vQ+RKe9xfy532h8wjcD0zk
+9wNC58m4T1jA7xOEzlNx/+DO7x+Ezmm4r8jm9xVC52u437Dj9xtC53TE5yCe
+dHYH/jTgk85uqMcP9ZDOo1H/ZNRPOmeB70rwJZ37Q5/GoVwf0vlH3G+s4fcb
+Qme6r8P90hntfZ1bseI3/gbtfZ1z9pB158xDDNr7ury/lXMg0qC9r6uwpJtT
+27VRBu193bLByvkcbdDe150Psvcpddlq0N7XLY5S+qZYg/a+7gLitfd1y4Gv
+va+rhHq093UvUL/2vs4DfLX3dYHQR3tf96zJjs4qPVnTJvsOGd6dkvb+tDKv
+c+Bmqd2Wv5ctufZGSt7fwlp5bozMqJ+XLfsN6Z/+8UWaW41n0ovfjpW8apku
+6Xvk28TGPZP6NrW5fTfpsTTl0QzTgT0fiPFfr0QF/+b9Ukr6cPLrhyaXJHfX
+I988fngs7fI4a1GrY5506GhRj3NP/xHjEcerOM6YUyDtub1l/rQnV6R7Jw5s
+dmiZI+nmL685fmu+9LbI4m25nCdiPKLSnW9TTN5I1bqa2Zwack0anZT++kjC
+aalHlo3PkgfPpZSx328HZuWKcW28Ix9n2nga19Zzm+dl2npo3A18D4HvVM6L
+7dbwpfGL0PMV9LThurH+0NMDetK4I+brpvF8seofMsrmq+B2inq+WMe0ypPu
+eyZLb6Lt/UofHhLzO6ZT6pWd27Oknnf/9P3i9lTMV1FUp6LWgbelFcuutJrr
+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
+/9RanqduWfl+beV5o/j/AwXzlaQ=
+     "], {
+      {RGBColor[0.880722, 0.611041, 0.142051], EdgeForm[None], Specularity[
+        GrayLevel[1], 3], 
+       StyleBox[GraphicsGroup3DBox[
+         TagBox[Polygon3DBox[CompressedData["
+1:eJxNmwfUFUXShmfmN6z+Kri6KJiIZsFAMpMUURQkq4gEEQNGTJgARcUsSnBN
+gGIAFDCLATEimHMOizkg4uqua1i3Huu5B875+sx7+9Z0V/XM7X5qpr9Gg4/v
+cVxVFMUpqxbF/8XxzfhweJQloT+NEtXF+lGuiLq9o3weer0ibVeJsm/U/bss
+ii9Ddw/9n9Dfht4/9M+hvw79fZT/j9IgypAqz/1rlF6he0b5LvQPUdaKslGU
+q6NuWJR/hT6iSttGURp7Hv1vrP3aUb6I8rcoTaPcEfanRtky+v4tyldRVy/K
+Z8bRJMrvUf9NHDeIsixK/ShbRqnivF/iuHmUf+rL1lG2UdPnxLCZEGWT0OdH
+O3/EcdMo/7btHaMsN9atolwTtkczwGF7VJVxbB9l19A/xfHHKDusFN9/w25p
+HDdkjMPm1zhuEeU3fWyD/7bdFnt93JkuGP84Novys+OxU5RdVorj2rD5e5Rt
+Q4+P45VR1uH6Rr9rRNku9A1Rd2yUNePzalyvOLaM+tVDrxK6Vei/hF41dGuu
+A22E7oRNmX51ZjzL7L8D1yls6sTnvUKvVmYce0epW+axN/6XOX7to3QxJnw/
+Ps7dM44HRPl72KwXZbfQ3Yqsb4cPZfZzIPda2K8dnzviZ5nt7BNlStTfGGVX
+bMrspzv3ftQdGsfhUdYt0/c+XMMy/To8yvSwuTnKvqFvjvpNouwX+raoGxFl
+0/hcr8z+B0YZoL/42M/+iWl4ldcfv0+q0oa+/xq6fpzfC12mfV/GJ+o3iM89
+uAfL9Gso92KZ3x8RZZi29LNu2G8Y3/UMfWcct4hyML+PMmM9zPHa3vtuRtjf
+HuWg0DfF8YQo64ftsfpFHJ3j83VxnEk73MPxeVDoeqEbhx4cumGZcR8fZYOo
+bxKfh4SeHfrOKEeG3rxMf0/h3ixzXEdEOXWlOB6I+h34rYRuXub350Y5y+uD
+X1tF/XFxPJv7usw+z+F6RT/bxOcTQt8VemSUHeNzszLH7GTGkHs/Pp/IGIbe
+LvRJoXeP46VFxtmiTNvzopyvv/h4T9jfHeW00I+Hza5RTg99f9SdFWW3+Hxm
+HM+MuoujXFKkxvfNor5VfD8qdMsy/b2McYv61vF5dOjTq4yRcxqFbhP1Y0I/
+HHoU8y/3cpl+XcVvI/TYOF4dZUKRGn8fDNsHolwQ+jl+c1Eu5JqXGQt251Tp
+49+jtC1zjMdHuXYl3/co08fruZdDz43jNK5jnNs+Pl8ZukOZ502N0rFMv7Dp
+VKZfN0VZEPbnRunOtYhjuzhewe9oJd8fjfpHokzk3uD3HjaXh34jjt2iTNIH
+2ruL31OZfs3ifgj7LvH5Bu4HfqOhbwy9Tej9Qk/hPjdW4htTpb49StcyfZ8T
+Zf8yfSfOzcr8rXCf3W0c+Pu4/VM3tso2HmDMbY9+DizztzIvSo8yfXwoSp8y
++5kf5ek49/woB0ddc9bBON7BvRe6V+g7Q38Ux4Oi3MK1i/reoWeHfiL041Gm
+h14Yx2ei3BP6K35zUe4NvTjqxrGWc+2r9PGZKP3K9H9BlL5e08doZ6U4DinT
+92ej9C/T90VRdmKejM8Pcw+HHhD6kdCDymzjxSiDy2z7pSgDy4z1hSgv2yfj
+96a+0Oer0c4rUY4L2xfi+HyUJ7Cv0uaNKEPL9OWtKK9H/Wucw33LvBLfPRd6
+59BHhX6e+5A1t8x+jynTrw+4n6P+iDJj+SdzXJQnQw8v098PGXN9x9+1XLOY
+S39iXonyapF8BMesWyTLwCNwyadquAhOgjfgJ7gJPoJRYCWYCCaBfWAj+ANu
+goNY92Eh+AFmagMLxXeLi+QdGAQWgXma2MdVVa7lsMRZZXLTZkUyFPzUUP/g
+i0ZFslBjff2kSNarWyQrNdVPuIC+4Cs4Cl6CK2An+ARGglXgpy30Cb6AM+Cj
+bfR1cpXMBCddEPZwUPM4XF8li8AcsNZWxgwrwUkt9JU1irXqyjJ5ZPciWWsH
+Y4B3dtLvSl6CT2AnmAk+gYvgOhgGdoI9ttRX+AI+gJd2dExhqrb6BCvtYmzw
+LGwLN8JHrOV7hL62zDWza5HM09624KYO+rea7ASTrC47dbJvuID1Hv5pZ2zw
+FZwEL8FUe+s3Y4EN/ADbdNbX5cbEvcQaDjPtrx0MAmfAPN2KFbwED+DrtCrZ
+CK6Cj7o4LjAUPEMMMBWMB4e0Cn1Y6EeL5DoYrsYt8Ak+wUr9jO3WKvkJZppe
+JisdUiQ3wUD9i2ScgUX2x1hwbl/9hkFgERhmgPHAabAZ41LPuZp4YH947pgi
+eQnGwG5jGaCP7cIaMAfsM6xYwU4wGDxTV44aFHpWlZwES80uM7c4ukhmgxGH
+6B9sMtzCms86/jcZCSapJxfBHjASDAR7wCdwDr7OrZKZYCA4C7ZhXGAnmGSo
+fsMjrOVwF2sU8cNZpxob69exjh28dJb+wUtwE+fASnAIfTSQi+ATuAkWOSP0
+g2Uy1Mgi2QleGl0kO8FnY7i/bRN+gp1giRH6B4/AG0+UyUfjimQlOOkixwjW
+uNh2LnHs+MxazTp9X5XsBW/BTvRDf/AUfEIM8Nu1trWZTAU/wFHwDawCL8En
+5+kT3AF/wFQwDH7DTRP0+/kymWtykZwGj8EtD1XJWHAVXAZLXVMkX9E21wl2
+us4xgZ9nGE8z2Qk+gaPgJ/gEdppapB+w07QifX2zTG66tUgugp1u0G94BC6B
+m242HrgJLmJcHquSq+AnuPV87xvYCT7BP7gJPuGcrWQnOGRr2elOrwH+wzdw
+HPx0W5F8BT/BJLATbDNVn+AjOANOuVtfn6qSXWAa2Ad+ut924Q744+Mymei+
+IjnqQfuGf/o45zSXkeAQ+ApWIZ4WMhJMAtvAHvjUX37ADlZ6XP8WVclPMNPX
+ZbLSU0VyE8z0dJG8BNvASTAaLDRLX+EXGAVeWmgMF5a5PjH/w0qwBue0dM6E
+VZg/YSNYBXaCU/AVdoJV6G9BkQwCi8BEaPyGlWCj10PvxjxfJjvhB1z1Rm3c
+bQN2elNf4Rw4iD76VslDsEW/KjkDljqoSq6CpQ6ukqtgqeeq5Cp4Cg6E/Rbr
+H8wEO8FWMBpjDaN9ZAwwG+z0Mb9B5vwymQM2gpngpRFl6vXVMAp8craadblb
+nHtAlWvwXlW2Bb90rpK3aO/kMjUMc1qZthta/4Xtdwn7fapkslPK5B7sR6mb
+Wc/3cFpXfgtVctupZbIQ9efYZlPr+R42GK0NjPRSlVwLa+LPUm3Glsk9MMjp
+ZbJfffUyfT5Xzbreh3u7Sl6EA2FE+LBH1B1Y5fkjy/y+gXq5bY6xXzjtPOth
+m6Fx3r+8FmeWyY88C/pFzXMtjj+psYUtYcUz9L+BGn9gwCNhMO3O9rfQ2LH6
+2es4Tr2TY/4fx/AidUvH8BevxcXqVsbyq2N7ibq1cf3uWF1aJvvBS5dZ39bx
+/M1xYPz/6ziML5O92oeeVGX88OofHnkmRkywK1x9TNgUVX6+0HNhtqvK5L8O
+xohmHrjcvmC9G8rkKjhqQplM1dEY4cOW1qM7GSOsSOwT1XsZI3xI7JPUe9sX
+XEi8k8tkR3jsGuv3cZxhU8b/uirjhMOvL5MLYTDig7dhdR4Qr+pnxgqObMe5
+6u7GvpZjeLXtd1Sv7ZisUmU/PLu7p0wWgn9udBzIs27BRlacUmb+1csY6xr7
+VHVvY1zX2KepYbypVfYH095UJpvCfWtYt59j8lfHh/hgePKL28rk0UHGCHfC
+nLeoYS3Gqp6x36oe6PXdwDG8vUyGHGyMG3rdT2Qs7W9mmRw4xOtbx+tOjA2M
+fab6cGPcyNhnqWFCYtzY2O9Qw4n0A2+Tm6zjuPI88OTQdfyOca5fG/8y2RFu
+vLtMdj3RGBsa+1z18Y5VI2O/S32CsTd2DGfY/hB1E8dkjn3Bov92vmB+uNcx
+gSG/K3Otec64Njfe+9Uw5n1lMjTcNbPKOGH1eWWyL6x4GuNdJbuv5/dH6QM2
+xxrX1vozv0y+hQkfLpOVRzkm2xrjI+rR3s/bOVYP2Q5cWsc+yXce1WaMMTb3
+/p9PjiCnEUsLYyfG7Y1rgRpunVNlDOQIG3rkOSTxwerkJmeEru9n/GnpODxZ
+JmfDpU9Zf5nXbhuvKfG20v9ny+Tn8cbb2nF4Rn2FcbVxHBaqr3QM2xrvY8Z1
+nnpnx/Zp+4LVF1l/lfHuov1iNcxLTOQR5CNnc//6mbjIAeD/F9TXeW4n29zE
+HOJCY9/DcXhRDQO/rv1N+ran40O87fSTGNsb+ytqGP5lbW503Do4DsTV0TF8
+yTZh+Fe1mRr6NW2mFXnfco3Ig+ZV6Te5xntlMjm8PTrqmlSZnxAvOQb5xVvq
+mca1j+OAb/va76aeRy72tjaz9K2L49DYPnnu+o715AX3VnnPMY7439XY31fP
+MZb9jesD9VzHaj/H5139udMxP8DYP1TDsFv4m+D5J7GSB5GLncdvys/ES55A
+jvAP9Tzj6uE4LFE/ZCw9jffTMvOIR/SnlzEyzr317RPtyTU+s54c5Mkq/SOX
++bzM3GS+8fZ1HL5QP2Zc/RyHL9ULioyDfIf8blvbu9fx7OO1/qZMjofhYXn0
+W9aTezxrjP2N/Vv1Iv0/1NiXqhcb+wDjWlZmbvK8MR7mmBDXQOO9IHzbTl+/
+t568hTryJvK15WXmMy8a42Bj/0FNrvBslXGSc+3g8UmvHbGQQ13EvGW7X9gm
+Ywtrw5FNjPEIY69xeT1jHGbsl0Qb7cxxWEeONPZLo669+Q6xk+uwvlwedZ3M
+d4jxaMeEuI4x3svi+w7mR4eYD5FTkYORi5E/8plci5zoxSrjhP9be+QZMvEd
+p/2PZWpyut2j/sQy86U3qjwHzRgOd2xZ91nv4IGL4/s9qxwL8idyJ/Kmz9Tk
+O+RDJ6u/UJPv1PIf9FdqxpCciVyFPOUbxxa91HpyE3zCz4+LzD1Otx7u5xk0
+OQK5CHkIOchyNfkCucIZ6n+qyR36V/lenFzkTfPEylhgA/KIZfZFm7A9fAvn
+/+y90dT5jbWB50vkDeQSm+v/GPU31pNf/Gp97T07ecKW9nWu9eQQ5BjkC+Qo
+ozx3ufVbGstYbeAZcgPyAvID9I76OU79X+23tk24HCaHTXh3C5/A0dSTF5BP
+jNOGuC62Hv/JE1ppA4u3NxbyBHIE8oNLyxX7By5TM35o8gX4nufsMD95xiWe
+i5+Xa0MOgSaXIf/hmT45EVzPHgLYntzlYv1ZS386GMvV6rXVHbWfoCafGK//
+pbpdkfkBNp30baKa/Ix9GORodayv7TGYpIbxYX1yH9ifPQTwP/zNs3uYn7wB
+toarYXy4v7vxci45wkba9NFPbLrZ/k3W085k7ckJyBPIBWB/cgAYm/yAPKGH
+Pk+xnpwG7of5G6h7O4bX68/ankub9T0XexiTZ9Nw5sb609d2yB+GGBd8D9tv
+pj5MP29V4yfsPkg/4fuBReYJPLvvqp+MLTlXQ8/FBq6fYV/kGeyTINdobJsw
+f1P9OdzxnKVuph5qXDO0h/HhfnKZRvozyPt2sj5srM1Q75MbHVtihO9hexgH
+HoJtYHNY/3jbvEvd0Pras3HqT9BneP0kY4T1TzSuu7XZznpsmms/wr7g77ON
+BaaH57dXk7/A7+x7gOHhdZ65H+2Y3Gc729oX/ZKvwIjw4U5q2oc94VS4tKX9
+wvDwNUw/ynYeUbdWj9b/R9Vt1GOMZb4aNofdYfIW6nONZcFK9fcZ4y7Wj9UH
+eBqWhtd5HzBS/2F3uH139aX6/5R6D/VlXpeHjWtP24TJ4VH2ZFxoXM9YTywL
+HRPWbJ5tstbD3TD6eONapO6oru2vWKzGNzgbxm7rubB9J23ITeBl9lvAzO3t
+FxtYm3cJ4+wXbp6i/y95T3ZR3+B1fFm9r/pGx4F7GJ7vrD/X2dcr2uynnuJ9
+Msf7uav9Ti2Sc+Fd+BbWhr/Jd2Bt9lvA27A17x4m2xecPUM/YehZxs6504rk
+bmxm+lt7Ww37v6ZND+tnOc6v6Q8+v6c/vdWz9fl9dR/1HMcE/2H1nvpzh319
+oE1f9Vxj/FDdT01+AWuzxwLehj1h0NqejSXqA62HS/tb/5B+wsqPOJ7w9MP6
+84k2A6zH5jDtH7Uv2H2hfsK48O0g9WP6+aV6sHqB4/C57RxqX/QLR7P/A5aG
+m3mfAZOzvvCOljViqP3CzPAiDL3Idpaqh6kX6/936iPVzxnLMnWNlWHjgera
+e43lK9V/bozHWA/HXu3zZ/ZRwLYwLjkCjMz+DDj50Crfc8DIA6rkY/Zi8Mya
+c+t6Xb41LpiWPRb1HLcf7Itn+NSvXmS+wLt8mJZ3Cui/FLmPgme/7O2EK9B/
+Pvcu8vkvnHONz7cbFslg7DmAc3gOzx6ONYpkafZMwIffqPHnV+1r/MleihqX
+spcCzpzs81j2Z8JUaNhmmTYwNtwFGMNpcCP7G1razu/GdYPPqFvoJzbNnAOX
+eY3wh30SMB7rNc9G4SIYiWensBxMyLNRGOkmnwOz5wGWY08DzAaPsV8B1rre
+567ssVxFm5Zq9j3AbL/Z7xaeu7pjSN7xH2OEzXh2CW/c5vNS9jPAP+xFYH1f
+R40P7GHAf/ZnrqY/rbVhH09Pfwtr6QN5LO8aybvr+hvBf9ib54dwyx0+I63t
+T2BPwKAiGamuPqDZNwCrzPK5HHsd4SXOhcfqa9NTzb4BGIl9EfTF3ssG1vM7
+neszFvYZwifsIYAxGqsHqdlPAA80UeMDHMhzQPgBrsCfo7RhzwF80lSND+yT
+xJ79Eqyh9AuHsIbyHr3GDA30Ac0+gNFFMsNG+oBmT8CYItd3cjDWu208l3aa
+a4MPvNPnuRZ7FNk/yXM99huwhlLPOg4LUT9Sf3gHzzreRj1azTt+1tm2anxo
+pf8wAPsnNzUf5N09z7bYZ8h6h57kuXAOPMN6zfMm1j7WaN67sxazzjbTBzTv
+71lnO6jxgXfuPBdibx578Hg+wjvudp7LGs26g01tneUZEPchawfvtpnP2R9I
+Pe/ZWe+20gfWyq2rFWs97+Bna0M9a2hX6/GNdYHnLaxxXWyHtZJ38dTf428B
+P1kv2KtJ7Oxn6KU/2DPn896aeYO1j/fxrEF91PjA+3SedTxR5ByOZj1iHdnJ
+uDi3hX6yTvEchGcg7ANEP22/2LBuHuq5ix3Dpl7TgfqDD7xj5TkJewJ5LoFm
+7eD5D++139H/lrY5QM36xbrWplrxXAg+fLfI5zy8+36vyDVuZ2M/rMr3zkzB
+A6t8XlGnyGcWaN6X8k4amyVxHFTl+vVakWsr79xZZwdXuZb9o8i1DRueAfE8
+B5u3i1yjebbDsz7eWbOPcLUi39F30E+eWfFe/v0i11Y0ay7v7jvpP+/629km
+ayf9Mk74uJex8IyI9nkWxN423vkx9/N/H53tl3fmXdR7q2vrLf8Hsro2+1rP
+/4Dw3py1lWNXbdB8V1uH99eG/x/h/T5rKHsS2nvtqOumDc+a2DdZ2zPZXXts
+0Kwh/F8J78TXLPLYQxvs0bSBj/voD+/We2qPP91sh7peK7XTy3N5rsW7eN6/
+c636Orbt1MO8p/rpf3s199rbXM8q94/SPn3THvfdQV7TDmrW6ne0Zf8m9+DB
+XlP2YxzidefeOdR7jGs7wPuK+7G/9yfXmnv3JO817kueV3ayzaO9f7mnf7Id
+7lGe8XF9u3q92DPA/leY7f0q92s2LJLFhlr/bpV+s/f0PY+NitwbMEz79/3u
+KNsb6u/lXW1ohyPnwF9vaxd/f/LXkbbT2zHkGuHLn+/m5SM0/PNhHD+ocr/m
+Rx7ZF3mM/mPzgb6wv5J7n9/AHp57rDar+rug/mPbYp/lPzyyV5F3u+y/3F+b
+E7TnyHc1rjlRmyWezz5I9AjrT1bDHhz5DFN8oi37DetYj83ncfysyn17HNkD
+yT5E3nuyJ5L1/VM19hz5rsYLp2nDe0P2/7EWf2F7Z3ruJ7b7XZSlVe7fWuaR
+/VB/ruGe+2WV57PP7yuP7OnjuSz7/y7S5iztOfId7PBNlXvq2Hf2tefzmXde
+7Le7xnhH6vPX1tMm+9N4P9TdNXy09t9W2e4YfefIvjNsOec2bc7VfqSx7Oj6
+fJ42o2wTRmBvMHuYYV3ej7Cn7X5/C1d731LHd7U19gJtvnfs2Ge23CN7uHj3
+wf4z1kHWw4vU49SHu4awTrA+fK89be5pPXMR6wBrA79r5iXWwnecZ1jnmIva
+q991bmHNY87poH7PeZ41gDm/k20y57SxTea66xwHcpbvHAfGiv3f7CPfxON4
+NWskeh2PV1lPvoX+0d8+Y8g8wN7rCba/iXpjjxOt76yfrGOTrMeW77hOtEEd
+3/2hnuy55FiTrWc+IMdr6DyDZj5ZxxjYD7+Lbe6qz5Psi+v4g9frD8eF9uER
+3uXAJ+RG5Ejkdswr5GnMLddaT5uF9ay/2E+1nr3Z7NMmx6l9xpep1lM3RXty
+OPKhW7Rn/iF/28N5DM1c9Of/s1W5T7uf+iDbmea5XeyrZjtdm1vU1PMbedr7
+fLr9klOS39yqZh4jl2N+W1PNnEZb7MOm/2HqIz3OUHNkb0ctP5upD9TP0mYN
+fV7PvGeW9ug52jBnktcx7/GZPdP0ear6NI+z1XPU2E43FvqdbZvkWKfaZn/r
+53ruhmpsmE/ItZiv2IfLftwLPN6jvlddO/deNTkKeQu50WmeU/t/NGzI29D3
+2Q5zFDkP8+Em1u9qLkWuxRzLXmH2Ok/0+KD6Aj/j4zzrqeM4Tx/Osp0zbH/e
+SjYP2c5Mrx1jtan+MGeyH5g9wOQd7FtmfzK50nz1ROOdr35U3c35nPyEuf1m
+z5+uzWPqLdTYT9RmgusC5zK3r++1YG5/Un9q5z6pfkJNroZ+Sp/ZN/y4eroa
+X7bVpra3md8CcyB27Dn+8zz1Ex4Xqp9V32M7z6oXqsnh0Iu030E9RN6HBZmT
+WV/IOVkjDrGenGCc9awRnM9+4sedl8idyNWoY58qc9SL6lpfL6pfUGP/gudi
+z3tr9iSz95j5j3mQzy/bFzawHszX0DkWDW+xn5ncr7beocmDOOc12/hI/bHH
+19VvqLGFDXlnXBVZx3fkOPAu9UsK263SX5gaDuf/t2qc2tB2YM0hFjh2XW3Q
+cDjHd6sVjIrm+x+Mh1iOsk249y3bxDeeDfLuuKk2cCfzPzwCn8A81H1o/bHq
+4dUKfmUOP14Nx3L82HrYEJ48oFjBpsy3HJeoT9Ce70dYz3lwI1zFHAXnwXtw
+Jkf4r8aN6FMsn2lf487hatiP+WGkbZ5uH5/YDusd6yPr4HDHAfZmboELz6xW
+sCPz2DlqGJLj19aPUp9jYQyv8fcOz9XG9Vvra/zHb/NM/YRvx1oPE9aYjOvI
+bxmmGVut4N37tUHDvRy/t36c+kLb/tJxeNk2YbyltokPr3jf8P3/APa2toE=
+
+           "]],
+          Annotation[#, "Charting`Private`Tag$14055359#1"]& ]],
+        Lighting->"Neutral"]}, {}, {}, {}, {}},
+     VertexColors->{{
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}},
+     VertexNormals->CompressedData["
+1:eJx1W3lcjtn7zjaMvUEy1kIMUVRIcUplKSn7npRWJLIma0RZGmSyJfu+hhLV
+oWIGjYkkZEvaLGUb85Xi9zzvue7n1/N+ZuaPmc+cz3Hd93Wd+1znPud9GHjM
+GuFVXUdH54P0rxrSfzu5lWaYX9zFCuP16rncHs+umneekV5Rxkx+GDai2uIM
+VpYXf+fZ2nDWi8+tXtmjjOXmD94x+2Quy9hTJz8z/jzrZmjcKDzpDQtPdhvv
++TSfhYxI+2ffiARW2nToqXavitniOOMiXljMXll+e2d29SIzHjTG4WxuPrt5
+/fXIobfesBp2B05eenGUbblonnrkci7r8YvrwsNGZcw8+O3RBtVOsHPLIuYe
+Csxg7++0iWnxsYzZZ5cM/vPiCTZ1ol5l0u3xSTTfRz2fZwC/NfDDBD4PQT7F
+6nx4JPJfgvxfi/y52Z9z2oSdz2U79VvPej7kLMs33FTwIu0NH7781uB2wRls
+R8s9S0s9o9ivuwI2/NCjjL+ZLPQcrdaT20UufrL4yVHmE/qILy7ZxiqK+qa3
+kvi0DD4YEHz0BsuMqCiZlnCR9VjqVrqzZxnL1vtfXFrNh8wzwbvmFf0/GG8/
+b1XSvTdspG+BX+aXPDbQf9Lf1q53WM3UFo5pNUuY993yN0siCpn759LTDy9k
+sz7vul3a8zGf+e//1i3zSwlz3DbwTrqEN2Pa9EZX0nPZzVYD/U63fMMuuASG
+h/2Uy1w3v4z9VVrv7FgTVzlO29HRV69K8/ZvOe///pVfUgbmx2P+cDGfzwC+
+E/C9BD6nfKao8+ETkf9Q5P/9qiZ//gR8fcE3RfDl/aHPO+hjIvTh3aHnGLWe
+/PQNziwK97Imz5qYlMw+pOj8j8Ft3T6pV5mP3qdef9hfV3TuYhtx00rKY+RH
+z0FynqSz79PNHi3zHrDAj67PdvV8xmpB5zWz9CbulP6/zbrA8DmR+cwSOtt7
+Tagm8/qrwHPlUon3TOjceV8T501B+Sz+9O89TKYVs0HQ2d2xcqL852q1H/Vc
+xh34+MyL+z3dk2j+BcwfAp0HAf8u8D2hs3Y+vaFzIPIPRv7VRP68O/iOU/Pl
+DQyFPquhD+kcCz3Ln6r05BULX2UEbwhn72sk29apPK7o/DquS9+fJxxlL4a5
+vr+afkvROSvX44u7tH6Tazf6c7VUP6RzQrN9s3pJcQfGz2m2WeJNOo++uqDZ
+NTmP7isru0s6UD3HjWu3ZIFUDztcxxfJ9egPnUM/eTikSPH+99Py+W7+pcwR
+Oj861vTmRum/ugYV7XdJeQyGziv/fT6/APydwCedx2jl0ws6X0L+jsi/OnTO
+AV9P8KV6rn9O6FPHRehDOpdAz0dqPfnkU3nNl24I5+dH7tetqvPwaqFLW084
+yhtp9uktZgqdLWumdZb2Ce8xee3uqjq7JQQnSuvLY17V/CTXVw3ovCdE/9Pv
+9tf5mnrRWTIvqufF9+JuSfuOh7+vmyDrMAc6X78b9FCKxwM39R0g6zYAOrdZ
+eH7eZkk/yuOwxjfGJ/3HfE74EcD3g877tfIhnb2R/z7kT75hA7591Xz5TOhj
+Dn1IZxvoGaPWk9sZXymW6pyfOuV8pLiKb0xB3M151md/r+Ibe3dWD5D8i9tV
+r33tQRXfcMoOdm6V94A30tTbM6oHZrDu0Arp//mDTRVN5H3aFzo3ftHkuLSv
+eQ/9ul9lv5wNnb9lXq4p1RP/Fj48VtahH3T+J8pNf6+kB62fHeqZ5ldiPoPO
+hG8GfNLZEPnkIh/yDWfk3wz566CeD4DvUDVfPh/6HIc+3aGzGfTcrtaTfw5x
+sAp5cpS3dxrXN7jKOTgX9WAcEu7jKe0bqqMn3c40kM4Vntn6wLqUKudgI/Cq
+uHWkUPYz8o293+P7S/7Ie35fPEnOU6lnR5P10jnFxbz/PwcfGPT8S6o//lfT
+Ti9WSfXjAJ31Dl26KPOj9RgKnWl+JuYPhs5LgP8D8D2g8z6tfEhnXeRfjvyx
+nvwl+Gap+fIt0McV+lA950HPZmo9+VKXtgOcLpzg8aevNG36tVUS6dwC+zQr
+9lNxmc8aa6rnTZNXFMv5jl7wPHr24ghr0vlv1NupTuap7WI8kqjfsPjYa6uc
+b53VnT93yplqTf7cDLqdSZy+ceZvgdak3xLXbj9K/subnT5vkrx1VpI9dNbR
+/POO74Jf0H+XYf6TcZPHR9v7JWFduD7wQyOf5Q+OcEzygc59kI/OpHUxETd8
+rEnncuR/193wRIHPams6B3eAb8PEuy1PD9pCfHk/6FO0sEmrWp1Mk6ievaDn
+XbWe/H/Qv53Qn2vXc3uxXly7nm+L9eWkcwPUwwdRD7w2dD6I+jEW9cPBi1G9
+if35kFM956I+/xD1yVGfrDl0I72OaXQekvTo3+fzpcCvDvxp+HMHkE935EN9
+XVPk/xX5V9Oq57vgm6JVz/bQR7ue66j15Pbwk+PCTxSd3eE/m4T/cKrn/fCr
+gcKv+BXoPBj+1kD4GyffaA8/fCj8UNGZfMZU+Cefp+XP8FtureXP1AecD6jd
+2CJwpLY/c/i54gM9gT8dOmvnQzoPR/56yJ/8+RD4DgFf0nkB9DkJfaie+0DP
+XWo9ua+631B0noHzVFecp4rOw3H+mojzV9F5NuLuFOe1ovN5nO9h4nwnXmwz
+6mGN6AcU381D/zBL9A/cDjqbY59S3QjfsEx6pjWffCNK3W9wOgcvIJ+1yId8
+Iwj570H+pPMY8O0DvsnQeTn0MYU+pPMo6LlDrSfPQb/3UfR7is7J6J+LRP+s
+6HwO/eQU0U8qOsei/3QS/SfVHTNT96uczsF16G93if6W0z1lHPrhctEPK75x
+Cv1zU9E/Kz499t/n8/XA3w188o2eyMcU+VA970X+zsifzsFk8PUBX6rnfOjz
+o+ifFZ3ToedjtZ78AO4vLcR9UNG5FPfBIHHfUXQ2wP1okrgfKTpPwH0qRNyn
+lHqeh/tXB3H/UurZCve1HHFf44HQuS3ud1zc78gH2BjcBxuK+yC/AN9og/kp
+mE99nTXwHwAf/s+DkU8n5GMGnScj/xXIn/zJCHzdwZd0roH74AboQzpvhZ61
+1Hpya9zH54r7uKKznvr+rpyDf+G+v1Tc9xWdXfA+MFG8D3DqN9zxnrBQvCco
+Onvg/WGaeH/gQdD5Gt4rMsV7hVLPGXjf6CfeNzjX6OyZRPPvYj7u6dwL+F7A
+x32TeyKfYORjAZ3pfcYN+ZNv0HtOGPiSzr2hT6N1Qh/ys87Qc5paT26E9zrP
+BM37Eqf3ujZ4j9om3qP4ZvEexTrj/eqkeL/iBeL9SnmvOyXeu/hbrfc6k76a
+9zFO73V/4D3tgXhP49rvdXUWa97fuPZ7nd59zXsdP56emdxgoqfyXmeJ+XF4
+r7sF/OfAp/c6yscY+XTFe91G5H8S+b/Ce50p+CaD7wu8142APhnQJxLvda/x
+Xnc3XqUn12197GzK+8sstsWqgh6h25nxjifLlmSUMecZa0Zc6WnJR5WmPXIN
++4ttCoryP1qjjKX+XZLm0aiQvZx7oeJN+3Rm06vIaveeQmbbxirn4Zk8NvXZ
+zPqDez9mthh3vxm9Zq7/K3bu06Uvn1r/wXzczlX6/JDHDvlcMdI1KWBx58t7
+XX35nHlgfOPFukNnznnLTuXsmO/94ia7n3hyu2P7bNZ//vLG42OK2Ltyo3fV
+sl+wexiPrPWg0lOnjLU007O67JzB3M+kl547msQssqymL3lczOLHfs8Jzcpn
+czBO85ti/gAxzntjfgLm0zjlcwT55Iq4vB/yKUM+TzA+FXwTwXea4MUPgu9Z
+8PXG+DXo+RZ69hO6cXvo6QU9rTHuivUqV68X/8VHrJcp1muLWC9ukFZ7Sq5v
+PMvfOWjRt6dnWVes7yjT1JsH9mUxi4enAv/n8VJZr8po0/KOoTksdNnNDkF+
+xcwT63J39oM3WRaP2IpNkTYbe71W1uXAmTtz6m/LZU8NJ40bdegNGwedD2H8
+GcYtoOcd4CwDzjPo9gVxlyMu6TMeefZBnqSPP3i13qXixYNq9k6f+ewIC+tj
+NLxhVqLCt9Vx99zqQ1en+No03yTzpLq9bnG47orl4Sm24e9nTdZ/rfC1fHV6
+1t6Z61OMqr184GheyrLB93JK0ZastxtSHBMnbJBxJ4Dv2NhPqvG+4Du6SZwG
+pyNwHoPvgMQjqrhe4Lv3rrcmz5nIk9b9Jng9UfPiDazmp9qWT0jpabDsRIKU
+B/FtcTyt8uC+LF4tItVI1o34ug/I9OsUmsP9djpkzJF0pn03tOPhsGyLR9zC
+98WTDdK6PADfBekDDBtuy+VhPovejZTWcSL4LtIaJ77OwDEHzlPwpbi+iEt8
+WyHP2siT+H7WP6DhtUXNi7/r1mrIrGdH+O62Kz82qLK+Zi7zbB+dyeMGNWtV
+H1TFfwY2/HRQ2nc81nRR9BVp39H61okbulvav9z73dj+8v4lvqFeq3SWPi7m
+Ix3/bCX7AK3vKq3xgeBbWwuH/MFBKy7x7Y08jZAn1bNdd8Hrk5oX142JLpDq
+nK+dui6zssr+/XF+VonkG/yVo9O0V5JvEN+wvZXnJf/he+PaPX0v+Q/xbW54
+aKnkY/zsrxe+e0g+lgW+Tdzamk3TKeOFBW5bEyQ/9ABfGi/CuD346mnhPATf
+VYi7B3Fp/zZAnm+QJ/GdAl6pal78tf+ZPMnf+Oqs5zu7S/6mzTdP4HDiuxpx
+t4m4XJvvEZEnvwO+zcArT/DiPuCrPe6gxfc4cB6BL8XdoY7LGyLPYuRJ9Tx4
+uuD1VM1L4btcjHPia446aSvqhGvX8x5RV9zj3+uZY12065ZPAt/VGB+F8Z7g
+SziewHkJvtpxPbXquQPy1Oabo+bFG6vrWeHbBj6gI3xA4eun9g1lfcfAZ3oK
+n6F1YcvhS6uEL3HyK+3xPuA7CjimwMkDXx/E9UZcOsfbI8+ayNMKfCeDV5qa
+Fy9X+5XC1+FY7GPZ5/2Ez3MGviebtatf5VxQ1vfydMfZVc4RngO+9V5v2Vrl
+3FH4jpu4QzVOfO9HDdXgdAAO9S2O61pq4togLu3fr+9XavIMQJ60vs7wq4/g
+9Qv4ripj6bJv9xC+rfC1wzluKc5xTudRIc79cHHuK3wT0SesEX0CJ7+KQF/x
+UvQVfDr4rsN4IcaHg+8l4IQBB7rxIsRdi7i0vg7Isz/yJL+aaZ6YVuU8Uvi6
+41xeJ85lha8l+rc5on9T6nk3+sAk0QcqfC3QT1aIfpJTf2WMvjRd9KXK+mqP
+DwZfM+BUqnF4jFZc4tsPec5HnrS+Z8HrBXgRX330XW9FP6nw5ehj68zT9LEK
+Xzf0w9miH6a6YhvQV2eLvppTf7Ue/fkA0Z/zqeC7AeMM4+TPhJMBHNwL+GTE
+zVHH5WnI80fkSXw9wKvLLhUv5X50X/TbnO5HNmtEvz1W9Nuc7kcumN/hZzG/
+C3AMemckd5R4lHdL6FhrdTjP099/PvdWGfc/uHaNtzQe4zy2hm7tUPbR2nBj
+ewk/3j2jmtwPPfG2jz4k1SP5w6hONfbI/dPeZnsMOkv1S/XjdGfdCbnfeh6y
+ceR9qd7JDxfVXpsk92fNh379Ivkf86L+DeP6GLeh/g04L4CDvohrx6V+5hLy
+fIo8SU/ie1DwZcS3LCjOV/6drM7f3fr1KtzLJjj20byftI/KDBko9UO9vDfP
+l84TpZ/pNvPiILl/ynm2oUCuX+Ib6RdYoCP1W1/+7Fkg1zv1b19szflKqT+L
+OdHZSTrfmC/4ao+TH27UwiF/MEbcLMSl+umCPK2QJ/HdED3CX+Z109lGw+ty
+y96ad4x7dtvnLirZxm7u6uEf8uQoC15gpeE7wFxPv0Tqh8aZ/1Eh1+MA8D0Y
+OdL1ndQ/5UecuSXX7zQ6318PsJ8q9Vs+9z5Gy/VOflirX2jqBak/S62d5iz1
+L2wm+P6gNe4IvrWA4wucu+C7D3FfIi6tL+U5CXmSH6YlLdop8/pQW/AqyDfT
+8DUJuGBbsnRYStwwze9Iyu+eM9yXn3kt7bfQ+Kf3ZRzy/+H33k7/KO3P0/GO
+u+W4dL4Xm3e+PE3azx0CxnnJeVI/02dDX99Eaf+fjFusL/PyBF8aP41xO/At
+0cKh9R2GuKcQl/xwPvJcgzzpfE8cqbMk0t85JRq8yvFO1ezT/gr595uo45Pr
+yzr0qCbWN3yO5Rq5H+rVe1z9qvVs+NGySO6fNlhN8Jbrair4msxn0bJf34jy
+HivXIe6JbPNw72DZ3+u3fn5B9nuca/81zk2BcxM45P9tEXc94hJfyrMf8qR6
+tky3fCrzuhPjo+H1qtBGw9fqZVmu/DvKKZ/BUfL7qN8nBw1f47iLTvJ56VA6
+YJrUHynra9Bw7f/k/unBTJ04I8k3qJ53VPZpJJ/HQzN44j3JZ2h9K6/5d5DP
+7/FWEY4NJF8aA74VGB+DcSfw3QkcZ+BQPbdD3BzExbsTN0WedsiT6vlegNvf
+Mq+T7v01vIa1Mtfw1Uly6iK/s6e5R84J2RDODk4W9VzHVvRD5/UqW8eMHGFN
+61sjQvRPOviH+Fag30pa5nJ51/yFSeRXXS+J/izFpLzylWtQEtUzjQ9/tW+E
+5VW/JPJnbRyq52qIe3bbr1H/vB9tTfu3AfI8hzypnn1DvnWWeb04tEPDq/oK
+Td3y4XFHf5HHJyzU8OXRr/uq1tda6Kac7+2h819CZ+orGK2LvVgXTny/Yx2H
+iXWkPk1ZdxeM0/rGAGcgcKieOyBuJuJ6aK2vLfKk9bU4fUDDy2mjhi+fUSb2
+75N5lSXyuieXMHnd+f0W1hq+a7Eveot9ofSr7dT7SLmPmKr3L6f9u0W9TxW+
+UVrjdB71+HccbqAVl/j+ijytkCft37ET7T/LvE6PHKLhdXCu8Ofpbfu+lfd1
+hyu+8r7mnl/6afguhe+tEL6n8PWGT54UPqms73f4qqHwVeX+5QofPiF8mHuD
+7wi1b3Nb8K3UwqF69tKKS/W8EnmGIU/iG9z+9zSZ1yan6RpevN5ADd8362u1
+aWfhmnJG+Db/ivOoI861yeJc4/3BdznOwSJxDir9+YNXqnNTuV8/tBbn7DVx
+zvIZ4Ks9PgR8tXGov1qGuIWIS/7cCXlOQZ60f+duDzs2lLumbFfz4lM691sm
+n8srZpjK5zJf4GWp4dtE3bdw6jc6oM95IvocTudRKPqiarc1fRHdE1kp+qiD
+oo9S6rlMa3wk+K4CTnXg3KH9i7iPEZfWVx952iBPWt83vNuvMq+h7ztpeH1r
+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
++eMXbvzcUVqn3llFi36R1o3y+T9I14yP
+      "],
+     VertexTextureCoordinates->CompressedData["
+1:eJx1msGO3EQQhg1vggjwGHMlcOMRkLgRwrMsbzDXuc1hAOWCLBQJjZCCIasQ
+J2jsyYYlIcOIF4CsvV9Z9bU9h239rm77r67qqurufe/z+5998W5VVf++/XPT
++vfNnbsXd+5uVxnXgZ/v7rW7e3vJm8Df3YjbS/VvA78z/D1ofB/4gxt48SLw
+t8Pwl4EH8Z2/Aj8d3v868Jc33XdvAo+/s/Ck53xbB0bfLG8Co2/u3wZG3zy+
+D4y+YPQFoy8YfcHom+12Xi3ZcV7Pqc361tK3lr619K2lby19a+lbS99a+tbS
+t5a+tfQt/XTejpOebtEXjL65XxsYffP4PjD6gtEXjL5g9AWjb15359XSOpz3
+07rQK8unNtu3kX0b2beRfRvZt5F9G9m3kX0b2beRfcs4M78O68Ju1gvsFn3B
+6JvH94HRF4y+YPQFoy8YfXPcPK+W4uh8nKkLv7TdrFfuP7XZn1v5cyt/buXP
+rfy5lT+38udW/lzmifk4Whfrzn5pu1kvsFv0BaMvGH3B6AtGXzD65rx3Xi3l
+wfk8UcsO+2Ld2S9tN+uVx09tXr+91m+v9dtr/fZav73Wb5nn5/NgXcRNxxWv
+O/ul7Wa9wG7RF4y+YPQFo2+uW86rpTpmPs/XRV5w3HRc8bqzX9pu1gvsFn3B
+6AtG31yXnVdLddp8HVMXec95wXHTccXrzn5pu1kvsFv0BaMvGH0znurQ+Tqt
+LvK6857zguOm44rXnf3SdrNeYLfom+vq82qpzp6vQ+uibnFed95zXnDcdFzx
+urNf2m7WC+wWfZf2EfN1dr1Ql7lucV533nNecNx0XPG6s1/abtbrXLTj99bR
+ojl45PdoZfxs+M6D1YcDgd9CDkb+ycDv95CDkX898HsecnAe32l8F/JxPo8h
+ByP/anjfVcjByEdtr6X/dchHc50kL+eN/szPaPeHMR9g9Aejb5Z3gdEHDH8w
+fMHwhQ/8kMOPFn5g+IHhl+VdYPiB4QeGHxh+8LFfmZdb+IHhl+VdYPiB4QeG
+Hxh+9vuleTIvt/DLz7vA8APDDww/MPy87pbs5nkyL7fwA8MPDD8w/MDw87pf
+8iPbzfNkXm7z/HWav07z1wU/x50lv7Yf2W6eJ/NyCz8w/MB5/roirnmd2a/t
+R7ab58m83MIPDD/H3aV173Vmv7Yf2W6eJ/NyCz/Hfceh4TN3XwU/MPzA8Mvy
+LjD8wHwXzHfB8OM5/JDD7/2B19/BDww/MPyyvAsMPzD8wPAAww8+8EPuOO64
+6Tg1Hxe6wo9sN88TmBY+8Mv9q8r93Y69zkXdk+P+VnF2q7i2VRzZat1utU62
+8sut/GBb6MHP9QV1aOZXi18tfrX41eJXi18tflPdm+snzuceKn7uFT/3ip97
+xc+94ude8XOvuLVXnJjq8FwfTXbN89do/hrNX6P5azR/jeav0fw1mr9pX5Dj
+ZFW5vmDfkOvHS9WPl6ofL4NfPvc7Bs7142Xw8z4lx+2qcn3BPibbt5V9W9m3
+lX1b2beVfVvZd9o35TxSVa4v2FfleT2oTjqoLjmoDjgo7x6U5w7KK9M+Luc1
+5q+T//Xyv17+18v/evlfL//r5X+9/K/X/HXBz/UF+074geEHhl+WdzqfOwaG
+X97XXhf73Jz3q8r1Bftg+IHhB4Zflnc6TzsG5jt5n31d7LtzHcJvqi8GWm/3
+5fADww8MvyzvdP51DMx3wXw343M8h5nrC84J4AeGHxh+Wd7pvOoYGH75HOK6
+OJfI9VFVub7g3AJ+YPiB4Zflnc6XjoHhl89FrotzEtcXeV7PxbnA/D3NOuJC
+7tcHzu/Zqt90z5Pz/0H7+37hvKKO9/meKOfrg/bjfXGekO8h1sp/bRF3Hedc
+N+Z7jHVxT+W47TjpujPfg6yVX9oi7jvOum5dsqPzmvOI4zbvW/ID50XnIcf9
+PH+TH/k+xHnLecJ1d74vWRf3Dc57zjOu2/N9xLo4z8/x8rCQp6a6n/G8z+fl
+Ob4dtH/pi/1XPk9fF+fROR4dFA/6Yr/k8ba77QYeeV1EO7zm3j+Lz93i97wv
+122uk1yXuA6YzpvzOjgq/pFPLop1t1Q3gsf5eBJ6jeOeBnbd9NHw+FnIvx++
+90dg1zEj/0PIR7/sAruuGPn3Ifc6GPm+0PuupN9VyNEP+8AfDL9svz5wfv85
+nnvesz3Ohd9U6XcuntuP6OdzY+elUb5R+0Djtnq+uX3/D/E855ttYPp/OhD+
+qThXp3++h9jc+sEvC/cS0z6e/vcHxR8v3FNM+3z646fz9xbTOQD98dP5e4zp
+nID++On8vcZ0jkB//HL+nmM6Z6D/aP+XC/ce0zkE/Ud3me5BcjzdBqb/GC9e
+Rf8cL7eB6f/x8II3YQf8kHkGM495fXSBmQcw78PfXcfle0XO3U6FX4/5ayfe
+D2J8npdT9Adnf9/crvsf4334e74XfRjj6Q/O6wH//bk4l8v3qI9iPP3Beb1s
+bv3r1+Lc0XU44+mf3/9Y/vmkOLd0Hc/4nBdOWm+biKM+9/Q+gPE5b5y0HjcR
+h31u6n1EtschcF6vm4jjPnf1PoTxOe+ctJ6JZ1fFua33MdmeE87rfXO7Pv4s
+zn29D2I8/cE5HmxWo7v/Fe8jHvA+MOPpD87xYrP6b/i9Dj1Yz7yflvfn755i
+PJj4Mr8vms5Zc3w8LdZ14Dy/Hn9RnIvmuDDJ4YGcNsvreE48yPlhH3LWdx7f
+hJz1mvPvZchZf/n9bchZT96HZn7lvhQ5/o48/1/SLuyOPP+f0i78EfkwPP6/
+Zxf+hTz/P8wu/MNx3HH7f21yzHw=
+      "]], {}}, {}},
+  Axes->True,
+  BoxRatios->{1, 1, 1},
+  DisplayFunction->Identity,
+  FaceGridsStyle->Automatic,
+  ImagePadding->Automatic,
+  ImageSize->{371.9900847571333, 370.01881678618395`},
+  ImageSizeRaw->Automatic,
+  Lighting->"Neutral",
+  Method->{
+   "DefaultGraphicsInteraction" -> {
+     "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+      "Effects" -> {
+       "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+        "Droplines" -> {
+         "freeformCursorMode" -> True, 
+          "placement" -> {"x" -> "All", "y" -> "None"}}}}},
+  PlotRange->{{Automatic, Automatic}, {Automatic, Automatic}, {
+    Automatic, Automatic}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.05], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic, Automatic},
+  ViewPoint->{0.0036373347896849696`, 3.3729478528863033`, 0.2705726362833136},
+  ViewVertical->{-0.7993455745219745, 0.5817529489508084, 
+   0.15036674791712684`}]], "Output",
+ CellChangeTimes->{{3.829452870214498*^9, 3.8294529084138994`*^9}, 
+   3.829452939539091*^9, {3.829453987527356*^9, 3.8294540865282187`*^9}, 
+   3.8294541423577375`*^9, {3.829454184494532*^9, 3.829454308845355*^9}, {
+   3.829454347026444*^9, 3.8294543640598135`*^9}, 3.8294545132044754`*^9},
+ CellLabel->
+  "Out[2917]=",ExpressionUUID->"986d8447-602a-48af-baab-7e2238054825"],
+
+Cell[BoxData[
+ Graphics3DBox[{{GraphicsComplex3DBox[CompressedData["
+1:eJxlW3lcT9n/zja+Q3Zi7EIyyE706XNjEMmaNYmJtFnCWMpeFKUaYUJJ2SMj
+W1k/h8q+TKnsw5CEkS1rJb97O8/7zP3c3/wxXp3Xu+f9fp5zznPe99xbC7dZ
+I93Lm5iYvJf/V0H+N+FK5N6hTcP1xQeGd3o7Tmfb5Lvy3xup3Lyj8yIXXZNq
+fsj/OeuGv77TUtfX0V3eSAucVzw/m35f6pxx6Pdz5iH6cy3nrTyd/Uo6G+na
+IL4wV3qffnOh48VIfYXUnxzSKr6QfN/22Kj8a/Vqz8i2a6P0vd92OBknx+Vt
+P3lc+b0ew9bomHm0fvpUnxoK7o9DOvwYI+fx0W/yLnXZqneMfLrtd7mOeSW8
+rrbXlXpj9ZVd6na12L1OVwXx0xFvz+PZM+D3BL43x2dzUE8n1NOT18PSUf8n
+1G/C62crwdcWfA2cL2sNfbpAHyuuDyvZMCBB0fNt3le1nuzyp5b3DOahel2F
+ihNTzf31pHM7/10z/RMuS49CSl5MTTkukc5/mX05nFbxruSSMq3i2QaXJNJ5
+jGeeV8bXx9JAb5ePuuGZEuk87WbRqyUhzyTXT68P3j2WI5HOPjtKO2R8fSHZ
+bxqQmS7jkc5XGw/wOtjolXR0mO+aoNr3JdI5e1vH4UqeZqOjzp2T40jna4g/
+hnjSeTrwBwKfdPZEPZNQD+nsjPoHo37S+R74eoAv6ewIfUqhD+lcs/B8mZ7e
+lePUerJBrVddHHwxQL9nhvPmtmuDhc4m5jdqWaeek+aZfehxqd8FoXPrPiFX
+bOQ6HAun2Ct1ks4+DyPdGj2+I80tHP4opssjoXPwLLMJ0fLPTUJ918yJyBU6
+93d3LqfwysibErBU5k06W26vM2Td3Fzp2MGLnTtOfS50dnP4NkH5vYotR/2j
+4JLObRGfjHjSeQDwM4FPOq9BPU1RD+nsi/r9UD/pbAW+Y8GXdK4PfdZBH9LZ
+Wv+xTM+lpc/UerJ71quT/7rhrf89KCuw1CVM6Pz58M+9GzonSIVDh787l35V
+6Hz9vtvXyfL8jalc4/oqef2QzqfrbZ/VQ847KHlOvUiZN+k8+tyCeuflOjpY
+BXyzknUgnQ+Na75kgbwetgwfn6+sR9J5xQe3/gY53+fay+e7er8WOt/bV/dK
+uPxvrRYlLRWfIJ0DEP8F8aQz4UcDn3Qei3o6oh7S+SzqH4L6See74OsGvkLn
+I1wfs2FcH9LZzM4yRdHzxY2AlSo92fUyf/E2DPrkMkKt8+RygUubOCew5mX7
+9D+de1VMs5T3CWs3cXWsWmfPFP8T8vyyrS8rflin0nnX4gYfLva7wIKqRmWp
+dV6affiqvO9YyLsqKWqdr92ce1fOx2at691XrbPFwjI/ZFSH8A3E+yKedF4G
+/FDgk857UM9q1EM6+6D+eNRPOvcD357gSzovhz6/QB/SuWlJcDtFz+1605Fq
+nRecV3w/wJDs/bGq2je8SLfHukMXVb4RE11+puxfzK585fN3VL7hkOM/pPHj
+O6x22Xr7zzeahe5eIf/M7q4rqaP2jZpP6uyX9zXr2qBK8RKVb3zLOFVRXk+s
+dM2IbVYq3/i0oeycYhWBSzpr40lnwu8GfNLZHPXcQz2k8zDU3wD1k847wXcw
++Aqdoc8J6EM6ez/s66foGVK8wlTtG5/LzuNQQ9utk9LPqs7B5VgPvRav8Zii
+OgdvdUiqJp8r7HKTnaEG1TlIvIqv7n1mozoH478n62V/ZJ2+L3K5ozoHFzl0
+XCufU9Dtv3Pwbosuf8nrj12v2+bJStU5aLa7rH9gMxBHOlP8DcSTzouBXwn4
+pPMO1NMF9ZDOdVB/KeonnZ+Abzb4ks5x0Gcc9CGd7Rzb2Sp6DokvVuvJvpf1
+SeEGszEJH/1j7GxIZ0vs05TnpYm1fJbpSOeQiWV9Dhs6ZtoGz/hwHelM6836
+ybq5Vcr/oSOduxeW9VGsQ8Vnnx5sitaRzqRb0T9hy6Zf36YjnZcML+vTWKp/
+98SH3eJ1pLNJ2X9vGdc3Xkc6L0V8GuJJ5/rALwY+6dwT9XREPaRzEeq3Rf2k
+cxT4uoCv6DegzyPoQzqP3FTW1xlqLzP9pNKTfcF6bs3Xs4F0XoH56s7nS/ji
+bczvBT6/TLuev/D1wEjn7Vg/Hfj6YaQzrbdyfL0x0vke1udlvj4Z6Uy6eUEv
+0pniryBeu57LA5903ol6OqIe0rku6i9B/aRzLvhmgi/pHA99RkEf0rkP1rMD
+X8+kJ1sIfz7K/Vno7A3/ieH+w7T+LHG/EjoPhr/V4P4mdG4BP7zN/VDoXAu8
+OnP/FDqXwm9LuN8KnT9jvZUHf9KZ4r8hnnQm/C7AJ51bGp8XQufhqN8M9ZPO
+u8B3EPhq/fk49CGdfeDPq7k/C52fot8YyPsNofM8nKf8ueCq0HkIzt+f+fkr
+dF5A88LPa6HzcZzvq/j5LnTegPWwhvcDQudc9A8zef8gdNZjn3YEH9L5qXF/
+InTeaNzPCJ1Pop5g1EM6+6P+ONRPOo837jeEzhuhT1/oQzp3R78Rz/sNofNR
+9M+RvH8WOmehf/7I+2eh8z70k2N5Pyl03oH+czDvP4XOPdCvWvF+Vei81ri/
+FTo7ox/+yvthofNh9M91eP8sdJ6A+CLEk85hwI8BvvBn1NMJ9ZDOe1D/UNRP
+OieD71TwJZ0LoU8D3j8Lnd9JvH/+l/fPQmcJz4MH+fOg0PlTC/68s4Q/7wid
+G+P5aBR/PhI6T8Tz1FL+PCV0no/nr1b8+UvobIPntTv8eU3o3BTPdwb+fCd0
+HovnwWr8eVDorI0nnXXAvwt80nkh6rFAPaSzG+pfhfpJ51bg6wq+pHM1PA9u
+hj6ksxWeB4P486DQORX3GxP4/YbQuRWe30v487vQ+RKe9xfy532h8wjcD0zk
+9wNC58m4T1jA7xOEzlNx/+DO7x+Ezmm4r8jm9xVC52u437Dj9xtC53TE5yCe
+dHYH/jTgk85uqMcP9ZDOo1H/ZNRPOmeB70rwJZ37Q5/GoVwf0vlH3G+s4fcb
+Qme6r8P90hntfZ1bseI3/gbtfZ1z9pB158xDDNr7ury/lXMg0qC9r6uwpJtT
+27VRBu193bLByvkcbdDe150Psvcpddlq0N7XLY5S+qZYg/a+7gLitfd1y4Gv
+va+rhHq093UvUL/2vs4DfLX3dYHQR3tf96zJjs4qPVnTJvsOGd6dkvb+tDKv
+c+Bmqd2Wv5ctufZGSt7fwlp5bozMqJ+XLfsN6Z/+8UWaW41n0ovfjpW8apku
+6Xvk28TGPZP6NrW5fTfpsTTl0QzTgT0fiPFfr0QF/+b9Ukr6cPLrhyaXJHfX
+I988fngs7fI4a1GrY5506GhRj3NP/xHjEcerOM6YUyDtub1l/rQnV6R7Jw5s
+dmiZI+nmL685fmu+9LbI4m25nCdiPKLSnW9TTN5I1bqa2Zwack0anZT++kjC
+aalHlo3PkgfPpZSx328HZuWKcW28Ix9n2nga19Zzm+dl2npo3A18D4HvVM6L
+7dbwpfGL0PMV9LThurH+0NMDetK4I+brpvF8seofMsrmq+B2inq+WMe0ypPu
+eyZLb6Lt/UofHhLzO6ZT6pWd27Oknnf/9P3i9lTMV1FUp6LWgbelFcuutJrr
+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
+/9RanqduWfl+beV5o/j/AwXzlaQ=
+     "], {
+      {RGBColor[0.880722, 0.611041, 0.142051], EdgeForm[None], Specularity[
+        GrayLevel[1], 3], 
+       StyleBox[GraphicsGroup3DBox[
+         TagBox[Polygon3DBox[CompressedData["
+1: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
+A6t8XlGnyGcWaN6X8k4amyVxHFTl+vVakWsr79xZZwdXuZb9o8i1DRueAfE8
+B5u3i1yjebbDsz7eWbOPcLUi39F30E+eWfFe/v0i11Y0ay7v7jvpP+/629km
+ayf9Mk74uJex8IyI9nkWxN423vkx9/N/H53tl3fmXdR7q2vrLf8Hsro2+1rP
+/4Dw3py1lWNXbdB8V1uH99eG/x/h/T5rKHsS2nvtqOumDc+a2DdZ2zPZXXts
+0Kwh/F8J78TXLPLYQxvs0bSBj/voD+/We2qPP91sh7peK7XTy3N5rsW7eN6/
+c636Orbt1MO8p/rpf3s199rbXM8q94/SPn3THvfdQV7TDmrW6ne0Zf8m9+DB
+XlP2YxzidefeOdR7jGs7wPuK+7G/9yfXmnv3JO817kueV3ayzaO9f7mnf7Id
+7lGe8XF9u3q92DPA/leY7f0q92s2LJLFhlr/bpV+s/f0PY+NitwbMEz79/3u
+KNsb6u/lXW1ohyPnwF9vaxd/f/LXkbbT2zHkGuHLn+/m5SM0/PNhHD+ocr/m
+Rx7ZF3mM/mPzgb6wv5J7n9/AHp57rDar+rug/mPbYp/lPzyyV5F3u+y/3F+b
+E7TnyHc1rjlRmyWezz5I9AjrT1bDHhz5DFN8oi37DetYj83ncfysyn17HNkD
+yT5E3nuyJ5L1/VM19hz5rsYLp2nDe0P2/7EWf2F7Z3ruJ7b7XZSlVe7fWuaR
+/VB/ruGe+2WV57PP7yuP7OnjuSz7/y7S5iztOfId7PBNlXvq2Hf2tefzmXde
+7Le7xnhH6vPX1tMm+9N4P9TdNXy09t9W2e4YfefIvjNsOec2bc7VfqSx7Oj6
+fJ42o2wTRmBvMHuYYV3ej7Cn7X5/C1d731LHd7U19gJtvnfs2Ge23CN7uHj3
+wf4z1kHWw4vU49SHu4awTrA+fK89be5pPXMR6wBrA79r5iXWwnecZ1jnmIva
+q991bmHNY87poH7PeZ41gDm/k20y57SxTea66xwHcpbvHAfGiv3f7CPfxON4
+NWskeh2PV1lPvoX+0d8+Y8g8wN7rCba/iXpjjxOt76yfrGOTrMeW77hOtEEd
+3/2hnuy55FiTrWc+IMdr6DyDZj5ZxxjYD7+Lbe6qz5Psi+v4g9frD8eF9uER
+3uXAJ+RG5Ejkdswr5GnMLddaT5uF9ay/2E+1nr3Z7NMmx6l9xpep1lM3RXty
+OPKhW7Rn/iF/28N5DM1c9Of/s1W5T7uf+iDbmea5XeyrZjtdm1vU1PMbedr7
+fLr9klOS39yqZh4jl2N+W1PNnEZb7MOm/2HqIz3OUHNkb0ctP5upD9TP0mYN
+fV7PvGeW9ug52jBnktcx7/GZPdP0ear6NI+z1XPU2E43FvqdbZvkWKfaZn/r
+53ruhmpsmE/ItZiv2IfLftwLPN6jvlddO/deNTkKeQu50WmeU/t/NGzI29D3
+2Q5zFDkP8+Em1u9qLkWuxRzLXmH2Ok/0+KD6Aj/j4zzrqeM4Tx/Osp0zbH/e
+SjYP2c5Mrx1jtan+MGeyH5g9wOQd7FtmfzK50nz1ROOdr35U3c35nPyEuf1m
+z5+uzWPqLdTYT9RmgusC5zK3r++1YG5/Un9q5z6pfkJNroZ+Sp/ZN/y4eroa
+X7bVpra3md8CcyB27Dn+8zz1Ex4Xqp9V32M7z6oXqsnh0Iu030E9RN6HBZmT
+WV/IOVkjDrGenGCc9awRnM9+4sedl8idyNWoY58qc9SL6lpfL6pfUGP/gudi
+z3tr9iSz95j5j3mQzy/bFzawHszX0DkWDW+xn5ncr7beocmDOOc12/hI/bHH
+19VvqLGFDXlnXBVZx3fkOPAu9UsK263SX5gaDuf/t2qc2tB2YM0hFjh2XW3Q
+cDjHd6sVjIrm+x+Mh1iOsk249y3bxDeeDfLuuKk2cCfzPzwCn8A81H1o/bHq
+4dUKfmUOP14Nx3L82HrYEJ48oFjBpsy3HJeoT9Ce70dYz3lwI1zFHAXnwXtw
+Jkf4r8aN6FMsn2lf487hatiP+WGkbZ5uH5/YDusd6yPr4HDHAfZmboELz6xW
+sCPz2DlqGJLj19aPUp9jYQyv8fcOz9XG9Vvra/zHb/NM/YRvx1oPE9aYjOvI
+bxmmGVut4N37tUHDvRy/t36c+kLb/tJxeNk2YbyltokPr3jf8P3/APa2toE=
+
+           "]],
+          Annotation[#, "Charting`Private`Tag$14056148#1"]& ]],
+        Lighting->"Neutral"]}, {}, {}, {}, {}},
+     VertexColors->{{
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}},
+     VertexNormals->CompressedData["
+1:eJx1W3lcjtn7zjaMvUEy1kIMUVRIcUplKSn7npRWJLIma0RZGmSyJfu+hhLV
+oWIGjYkkZEvaLGUb85Xi9zzvue7n1/N+ZuaPmc+cz3Hd93Wd+1znPud9GHjM
+GuFVXUdH54P0rxrSfzu5lWaYX9zFCuP16rncHs+umneekV5Rxkx+GDai2uIM
+VpYXf+fZ2nDWi8+tXtmjjOXmD94x+2Quy9hTJz8z/jzrZmjcKDzpDQtPdhvv
++TSfhYxI+2ffiARW2nToqXavitniOOMiXljMXll+e2d29SIzHjTG4WxuPrt5
+/fXIobfesBp2B05eenGUbblonnrkci7r8YvrwsNGZcw8+O3RBtVOsHPLIuYe
+Csxg7++0iWnxsYzZZ5cM/vPiCTZ1ol5l0u3xSTTfRz2fZwC/NfDDBD4PQT7F
+6nx4JPJfgvxfi/y52Z9z2oSdz2U79VvPej7kLMs33FTwIu0NH7781uB2wRls
+R8s9S0s9o9ivuwI2/NCjjL+ZLPQcrdaT20UufrL4yVHmE/qILy7ZxiqK+qa3
+kvi0DD4YEHz0BsuMqCiZlnCR9VjqVrqzZxnL1vtfXFrNh8wzwbvmFf0/GG8/
+b1XSvTdspG+BX+aXPDbQf9Lf1q53WM3UFo5pNUuY993yN0siCpn759LTDy9k
+sz7vul3a8zGf+e//1i3zSwlz3DbwTrqEN2Pa9EZX0nPZzVYD/U63fMMuuASG
+h/2Uy1w3v4z9VVrv7FgTVzlO29HRV69K8/ZvOe///pVfUgbmx2P+cDGfzwC+
+E/C9BD6nfKao8+ETkf9Q5P/9qiZ//gR8fcE3RfDl/aHPO+hjIvTh3aHnGLWe
+/PQNziwK97Imz5qYlMw+pOj8j8Ft3T6pV5mP3qdef9hfV3TuYhtx00rKY+RH
+z0FynqSz79PNHi3zHrDAj67PdvV8xmpB5zWz9CbulP6/zbrA8DmR+cwSOtt7
+Tagm8/qrwHPlUon3TOjceV8T501B+Sz+9O89TKYVs0HQ2d2xcqL852q1H/Vc
+xh34+MyL+z3dk2j+BcwfAp0HAf8u8D2hs3Y+vaFzIPIPRv7VRP68O/iOU/Pl
+DQyFPquhD+kcCz3Ln6r05BULX2UEbwhn72sk29apPK7o/DquS9+fJxxlL4a5
+vr+afkvROSvX44u7tH6Tazf6c7VUP6RzQrN9s3pJcQfGz2m2WeJNOo++uqDZ
+NTmP7isru0s6UD3HjWu3ZIFUDztcxxfJ9egPnUM/eTikSPH+99Py+W7+pcwR
+Oj861vTmRum/ugYV7XdJeQyGziv/fT6/APydwCedx2jl0ws6X0L+jsi/OnTO
+AV9P8KV6rn9O6FPHRehDOpdAz0dqPfnkU3nNl24I5+dH7tetqvPwaqFLW084
+yhtp9uktZgqdLWumdZb2Ce8xee3uqjq7JQQnSuvLY17V/CTXVw3ovCdE/9Pv
+9tf5mnrRWTIvqufF9+JuSfuOh7+vmyDrMAc6X78b9FCKxwM39R0g6zYAOrdZ
+eH7eZkk/yuOwxjfGJ/3HfE74EcD3g877tfIhnb2R/z7kT75hA7591Xz5TOhj
+Dn1IZxvoGaPWk9sZXymW6pyfOuV8pLiKb0xB3M151md/r+Ibe3dWD5D8i9tV
+r33tQRXfcMoOdm6V94A30tTbM6oHZrDu0Arp//mDTRVN5H3aFzo3ftHkuLSv
+eQ/9ul9lv5wNnb9lXq4p1RP/Fj48VtahH3T+J8pNf6+kB62fHeqZ5ldiPoPO
+hG8GfNLZEPnkIh/yDWfk3wz566CeD4DvUDVfPh/6HIc+3aGzGfTcrtaTfw5x
+sAp5cpS3dxrXN7jKOTgX9WAcEu7jKe0bqqMn3c40kM4Vntn6wLqUKudgI/Cq
+uHWkUPYz8o293+P7S/7Ie35fPEnOU6lnR5P10jnFxbz/PwcfGPT8S6o//lfT
+Ti9WSfXjAJ31Dl26KPOj9RgKnWl+JuYPhs5LgP8D8D2g8z6tfEhnXeRfjvyx
+nvwl+Gap+fIt0McV+lA950HPZmo9+VKXtgOcLpzg8aevNG36tVUS6dwC+zQr
+9lNxmc8aa6rnTZNXFMv5jl7wPHr24ghr0vlv1NupTuap7WI8kqjfsPjYa6uc
+b53VnT93yplqTf7cDLqdSZy+ceZvgdak3xLXbj9K/subnT5vkrx1VpI9dNbR
+/POO74Jf0H+XYf6TcZPHR9v7JWFduD7wQyOf5Q+OcEzygc59kI/OpHUxETd8
+rEnncuR/193wRIHPams6B3eAb8PEuy1PD9pCfHk/6FO0sEmrWp1Mk6ievaDn
+XbWe/H/Qv53Qn2vXc3uxXly7nm+L9eWkcwPUwwdRD7w2dD6I+jEW9cPBi1G9
+if35kFM956I+/xD1yVGfrDl0I72OaXQekvTo3+fzpcCvDvxp+HMHkE935EN9
+XVPk/xX5V9Oq57vgm6JVz/bQR7ue66j15Pbwk+PCTxSd3eE/m4T/cKrn/fCr
+gcKv+BXoPBj+1kD4GyffaA8/fCj8UNGZfMZU+Cefp+XP8FtureXP1AecD6jd
+2CJwpLY/c/i54gM9gT8dOmvnQzoPR/56yJ/8+RD4DgFf0nkB9DkJfaie+0DP
+XWo9ua+631B0noHzVFecp4rOw3H+mojzV9F5NuLuFOe1ovN5nO9h4nwnXmwz
+6mGN6AcU381D/zBL9A/cDjqbY59S3QjfsEx6pjWffCNK3W9wOgcvIJ+1yId8
+Iwj570H+pPMY8O0DvsnQeTn0MYU+pPMo6LlDrSfPQb/3UfR7is7J6J+LRP+s
+6HwO/eQU0U8qOsei/3QS/SfVHTNT96uczsF16G93if6W0z1lHPrhctEPK75x
+Cv1zU9E/Kz499t/n8/XA3w188o2eyMcU+VA970X+zsifzsFk8PUBX6rnfOjz
+o+ifFZ3ToedjtZ78AO4vLcR9UNG5FPfBIHHfUXQ2wP1okrgfKTpPwH0qRNyn
+lHqeh/tXB3H/UurZCve1HHFf44HQuS3ud1zc78gH2BjcBxuK+yC/AN9og/kp
+mE99nTXwHwAf/s+DkU8n5GMGnScj/xXIn/zJCHzdwZd0roH74AboQzpvhZ61
+1Hpya9zH54r7uKKznvr+rpyDf+G+v1Tc9xWdXfA+MFG8D3DqN9zxnrBQvCco
+Onvg/WGaeH/gQdD5Gt4rMsV7hVLPGXjf6CfeNzjX6OyZRPPvYj7u6dwL+F7A
+x32TeyKfYORjAZ3pfcYN+ZNv0HtOGPiSzr2hT6N1Qh/ys87Qc5paT26E9zrP
+BM37Eqf3ujZ4j9om3qP4ZvEexTrj/eqkeL/iBeL9SnmvOyXeu/hbrfc6k76a
+9zFO73V/4D3tgXhP49rvdXUWa97fuPZ7nd59zXsdP56emdxgoqfyXmeJ+XF4
+r7sF/OfAp/c6yscY+XTFe91G5H8S+b/Ce50p+CaD7wu8142APhnQJxLvda/x
+Xnc3XqUn12197GzK+8sstsWqgh6h25nxjifLlmSUMecZa0Zc6WnJR5WmPXIN
++4ttCoryP1qjjKX+XZLm0aiQvZx7oeJN+3Rm06vIaveeQmbbxirn4Zk8NvXZ
+zPqDez9mthh3vxm9Zq7/K3bu06Uvn1r/wXzczlX6/JDHDvlcMdI1KWBx58t7
+XX35nHlgfOPFukNnznnLTuXsmO/94ia7n3hyu2P7bNZ//vLG42OK2Ltyo3fV
+sl+wexiPrPWg0lOnjLU007O67JzB3M+kl547msQssqymL3lczOLHfs8Jzcpn
+czBO85ti/gAxzntjfgLm0zjlcwT55Iq4vB/yKUM+TzA+FXwTwXea4MUPgu9Z
+8PXG+DXo+RZ69hO6cXvo6QU9rTHuivUqV68X/8VHrJcp1muLWC9ukFZ7Sq5v
+PMvfOWjRt6dnWVes7yjT1JsH9mUxi4enAv/n8VJZr8po0/KOoTksdNnNDkF+
+xcwT63J39oM3WRaP2IpNkTYbe71W1uXAmTtz6m/LZU8NJ40bdegNGwedD2H8
+GcYtoOcd4CwDzjPo9gVxlyMu6TMeefZBnqSPP3i13qXixYNq9k6f+ewIC+tj
+NLxhVqLCt9Vx99zqQ1en+No03yTzpLq9bnG47orl4Sm24e9nTdZ/rfC1fHV6
+1t6Z61OMqr184GheyrLB93JK0ZastxtSHBMnbJBxJ4Dv2NhPqvG+4Du6SZwG
+pyNwHoPvgMQjqrhe4Lv3rrcmz5nIk9b9Jng9UfPiDazmp9qWT0jpabDsRIKU
+B/FtcTyt8uC+LF4tItVI1o34ug/I9OsUmsP9djpkzJF0pn03tOPhsGyLR9zC
+98WTDdK6PADfBekDDBtuy+VhPovejZTWcSL4LtIaJ77OwDEHzlPwpbi+iEt8
+WyHP2siT+H7WP6DhtUXNi7/r1mrIrGdH+O62Kz82qLK+Zi7zbB+dyeMGNWtV
+H1TFfwY2/HRQ2nc81nRR9BVp39H61okbulvav9z73dj+8v4lvqFeq3SWPi7m
+Ix3/bCX7AK3vKq3xgeBbWwuH/MFBKy7x7Y08jZAn1bNdd8Hrk5oX142JLpDq
+nK+dui6zssr+/XF+VonkG/yVo9O0V5JvEN+wvZXnJf/he+PaPX0v+Q/xbW54
+aKnkY/zsrxe+e0g+lgW+Tdzamk3TKeOFBW5bEyQ/9ABfGi/CuD346mnhPATf
+VYi7B3Fp/zZAnm+QJ/GdAl6pal78tf+ZPMnf+Oqs5zu7S/6mzTdP4HDiuxpx
+t4m4XJvvEZEnvwO+zcArT/DiPuCrPe6gxfc4cB6BL8XdoY7LGyLPYuRJ9Tx4
+uuD1VM1L4btcjHPia446aSvqhGvX8x5RV9zj3+uZY12065ZPAt/VGB+F8Z7g
+SziewHkJvtpxPbXquQPy1Oabo+bFG6vrWeHbBj6gI3xA4eun9g1lfcfAZ3oK
+n6F1YcvhS6uEL3HyK+3xPuA7CjimwMkDXx/E9UZcOsfbI8+ayNMKfCeDV5qa
+Fy9X+5XC1+FY7GPZ5/2Ez3MGviebtatf5VxQ1vfydMfZVc4RngO+9V5v2Vrl
+3FH4jpu4QzVOfO9HDdXgdAAO9S2O61pq4togLu3fr+9XavIMQJ60vs7wq4/g
+9Qv4ripj6bJv9xC+rfC1wzluKc5xTudRIc79cHHuK3wT0SesEX0CJ7+KQF/x
+UvQVfDr4rsN4IcaHg+8l4IQBB7rxIsRdi7i0vg7Isz/yJL+aaZ6YVuU8Uvi6
+41xeJ85lha8l+rc5on9T6nk3+sAk0QcqfC3QT1aIfpJTf2WMvjRd9KXK+mqP
+DwZfM+BUqnF4jFZc4tsPec5HnrS+Z8HrBXgRX330XW9FP6nw5ehj68zT9LEK
+Xzf0w9miH6a6YhvQV2eLvppTf7Ue/fkA0Z/zqeC7AeMM4+TPhJMBHNwL+GTE
+zVHH5WnI80fkSXw9wKvLLhUv5X50X/TbnO5HNmtEvz1W9Nuc7kcumN/hZzG/
+C3AMemckd5R4lHdL6FhrdTjP099/PvdWGfc/uHaNtzQe4zy2hm7tUPbR2nBj
+ewk/3j2jmtwPPfG2jz4k1SP5w6hONfbI/dPeZnsMOkv1S/XjdGfdCbnfeh6y
+ceR9qd7JDxfVXpsk92fNh379Ivkf86L+DeP6GLeh/g04L4CDvohrx6V+5hLy
+fIo8SU/ie1DwZcS3LCjOV/6drM7f3fr1KtzLJjj20byftI/KDBko9UO9vDfP
+l84TpZ/pNvPiILl/ynm2oUCuX+Ib6RdYoCP1W1/+7Fkg1zv1b19szflKqT+L
+OdHZSTrfmC/4ao+TH27UwiF/MEbcLMSl+umCPK2QJ/HdED3CX+Z109lGw+ty
+y96ad4x7dtvnLirZxm7u6uEf8uQoC15gpeE7wFxPv0Tqh8aZ/1Eh1+MA8D0Y
+OdL1ndQ/5UecuSXX7zQ6318PsJ8q9Vs+9z5Gy/VOflirX2jqBak/S62d5iz1
+L2wm+P6gNe4IvrWA4wucu+C7D3FfIi6tL+U5CXmSH6YlLdop8/pQW/AqyDfT
+8DUJuGBbsnRYStwwze9Iyu+eM9yXn3kt7bfQ+Kf3ZRzy/+H33k7/KO3P0/GO
+u+W4dL4Xm3e+PE3azx0CxnnJeVI/02dDX99Eaf+fjFusL/PyBF8aP41xO/At
+0cKh9R2GuKcQl/xwPvJcgzzpfE8cqbMk0t85JRq8yvFO1ezT/gr595uo45Pr
+yzr0qCbWN3yO5Rq5H+rVe1z9qvVs+NGySO6fNlhN8Jbrair4msxn0bJf34jy
+HivXIe6JbPNw72DZ3+u3fn5B9nuca/81zk2BcxM45P9tEXc94hJfyrMf8qR6
+tky3fCrzuhPjo+H1qtBGw9fqZVmu/DvKKZ/BUfL7qN8nBw1f47iLTvJ56VA6
+YJrUHynra9Bw7f/k/unBTJ04I8k3qJ53VPZpJJ/HQzN44j3JZ2h9K6/5d5DP
+7/FWEY4NJF8aA74VGB+DcSfw3QkcZ+BQPbdD3BzExbsTN0WedsiT6vlegNvf
+Mq+T7v01vIa1Mtfw1Uly6iK/s6e5R84J2RDODk4W9VzHVvRD5/UqW8eMHGFN
+61sjQvRPOviH+Fag30pa5nJ51/yFSeRXXS+J/izFpLzylWtQEtUzjQ9/tW+E
+5VW/JPJnbRyq52qIe3bbr1H/vB9tTfu3AfI8hzypnn1DvnWWeb04tEPDq/oK
+Td3y4XFHf5HHJyzU8OXRr/uq1tda6Kac7+2h819CZ+orGK2LvVgXTny/Yx2H
+iXWkPk1ZdxeM0/rGAGcgcKieOyBuJuJ6aK2vLfKk9bU4fUDDy2mjhi+fUSb2
+75N5lSXyuieXMHnd+f0W1hq+a7Eveot9ofSr7dT7SLmPmKr3L6f9u0W9TxW+
+UVrjdB71+HccbqAVl/j+ijytkCft37ET7T/LvE6PHKLhdXCu8Ofpbfu+lfd1
+hyu+8r7mnl/6afguhe+tEL6n8PWGT54UPqms73f4qqHwVeX+5QofPiF8mHuD
+7wi1b3Nb8K3UwqF69tKKS/W8EnmGIU/iG9z+9zSZ1yan6RpevN5ADd8362u1
+aWfhmnJG+Db/ivOoI861yeJc4/3BdznOwSJxDir9+YNXqnNTuV8/tBbn7DVx
+zvIZ4Ks9PgR8tXGov1qGuIWIS/7cCXlOQZ60f+duDzs2lLumbFfz4lM691sm
+n8srZpjK5zJf4GWp4dtE3bdw6jc6oM95IvocTudRKPqiarc1fRHdE1kp+qiD
+oo9S6rlMa3wk+K4CTnXg3KH9i7iPEZfWVx952iBPWt83vNuvMq+h7ztpeH1r
+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
++eMXbvzcUVqn3llFi36R1o3y+T9I14yP
+      "],
+     VertexTextureCoordinates->CompressedData["
+1:eJx1msGO3EQQhg1vggjwGHMlcOMRkLgRwrMsbzDXuc1hAOWCLBQJjZCCIasQ
+J2jsyYYlIcOIF4CsvV9Z9bU9h239rm77r67qqurufe/z+5998W5VVf++/XPT
++vfNnbsXd+5uVxnXgZ/v7rW7e3vJm8Df3YjbS/VvA78z/D1ofB/4gxt48SLw
+t8Pwl4EH8Z2/Aj8d3v868Jc33XdvAo+/s/Ck53xbB0bfLG8Co2/u3wZG3zy+
+D4y+YPQFoy8YfcHom+12Xi3ZcV7Pqc361tK3lr619K2lby19a+lbS99a+tbS
+t5a+tfQt/XTejpOebtEXjL65XxsYffP4PjD6gtEXjL5g9AWjb15359XSOpz3
+07rQK8unNtu3kX0b2beRfRvZt5F9G9m3kX0b2beRfcs4M78O68Ju1gvsFn3B
+6JvH94HRF4y+YPQFoy8YfXPcPK+W4uh8nKkLv7TdrFfuP7XZn1v5cyt/buXP
+rfy5lT+38udW/lzmifk4Whfrzn5pu1kvsFv0BaMvGH3B6AtGXzD65rx3Xi3l
+wfk8UcsO+2Ld2S9tN+uVx09tXr+91m+v9dtr/fZav73Wb5nn5/NgXcRNxxWv
+O/ul7Wa9wG7RF4y+YPQFo2+uW86rpTpmPs/XRV5w3HRc8bqzX9pu1gvsFn3B
+6AtG31yXnVdLddp8HVMXec95wXHTccXrzn5pu1kvsFv0BaMvGH0znurQ+Tqt
+LvK6857zguOm44rXnf3SdrNeYLfom+vq82qpzp6vQ+uibnFed95zXnDcdFzx
+urNf2m7WC+wWfZf2EfN1dr1Ql7lucV533nNecNx0XPG6s1/abtbrXLTj99bR
+ojl45PdoZfxs+M6D1YcDgd9CDkb+ycDv95CDkX898HsecnAe32l8F/JxPo8h
+ByP/anjfVcjByEdtr6X/dchHc50kL+eN/szPaPeHMR9g9Aejb5Z3gdEHDH8w
+fMHwhQ/8kMOPFn5g+IHhl+VdYPiB4QeGHxh+8LFfmZdb+IHhl+VdYPiB4QeG
+Hxh+9vuleTIvt/DLz7vA8APDDww/MPy87pbs5nkyL7fwA8MPDD8w/MDw87pf
+8iPbzfNkXm7z/HWav07z1wU/x50lv7Yf2W6eJ/NyCz8w/MB5/roirnmd2a/t
+R7ab58m83MIPDD/H3aV173Vmv7Yf2W6eJ/NyCz/Hfceh4TN3XwU/MPzA8Mvy
+LjD8wHwXzHfB8OM5/JDD7/2B19/BDww/MPyyvAsMPzD8wPAAww8+8EPuOO64
+6Tg1Hxe6wo9sN88TmBY+8Mv9q8r93Y69zkXdk+P+VnF2q7i2VRzZat1utU62
+8sut/GBb6MHP9QV1aOZXi18tfrX41eJXi18tflPdm+snzuceKn7uFT/3ip97
+xc+94ude8XOvuLVXnJjq8FwfTXbN89do/hrNX6P5azR/jeav0fw1mr9pX5Dj
+ZFW5vmDfkOvHS9WPl6ofL4NfPvc7Bs7142Xw8z4lx+2qcn3BPibbt5V9W9m3
+lX1b2beVfVvZd9o35TxSVa4v2FfleT2oTjqoLjmoDjgo7x6U5w7KK9M+Luc1
+5q+T//Xyv17+18v/evlfL//r5X+9/K/X/HXBz/UF+074geEHhl+WdzqfOwaG
+X97XXhf73Jz3q8r1Bftg+IHhB4Zflnc6TzsG5jt5n31d7LtzHcJvqi8GWm/3
+5fADww8MvyzvdP51DMx3wXw343M8h5nrC84J4AeGHxh+Wd7pvOoYGH75HOK6
+OJfI9VFVub7g3AJ+YPiB4Zflnc6XjoHhl89FrotzEtcXeV7PxbnA/D3NOuJC
+7tcHzu/Zqt90z5Pz/0H7+37hvKKO9/meKOfrg/bjfXGekO8h1sp/bRF3Hedc
+N+Z7jHVxT+W47TjpujPfg6yVX9oi7jvOum5dsqPzmvOI4zbvW/ID50XnIcf9
+PH+TH/k+xHnLecJ1d74vWRf3Dc57zjOu2/N9xLo4z8/x8rCQp6a6n/G8z+fl
+Ob4dtH/pi/1XPk9fF+fROR4dFA/6Yr/k8ba77QYeeV1EO7zm3j+Lz93i97wv
+122uk1yXuA6YzpvzOjgq/pFPLop1t1Q3gsf5eBJ6jeOeBnbd9NHw+FnIvx++
+90dg1zEj/0PIR7/sAruuGPn3Ifc6GPm+0PuupN9VyNEP+8AfDL9svz5wfv85
+nnvesz3Ohd9U6XcuntuP6OdzY+elUb5R+0Djtnq+uX3/D/E855ttYPp/OhD+
+qThXp3++h9jc+sEvC/cS0z6e/vcHxR8v3FNM+3z646fz9xbTOQD98dP5e4zp
+nID++On8vcZ0jkB//HL+nmM6Z6D/aP+XC/ce0zkE/Ud3me5BcjzdBqb/GC9e
+Rf8cL7eB6f/x8II3YQf8kHkGM495fXSBmQcw78PfXcfle0XO3U6FX4/5ayfe
+D2J8npdT9Adnf9/crvsf4334e74XfRjj6Q/O6wH//bk4l8v3qI9iPP3Beb1s
+bv3r1+Lc0XU44+mf3/9Y/vmkOLd0Hc/4nBdOWm+biKM+9/Q+gPE5b5y0HjcR
+h31u6n1EtschcF6vm4jjPnf1PoTxOe+ctJ6JZ1fFua33MdmeE87rfXO7Pv4s
+zn29D2I8/cE5HmxWo7v/Fe8jHvA+MOPpD87xYrP6b/i9Dj1Yz7yflvfn755i
+PJj4Mr8vms5Zc3w8LdZ14Dy/Hn9RnIvmuDDJ4YGcNsvreE48yPlhH3LWdx7f
+hJz1mvPvZchZf/n9bchZT96HZn7lvhQ5/o48/1/SLuyOPP+f0i78EfkwPP6/
+Zxf+hTz/P8wu/MNx3HH7f21yzHw=
+      "]], {}}, {}},
+  Axes->True,
+  BoxRatios->{1, 1, 1},
+  DisplayFunction->Identity,
+  FaceGridsStyle->Automatic,
+  ImagePadding->Automatic,
+  ImageSize->{371.9900847571333, 370.01881678618395`},
+  ImageSizeRaw->Automatic,
+  Lighting->"Neutral",
+  Method->{
+   "DefaultGraphicsInteraction" -> {
+     "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+      "Effects" -> {
+       "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+        "Droplines" -> {
+         "freeformCursorMode" -> True, 
+          "placement" -> {"x" -> "All", "y" -> "None"}}}}},
+  PlotRange->{{Automatic, Automatic}, {Automatic, Automatic}, {
+    Automatic, Automatic}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.05], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic, Automatic},
+  ViewPoint->{0.0036373347896849696`, 3.3729478528863033`, 0.2705726362833136},
+  ViewVertical->{-0.7993455745219745, 0.5817529489508084, 
+   0.15036674791712684`}]], "Output",
+ CellChangeTimes->{{3.829452870214498*^9, 3.8294529084138994`*^9}, 
+   3.829452939539091*^9, {3.829453987527356*^9, 3.8294540865282187`*^9}, 
+   3.8294541423577375`*^9, {3.829454184494532*^9, 3.829454308845355*^9}, {
+   3.829454347026444*^9, 3.8294543640598135`*^9}, 3.829454513806402*^9},
+ CellLabel->
+  "Out[2919]=",ExpressionUUID->"6219369d-6a82-40ce-aa33-31699c33786e"],
+
+Cell[BoxData[
+ Graphics3DBox[{{GraphicsComplex3DBox[CompressedData["
+1:eJxlW3lcT9n/zja+Q3Zi7EIyyE706XNjEMmaNYmJtFnCWMpeFKUaYUJJ2SMj
+W1k/h8q+TKnsw5CEkS1rJb97O8/7zP3c3/wxXp3Xu+f9fp5zznPe99xbC7dZ
+I93Lm5iYvJf/V0H+N+FK5N6hTcP1xQeGd3o7Tmfb5Lvy3xup3Lyj8yIXXZNq
+fsj/OeuGv77TUtfX0V3eSAucVzw/m35f6pxx6Pdz5iH6cy3nrTyd/Uo6G+na
+IL4wV3qffnOh48VIfYXUnxzSKr6QfN/22Kj8a/Vqz8i2a6P0vd92OBknx+Vt
+P3lc+b0ew9bomHm0fvpUnxoK7o9DOvwYI+fx0W/yLnXZqneMfLrtd7mOeSW8
+rrbXlXpj9ZVd6na12L1OVwXx0xFvz+PZM+D3BL43x2dzUE8n1NOT18PSUf8n
+1G/C62crwdcWfA2cL2sNfbpAHyuuDyvZMCBB0fNt3le1nuzyp5b3DOahel2F
+ihNTzf31pHM7/10z/RMuS49CSl5MTTkukc5/mX05nFbxruSSMq3i2QaXJNJ5
+jGeeV8bXx9JAb5ePuuGZEuk87WbRqyUhzyTXT68P3j2WI5HOPjtKO2R8fSHZ
+bxqQmS7jkc5XGw/wOtjolXR0mO+aoNr3JdI5e1vH4UqeZqOjzp2T40jna4g/
+hnjSeTrwBwKfdPZEPZNQD+nsjPoHo37S+R74eoAv6ewIfUqhD+lcs/B8mZ7e
+lePUerJBrVddHHwxQL9nhvPmtmuDhc4m5jdqWaeek+aZfehxqd8FoXPrPiFX
+bOQ6HAun2Ct1ks4+DyPdGj2+I80tHP4opssjoXPwLLMJ0fLPTUJ918yJyBU6
+93d3LqfwysibErBU5k06W26vM2Td3Fzp2MGLnTtOfS50dnP4NkH5vYotR/2j
+4JLObRGfjHjSeQDwM4FPOq9BPU1RD+nsi/r9UD/pbAW+Y8GXdK4PfdZBH9LZ
+Wv+xTM+lpc/UerJ71quT/7rhrf89KCuw1CVM6Pz58M+9GzonSIVDh787l35V
+6Hz9vtvXyfL8jalc4/oqef2QzqfrbZ/VQ847KHlOvUiZN+k8+tyCeuflOjpY
+BXyzknUgnQ+Na75kgbwetgwfn6+sR9J5xQe3/gY53+fay+e7er8WOt/bV/dK
+uPxvrRYlLRWfIJ0DEP8F8aQz4UcDn3Qei3o6oh7S+SzqH4L6See74OsGvkLn
+I1wfs2FcH9LZzM4yRdHzxY2AlSo92fUyf/E2DPrkMkKt8+RygUubOCew5mX7
+9D+de1VMs5T3CWs3cXWsWmfPFP8T8vyyrS8rflin0nnX4gYfLva7wIKqRmWp
+dV6affiqvO9YyLsqKWqdr92ce1fOx2at691XrbPFwjI/ZFSH8A3E+yKedF4G
+/FDgk857UM9q1EM6+6D+eNRPOvcD357gSzovhz6/QB/SuWlJcDtFz+1605Fq
+nRecV3w/wJDs/bGq2je8SLfHukMXVb4RE11+puxfzK585fN3VL7hkOM/pPHj
+O6x22Xr7zzeahe5eIf/M7q4rqaP2jZpP6uyX9zXr2qBK8RKVb3zLOFVRXk+s
+dM2IbVYq3/i0oeycYhWBSzpr40lnwu8GfNLZHPXcQz2k8zDU3wD1k847wXcw
++Aqdoc8J6EM6ez/s66foGVK8wlTtG5/LzuNQQ9utk9LPqs7B5VgPvRav8Zii
+OgdvdUiqJp8r7HKTnaEG1TlIvIqv7n1mozoH478n62V/ZJ2+L3K5ozoHFzl0
+XCufU9Dtv3Pwbosuf8nrj12v2+bJStU5aLa7rH9gMxBHOlP8DcSTzouBXwn4
+pPMO1NMF9ZDOdVB/KeonnZ+Abzb4ks5x0Gcc9CGd7Rzb2Sp6DokvVuvJvpf1
+SeEGszEJH/1j7GxIZ0vs05TnpYm1fJbpSOeQiWV9Dhs6ZtoGz/hwHelM6836
+ybq5Vcr/oSOduxeW9VGsQ8Vnnx5sitaRzqRb0T9hy6Zf36YjnZcML+vTWKp/
+98SH3eJ1pLNJ2X9vGdc3Xkc6L0V8GuJJ5/rALwY+6dwT9XREPaRzEeq3Rf2k
+cxT4uoCv6DegzyPoQzqP3FTW1xlqLzP9pNKTfcF6bs3Xs4F0XoH56s7nS/ji
+bczvBT6/TLuev/D1wEjn7Vg/Hfj6YaQzrbdyfL0x0vke1udlvj4Z6Uy6eUEv
+0pniryBeu57LA5903ol6OqIe0rku6i9B/aRzLvhmgi/pHA99RkEf0rkP1rMD
+X8+kJ1sIfz7K/Vno7A3/ieH+w7T+LHG/EjoPhr/V4P4mdG4BP7zN/VDoXAu8
+OnP/FDqXwm9LuN8KnT9jvZUHf9KZ4r8hnnQm/C7AJ51bGp8XQufhqN8M9ZPO
+u8B3EPhq/fk49CGdfeDPq7k/C52fot8YyPsNofM8nKf8ueCq0HkIzt+f+fkr
+dF5A88LPa6HzcZzvq/j5LnTegPWwhvcDQudc9A8zef8gdNZjn3YEH9L5qXF/
+InTeaNzPCJ1Pop5g1EM6+6P+ONRPOo837jeEzhuhT1/oQzp3R78Rz/sNofNR
+9M+RvH8WOmehf/7I+2eh8z70k2N5Pyl03oH+czDvP4XOPdCvWvF+Vei81ri/
+FTo7ox/+yvthofNh9M91eP8sdJ6A+CLEk85hwI8BvvBn1NMJ9ZDOe1D/UNRP
+OieD71TwJZ0LoU8D3j8Lnd9JvH/+l/fPQmcJz4MH+fOg0PlTC/68s4Q/7wid
+G+P5aBR/PhI6T8Tz1FL+PCV0no/nr1b8+UvobIPntTv8eU3o3BTPdwb+fCd0
+HovnwWr8eVDorI0nnXXAvwt80nkh6rFAPaSzG+pfhfpJ51bg6wq+pHM1PA9u
+hj6ksxWeB4P486DQORX3GxP4/YbQuRWe30v487vQ+RKe9xfy532h8wjcD0zk
+9wNC58m4T1jA7xOEzlNx/+DO7x+Ezmm4r8jm9xVC52u437Dj9xtC53TE5yCe
+dHYH/jTgk85uqMcP9ZDOo1H/ZNRPOmeB70rwJZ37Q5/GoVwf0vlH3G+s4fcb
+Qme6r8P90hntfZ1bseI3/gbtfZ1z9pB158xDDNr7ury/lXMg0qC9r6uwpJtT
+27VRBu193bLByvkcbdDe150Psvcpddlq0N7XLY5S+qZYg/a+7gLitfd1y4Gv
+va+rhHq093UvUL/2vs4DfLX3dYHQR3tf96zJjs4qPVnTJvsOGd6dkvb+tDKv
+c+Bmqd2Wv5ctufZGSt7fwlp5bozMqJ+XLfsN6Z/+8UWaW41n0ovfjpW8apku
+6Xvk28TGPZP6NrW5fTfpsTTl0QzTgT0fiPFfr0QF/+b9Ukr6cPLrhyaXJHfX
+I988fngs7fI4a1GrY5506GhRj3NP/xHjEcerOM6YUyDtub1l/rQnV6R7Jw5s
+dmiZI+nmL685fmu+9LbI4m25nCdiPKLSnW9TTN5I1bqa2Zwack0anZT++kjC
+aalHlo3PkgfPpZSx328HZuWKcW28Ix9n2nga19Zzm+dl2npo3A18D4HvVM6L
+7dbwpfGL0PMV9LThurH+0NMDetK4I+brpvF8seofMsrmq+B2inq+WMe0ypPu
+eyZLb6Lt/UofHhLzO6ZT6pWd27Oknnf/9P3i9lTMV1FUp6LWgbelFcuutJrr
+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
+/9RanqduWfl+beV5o/j/AwXzlaQ=
+     "], {
+      {RGBColor[0.880722, 0.611041, 0.142051], EdgeForm[None], Specularity[
+        GrayLevel[1], 3], 
+       StyleBox[GraphicsGroup3DBox[
+         TagBox[Polygon3DBox[CompressedData["
+1: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
+A6t8XlGnyGcWaN6X8k4amyVxHFTl+vVakWsr79xZZwdXuZb9o8i1DRueAfE8
+B5u3i1yjebbDsz7eWbOPcLUi39F30E+eWfFe/v0i11Y0ay7v7jvpP+/629km
+ayf9Mk74uJex8IyI9nkWxN423vkx9/N/H53tl3fmXdR7q2vrLf8Hsro2+1rP
+/4Dw3py1lWNXbdB8V1uH99eG/x/h/T5rKHsS2nvtqOumDc+a2DdZ2zPZXXts
+0Kwh/F8J78TXLPLYQxvs0bSBj/voD+/We2qPP91sh7peK7XTy3N5rsW7eN6/
+c636Orbt1MO8p/rpf3s199rbXM8q94/SPn3THvfdQV7TDmrW6ne0Zf8m9+DB
+XlP2YxzidefeOdR7jGs7wPuK+7G/9yfXmnv3JO817kueV3ayzaO9f7mnf7Id
+7lGe8XF9u3q92DPA/leY7f0q92s2LJLFhlr/bpV+s/f0PY+NitwbMEz79/3u
+KNsb6u/lXW1ohyPnwF9vaxd/f/LXkbbT2zHkGuHLn+/m5SM0/PNhHD+ocr/m
+Rx7ZF3mM/mPzgb6wv5J7n9/AHp57rDar+rug/mPbYp/lPzyyV5F3u+y/3F+b
+E7TnyHc1rjlRmyWezz5I9AjrT1bDHhz5DFN8oi37DetYj83ncfysyn17HNkD
+yT5E3nuyJ5L1/VM19hz5rsYLp2nDe0P2/7EWf2F7Z3ruJ7b7XZSlVe7fWuaR
+/VB/ruGe+2WV57PP7yuP7OnjuSz7/y7S5iztOfId7PBNlXvq2Hf2tefzmXde
+7Le7xnhH6vPX1tMm+9N4P9TdNXy09t9W2e4YfefIvjNsOec2bc7VfqSx7Oj6
+fJ42o2wTRmBvMHuYYV3ej7Cn7X5/C1d731LHd7U19gJtvnfs2Ge23CN7uHj3
+wf4z1kHWw4vU49SHu4awTrA+fK89be5pPXMR6wBrA79r5iXWwnecZ1jnmIva
+q991bmHNY87poH7PeZ41gDm/k20y57SxTea66xwHcpbvHAfGiv3f7CPfxON4
+NWskeh2PV1lPvoX+0d8+Y8g8wN7rCba/iXpjjxOt76yfrGOTrMeW77hOtEEd
+3/2hnuy55FiTrWc+IMdr6DyDZj5ZxxjYD7+Lbe6qz5Psi+v4g9frD8eF9uER
+3uXAJ+RG5Ejkdswr5GnMLddaT5uF9ay/2E+1nr3Z7NMmx6l9xpep1lM3RXty
+OPKhW7Rn/iF/28N5DM1c9Of/s1W5T7uf+iDbmea5XeyrZjtdm1vU1PMbedr7
+fLr9klOS39yqZh4jl2N+W1PNnEZb7MOm/2HqIz3OUHNkb0ctP5upD9TP0mYN
+fV7PvGeW9ug52jBnktcx7/GZPdP0ear6NI+z1XPU2E43FvqdbZvkWKfaZn/r
+53ruhmpsmE/ItZiv2IfLftwLPN6jvlddO/deNTkKeQu50WmeU/t/NGzI29D3
+2Q5zFDkP8+Em1u9qLkWuxRzLXmH2Ok/0+KD6Aj/j4zzrqeM4Tx/Osp0zbH/e
+SjYP2c5Mrx1jtan+MGeyH5g9wOQd7FtmfzK50nz1ROOdr35U3c35nPyEuf1m
+z5+uzWPqLdTYT9RmgusC5zK3r++1YG5/Un9q5z6pfkJNroZ+Sp/ZN/y4eroa
+X7bVpra3md8CcyB27Dn+8zz1Ex4Xqp9V32M7z6oXqsnh0Iu030E9RN6HBZmT
+WV/IOVkjDrGenGCc9awRnM9+4sedl8idyNWoY58qc9SL6lpfL6pfUGP/gudi
+z3tr9iSz95j5j3mQzy/bFzawHszX0DkWDW+xn5ncr7beocmDOOc12/hI/bHH
+19VvqLGFDXlnXBVZx3fkOPAu9UsK263SX5gaDuf/t2qc2tB2YM0hFjh2XW3Q
+cDjHd6sVjIrm+x+Mh1iOsk249y3bxDeeDfLuuKk2cCfzPzwCn8A81H1o/bHq
+4dUKfmUOP14Nx3L82HrYEJ48oFjBpsy3HJeoT9Ce70dYz3lwI1zFHAXnwXtw
+Jkf4r8aN6FMsn2lf487hatiP+WGkbZ5uH5/YDusd6yPr4HDHAfZmboELz6xW
+sCPz2DlqGJLj19aPUp9jYQyv8fcOz9XG9Vvra/zHb/NM/YRvx1oPE9aYjOvI
+bxmmGVut4N37tUHDvRy/t36c+kLb/tJxeNk2YbyltokPr3jf8P3/APa2toE=
+
+           "]],
+          Annotation[#, "Charting`Private`Tag$14056937#1"]& ]],
+        Lighting->"Neutral"]}, {}, {}, {}, {}},
+     VertexColors->{{
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[1, 1, 1]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}, {
+        RGBColor[0, 0, 0]}},
+     VertexNormals->CompressedData["
+1:eJx1W3lcjtn7zjaMvUEy1kIMUVRIcUplKSn7npRWJLIma0RZGmSyJfu+hhLV
+oWIGjYkkZEvaLGUb85Xi9zzvue7n1/N+ZuaPmc+cz3Hd93Wd+1znPud9GHjM
+GuFVXUdH54P0rxrSfzu5lWaYX9zFCuP16rncHs+umneekV5Rxkx+GDai2uIM
+VpYXf+fZ2nDWi8+tXtmjjOXmD94x+2Quy9hTJz8z/jzrZmjcKDzpDQtPdhvv
++TSfhYxI+2ffiARW2nToqXavitniOOMiXljMXll+e2d29SIzHjTG4WxuPrt5
+/fXIobfesBp2B05eenGUbblonnrkci7r8YvrwsNGZcw8+O3RBtVOsHPLIuYe
+Csxg7++0iWnxsYzZZ5cM/vPiCTZ1ol5l0u3xSTTfRz2fZwC/NfDDBD4PQT7F
+6nx4JPJfgvxfi/y52Z9z2oSdz2U79VvPej7kLMs33FTwIu0NH7781uB2wRls
+R8s9S0s9o9ivuwI2/NCjjL+ZLPQcrdaT20UufrL4yVHmE/qILy7ZxiqK+qa3
+kvi0DD4YEHz0BsuMqCiZlnCR9VjqVrqzZxnL1vtfXFrNh8wzwbvmFf0/GG8/
+b1XSvTdspG+BX+aXPDbQf9Lf1q53WM3UFo5pNUuY993yN0siCpn759LTDy9k
+sz7vul3a8zGf+e//1i3zSwlz3DbwTrqEN2Pa9EZX0nPZzVYD/U63fMMuuASG
+h/2Uy1w3v4z9VVrv7FgTVzlO29HRV69K8/ZvOe///pVfUgbmx2P+cDGfzwC+
+E/C9BD6nfKao8+ETkf9Q5P/9qiZ//gR8fcE3RfDl/aHPO+hjIvTh3aHnGLWe
+/PQNziwK97Imz5qYlMw+pOj8j8Ft3T6pV5mP3qdef9hfV3TuYhtx00rKY+RH
+z0FynqSz79PNHi3zHrDAj67PdvV8xmpB5zWz9CbulP6/zbrA8DmR+cwSOtt7
+Tagm8/qrwHPlUon3TOjceV8T501B+Sz+9O89TKYVs0HQ2d2xcqL852q1H/Vc
+xh34+MyL+z3dk2j+BcwfAp0HAf8u8D2hs3Y+vaFzIPIPRv7VRP68O/iOU/Pl
+DQyFPquhD+kcCz3Ln6r05BULX2UEbwhn72sk29apPK7o/DquS9+fJxxlL4a5
+vr+afkvROSvX44u7tH6Tazf6c7VUP6RzQrN9s3pJcQfGz2m2WeJNOo++uqDZ
+NTmP7isru0s6UD3HjWu3ZIFUDztcxxfJ9egPnUM/eTikSPH+99Py+W7+pcwR
+Oj861vTmRum/ugYV7XdJeQyGziv/fT6/APydwCedx2jl0ws6X0L+jsi/OnTO
+AV9P8KV6rn9O6FPHRehDOpdAz0dqPfnkU3nNl24I5+dH7tetqvPwaqFLW084
+yhtp9uktZgqdLWumdZb2Ce8xee3uqjq7JQQnSuvLY17V/CTXVw3ovCdE/9Pv
+9tf5mnrRWTIvqufF9+JuSfuOh7+vmyDrMAc6X78b9FCKxwM39R0g6zYAOrdZ
+eH7eZkk/yuOwxjfGJ/3HfE74EcD3g877tfIhnb2R/z7kT75hA7591Xz5TOhj
+Dn1IZxvoGaPWk9sZXymW6pyfOuV8pLiKb0xB3M151md/r+Ibe3dWD5D8i9tV
+r33tQRXfcMoOdm6V94A30tTbM6oHZrDu0Arp//mDTRVN5H3aFzo3ftHkuLSv
+eQ/9ul9lv5wNnb9lXq4p1RP/Fj48VtahH3T+J8pNf6+kB62fHeqZ5ldiPoPO
+hG8GfNLZEPnkIh/yDWfk3wz566CeD4DvUDVfPh/6HIc+3aGzGfTcrtaTfw5x
+sAp5cpS3dxrXN7jKOTgX9WAcEu7jKe0bqqMn3c40kM4Vntn6wLqUKudgI/Cq
+uHWkUPYz8o293+P7S/7Ie35fPEnOU6lnR5P10jnFxbz/PwcfGPT8S6o//lfT
+Ti9WSfXjAJ31Dl26KPOj9RgKnWl+JuYPhs5LgP8D8D2g8z6tfEhnXeRfjvyx
+nvwl+Gap+fIt0McV+lA950HPZmo9+VKXtgOcLpzg8aevNG36tVUS6dwC+zQr
+9lNxmc8aa6rnTZNXFMv5jl7wPHr24ghr0vlv1NupTuap7WI8kqjfsPjYa6uc
+b53VnT93yplqTf7cDLqdSZy+ceZvgdak3xLXbj9K/subnT5vkrx1VpI9dNbR
+/POO74Jf0H+XYf6TcZPHR9v7JWFduD7wQyOf5Q+OcEzygc59kI/OpHUxETd8
+rEnncuR/193wRIHPams6B3eAb8PEuy1PD9pCfHk/6FO0sEmrWp1Mk6ievaDn
+XbWe/H/Qv53Qn2vXc3uxXly7nm+L9eWkcwPUwwdRD7w2dD6I+jEW9cPBi1G9
+if35kFM956I+/xD1yVGfrDl0I72OaXQekvTo3+fzpcCvDvxp+HMHkE935EN9
+XVPk/xX5V9Oq57vgm6JVz/bQR7ue66j15Pbwk+PCTxSd3eE/m4T/cKrn/fCr
+gcKv+BXoPBj+1kD4GyffaA8/fCj8UNGZfMZU+Cefp+XP8FtureXP1AecD6jd
+2CJwpLY/c/i54gM9gT8dOmvnQzoPR/56yJ/8+RD4DgFf0nkB9DkJfaie+0DP
+XWo9ua+631B0noHzVFecp4rOw3H+mojzV9F5NuLuFOe1ovN5nO9h4nwnXmwz
+6mGN6AcU381D/zBL9A/cDjqbY59S3QjfsEx6pjWffCNK3W9wOgcvIJ+1yId8
+Iwj570H+pPMY8O0DvsnQeTn0MYU+pPMo6LlDrSfPQb/3UfR7is7J6J+LRP+s
+6HwO/eQU0U8qOsei/3QS/SfVHTNT96uczsF16G93if6W0z1lHPrhctEPK75x
+Cv1zU9E/Kz499t/n8/XA3w188o2eyMcU+VA970X+zsifzsFk8PUBX6rnfOjz
+o+ifFZ3ToedjtZ78AO4vLcR9UNG5FPfBIHHfUXQ2wP1okrgfKTpPwH0qRNyn
+lHqeh/tXB3H/UurZCve1HHFf44HQuS3ud1zc78gH2BjcBxuK+yC/AN9og/kp
+mE99nTXwHwAf/s+DkU8n5GMGnScj/xXIn/zJCHzdwZd0roH74AboQzpvhZ61
+1Hpya9zH54r7uKKznvr+rpyDf+G+v1Tc9xWdXfA+MFG8D3DqN9zxnrBQvCco
+Onvg/WGaeH/gQdD5Gt4rMsV7hVLPGXjf6CfeNzjX6OyZRPPvYj7u6dwL+F7A
+x32TeyKfYORjAZ3pfcYN+ZNv0HtOGPiSzr2hT6N1Qh/ys87Qc5paT26E9zrP
+BM37Eqf3ujZ4j9om3qP4ZvEexTrj/eqkeL/iBeL9SnmvOyXeu/hbrfc6k76a
+9zFO73V/4D3tgXhP49rvdXUWa97fuPZ7nd59zXsdP56emdxgoqfyXmeJ+XF4
+r7sF/OfAp/c6yscY+XTFe91G5H8S+b/Ce50p+CaD7wu8142APhnQJxLvda/x
+Xnc3XqUn12197GzK+8sstsWqgh6h25nxjifLlmSUMecZa0Zc6WnJR5WmPXIN
++4ttCoryP1qjjKX+XZLm0aiQvZx7oeJN+3Rm06vIaveeQmbbxirn4Zk8NvXZ
+zPqDez9mthh3vxm9Zq7/K3bu06Uvn1r/wXzczlX6/JDHDvlcMdI1KWBx58t7
+XX35nHlgfOPFukNnznnLTuXsmO/94ia7n3hyu2P7bNZ//vLG42OK2Ltyo3fV
+sl+wexiPrPWg0lOnjLU007O67JzB3M+kl547msQssqymL3lczOLHfs8Jzcpn
+czBO85ti/gAxzntjfgLm0zjlcwT55Iq4vB/yKUM+TzA+FXwTwXea4MUPgu9Z
+8PXG+DXo+RZ69hO6cXvo6QU9rTHuivUqV68X/8VHrJcp1muLWC9ukFZ7Sq5v
+PMvfOWjRt6dnWVes7yjT1JsH9mUxi4enAv/n8VJZr8po0/KOoTksdNnNDkF+
+xcwT63J39oM3WRaP2IpNkTYbe71W1uXAmTtz6m/LZU8NJ40bdegNGwedD2H8
+GcYtoOcd4CwDzjPo9gVxlyMu6TMeefZBnqSPP3i13qXixYNq9k6f+ewIC+tj
+NLxhVqLCt9Vx99zqQ1en+No03yTzpLq9bnG47orl4Sm24e9nTdZ/rfC1fHV6
+1t6Z61OMqr184GheyrLB93JK0ZastxtSHBMnbJBxJ4Dv2NhPqvG+4Du6SZwG
+pyNwHoPvgMQjqrhe4Lv3rrcmz5nIk9b9Jng9UfPiDazmp9qWT0jpabDsRIKU
+B/FtcTyt8uC+LF4tItVI1o34ug/I9OsUmsP9djpkzJF0pn03tOPhsGyLR9zC
+98WTDdK6PADfBekDDBtuy+VhPovejZTWcSL4LtIaJ77OwDEHzlPwpbi+iEt8
+WyHP2siT+H7WP6DhtUXNi7/r1mrIrGdH+O62Kz82qLK+Zi7zbB+dyeMGNWtV
+H1TFfwY2/HRQ2nc81nRR9BVp39H61okbulvav9z73dj+8v4lvqFeq3SWPi7m
+Ix3/bCX7AK3vKq3xgeBbWwuH/MFBKy7x7Y08jZAn1bNdd8Hrk5oX142JLpDq
+nK+dui6zssr+/XF+VonkG/yVo9O0V5JvEN+wvZXnJf/he+PaPX0v+Q/xbW54
+aKnkY/zsrxe+e0g+lgW+Tdzamk3TKeOFBW5bEyQ/9ABfGi/CuD346mnhPATf
+VYi7B3Fp/zZAnm+QJ/GdAl6pal78tf+ZPMnf+Oqs5zu7S/6mzTdP4HDiuxpx
+t4m4XJvvEZEnvwO+zcArT/DiPuCrPe6gxfc4cB6BL8XdoY7LGyLPYuRJ9Tx4
+uuD1VM1L4btcjHPia446aSvqhGvX8x5RV9zj3+uZY12065ZPAt/VGB+F8Z7g
+SziewHkJvtpxPbXquQPy1Oabo+bFG6vrWeHbBj6gI3xA4eun9g1lfcfAZ3oK
+n6F1YcvhS6uEL3HyK+3xPuA7CjimwMkDXx/E9UZcOsfbI8+ayNMKfCeDV5qa
+Fy9X+5XC1+FY7GPZ5/2Ez3MGviebtatf5VxQ1vfydMfZVc4RngO+9V5v2Vrl
+3FH4jpu4QzVOfO9HDdXgdAAO9S2O61pq4togLu3fr+9XavIMQJ60vs7wq4/g
+9Qv4ripj6bJv9xC+rfC1wzluKc5xTudRIc79cHHuK3wT0SesEX0CJ7+KQF/x
+UvQVfDr4rsN4IcaHg+8l4IQBB7rxIsRdi7i0vg7Isz/yJL+aaZ6YVuU8Uvi6
+41xeJ85lha8l+rc5on9T6nk3+sAk0QcqfC3QT1aIfpJTf2WMvjRd9KXK+mqP
+DwZfM+BUqnF4jFZc4tsPec5HnrS+Z8HrBXgRX330XW9FP6nw5ehj68zT9LEK
+Xzf0w9miH6a6YhvQV2eLvppTf7Ue/fkA0Z/zqeC7AeMM4+TPhJMBHNwL+GTE
+zVHH5WnI80fkSXw9wKvLLhUv5X50X/TbnO5HNmtEvz1W9Nuc7kcumN/hZzG/
+C3AMemckd5R4lHdL6FhrdTjP099/PvdWGfc/uHaNtzQe4zy2hm7tUPbR2nBj
+ewk/3j2jmtwPPfG2jz4k1SP5w6hONfbI/dPeZnsMOkv1S/XjdGfdCbnfeh6y
+ceR9qd7JDxfVXpsk92fNh379Ivkf86L+DeP6GLeh/g04L4CDvohrx6V+5hLy
+fIo8SU/ie1DwZcS3LCjOV/6drM7f3fr1KtzLJjj20byftI/KDBko9UO9vDfP
+l84TpZ/pNvPiILl/ynm2oUCuX+Ib6RdYoCP1W1/+7Fkg1zv1b19szflKqT+L
+OdHZSTrfmC/4ao+TH27UwiF/MEbcLMSl+umCPK2QJ/HdED3CX+Z109lGw+ty
+y96ad4x7dtvnLirZxm7u6uEf8uQoC15gpeE7wFxPv0Tqh8aZ/1Eh1+MA8D0Y
+OdL1ndQ/5UecuSXX7zQ6318PsJ8q9Vs+9z5Gy/VOflirX2jqBak/S62d5iz1
+L2wm+P6gNe4IvrWA4wucu+C7D3FfIi6tL+U5CXmSH6YlLdop8/pQW/AqyDfT
+8DUJuGBbsnRYStwwze9Iyu+eM9yXn3kt7bfQ+Kf3ZRzy/+H33k7/KO3P0/GO
+u+W4dL4Xm3e+PE3azx0CxnnJeVI/02dDX99Eaf+fjFusL/PyBF8aP41xO/At
+0cKh9R2GuKcQl/xwPvJcgzzpfE8cqbMk0t85JRq8yvFO1ezT/gr595uo45Pr
+yzr0qCbWN3yO5Rq5H+rVe1z9qvVs+NGySO6fNlhN8Jbrair4msxn0bJf34jy
+HivXIe6JbPNw72DZ3+u3fn5B9nuca/81zk2BcxM45P9tEXc94hJfyrMf8qR6
+tky3fCrzuhPjo+H1qtBGw9fqZVmu/DvKKZ/BUfL7qN8nBw1f47iLTvJ56VA6
+YJrUHynra9Bw7f/k/unBTJ04I8k3qJ53VPZpJJ/HQzN44j3JZ2h9K6/5d5DP
+7/FWEY4NJF8aA74VGB+DcSfw3QkcZ+BQPbdD3BzExbsTN0WedsiT6vlegNvf
+Mq+T7v01vIa1Mtfw1Uly6iK/s6e5R84J2RDODk4W9VzHVvRD5/UqW8eMHGFN
+61sjQvRPOviH+Fag30pa5nJ51/yFSeRXXS+J/izFpLzylWtQEtUzjQ9/tW+E
+5VW/JPJnbRyq52qIe3bbr1H/vB9tTfu3AfI8hzypnn1DvnWWeb04tEPDq/oK
+Td3y4XFHf5HHJyzU8OXRr/uq1tda6Kac7+2h819CZ+orGK2LvVgXTny/Yx2H
+iXWkPk1ZdxeM0/rGAGcgcKieOyBuJuJ6aK2vLfKk9bU4fUDDy2mjhi+fUSb2
+75N5lSXyuieXMHnd+f0W1hq+a7Eveot9ofSr7dT7SLmPmKr3L6f9u0W9TxW+
+UVrjdB71+HccbqAVl/j+ijytkCft37ET7T/LvE6PHKLhdXCu8Ofpbfu+lfd1
+hyu+8r7mnl/6afguhe+tEL6n8PWGT54UPqms73f4qqHwVeX+5QofPiF8mHuD
+7wi1b3Nb8K3UwqF69tKKS/W8EnmGIU/iG9z+9zSZ1yan6RpevN5ADd8362u1
+aWfhmnJG+Db/ivOoI861yeJc4/3BdznOwSJxDir9+YNXqnNTuV8/tBbn7DVx
+zvIZ4Ks9PgR8tXGov1qGuIWIS/7cCXlOQZ60f+duDzs2lLumbFfz4lM691sm
+n8srZpjK5zJf4GWp4dtE3bdw6jc6oM95IvocTudRKPqiarc1fRHdE1kp+qiD
+oo9S6rlMa3wk+K4CTnXg3KH9i7iPEZfWVx952iBPWt83vNuvMq+h7ztpeH1r
+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
++eMXbvzcUVqn3llFi36R1o3y+T9I14yP
+      "],
+     VertexTextureCoordinates->CompressedData["
+1:eJx1msGO3EQQhg1vggjwGHMlcOMRkLgRwrMsbzDXuc1hAOWCLBQJjZCCIasQ
+J2jsyYYlIcOIF4CsvV9Z9bU9h239rm77r67qqurufe/z+5998W5VVf++/XPT
++vfNnbsXd+5uVxnXgZ/v7rW7e3vJm8Df3YjbS/VvA78z/D1ofB/4gxt48SLw
+t8Pwl4EH8Z2/Aj8d3v868Jc33XdvAo+/s/Ck53xbB0bfLG8Co2/u3wZG3zy+
+D4y+YPQFoy8YfcHom+12Xi3ZcV7Pqc361tK3lr619K2lby19a+lbS99a+tbS
+t5a+tfQt/XTejpOebtEXjL65XxsYffP4PjD6gtEXjL5g9AWjb15359XSOpz3
+07rQK8unNtu3kX0b2beRfRvZt5F9G9m3kX0b2beRfcs4M78O68Ju1gvsFn3B
+6JvH94HRF4y+YPQFoy8YfXPcPK+W4uh8nKkLv7TdrFfuP7XZn1v5cyt/buXP
+rfy5lT+38udW/lzmifk4Whfrzn5pu1kvsFv0BaMvGH3B6AtGXzD65rx3Xi3l
+wfk8UcsO+2Ld2S9tN+uVx09tXr+91m+v9dtr/fZav73Wb5nn5/NgXcRNxxWv
+O/ul7Wa9wG7RF4y+YPQFo2+uW86rpTpmPs/XRV5w3HRc8bqzX9pu1gvsFn3B
+6AtG31yXnVdLddp8HVMXec95wXHTccXrzn5pu1kvsFv0BaMvGH0znurQ+Tqt
+LvK6857zguOm44rXnf3SdrNeYLfom+vq82qpzp6vQ+uibnFed95zXnDcdFzx
+urNf2m7WC+wWfZf2EfN1dr1Ql7lucV533nNecNx0XPG6s1/abtbrXLTj99bR
+ojl45PdoZfxs+M6D1YcDgd9CDkb+ycDv95CDkX898HsecnAe32l8F/JxPo8h
+ByP/anjfVcjByEdtr6X/dchHc50kL+eN/szPaPeHMR9g9Aejb5Z3gdEHDH8w
+fMHwhQ/8kMOPFn5g+IHhl+VdYPiB4QeGHxh+8LFfmZdb+IHhl+VdYPiB4QeG
+Hxh+9vuleTIvt/DLz7vA8APDDww/MPy87pbs5nkyL7fwA8MPDD8w/MDw87pf
+8iPbzfNkXm7z/HWav07z1wU/x50lv7Yf2W6eJ/NyCz8w/MB5/roirnmd2a/t
+R7ab58m83MIPDD/H3aV173Vmv7Yf2W6eJ/NyCz/Hfceh4TN3XwU/MPzA8Mvy
+LjD8wHwXzHfB8OM5/JDD7/2B19/BDww/MPyyvAsMPzD8wPAAww8+8EPuOO64
+6Tg1Hxe6wo9sN88TmBY+8Mv9q8r93Y69zkXdk+P+VnF2q7i2VRzZat1utU62
+8sut/GBb6MHP9QV1aOZXi18tfrX41eJXi18tflPdm+snzuceKn7uFT/3ip97
+xc+94ude8XOvuLVXnJjq8FwfTXbN89do/hrNX6P5azR/jeav0fw1mr9pX5Dj
+ZFW5vmDfkOvHS9WPl6ofL4NfPvc7Bs7142Xw8z4lx+2qcn3BPibbt5V9W9m3
+lX1b2beVfVvZd9o35TxSVa4v2FfleT2oTjqoLjmoDjgo7x6U5w7KK9M+Luc1
+5q+T//Xyv17+18v/evlfL//r5X+9/K/X/HXBz/UF+074geEHhl+WdzqfOwaG
+X97XXhf73Jz3q8r1Bftg+IHhB4Zflnc6TzsG5jt5n31d7LtzHcJvqi8GWm/3
+5fADww8MvyzvdP51DMx3wXw343M8h5nrC84J4AeGHxh+Wd7pvOoYGH75HOK6
+OJfI9VFVub7g3AJ+YPiB4Zflnc6XjoHhl89FrotzEtcXeV7PxbnA/D3NOuJC
+7tcHzu/Zqt90z5Pz/0H7+37hvKKO9/meKOfrg/bjfXGekO8h1sp/bRF3Hedc
+N+Z7jHVxT+W47TjpujPfg6yVX9oi7jvOum5dsqPzmvOI4zbvW/ID50XnIcf9
+PH+TH/k+xHnLecJ1d74vWRf3Dc57zjOu2/N9xLo4z8/x8rCQp6a6n/G8z+fl
+Ob4dtH/pi/1XPk9fF+fROR4dFA/6Yr/k8ba77QYeeV1EO7zm3j+Lz93i97wv
+122uk1yXuA6YzpvzOjgq/pFPLop1t1Q3gsf5eBJ6jeOeBnbd9NHw+FnIvx++
+90dg1zEj/0PIR7/sAruuGPn3Ifc6GPm+0PuupN9VyNEP+8AfDL9svz5wfv85
+nnvesz3Ohd9U6XcuntuP6OdzY+elUb5R+0Djtnq+uX3/D/E855ttYPp/OhD+
+qThXp3++h9jc+sEvC/cS0z6e/vcHxR8v3FNM+3z646fz9xbTOQD98dP5e4zp
+nID++On8vcZ0jkB//HL+nmM6Z6D/aP+XC/ce0zkE/Ud3me5BcjzdBqb/GC9e
+Rf8cL7eB6f/x8II3YQf8kHkGM495fXSBmQcw78PfXcfle0XO3U6FX4/5ayfe
+D2J8npdT9Adnf9/crvsf4334e74XfRjj6Q/O6wH//bk4l8v3qI9iPP3Beb1s
+bv3r1+Lc0XU44+mf3/9Y/vmkOLd0Hc/4nBdOWm+biKM+9/Q+gPE5b5y0HjcR
+h31u6n1EtschcF6vm4jjPnf1PoTxOe+ctJ6JZ1fFua33MdmeE87rfXO7Pv4s
+zn29D2I8/cE5HmxWo7v/Fe8jHvA+MOPpD87xYrP6b/i9Dj1Yz7yflvfn755i
+PJj4Mr8vms5Zc3w8LdZ14Dy/Hn9RnIvmuDDJ4YGcNsvreE48yPlhH3LWdx7f
+hJz1mvPvZchZf/n9bchZT96HZn7lvhQ5/o48/1/SLuyOPP+f0i78EfkwPP6/
+Zxf+hTz/P8wu/MNx3HH7f21yzHw=
+      "]], {}}, {}},
+  Axes->True,
+  BoxRatios->{1, 1, 1},
+  DisplayFunction->Identity,
+  FaceGridsStyle->Automatic,
+  ImagePadding->Automatic,
+  ImageSize->{371.9900847571333, 370.01881678618395`},
+  ImageSizeRaw->Automatic,
+  Lighting->"Neutral",
+  Method->{
+   "DefaultGraphicsInteraction" -> {
+     "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+      "Effects" -> {
+       "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+        "Droplines" -> {
+         "freeformCursorMode" -> True, 
+          "placement" -> {"x" -> "All", "y" -> "None"}}}}},
+  PlotRange->{{Automatic, Automatic}, {Automatic, Automatic}, {
+    Automatic, Automatic}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.05], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic, Automatic},
+  ViewPoint->{0.0036373347896849696`, 3.3729478528863033`, 0.2705726362833136},
+  ViewVertical->{-0.7993455745219745, 0.5817529489508084, 
+   0.15036674791712684`}]], "Output",
+ CellChangeTimes->{{3.829452870214498*^9, 3.8294529084138994`*^9}, 
+   3.829452939539091*^9, {3.829453987527356*^9, 3.8294540865282187`*^9}, 
+   3.8294541423577375`*^9, {3.829454184494532*^9, 3.829454308845355*^9}, {
+   3.829454347026444*^9, 3.8294543640598135`*^9}, 3.8294545143744287`*^9},
+ CellLabel->
+  "Out[2921]=",ExpressionUUID->"85fcb91d-b9ce-4880-aef2-edcd85b34b17"]
+}, Open  ]]
+},
+WindowSize->{1743, 922},
+WindowMargins->{{Automatic, -13}, {-132, Automatic}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 7000, 194, 523, "Input",ExpressionUUID->"7d310b64-6aaf-4380-8772-d29a777f86e9"],
+Cell[7583, 218, 58258, 1358, 387, "Output",ExpressionUUID->"986d8447-602a-48af-baab-7e2238054825"],
+Cell[65844, 1578, 58256, 1358, 387, "Output",ExpressionUUID->"6219369d-6a82-40ce-aa33-31699c33786e"],
+Cell[124103, 2938, 58258, 1358, 387, "Output",ExpressionUUID->"85fcb91d-b9ce-4880-aef2-edcd85b34b17"]
+}, Open  ]]
+}
+]
+*)
+
