@@ -1,0 +1,846 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     35265,        838]
+NotebookOptionsPosition[     34092,        811]
+NotebookOutlinePosition[     34439,        826]
+CellTagsIndexPosition[     34396,        823]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Clear", "[", "\"\<Global`*\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Needs", "[", "\"\<VectorAnalysis`\>\"", "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"G", "[", 
+     RowBox[{"v_", ",", 
+      RowBox[{"{", 
+       RowBox[{"p_", ",", "\[Lambda]_", ",", "\[Mu]_"}], "}"}]}], "]"}], ":=", 
+    RowBox[{"\[Mu]", "*", 
+     RowBox[{"Exp", "[", 
+      RowBox[{"\[Lambda]", "*", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Dot", "[", 
+          RowBox[{"v", ",", "p"}], "]"}], "-", "1"}], ")"}]}], "]"}]}]}], 
+   ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Blinn", " ", "Phong", " ", "NDF"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"PhongNDF", "[", 
+    RowBox[{"m_", ",", "normalAngle_", ",", "halfAngle_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"NoH", ",", "a2", ",", "tmpN"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"NoH", "=", 
+       RowBox[{"Cos", "[", 
+        RowBox[{"normalAngle", "-", "halfAngle"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"a2", "=", 
+       RowBox[{"m", "*", "m"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"tmpN", "=", 
+       RowBox[{
+        RowBox[{"2", "/", "a2"}], "-", "2"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"tmpN", "=", 
+       RowBox[{"Max", "[", 
+        RowBox[{"tmpN", ",", "0.000000001"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"tmpN", "+", "2"}], ")"}], "/", 
+        RowBox[{"(", 
+         RowBox[{"2", " ", "\[Pi]"}], ")"}]}], "*", 
+       RowBox[{"Max", "[", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"NoH", "^", "tmpN"}], ")"}], ",", "0"}], "]"}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"PhongCircle", "[", 
+    RowBox[{
+    "normalAngle_", ",", "roughness_", ",", "lightAngle_", ",", 
+     "viewAngle_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"halfAngle", "=", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"lightAngle", "+", "viewAngle"}], ")"}], "/", "2"}]}], "}"}],
+      ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"Cos", "[", "normalAngle", "]"}], ",", 
+        RowBox[{"Sin", "[", "normalAngle", "]"}]}], "}"}], "*", 
+      RowBox[{"PhongNDF", "[", 
+       RowBox[{"roughness", ",", "normalAngle", ",", "halfAngle"}], "]"}]}]}],
+     "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Manipulate", "[", 
+    RowBox[{
+     RowBox[{"ParametricPlot", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"PhongCircle", "[", 
+          RowBox[{
+          "normalAngle", ",", "roughness", ",", "lightAngle", ",", 
+           "viewAngle"}], "]"}], ",", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"Cos", "[", "lightAngle", "]"}], ",", 
+            RowBox[{"Sin", "[", "lightAngle", "]"}]}], "}"}], "*", "2"}]}], 
+        "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"{", 
+        RowBox[{"normalAngle", ",", "0", ",", 
+         RowBox[{"2", "\[Pi]"}]}], "}"}], ",", " ", 
+       RowBox[{"PlotRange", "\[Rule]", "Full"}], ",", 
+       RowBox[{"AspectRatio", "\[Rule]", "1"}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"roughness", ",", "0", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"lightAngle", ",", 
+       RowBox[{"\[Pi]", "/", "2"}], ",", "\[Pi]"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"viewAngle", ",", "0", ",", 
+       RowBox[{"\[Pi]", "/", "2"}]}], "}"}]}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", "\"\<>Blinn Phong Lobe:\>\"", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Quiet", "@", 
+    RowBox[{"ParametricPlot", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"PhongCircle", "[", 
+         RowBox[{
+         "normalAngle", ",", "roughness", ",", "lightAngle", ",", 
+          "viewAngle"}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Cos", "[", "lightAngle", "]"}], ",", 
+           RowBox[{"Sin", "[", "lightAngle", "]"}]}], "}"}], "*", 
+         RowBox[{"(", 
+          RowBox[{"normalAngle", "-", "\[Pi]"}], ")"}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Cos", "[", "viewAngle", "]"}], ",", 
+           RowBox[{"Sin", "[", "viewAngle", "]"}]}], "}"}], "*", 
+         RowBox[{"(", 
+          RowBox[{"normalAngle", "-", "\[Pi]"}], ")"}]}]}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{"normalAngle", ",", "0", ",", 
+        RowBox[{"2", "\[Pi]"}]}], "}"}], ",", 
+      RowBox[{"PlotStyle", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"Blue", ",", "Green", ",", "Green"}], "}"}]}], ",", " ", 
+      RowBox[{"PlotRange", "\[Rule]", "Full"}], ",", 
+      RowBox[{"AspectRatio", "\[Rule]", "1"}]}], "]"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"roughness", ",", "0.2", ",", "0.9"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"lightAngle", ",", 
+     RowBox[{"3", 
+      RowBox[{"\[Pi]", "/", "4"}]}], ",", "\[Pi]"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"viewAngle", ",", 
+     RowBox[{"\[Pi]", "/", "4"}], ",", 
+     RowBox[{"\[Pi]", "/", "2"}]}], "}"}]}], 
+  "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.8308275613451757`*^9, 3.8308275738019238`*^9}, {
+   3.8308276159295263`*^9, 3.8308276503867826`*^9}, {3.830827699297364*^9, 
+   3.830827699872095*^9}, {3.830827968220093*^9, 3.830828013155596*^9}, {
+   3.830828068081149*^9, 3.8308281343259726`*^9}, {3.8308281801058345`*^9, 
+   3.830828389431985*^9}, {3.830828429687319*^9, 3.8308286179518914`*^9}, {
+   3.8308286486980057`*^9, 3.8308290632565727`*^9}, {3.8308291417850103`*^9, 
+   3.830829164623849*^9}, {3.8308291958084235`*^9, 3.8308293624030347`*^9}, {
+   3.8308294619311705`*^9, 3.8308294775322914`*^9}, {3.8308295146278443`*^9, 
+   3.830829534599592*^9}, {3.83082965710386*^9, 3.8308297075676928`*^9}, {
+   3.830829739158642*^9, 3.830829771600197*^9}, {3.8308298192891583`*^9, 
+   3.830829890703207*^9}, {3.830830877349207*^9, 3.8308309028557453`*^9}, {
+   3.830831366783129*^9, 3.8308315812945185`*^9}, {3.8308316227592955`*^9, 
+   3.830831665990144*^9}, {3.8308317284719543`*^9, 3.830831780342054*^9}, {
+   3.8308318288492393`*^9, 3.8308320532068167`*^9}, {3.8308321039895706`*^9, 
+   3.830832105597275*^9}, {3.8308321855596685`*^9, 3.830832270422208*^9}, {
+   3.8308323011261835`*^9, 3.8308323028937387`*^9}, {3.8308323405248337`*^9, 
+   3.8308323524858456`*^9}, {3.830832418647126*^9, 3.8308324195096335`*^9}, {
+   3.830832466294838*^9, 3.8308324742375574`*^9}, {3.8308326771984663`*^9, 
+   3.830832864221012*^9}, {3.8308329134937086`*^9, 3.8308329829673414`*^9}, {
+   3.8308330166164975`*^9, 3.830833045605495*^9}, {3.8308332315649157`*^9, 
+   3.8308333931501894`*^9}, {3.8308334311906404`*^9, 
+   3.8308334376449466`*^9}, {3.8308337381654544`*^9, 
+   3.8308338181827307`*^9}, {3.8308338605108366`*^9, 3.830833869125597*^9}, {
+   3.8308344894288063`*^9, 3.8308346051404996`*^9}, {3.8308346476380033`*^9, 
+   3.830834816407141*^9}, {3.830834968821747*^9, 3.8308351276696663`*^9}, {
+   3.830835161853963*^9, 3.8308351810847654`*^9}, {3.830835411877773*^9, 
+   3.830835506131982*^9}, {3.8308355378050175`*^9, 3.830835550588521*^9}, {
+   3.8308355979878902`*^9, 3.8308356163258896`*^9}, {3.8308357514209394`*^9, 
+   3.8308357684759445`*^9}, {3.830835925284573*^9, 3.8308359556043005`*^9}, {
+   3.8308362050843244`*^9, 3.8308362379318953`*^9}, {3.8308362757510643`*^9, 
+   3.8308363400769105`*^9}, {3.830837016068158*^9, 3.830837026571828*^9}, {
+   3.8308370858832607`*^9, 3.830837091973321*^9}, {3.830837123133142*^9, 
+   3.8308371257225385`*^9}, {3.8308371949720016`*^9, 3.830837215203801*^9}, {
+   3.8308375480997267`*^9, 3.8308375608611546`*^9}, 
+   3.830902392884366*^9},ExpressionUUID->"84ca3e71-e273-44d6-affa-\
+6e6ad1522301"],
+
+Cell[BoxData["\<\">Blinn Phong Lobe:\"\>"], "Print",
+ CellChangeTimes->{
+  3.830835770282693*^9, {3.830835931738446*^9, 3.830835943065799*^9}, {
+   3.8308362066961503`*^9, 3.830836239202553*^9}, {3.8308363101760035`*^9, 
+   3.8308363408788605`*^9}, 3.8308370303184023`*^9, 3.830837093959964*^9, 
+   3.830837128426139*^9, {3.8308371974715157`*^9, 3.830837215889926*^9}, 
+   3.830837561436716*^9},
+ FontSize->18,
+ CellLabel->
+  "During evaluation of \
+In[2617]:=",ExpressionUUID->"f3409d3b-6990-4852-80b0-6c5ce8e1a7ef"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`lightAngle$$ = 
+    2.80387144332889, $CellContext`roughness$$ = 
+    0.43300000000000005`, $CellContext`viewAngle$$ = 1.0053096491487339`, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`roughness$$], 0.2, 0.9}, {
+      Hold[$CellContext`lightAngle$$], Rational[3, 4] Pi, Pi}, {
+      Hold[$CellContext`viewAngle$$], Rational[1, 4] Pi, Rational[1, 2] Pi}}, 
+    Typeset`size$$ = {360., {177., 183.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`roughness$4014514$$ = 
+    0, $CellContext`lightAngle$4014515$$ = 
+    0, $CellContext`viewAngle$4014516$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`lightAngle$$ = 
+        Rational[3, 4] Pi, $CellContext`roughness$$ = 
+        0.2, $CellContext`viewAngle$$ = Rational[1, 4] Pi}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`roughness$$, $CellContext`roughness$4014514$$, 0], 
+        Hold[$CellContext`lightAngle$$, $CellContext`lightAngle$4014515$$, 0], 
+        Hold[$CellContext`viewAngle$$, $CellContext`viewAngle$4014516$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Quiet[
+        ParametricPlot[{
+          $CellContext`PhongCircle[$CellContext`normalAngle, \
+$CellContext`roughness$$, $CellContext`lightAngle$$, \
+$CellContext`viewAngle$$], {
+            Cos[$CellContext`lightAngle$$], 
+            Sin[$CellContext`lightAngle$$]} ($CellContext`normalAngle - Pi), {
+            Cos[$CellContext`viewAngle$$], 
+            Sin[$CellContext`viewAngle$$]} ($CellContext`normalAngle - 
+           Pi)}, {$CellContext`normalAngle, 0, 2 Pi}, 
+         PlotStyle -> {Blue, Green, Green}, PlotRange -> Full, AspectRatio -> 
+         1]], "Specifications" :> {{$CellContext`roughness$$, 0.2, 
+         0.9}, {$CellContext`lightAngle$$, Rational[3, 4] Pi, 
+         Pi}, {$CellContext`viewAngle$$, Rational[1, 4] Pi, Rational[1, 2] 
+         Pi}}, "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{411., {252., 258.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.830834996170777*^9, 3.8308350125214205`*^9}, 
+   3.8308350741939*^9, 3.8308351095414157`*^9, 3.8308351818672504`*^9, 
+   3.8308354667279797`*^9, 3.8308355070749445`*^9, 3.8308355515049815`*^9, 
+   3.8308356230315933`*^9, 3.8308357703215895`*^9, {3.830835932011157*^9, 
+   3.8308359431027*^9}, {3.8308362067330523`*^9, 3.830836239240451*^9}, {
+   3.8308363102149*^9, 3.830836340917786*^9}, 3.830837030357298*^9, 
+   3.8308370939908834`*^9, 3.83083712845905*^9, {3.8308371975144005`*^9, 
+   3.8308372159268265`*^9}, 3.8308375614702597`*^9},
+ CellLabel->
+  "Out[2624]=",ExpressionUUID->"54ba96d1-ef55-476f-85dd-9f58e6fe6ab2"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"GGXNDF", "[", 
+    RowBox[{"m_", ",", "normalAngle_", ",", "halfAngle_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"NoH", "=", 
+       RowBox[{"Cos", "[", 
+        RowBox[{"normalAngle", "-", "halfAngle"}], "]"}]}], "}"}], ",", 
+     RowBox[{
+      SuperscriptBox["m", "2"], "/", 
+      RowBox[{"(", 
+       RowBox[{"\[Pi]", "*", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             SuperscriptBox["NoH", "2"], "*", 
+             RowBox[{"(", 
+              RowBox[{
+               SuperscriptBox["m", "2"], "-", "1"}], ")"}]}], ")"}], "+", 
+           "1"}], ")"}], "^", "2"}]}], ")"}]}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"GGXCircle", "[", 
+    RowBox[{
+    "normalAngle_", ",", "roughness_", ",", "lightAngle_", ",", 
+     "viewAngle_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"halfAngle", "=", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"lightAngle", "+", "viewAngle"}], ")"}], "/", "2"}]}], "}"}],
+      ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"Cos", "[", "normalAngle", "]"}], ",", 
+        RowBox[{"Sin", "[", "normalAngle", "]"}]}], "}"}], "*", 
+      RowBox[{"GGXNDF", "[", 
+       RowBox[{"roughness", ",", "normalAngle", ",", "halfAngle"}], "]"}]}]}],
+     "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ApproxGGX", "[", 
+    RowBox[{"m_", ",", "\[Theta]_"}], "]"}], ":=", 
+   RowBox[{
+    RowBox[{"(", 
+     FractionBox["1", 
+      RowBox[{"\[Pi]", 
+       RowBox[{"(", 
+        RowBox[{"m", "^", "2"}], ")"}]}]], ")"}], 
+    RowBox[{"Exp", "[", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"2", "/", 
+        SuperscriptBox["m", "2"]}], ")"}], "*", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"Cos", "[", "\[Theta]", "]"}], "-", "1"}], ")"}]}], "]"}]}]}],
+   ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"ApproxGGXCircle", "[", 
+     RowBox[{
+     "normalAngle_", ",", "roughness_", ",", "lightAngle_", ",", 
+      "viewAngle_"}], "]"}], ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"halfAngle", "=", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"lightAngle", "+", "viewAngle"}], ")"}], "/", "2"}]}], 
+       "}"}], ",", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Cos", "[", "normalAngle", "]"}], ",", 
+         RowBox[{"Sin", "[", "normalAngle", "]"}]}], "}"}], "*", 
+       RowBox[{"ApproxGGX", "[", 
+        RowBox[{"roughness", ",", 
+         RowBox[{"normalAngle", "-", "halfAngle"}]}], "]"}]}]}], "]"}]}], 
+   ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", "\"\<>GGX Lobe:\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Quiet", "@", 
+    RowBox[{"ParametricPlot", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"GGXCircle", "[", 
+         RowBox[{
+         "normalAngle", ",", "roughness", ",", "lightAngle", ",", 
+          "viewAngle"}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"ApproxGGXCircle", "[", 
+         RowBox[{
+         "normalAngle", ",", "roughness", ",", "lightAngle", ",", 
+          "viewAngle"}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Cos", "[", "lightAngle", "]"}], ",", 
+           RowBox[{"Sin", "[", "lightAngle", "]"}]}], "}"}], "*", 
+         RowBox[{"(", 
+          RowBox[{"normalAngle", "-", "\[Pi]"}], ")"}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Cos", "[", "viewAngle", "]"}], ",", 
+           RowBox[{"Sin", "[", "viewAngle", "]"}]}], "}"}], "*", 
+         RowBox[{"(", 
+          RowBox[{"normalAngle", "-", "\[Pi]"}], ")"}]}]}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{"normalAngle", ",", "0", ",", 
+        RowBox[{"2", "\[Pi]"}]}], "}"}], ",", 
+      RowBox[{"PlotStyle", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"Blue", ",", "Red", ",", "Green", ",", "Green"}], "}"}]}], 
+      ",", " ", 
+      RowBox[{"PlotRange", "\[Rule]", "Full"}], ",", 
+      RowBox[{"AspectRatio", "\[Rule]", "1"}]}], "]"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"roughness", ",", "0.2", ",", "0.9"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"lightAngle", ",", 
+     RowBox[{"3", 
+      RowBox[{"\[Pi]", "/", "4"}]}], ",", "\[Pi]"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"viewAngle", ",", 
+     RowBox[{"\[Pi]", "/", "4"}], ",", 
+     RowBox[{"\[Pi]", "/", "2"}]}], "}"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.8308299198175507`*^9, 3.830830059254714*^9}, {
+   3.8308300893611317`*^9, 3.8308300934554825`*^9}, {3.830830157272458*^9, 
+   3.8308301594705157`*^9}, 3.8308367532838573`*^9, {3.8308368442696233`*^9, 
+   3.830836859947141*^9}, {3.830836915948621*^9, 3.8308369215795927`*^9}, {
+   3.830836958948941*^9, 3.830836993986225*^9}, {3.8308372382105455`*^9, 
+   3.830837281660477*^9}, {3.8308373294274864`*^9, 3.8308373474265804`*^9}, {
+   3.830837407299282*^9, 3.830837408154952*^9}, 3.8308375870045476`*^9, {
+   3.830837703252425*^9, 3.830837822770734*^9}},
+ CellLabel->
+  "In[2815]:=",ExpressionUUID->"8f1f684f-dccf-404f-8143-635ad0aaaa29"],
+
+Cell[BoxData["\<\">GGX Lobe:\"\>"], "Print",
+ CellChangeTimes->{3.830837283889367*^9, 3.8308373346191835`*^9, 
+  3.8308374016071863`*^9, 3.83083759106929*^9, 3.83083782368461*^9, 
+  3.8308507147996016`*^9},
+ FontSize->18,
+ CellLabel->
+  "During evaluation of \
+In[2815]:=",ExpressionUUID->"5740de55-c084-444e-94ca-7b7ddd262ccb"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`lightAngle$$ = 
+    2.825862591904019, $CellContext`roughness$$ = 
+    0.377, $CellContext`viewAngle$$ = 1.1623892818282235`, Typeset`show$$ = 
+    True, Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`roughness$$], 0.2, 0.9}, {
+      Hold[$CellContext`lightAngle$$], Rational[3, 4] Pi, Pi}, {
+      Hold[$CellContext`viewAngle$$], Rational[1, 4] Pi, Rational[1, 2] Pi}}, 
+    Typeset`size$$ = {360., {177., 183.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`roughness$9677007$$ = 
+    0, $CellContext`lightAngle$9677008$$ = 
+    0, $CellContext`viewAngle$9677009$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`lightAngle$$ = 
+        Rational[3, 4] Pi, $CellContext`roughness$$ = 
+        0.2, $CellContext`viewAngle$$ = Rational[1, 4] Pi}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`roughness$$, $CellContext`roughness$9677007$$, 0], 
+        Hold[$CellContext`lightAngle$$, $CellContext`lightAngle$9677008$$, 0], 
+        Hold[$CellContext`viewAngle$$, $CellContext`viewAngle$9677009$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Quiet[
+        ParametricPlot[{
+          $CellContext`GGXCircle[$CellContext`normalAngle, \
+$CellContext`roughness$$, $CellContext`lightAngle$$, \
+$CellContext`viewAngle$$], 
+          $CellContext`ApproxGGXCircle[$CellContext`normalAngle, \
+$CellContext`roughness$$, $CellContext`lightAngle$$, \
+$CellContext`viewAngle$$], {
+            Cos[$CellContext`lightAngle$$], 
+            Sin[$CellContext`lightAngle$$]} ($CellContext`normalAngle - Pi), {
+            Cos[$CellContext`viewAngle$$], 
+            Sin[$CellContext`viewAngle$$]} ($CellContext`normalAngle - 
+           Pi)}, {$CellContext`normalAngle, 0, 2 Pi}, 
+         PlotStyle -> {Blue, Red, Green, Green}, PlotRange -> Full, 
+         AspectRatio -> 1]], 
+      "Specifications" :> {{$CellContext`roughness$$, 0.2, 
+         0.9}, {$CellContext`lightAngle$$, Rational[3, 4] Pi, 
+         Pi}, {$CellContext`viewAngle$$, Rational[1, 4] Pi, Rational[1, 2] 
+         Pi}}, "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{411., {252., 258.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.830836979913165*^9, 3.8308372839202843`*^9, 
+  3.830837334654089*^9, 3.830837401640098*^9, 3.8308375910992107`*^9, 
+  3.830837823714531*^9, 3.8308507148315163`*^9},
+ CellLabel->
+  "Out[2820]=",ExpressionUUID->"cf1cc24f-98cf-4018-8887-a45650f80e76"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"DefaultNormalAngle", "=", 
+   RowBox[{"\[Pi]", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"DefaultNormalDir", "=", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"GGXCircle2", "[", 
+     RowBox[{
+     "normalAngle_", ",", "roughness_", ",", "lightAngle_", ",", 
+      "viewAngle_"}], "]"}], ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"halfAngle", "=", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"lightAngle", "+", "viewAngle"}], ")"}], "/", "2"}]}], 
+       "}"}], ",", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Cos", "[", "lightAngle", "]"}], ",", 
+         RowBox[{"Sin", "[", "lightAngle", "]"}]}], "}"}], "*", 
+       RowBox[{"GGXNDF", "[", 
+        RowBox[{"roughness", ",", "normalAngle", ",", "halfAngle"}], 
+        "]"}]}]}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"G", "[", 
+    RowBox[{"v_", ",", 
+     RowBox[{"{", 
+      RowBox[{"p_", ",", "\[Lambda]_", ",", "\[Mu]_"}], "}"}]}], "]"}], ":=", 
+   RowBox[{"\[Mu]", "*", 
+    RowBox[{"Exp", "[", 
+     RowBox[{"\[Lambda]", "*", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"Dot", "[", 
+         RowBox[{"v", ",", "p"}], "]"}], "-", "1"}], ")"}]}], "]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ApproxGGX2", "[", 
+    RowBox[{
+    "m_", ",", "lightAngle_", ",", "viewAngle_", ",", "normalAngle_"}], "]"}],
+    ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "lightDir", ",", "viewDir", ",", "normalDir", ",", "halfDir", ",", 
+       "reflectDir", ",", "jacobian", ",", "NoH"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"lightDir", "=", 
+       RowBox[{"FromPolarCoordinates", "[", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "lightAngle"}], "}"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"viewDir", "=", 
+       RowBox[{"FromPolarCoordinates", "[", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "viewAngle"}], "}"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"normalDir", "=", 
+       RowBox[{"FromPolarCoordinates", "[", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "normalAngle"}], "}"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"halfDir", "=", 
+       RowBox[{"Normalize", "[", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"lightDir", "+", "viewDir"}], ")"}], "/", "2"}], "]"}]}], 
+      ";", "\[IndentingNewLine]", 
+      RowBox[{"reflectDir", "=", 
+       RowBox[{
+        RowBox[{"2", 
+         RowBox[{"Dot", "[", 
+          RowBox[{"viewDir", ",", "normalDir"}], "]"}], "*", "normalDir"}], 
+        "-", "viewDir"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"jacobian", "=", 
+       RowBox[{"Max", "[", 
+        RowBox[{
+         RowBox[{"4", 
+          RowBox[{"Dot", "[", 
+           RowBox[{"halfDir", ",", "viewDir"}], "]"}]}], ",", "0.001"}], 
+        "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"G", "[", 
+       RowBox[{"lightDir", ",", 
+        RowBox[{"{", 
+         RowBox[{"reflectDir", ",", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"2", "/", 
+             SuperscriptBox["m", "2"]}], ")"}], "/", "jacobian"}], ",", 
+          RowBox[{"1", "/", 
+           RowBox[{"(", 
+            RowBox[{"\[Pi]", "*", 
+             SuperscriptBox["m", "2"]}], ")"}]}]}], "}"}]}], "]"}]}]}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"ApproxGGXCircle2", "[", 
+     RowBox[{
+     "normalAngle_", ",", "roughness_", ",", "lightAngle_", ",", 
+      "viewAngle_"}], "]"}], ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"halfAngle", "=", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"lightAngle", "+", "viewAngle"}], ")"}], "/", "2"}]}], 
+       "}"}], ",", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Cos", "[", "lightAngle", "]"}], ",", 
+         RowBox[{"Sin", "[", "lightAngle", "]"}]}], "}"}], "*", 
+       RowBox[{"ApproxGGX2", "[", 
+        RowBox[{
+        "roughness", ",", "lightAngle", ",", "viewAngle", ",", 
+         "normalAngle"}], "]"}]}]}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", "\"\<>Spherical Warping:\>\"", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Quiet", "@", 
+    RowBox[{"ParametricPlot", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"GGXCircle2", "[", 
+         RowBox[{
+         "DefaultNormalAngle", ",", "roughness", ",", "lightAngle", ",", 
+          "viewAngle"}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"ApproxGGXCircle2", "[", 
+         RowBox[{
+         "DefaultNormalAngle", ",", "roughness", ",", "lightAngle", ",", 
+          "viewAngle"}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Cos", "[", "viewAngle", "]"}], ",", 
+           RowBox[{"Sin", "[", "viewAngle", "]"}]}], "}"}], "*", 
+         RowBox[{"(", 
+          RowBox[{"lightAngle", "-", "\[Pi]"}], ")"}]}]}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{"lightAngle", ",", "0", ",", 
+        RowBox[{"2", "\[Pi]"}]}], "}"}], ",", 
+      RowBox[{"PlotStyle", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"Blue", ",", "Red", ",", "Green"}], "}"}]}], ",", " ", 
+      RowBox[{"PlotRange", "\[Rule]", "Full"}], ",", 
+      RowBox[{"AspectRatio", "\[Rule]", "1"}]}], "]"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"roughness", ",", "0.2", ",", "0.99"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"viewAngle", ",", 
+     RowBox[{"\[Pi]", "/", "4"}], ",", "\[Pi]"}], "}"}]}], 
+  "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{
+  3.830839516600603*^9, {3.8308395568448057`*^9, 3.830839602617693*^9}, {
+   3.8308396596590405`*^9, 3.830839678281635*^9}, {3.830839923075919*^9, 
+   3.8308399965441494`*^9}, {3.830840032075227*^9, 3.8308400337612495`*^9}, 
+   3.8308400726500673`*^9, {3.8308401479704075`*^9, 3.830840167657736*^9}, {
+   3.8308401986014338`*^9, 3.8308402702480817`*^9}, {3.830842182303935*^9, 
+   3.8308422541849585`*^9}, {3.8308423230565667`*^9, 3.830842362130319*^9}, {
+   3.8308424385218005`*^9, 3.830842476695052*^9}, {3.830842526192628*^9, 
+   3.8308426179758835`*^9}, 3.830850776267832*^9, {3.8308508523565445`*^9, 
+   3.830850869964224*^9}, {3.8308509050183954`*^9, 3.8308511824588623`*^9}, {
+   3.8308512213803043`*^9, 3.8308513803142805`*^9}, {3.830853026810419*^9, 
+   3.8308530613687325`*^9}, {3.830898182740944*^9, 3.8308982258490725`*^9}, {
+   3.8308982815418997`*^9, 3.8308984365095778`*^9}, {3.8308984880075026`*^9, 
+   3.830898515940613*^9}, {3.8308986010301876`*^9, 3.8308986039908423`*^9}, {
+   3.8308986428300467`*^9, 3.830898683221472*^9}, {3.830898749128602*^9, 
+   3.8308988563575425`*^9}, {3.8308988914295855`*^9, 3.830898926173197*^9}, 
+   3.830898958199915*^9, {3.8308990315580993`*^9, 3.830899034028946*^9}, {
+   3.83089910510888*^9, 3.8308991309484406`*^9}, {3.8308992905026855`*^9, 
+   3.8308993024876842`*^9}, 3.8308996217938175`*^9, {3.8308996992704377`*^9, 
+   3.8308997004873805`*^9}, {3.8309006493019733`*^9, 3.830900655278346*^9}, {
+   3.8309007785973425`*^9, 3.830900788932675*^9}, {3.8309008884927335`*^9, 
+   3.8309008956607237`*^9}, {3.8309009527808657`*^9, 
+   3.8309011095900154`*^9}, {3.830902006853547*^9, 3.8309020140968328`*^9}, {
+   3.830902122539645*^9, 3.8309021690375814`*^9}, {3.830902211141455*^9, 
+   3.830902272276944*^9}},
+ CellLabel->
+  "In[3078]:=",ExpressionUUID->"5e4a31b9-2f24-4769-b78d-fd0a4bbe3a62"],
+
+Cell[BoxData["\<\">Spherical Warping:\"\>"], "Print",
+ CellChangeTimes->{
+  3.830839905168457*^9, 3.830839961721094*^9, 3.8308399973372617`*^9, 
+   3.8308400349716654`*^9, {3.8308401195514455`*^9, 3.830840169342332*^9}, {
+   3.830840230062091*^9, 3.830840270792856*^9}, 3.830842213697219*^9, 
+   3.830842254680891*^9, 3.8308423323168664`*^9, 3.8308423625483913`*^9, 
+   3.830842444913494*^9, 3.830842477785547*^9, {3.8308425574195547`*^9, 
+   3.830842618494998*^9}, 3.8308507771599293`*^9, 3.8308511832807817`*^9, 
+   3.830851235243065*^9, {3.8308512732711573`*^9, 3.830851285277949*^9}, {
+   3.830851341022894*^9, 3.830851380610753*^9}, 3.8308985543743954`*^9, 
+   3.8308986089072657`*^9, {3.8308987501924024`*^9, 3.8308987527096663`*^9}, 
+   3.830898859008747*^9, 3.830898926931478*^9, 3.8308989625204315`*^9, 
+   3.830899012185465*^9, 3.8308990712477765`*^9, {3.830899105446786*^9, 
+   3.830899131559623*^9}, 3.8308993036722307`*^9, 3.830899334582553*^9, 
+   3.8308996236024647`*^9, 3.830899701802356*^9, 3.830901115966923*^9, 
+   3.8309021697349014`*^9, 3.8309022423269415`*^9, 3.830902274992016*^9},
+ FontSize->18,
+ CellLabel->
+  "During evaluation of \
+In[3078]:=",ExpressionUUID->"8f386f49-81bf-48dd-a5eb-36a544fb5a9b"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`roughness$$ = 
+    0.2, $CellContext`viewAngle$$ = 1.6053538459843844`, Typeset`show$$ = 
+    True, Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`roughness$$], 0.2, 0.99}, {
+      Hold[$CellContext`viewAngle$$], Rational[1, 4] Pi, Pi}}, 
+    Typeset`size$$ = {360., {177., 183.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`roughness$16780477$$ = 
+    0, $CellContext`viewAngle$16780478$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`roughness$$ = 
+        0.2, $CellContext`viewAngle$$ = Rational[1, 4] Pi}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`roughness$$, $CellContext`roughness$16780477$$, 0], 
+        Hold[$CellContext`viewAngle$$, $CellContext`viewAngle$16780478$$, 0]},
+       "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Quiet[
+        ParametricPlot[{
+          $CellContext`GGXCircle2[$CellContext`DefaultNormalAngle, \
+$CellContext`roughness$$, $CellContext`lightAngle, $CellContext`viewAngle$$], 
+          $CellContext`ApproxGGXCircle2[$CellContext`DefaultNormalAngle, \
+$CellContext`roughness$$, $CellContext`lightAngle, $CellContext`viewAngle$$], {
+            Cos[$CellContext`viewAngle$$], 
+            Sin[$CellContext`viewAngle$$]} ($CellContext`lightAngle - 
+           Pi)}, {$CellContext`lightAngle, 0, 2 Pi}, 
+         PlotStyle -> {Blue, Red, Green}, PlotRange -> Full, AspectRatio -> 
+         1]], "Specifications" :> {{$CellContext`roughness$$, 0.2, 
+         0.99}, {$CellContext`viewAngle$$, Rational[1, 4] Pi, Pi}}, 
+      "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{411., {238., 244.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{
+  3.830899131488783*^9, {3.8308993037021213`*^9, 3.8308993346094866`*^9}, 
+   3.8308996236293926`*^9, 3.8308997018302517`*^9, 3.830901115987867*^9, 
+   3.8309021697638254`*^9, 3.8309022423498807`*^9, 3.830902275018943*^9},
+ CellLabel->
+  "Out[3085]=",ExpressionUUID->"b3272bb1-912d-4dc8-a196-65b9c406e88c"]
+}, Open  ]]
+},
+WindowSize->{1106, 897},
+WindowMargins->{{Automatic, -116}, {-134, Automatic}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 8334, 197, 523, "Input",ExpressionUUID->"84ca3e71-e273-44d6-affa-6e6ad1522301"],
+Cell[8917, 221, 517, 10, 30, "Print",ExpressionUUID->"f3409d3b-6990-4852-80b0-6c5ce8e1a7ef"],
+Cell[9437, 233, 3534, 65, 529, "Output",ExpressionUUID->"54ba96d1-ef55-476f-85dd-9f58e6fe6ab2"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13008, 303, 5473, 151, 320, "Input",ExpressionUUID->"8f1f684f-dccf-404f-8143-635ad0aaaa29"],
+Cell[18484, 456, 328, 7, 30, "Print",ExpressionUUID->"5740de55-c084-444e-94ca-7b7ddd262ccb"],
+Cell[18815, 465, 3305, 64, 529, "Output",ExpressionUUID->"cf1cc24f-98cf-4018-8887-a45650f80e76"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[22157, 534, 7845, 197, 495, "Input",ExpressionUUID->"5e4a31b9-2f24-4769-b78d-fd0a4bbe3a62"],
+Cell[30005, 733, 1226, 19, 30, "Print",ExpressionUUID->"8f386f49-81bf-48dd-a5eb-36a544fb5a9b"],
+Cell[31234, 754, 2842, 54, 501, "Output",ExpressionUUID->"b3272bb1-912d-4dc8-a196-65b9c406e88c"]
+}, Open  ]]
+}
+]
+*)
+
