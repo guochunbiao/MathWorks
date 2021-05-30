@@ -1,13 +1,40 @@
 (* ::Package:: *)
 
-BeginPackage["gUtils`"]
-Begin["`Private`"]
+BeginPackage["gUtils`"];
 
-ClearAll[gPrint2];
-gPrint2[msg_,f_,p1_]=f[p1];
 
-ClearAll[testF123];
-testF123[x_]=x*2;
+gPrint::usage="Print a message";
+gPrintFunc::usage="Print a function";
+gEvalFunc::usage="Evaluate a funciton";
 
-End[ ]
-EndPackage[ ]
+
+Begin["`Private`"];
+
+
+ClearAll[gPrint];
+gPrint[msg_]:=Module[
+{},
+Print[Style[msg,FontSize->18,Background->LightBlue]]
+];
+
+
+ClearAll[gPrintFunc];
+gPrintFunc[name_,func_]:=Module[
+{ret},
+ret=Print[Style[
+StringJoin[ToString[name],"=",ToString[TraditionalForm[func]]],
+FontSize->18,Background->LightBlue]];
+ret
+];
+
+
+ClearAll[gEvalFunc];
+gEvalFunc[name_,func_]:=Print[Style[
+StringJoin[ToString[name],"=",ToString[func]],
+FontSize->18,Background->LightBlue]];
+
+
+End[];
+
+
+EndPackage[];

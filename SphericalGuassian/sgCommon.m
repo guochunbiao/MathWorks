@@ -1,10 +1,51 @@
 (* ::Package:: *)
 
 BeginPackage["sgCommon`"];
+
+
+ClearAll[sgVector];
+sgVector::usage="function{sgVector}";
+ClearAll[sgPolar];
+sgPolar::usage="function{sgPolar}";
+ClearAll[sgIntegral];
+sgIntegral::usage="function[sgIntegral]";
+ClearAll[sgFindMinLambda];
+sgFindMinLambda::usage="function[sgFindMinLambda]";
+ClearAll[sgMinLambda];
+sgMinLambda=4.20341;
+
+
 Begin["`Private`"];
+On[Assert];
 
-ClearAll[sgFunc];
-sgFunc[v_,{p_,\[Lambda]_,\[Mu]_}]:=\[Mu]*Exp[\[Lambda]*(Dot[v,p]-1)];
 
-End[ ];
-EndPackage[ ];
+sgVector[v_,{p_,\[Lambda]_,\[Mu]_}]:=Module[
+{CosTheta},
+CosTheta=Dot[v,p];
+Assert[CosTheta>=0];
+Assert[\[Lambda]>=sgMinLambda];
+\[Mu]*Exp[\[Lambda]*(CosTheta-1)]];
+
+
+sgPolar[\[Theta]_,\[Lambda]_,\[Mu]_]:=Module[
+{},
+Assert[-\[Pi]/2<=\[Theta]<=\[Pi]/2];
+Assert[\[Lambda]>=sgMinLambda];
+\[Mu]*Exp[\[Lambda]*(Cos[\[Theta]]-1)]];
+
+
+sgIntegral[\[Lambda]_,\[Mu]_:1]:=\[Mu]*2\[Pi]*(1-Exp[-2\[Lambda]])/\[Lambda];
+
+
+sgFindMinLambda[\[Epsilon]_]:=Module[
+{tmp0,tmp1},
+tmp0=Quiet@Solve[(sgPolar[\[Pi]/2,\[Lambda],1]/sgIntegral[\[Lambda],1])==\[Epsilon] && \[Lambda]>0,\[Lambda]];
+tmp1=tmp0[[All,1,2]];
+tmp1[[1]]
+];
+
+
+End[];
+
+
+EndPackage[];
