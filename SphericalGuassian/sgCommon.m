@@ -13,6 +13,12 @@ ClearAll[sgFindMinLambda];
 sgFindMinLambda::usage="function[sgFindMinLambda]";
 ClearAll[sgMinLambda];
 sgMinLambda=4.20341;
+ClearAll[sgRawFa];
+sgRawFa::usage="All-Frequency.";
+ClearAll[sgFa];
+sgFa::usage="function[sgFa]";
+ClearAll[sgInvFa];
+sgInvFa::usage="function[sgInvFa]";
 
 
 Begin["`Private`"];
@@ -43,6 +49,15 @@ tmp0=Quiet@Solve[(sgPolar[\[Pi]/2,\[Lambda],1]/sgIntegral[\[Lambda],1])==\[Epsil
 tmp1=tmp0[[All,1,2]];
 tmp1[[1]]
 ];
+
+
+sgRawFa[\[Lambda]_,\[Epsilon]_]=-2\[Pi]*Log[\[Epsilon]/\[Lambda]];
+
+
+sgFa[\[Lambda]_]:=sgRawFa[\[Lambda],0.1];
+
+
+sgInvFa=InverseFunction[sgFa];
 
 
 End[];
