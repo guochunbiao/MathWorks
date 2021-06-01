@@ -9,7 +9,7 @@ Needs["gUtils`"];
 
 ClearAll[gParamPlot];
 gParamPlot::usage="function{gParamPlot}";
-gParamSGPointLight::usage="aaa";
+gParamSGGroundShading::usage="aaa";
 
 
 Begin["`Private`"];
@@ -114,6 +114,26 @@ gParamSGPointLight[input_,\[Theta]_]:=Module[
 ];
 
 
+ClearAll[gParamSGGroundShading];
+gParamSGGroundShading[input_,\[Theta]_]:=Module[
+	{sgLightFunc,sgLight,sgShadingFunc,sgShading,
+		lightCenter,lightRadius,lightIntensity,shadingPos,shadingDist,
+		sgClampedCos},
+	sgLightFunc=input["sgLightFunc"];
+	sgShadingFunc=input["sgShadingFunc"];
+	lightCenter=input["lightCenter"];
+	lightRadius=input["lightRadius"];
+	lightIntensity=input["lightIntensity"];
+	shadingPos={\[Theta]-\[Pi],0};
+	shadingDist=Norm[lightRadius-shadingPos];
+	sgLight=sgLightFunc[<|"lightCenter"->lightCenter,"lightRadius"->lightRadius,
+		"lightIntensity"->lightIntensity,"shadingPos"->shadingPos|>];
+	sgClampedCos=sgClampedCosine[sgLight[[1]]];
+	sgShading=sgShadingFunc[<|"sgLight"->sgLight,"sgClampedCos"->sgClampedCos|>];
+	{shadingPos[[1]],sgShading}
+];
+
+
 (*
 circles: {center,radius}
 dirLines: {start,direction vector}
@@ -157,6 +177,8 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["groundShadings",gParamGroundShading];
 	(*append SG point lights*)
 	collectFunc["sgPointLights",gParamSGPointLight];
+	(*append SG point lights*)
+	collectFunc["sgGroundShading",gParamSGGroundShading];
 
 	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
 	ParametricPlot[plotList,

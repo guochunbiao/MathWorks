@@ -11,10 +11,14 @@ ClearAll[sgPolar2];
 sgPolar2::usage="function{sgPolar2}";
 ClearAll[sgIntegral];
 sgIntegral::usage="function[sgIntegral]";
+ClearAll[sgIntegral2];
+sgIntegral2::usage="function[sgIntegral2]";
 ClearAll[sgFindMinLambda];
 sgFindMinLambda::usage="function[sgFindMinLambda]";
 ClearAll[sgMinLambda];
 sgMinLambda=4.20341;
+ClearAll[sgDot];
+sgDot::usage="function[sgDot]";
 ClearAll[sgRawFa];
 sgRawFa::usage="All-Frequency.";
 ClearAll[sgFa];
@@ -25,6 +29,10 @@ ClearAll[sgPointLightOld];
 sgPointLightOld::usage="function[sgPointLightOld]";
 ClearAll[sgPointLightNew];
 sgPointLightNew::usage="function[sgPointLightNew]";
+ClearAll[sgClampedCosine];
+sgClampedCosine::usage="function[sgClampedCosine]";
+ClearAll[sgDiffuseLighting];
+sgDiffuseLighting::usage="function[sgDiffuseLighting]";
 
 
 Begin["`Private`"];
@@ -52,12 +60,19 @@ sgPolar2[\[Theta]_,{p_,\[Lambda]_,\[Mu]_}]:=sgPolar[\[Theta],\[Lambda],\[Mu]];
 sgIntegral[\[Lambda]_,\[Mu]_:1]:=\[Mu]*2\[Pi]*(1-Exp[-2\[Lambda]])/\[Lambda];
 
 
+sgIntegral2[{p_,\[Lambda]_,\[Mu]_}]:=sgIntegral[\[Lambda],\[Mu]];
+
+
 sgFindMinLambda[\[Epsilon]_]:=Module[
 {tmp0,tmp1},
 tmp0=Quiet@Solve[(sgPolar[\[Pi]/2,\[Lambda],1]/sgIntegral[\[Lambda],1])==\[Epsilon] && \[Lambda]>0,\[Lambda]];
 tmp1=tmp0[[All,1,2]];
 tmp1[[1]]
 ];
+
+
+sgDot[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_}]:=
+	4\[Pi]*\[Mu]1*\[Mu]2*Sinh[Norm[p1*\[Lambda]1+p2*\[Lambda]2]]/(Exp[\[Lambda]1+\[Lambda]2]*Norm[p1*\[Lambda]1+p2*\[Lambda]2]);
 
 
 sgRawFa[\[Lambda]_,\[Epsilon]_]=-2\[Pi]*Log[\[Epsilon]/\[Lambda]];
@@ -79,15 +94,17 @@ sgPointLightOld[lightCenter_,lightRadius_,lightIntensity_,shadingPos_]:=Module[
 ];
 
 
-sgPointLightQuadratic[t_,a_,b_,c_]=a*t^2+b*t+c;
 sgPointLightNew[lightCenter_,lightRadius_,lightIntensity_,shadingPos_]:=Module[
-    {fitParams,d,distPercent,p,\[Lambda],\[Mu]},
+    {fitParams,d,distPercent,p,\[Lambda],\[Mu],sgPointLightQuadratic},
     fitParams={
 		{0.791375,-1.89057,1.0872,6.66654,-10.8249,6.76642},
 		{-0.340146,0.0665636,0.236471,3.79125,0.618155,1.38885},
 		{0.385139,-0.87285,0.485253,1.80957,0.308354,2.7173},
 		{0.213239,-0.506706,0.291679,1.83615,2.49729,1.51728},
 		{0.128335,-0.316743,0.187358,2.15074,3.59944,0.786432}};
+	
+	sgPointLightQuadratic[t_,a_,b_,c_]:=a*t^2+b*t+c;
+	
 	d=Norm[lightCenter-shadingPos];
 	distPercent=d/lightRadius;
 	p=Normalize[lightCenter-shadingPos];
@@ -98,6 +115,13 @@ sgPointLightNew[lightCenter_,lightRadius_,lightIntensity_,shadingPos_]:=Module[
 			fitParams[[lightRadius]][[2]],fitParams[[lightRadius]][[3]]];
 	{p,\[Lambda],\[Mu]}
 ];
+
+
+sgClampedCosine[p_]:={p,2.01906,1.077094};
+
+
+sgDiffuseLighting[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_},diffuseCol_:1]:=
+					diffuseCol/\[Pi] sgDot[{p1,\[Lambda]1,\[Mu]1},{p2,\[Lambda]2,\[Mu]2}];
 
 
 End[];
