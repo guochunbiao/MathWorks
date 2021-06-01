@@ -25,30 +25,12 @@ gParamCircle[circleInput_,\[Theta]_]:=Module[
 
 
 ClearAll[gParamLine];
-gParamLine[startPos_,dirVector_,length_,\[Theta]_]:=Module[
-	{},
-	startPos+(length/2\[Pi])*\[Theta]*Normalize[dirVector]
-];
-
-
-ClearAll[gParamLine2];
-gParamLine2[lineInput_,\[Theta]_]:=Module[
+gParamLine[lineInput_,\[Theta]_]:=Module[
 	{startPos,dirVector,length},
 	startPos=lineInput["startPos"];
 	dirVector=lineInput["dirVec"];
 	length=lineInput["length"];
-	gParamLine[startPos,dirVector,length,\[Theta]]
-];
-
-
-ClearAll[gParamLine3];
-gParamLine3[lineInput_,\[Theta]_]:=Module[
-	{startPos,dirAngle,length,dirVector},
-	startPos=lineInput["startPos"];
-	dirAngle=lineInput["dirAngle"];
-	length=lineInput["length"];
-	dirVector=FromPolarCoordinates[{1,dirAngle}];
-	gParamLine[startPos,dirVector,length,\[Theta]]
+	startPos+(length/2\[Pi])*\[Theta]*Normalize[dirVector]
 ];
 
 
@@ -63,14 +45,15 @@ gParamBasicDisb[disbInput_,\[Theta]_]:=Module[
 
 ClearAll[gParamSGDisb];
 gParamSGDisb[disbInput_,\[Theta]_]:=Module[
-	{disbCenter,upAxis,sgLambda,sgMu,realTheta,sgPower,upAngle},
+	{disbCenter,sg,sgAxis,sgLambda,sgMu,realTheta,sgPower,upAngle},
 	disbCenter=disbInput["disbCenter"];
-	upAxis=disbInput["upAxis"];
-	sgLambda=disbInput["sgLambda"];
-	sgMu=disbInput["sgMu"];
+	sg=disbInput["sg"];
+	sgAxis=sg[[1]];
+	sgLambda=sg[[2]];
+	sgMu=sg[[3]];
 	realTheta=\[Theta]-\[Pi];
-	upAngle=ToPolarCoordinates[upAxis][[2]];
-	sgPower=If[-\[Pi]/2<=realTheta<=\[Pi]/2,sgPolar[realTheta,sgLambda,sgMu],0];
+	upAngle=ToPolarCoordinates[sgAxis][[2]];
+	sgPower=If[-\[Pi]/2<=realTheta<=\[Pi]/2,sgPolar2[realTheta,sg],0];
 	(RotationTransform[upAngle-\[Pi]/2,disbCenter]/@{(disbCenter+{realTheta,sgPower})})
 ];
 
@@ -80,44 +63,49 @@ circles: {center,radius}
 dirLines: {start,direction vector}
 axisExtent: plot range
 *)
-gParamPlot:=Module[
-	{plotList,plotColors,plotLabels},
+gParamPlot[inputs_,imageSize_:Tiny]:=Module[
+	{
+		inputKeys,collectFunc,
+		plotList,plotColors,plotLabels,
+		axisExtent
+	},
+    inputKeys=Keys[inputs];    
 	plotList={};
 	plotColors={};
 	plotLabels={};
+	
+	collectFunc[keyName_,paramFunc_]:={
+		If[MemberQ[inputKeys,keyName],
+			elements=inputs[[keyName]];
+			For[i=1,i<=Length[elements],i++,
+				element=elements[[i]];
+				AppendTo[plotList,paramFunc[element,\[Theta]]];
+				elementKeys=Keys[element];
+				If[MemberQ[elementKeys,"color"],AppendTo[plotColors,element["color"]]];
+				If[MemberQ[elementKeys,"label"],AppendTo[plotLabels,element["label"]]];
+			];
+		];
+	};
+	
 	(*append circles*)
-	Do[AppendTo[plotList,gParamCircle[circle,\[Theta]]];
-	     AppendTo[plotColors,circle["color"]];
-	     AppendTo[plotLabels,circle["label"]],
-		{circle,#circles}];
+	collectFunc["circles",gParamCircle];		
 	(*append dir lines*)
-	Do[AppendTo[plotList,gParamLine2[line,\[Theta]]];
-	     AppendTo[plotColors,line["color"]];
-	     AppendTo[plotLabels,line["label"]],
-		{line,#dirLines}];
-	(*append angle lines*)
-	Do[AppendTo[plotList,gParamLine3[line,\[Theta]]];
-		 AppendTo[plotColors,line["color"]];
-	     AppendTo[plotLabels,line["label"]],
-		{line,#angleLines}];
+	collectFunc["lines",gParamLine];
 	(*append simple distributions*)
-	Do[AppendTo[plotList,gParamBasicDisb[basicDisb,\[Theta]]];
-		 AppendTo[plotColors,basicDisb["color"]];
-	     AppendTo[plotLabels,basicDisb["label"]],
-		{basicDisb,#basicDisbs}];
+	collectFunc["basicDisbs",gParamBasicDisb];		
 	(*append SG distributions*)
-	Do[AppendTo[plotList,gParamSGDisb[sgDisb,\[Theta]]];
-		 AppendTo[plotColors,sgDisb["color"]];
-	     AppendTo[plotLabels,sgDisb["label"]],
-		{sgDisb,#sgDisbs}];
-		
+	collectFunc["sgDisbs",gParamSGDisb];		
+	(*append grounding shading*)
+
+	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
 	ParametricPlot[plotList,
 		{\[Theta],0,2 \[Pi]},
 		PlotStyle->plotColors,
 		PlotLabels->plotLabels,
-		PlotRange->{{-#axisExtent,#axisExtent},{-#axisExtent,#axisExtent}},
-		AspectRatio->1]
-]&;
+		PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
+		AspectRatio->1,
+		ImageSize->imageSize]
+];
 
 
 End[];
