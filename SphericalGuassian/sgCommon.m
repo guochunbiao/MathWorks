@@ -33,6 +33,10 @@ ClearAll[sgClampedCosine];
 sgClampedCosine::usage="function[sgClampedCosine]";
 ClearAll[sgDiffuseLighting];
 sgDiffuseLighting::usage="function[sgDiffuseLighting]";
+ClearAll[sgNDF];
+sgNDF::usage="function[sgNDF]";
+ClearAll[sgNDFConvLight];
+sgNDFConvLight::usage="function[sgNDFConvLight]";
 
 
 Begin["`Private`"];
@@ -117,11 +121,27 @@ sgPointLightNew[lightCenter_,lightRadius_,lightIntensity_,shadingPos_]:=Module[
 ];
 
 
-sgClampedCosine[p_]:={p,2.01906,1.077094};
+sgClampedCosine[noramlDir_]:={noramlDir,2.01906,1.077094};
 
 
 sgDiffuseLighting[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_},diffuseCol_:1]:=
-					diffuseCol/\[Pi] sgDot[{p1,\[Lambda]1,\[Mu]1},{p2,\[Lambda]2,\[Mu]2}];
+					(diffuseCol/\[Pi])*sgDot[{p1,\[Lambda]1,\[Mu]1},{p2,\[Lambda]2,\[Mu]2}];
+
+
+sgNDF[roughness_,lightDir_,viewDir_,normalDir_]:=Module[
+	{halfDir,reflectDir,jacobian,p,\[Lambda],\[Mu]},
+	halfDir=Normalize[(lightDir+viewDir)/2];
+	reflectDir=2Dot[viewDir,normalDir]*normalDir-viewDir;
+	jacobian=Max[4Dot[halfDir,viewDir],0.001];
+	p=reflectDir;
+	\[Lambda]=(2/roughness^2)/jacobian;
+	\[Mu]=1/(\[Pi]*roughness^2);
+	{p,\[Lambda],\[Mu]}
+];
+
+
+sgNDFConvLight[lightRadius_,shadingDist_,sglight_,sgndf_]:=
+		If[shadingDist>=lightRadius,0,sgDot[sglight,sgndf]];
 
 
 End[];

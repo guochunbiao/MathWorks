@@ -6,7 +6,7 @@ BeginPackage["gUtils`"];
 gPrint::usage="Print messages";
 gPrintFunc::usage="Print a function";
 gEvalFunc::usage="Evaluate a funciton";
-gQuickFinMin::usage="Quick find minimum";\[AliasDelimiter]
+gQuickFinMin::usage="Quick find minimum";
 
 
 ClearAll[gStructRules]

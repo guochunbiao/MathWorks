@@ -82,20 +82,24 @@ gParamSGFuncDisb[disbInput_,\[Theta]_]:=Module[
 
 ClearAll[gParamGroundShading];
 gParamGroundShading[shadingInput_,\[Theta]_]:=Module[
-	{shadingFunc,lightCenter,lightRadius,shadingPos,shadingNormal,
-		shadingDist,lightDir,nol,
+	{inputKeys,shadingFunc,lightCenter,lightRadius,shadingPos,normalDir,
+		shadingDist,lightDir,viewDir,
+		roughness,nol,
 		shadedValue},
+	inputKeys=Keys[shadingInput];
 	shadingFunc=shadingInput["shadingFunc"];
 	lightCenter=shadingInput["lightCenter"];
 	lightRadius=shadingInput["lightRadius"];
+	roughness=If[MemberQ[inputKeys,"roughness"],shadingInput["roughness"],NaN];
+	viewDir=Normalize[If[MemberQ[inputKeys,"viewDir"],shadingInput["viewDir"],NaN]];
 	shadingPos={\[Theta]-\[Pi],0};
-	shadingNormal=Normalize[{0,1}];
+	normalDir=Normalize[{0,1}];
 	shadingDist=Norm[lightCenter-shadingPos];
 	lightDir=Normalize[lightCenter-shadingPos];
-	nol=Dot[lightDir,shadingNormal];
+	nol=Dot[normalDir,lightDir];
 	shadedValue=shadingFunc[<|"lightCenter"->lightCenter,"lightRadius"->lightRadius,
 		"lightDir"->lightDir,"shadingPos"->shadingPos,"shadingDist"->shadingDist,
-		"nol"->nol|>];
+		"normalDir"->normalDir,"viewDir"->viewDir,"roughness"->roughness,"nol"->nol|>];
 	{shadingPos[[1]],shadedValue}
 ];
 
@@ -116,20 +120,30 @@ gParamSGPointLight[input_,\[Theta]_]:=Module[
 
 ClearAll[gParamSGGroundShading];
 gParamSGGroundShading[input_,\[Theta]_]:=Module[
-	{sgLightFunc,sgLight,sgShadingFunc,sgShading,
+	{inputKeys,sgLightFunc,sgLight,sgShadingFunc,sgShading,viewDir,lightDir,
 		lightCenter,lightRadius,lightIntensity,shadingPos,shadingDist,
-		sgClampedCos},
+		normalDir,roughness,sgNDF,sgClampedCos},
+	inputKeys=Keys[input];
 	sgLightFunc=input["sgLightFunc"];
 	sgShadingFunc=input["sgShadingFunc"];
 	lightCenter=input["lightCenter"];
 	lightRadius=input["lightRadius"];
 	lightIntensity=input["lightIntensity"];
+	roughness=If[MemberQ[inputKeys,"roughness"],input["roughness"],NaN];
+	viewDir=Normalize[If[MemberQ[inputKeys,"viewDir"],input["viewDir"],NaN]];
 	shadingPos={\[Theta]-\[Pi],0};
+	normalDir=Normalize[{0,1}];
+	lightDir=Normalize[lightCenter-shadingPos];
 	shadingDist=Norm[lightRadius-shadingPos];
 	sgLight=sgLightFunc[<|"lightCenter"->lightCenter,"lightRadius"->lightRadius,
 		"lightIntensity"->lightIntensity,"shadingPos"->shadingPos|>];
+	sgNDF=If[MemberQ[inputKeys,"sgNDFFunc"],
+				input["sgNDFFunc"][<|"roughness"->roughness,"lightDir"->lightDir,
+							"viewDir"->viewDir,"normalDir"->normalDir|>],
+				{p,\[Lambda],\[Mu]}];
 	sgClampedCos=sgClampedCosine[sgLight[[1]]];
-	sgShading=sgShadingFunc[<|"sgLight"->sgLight,"sgClampedCos"->sgClampedCos|>];
+	sgShading=sgShadingFunc[<|"sgLight"->sgLight,"sgClampedCos"->sgClampedCos,
+				"sgNDF"->sgNDF,"lightRadius"->lightRadius,"shadingDist"->shadingDist|>];
 	{shadingPos[[1]],sgShading}
 ];
 
