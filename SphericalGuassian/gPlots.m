@@ -54,7 +54,8 @@ gParamVaryingDisbShared[disbInput_,\[Theta]_,viewDir_,lightDir_,normalDir_]:=Mod
 	voh=Clip[Dot[viewDir,halfDir],{0,1}];
 	nov=Clip[Dot[normalDir,viewDir],{0,1}];
 	disbFunc[<|"\[Theta]"->\[Theta],"viewDir"->viewDir,"lightDir"->lightDir,"normalDir"->normalDir,
-		"roughness"->roughness,"nol"->nol,"noh"->noh,"voh"->voh,"nov"->nov|>]
+		"halfDir"->halfDir,"roughness"->roughness,
+		"nol"->nol,"noh"->noh,"voh"->voh,"nov"->nov|>]
 ];
 
 
@@ -101,6 +102,23 @@ gParamSGFuncDisb[disbInput_,\[Theta]_]:=Module[
 	nol=Dot[lightDir,shadingNormal];
 	sg=sgFunc[];
 	gParamSGCommon[disbCenter,sg,\[Theta]]
+];
+
+
+ClearAll[gParamSGVaryDirDisb];
+gParamSGVaryDirDisb[disbInput_,\[Theta]_]:=Module[
+	{roughness,viewDir,lightDir,normalDir,halfDir,sgFunc,
+		sgValue},
+	roughness=disbInput["roughness"];
+	viewDir=Normalize[disbInput["viewDir"][<|"\[Theta]"->\[Theta]|>]];
+	lightDir=Normalize[disbInput["lightDir"][<|"\[Theta]"->\[Theta]|>]];
+	normalDir=Normalize[disbInput["normalDir"][<|"\[Theta]"->\[Theta]|>]];
+	halfDir=Normalize[viewDir+lightDir];
+	sgFunc=disbInput["sgFunc"];
+	sgValue=sgFunc[<|"\[Theta]"->\[Theta],"roughness"->roughness,"lightDir"->lightDir,
+			"viewDir"->viewDir,"normalDir"->normalDir,"halfDir"->halfDir|>];
+	
+	sgValue
 ];
 
 
@@ -216,6 +234,8 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["sgDisbs",gParamSGDisb];
 	(*append SG function distributions*)
 	collectFunc["sgFuncDisbs",gParamSGFuncDisb];
+	(*append SG varying direction distributions*)
+	collectFunc["sgVaryDirDisbs",gParamSGVaryDirDisb];
 	(*append grounding shading*)
 	collectFunc["groundShadings",gParamGroundShading];
 	(*append SG point lights*)

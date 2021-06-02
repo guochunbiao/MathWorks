@@ -33,6 +33,10 @@ ClearAll[sgClampedCosine];
 sgClampedCosine::usage="function[sgClampedCosine]";
 ClearAll[sgDiffuseLighting];
 sgDiffuseLighting::usage="function[sgDiffuseLighting]";
+ClearAll[sgRawNDF];
+sgRawNDF::usage="function[sgRawNDF]";
+ClearAll[sgRawNDFConvHalfVec];
+sgRawNDFConvHalfVec::usage="function[sgRawNDFConvHalfVec]";
 ClearAll[sgNDF];
 sgNDF::usage="function[sgNDF]";
 ClearAll[sgNDFConvLight];
@@ -46,9 +50,12 @@ On[Assert];
 sgVector[v_,{p_,\[Lambda]_,\[Mu]_}]:=Module[
 {CosTheta},
 CosTheta=Dot[v,p];
+(*
 Assert[CosTheta>=0];
 Assert[\[Lambda]>=sgMinLambda];
-\[Mu]*Exp[\[Lambda]*(CosTheta-1)]];
+*)
+If[CosTheta<0||\[Lambda]<sgMinLambda,0,\[Mu]*Exp[\[Lambda]*(CosTheta-1)]]
+];
 
 
 sgPolar[\[Theta]_,\[Lambda]_,\[Mu]_]:=Module[
@@ -128,6 +135,23 @@ sgDiffuseLighting[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_},diffuseCol
 					(diffuseCol/\[Pi])*sgDot[{p1,\[Lambda]1,\[Mu]1},{p2,\[Lambda]2,\[Mu]2}];
 
 
+(*Raw(no warping) NDF*)
+sgRawNDF[roughness_,normalDir_]:=Module[
+	{p,\[Lambda],\[Mu]},
+	p=normalDir;
+	\[Lambda]=2/roughness^2;
+	\[Mu]=1/(\[Pi]*roughness^2);
+	{p,\[Lambda],\[Mu]}
+];
+
+
+sgRawNDFConvHalfVec[lightRadius_,shadingDist_,halfVec_,rawSgNdf_]:=Module[
+	{},
+	If[shadingDist>=lightRadius,0,sgDot[halfVec,rawSgNdf]]
+];
+
+
+(*Warped GGX NDF*)
 sgNDF[roughness_,lightDir_,viewDir_,normalDir_]:=Module[
 	{halfDir,reflectDir,jacobian,p,\[Lambda],\[Mu]},
 	halfDir=Normalize[(lightDir+viewDir)/2];
