@@ -121,7 +121,7 @@ sgPointLightNew[lightCenter_,lightRadius_,lightIntensity_,shadingPos_]:=Module[
 ];
 
 
-sgClampedCosine[noramlDir_]:={noramlDir,2.01906,1.077094};
+sgClampedCosine[noramlDir_,lightDir_]:={lightDir,2.01906,1.077094};
 
 
 sgDiffuseLighting[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_},diffuseCol_:1]:=
@@ -140,8 +140,10 @@ sgNDF[roughness_,lightDir_,viewDir_,normalDir_]:=Module[
 ];
 
 
-sgNDFConvLight[lightRadius_,shadingDist_,sglight_,sgndf_]:=
-		If[shadingDist>=lightRadius,0,sgDot[sglight,sgndf]];
+sgNDFConvLight[lightRadius_,shadingDist_,sglight_,sgndf_]:=Module[
+	{},
+	If[shadingDist>=lightRadius,0,sgDot[sglight,sgndf]]
+];
 
 
 End[];

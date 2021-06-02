@@ -9,7 +9,6 @@ Needs["gUtils`"];
 
 ClearAll[gParamPlot];
 gParamPlot::usage="function{gParamPlot}";
-gParamSGGroundShading::usage="aaa";
 
 
 Begin["`Private`"];
@@ -118,6 +117,35 @@ gParamSGPointLight[input_,\[Theta]_]:=Module[
 ];
 
 
+ClearAll[tmpParamSGGroundShadingBackup];
+tmpParamSGGroundShadingBackup[input_,\[Theta]_]:=Module[
+	{inputKeys,sgLightFunc,sgLight,sgShadingFunc,sgShading,viewDir,lightDir,
+		lightCenter,lightRadius,lightIntensity,shadingPos,shadingDist,
+		normalDir,roughness,sgNDF,sgClampedCos},
+	inputKeys=Keys[input];
+	sgLightFunc=input["sgLightFunc"];
+	sgShadingFunc=input["sgShadingFunc"];
+	lightCenter=input["lightCenter"];
+	lightRadius=input["lightRadius"];
+	lightIntensity=input["lightIntensity"];
+	roughness=If[MemberQ[inputKeys,"roughness"],input["roughness"],NaN];
+	viewDir=Normalize[If[MemberQ[inputKeys,"viewDir"],input["viewDir"],NaN]];
+	shadingPos={\[Theta]-\[Pi],0};
+	normalDir=Normalize[{0,1}];
+	lightDir=Normalize[lightCenter-shadingPos];
+	shadingDist=Norm[lightCenter-shadingPos];
+	sgLight=sgLightFunc[<|"lightCenter"->lightCenter,"lightRadius"->lightRadius,
+		"lightIntensity"->lightIntensity,"shadingPos"->shadingPos|>];
+	sgNDF=If[MemberQ[inputKeys,"sgNDFFunc"],
+				input["sgNDFFunc"][<|"roughness"->roughness,"lightDir"->lightDir,
+							"viewDir"->viewDir,"normalDir"->normalDir|>],
+				{p,\[Lambda],\[Mu]}];
+	sgClampedCos=sgClampedCosine[normalDir,sgLight[[1]]];
+	sgShading=sgShadingFunc[<|"sgLight"->sgLight,"sgClampedCos"->sgClampedCos,
+				"sgNDF"->sgNDF,"lightRadius"->lightRadius,"shadingDist"->shadingDist|>];
+	{shadingPos[[1]],sgShading}
+];
+
 ClearAll[gParamSGGroundShading];
 gParamSGGroundShading[input_,\[Theta]_]:=Module[
 	{inputKeys,sgLightFunc,sgLight,sgShadingFunc,sgShading,viewDir,lightDir,
@@ -134,14 +162,14 @@ gParamSGGroundShading[input_,\[Theta]_]:=Module[
 	shadingPos={\[Theta]-\[Pi],0};
 	normalDir=Normalize[{0,1}];
 	lightDir=Normalize[lightCenter-shadingPos];
-	shadingDist=Norm[lightRadius-shadingPos];
+	shadingDist=Norm[lightCenter-shadingPos];
 	sgLight=sgLightFunc[<|"lightCenter"->lightCenter,"lightRadius"->lightRadius,
 		"lightIntensity"->lightIntensity,"shadingPos"->shadingPos|>];
 	sgNDF=If[MemberQ[inputKeys,"sgNDFFunc"],
 				input["sgNDFFunc"][<|"roughness"->roughness,"lightDir"->lightDir,
 							"viewDir"->viewDir,"normalDir"->normalDir|>],
 				{p,\[Lambda],\[Mu]}];
-	sgClampedCos=sgClampedCosine[sgLight[[1]]];
+	sgClampedCos=sgClampedCosine[normalDir,sgLight[[1]]];
 	sgShading=sgShadingFunc[<|"sgLight"->sgLight,"sgClampedCos"->sgClampedCos,
 				"sgNDF"->sgNDF,"lightRadius"->lightRadius,"shadingDist"->shadingDist|>];
 	{shadingPos[[1]],sgShading}
@@ -171,8 +199,8 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 				element=elements[[i]];
 				AppendTo[plotList,paramFunc[element,\[Theta]]];
 				elementKeys=Keys[element];
-				If[MemberQ[elementKeys,"color"],AppendTo[plotColors,element["color"]]];
-				If[MemberQ[elementKeys,"label"],AppendTo[plotLabels,element["label"]]];
+				AppendTo[plotColors,If[MemberQ[elementKeys,"color"],element["color"],Brown]];
+				AppendTo[plotLabels,If[MemberQ[elementKeys,"label"],element["label"],""]];
 			];
 		];
 	};
@@ -198,7 +226,7 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	ParametricPlot[plotList,
 		{\[Theta],0,2 \[Pi]},
 		PlotStyle->plotColors,
-		PlotLabels->plotLabels,
+		PlotLegends->plotLabels,
 		PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
 		AspectRatio->1,
 		ImageSize->imageSize]
