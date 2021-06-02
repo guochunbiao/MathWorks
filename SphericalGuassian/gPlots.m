@@ -43,6 +43,31 @@ gParamBasicDisb[disbInput_,\[Theta]_]:=Module[
 ];
 
 
+ClearAll[gParamVaryingDisbShared];
+gParamVaryingDisbShared[disbInput_,\[Theta]_,viewDir_,lightDir_,normalDir_]:=Module[
+	{disbFunc,roughness,halfDir,nol,noh,voh,nov},
+	disbFunc=disbInput["disbFunc"];
+	roughness=disbInput["roughness"];
+	halfDir=Normalize[viewDir+lightDir];
+	nol=Clip[Dot[normalDir,lightDir],{0,1}];
+	noh=Clip[Dot[normalDir,halfDir],{0,1}];
+	voh=Clip[Dot[viewDir,halfDir],{0,1}];
+	nov=Clip[Dot[normalDir,viewDir],{0,1}];
+	disbFunc[<|"\[Theta]"->\[Theta],"viewDir"->viewDir,"lightDir"->lightDir,"normalDir"->normalDir,
+		"roughness"->roughness,"nol"->nol,"noh"->noh,"voh"->voh,"nov"->nov|>]
+];
+
+
+ClearAll[gParamVaryDirectionDisbs];
+gParamVaryDirectionDisbs[disbInput_,\[Theta]_]:=Module[
+	{viewDir,lightDir,normalDir},
+	viewDir=Normalize[disbInput["viewDir"][<|"\[Theta]"->\[Theta]|>]];
+	lightDir=Normalize[disbInput["lightDir"][<|"\[Theta]"->\[Theta]|>]];
+	normalDir=Normalize[disbInput["normalDir"][<|"\[Theta]"->\[Theta]|>]];
+	gParamVaryingDisbShared[disbInput,\[Theta],viewDir,lightDir,normalDir]
+];
+
+
 ClearAll[gParamSGCommon];
 gParamSGCommon[disbCenter_,sg_,\[Theta]_]:=Module[
 	{sgAxis,sgLambda,sgMu,realTheta,sgPower,upAngle},
@@ -117,35 +142,6 @@ gParamSGPointLight[input_,\[Theta]_]:=Module[
 ];
 
 
-ClearAll[tmpParamSGGroundShadingBackup];
-tmpParamSGGroundShadingBackup[input_,\[Theta]_]:=Module[
-	{inputKeys,sgLightFunc,sgLight,sgShadingFunc,sgShading,viewDir,lightDir,
-		lightCenter,lightRadius,lightIntensity,shadingPos,shadingDist,
-		normalDir,roughness,sgNDF,sgClampedCos},
-	inputKeys=Keys[input];
-	sgLightFunc=input["sgLightFunc"];
-	sgShadingFunc=input["sgShadingFunc"];
-	lightCenter=input["lightCenter"];
-	lightRadius=input["lightRadius"];
-	lightIntensity=input["lightIntensity"];
-	roughness=If[MemberQ[inputKeys,"roughness"],input["roughness"],NaN];
-	viewDir=Normalize[If[MemberQ[inputKeys,"viewDir"],input["viewDir"],NaN]];
-	shadingPos={\[Theta]-\[Pi],0};
-	normalDir=Normalize[{0,1}];
-	lightDir=Normalize[lightCenter-shadingPos];
-	shadingDist=Norm[lightCenter-shadingPos];
-	sgLight=sgLightFunc[<|"lightCenter"->lightCenter,"lightRadius"->lightRadius,
-		"lightIntensity"->lightIntensity,"shadingPos"->shadingPos|>];
-	sgNDF=If[MemberQ[inputKeys,"sgNDFFunc"],
-				input["sgNDFFunc"][<|"roughness"->roughness,"lightDir"->lightDir,
-							"viewDir"->viewDir,"normalDir"->normalDir|>],
-				{p,\[Lambda],\[Mu]}];
-	sgClampedCos=sgClampedCosine[normalDir,sgLight[[1]]];
-	sgShading=sgShadingFunc[<|"sgLight"->sgLight,"sgClampedCos"->sgClampedCos,
-				"sgNDF"->sgNDF,"lightRadius"->lightRadius,"shadingDist"->shadingDist|>];
-	{shadingPos[[1]],sgShading}
-];
-
 ClearAll[gParamSGGroundShading];
 gParamSGGroundShading[input_,\[Theta]_]:=Module[
 	{inputKeys,sgLightFunc,sgLight,sgShadingFunc,sgShading,viewDir,lightDir,
@@ -184,12 +180,12 @@ axisExtent: plot range
 gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	{
 		inputKeys,collectFunc,
-		plotList,plotColors,plotLabels,
+		plotList,plotStyles,plotLabels,
 		axisExtent
 	},
     inputKeys=Keys[inputs];    
 	plotList={};
-	plotColors={};
+	plotStyles={};
 	plotLabels={};
 	
 	collectFunc[keyName_,paramFunc_]:={
@@ -199,7 +195,10 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 				element=elements[[i]];
 				AppendTo[plotList,paramFunc[element,\[Theta]]];
 				elementKeys=Keys[element];
-				AppendTo[plotColors,If[MemberQ[elementKeys,"color"],element["color"],Brown]];
+				(*AppendTo[plotStyles,If[MemberQ[elementKeys,"color"],element["color"],Brown]];*)
+				tmpColor=If[MemberQ[elementKeys,"color"],element["color"],LightBrown];
+				tmpThickness=If[MemberQ[elementKeys,"thickness"],element["thickness"],0.01];
+				AppendTo[plotStyles,{tmpColor,Thickness[tmpThickness]}];
 				AppendTo[plotLabels,If[MemberQ[elementKeys,"label"],element["label"],""]];
 			];
 		];
@@ -211,6 +210,8 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["lines",gParamLine];
 	(*append simple distributions*)
 	collectFunc["basicDisbs",gParamBasicDisb];
+	(*append shading distributions, direction(view or light or normal) varying with \[Theta]*)
+	collectFunc["varyDirectionDisbs",gParamVaryDirectionDisbs];
 	(*append SG distributions*)
 	collectFunc["sgDisbs",gParamSGDisb];
 	(*append SG function distributions*)
@@ -225,7 +226,7 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
 	ParametricPlot[plotList,
 		{\[Theta],0,2 \[Pi]},
-		PlotStyle->plotColors,
+		PlotStyle->plotStyles,
 		PlotLegends->plotLabels,
 		PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
 		AspectRatio->1,

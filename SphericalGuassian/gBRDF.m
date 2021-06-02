@@ -5,6 +5,8 @@ BeginPackage["gBRDF`"];
 
 ClearAll[gPointLightFallOff];
 gPointLightFallOff::usage="function{gPointLightFallOff}";
+ClearAll[gPhongNDF];
+gPhongNDF::usage="function[gPhongNDF]";
 ClearAll[gDGGX];
 gDGGX::usage="function[gDGGX]";
 ClearAll[gVisSmith];
@@ -21,6 +23,16 @@ On[Assert];
 
 (*https://neil3d.github.io/assets/pdf/s2013_pbs_epic_notes_v2.pdf Page 12*)
 gPointLightFallOff[radius_,dist_]:=(Clip[(1-(dist/radius)^4),{0,1}])^2/(dist^2+1);
+
+
+(*Blinn Phong NDF*)
+gPhongNDF[m_,noh_]:=Module[
+	{a2,tmpN},
+	a2=m*m;
+	tmpN=2/a2-2;
+	tmpN=Max[tmpN,0.001];
+	(tmpN+2)/(2 \[Pi])*Max[(noh^tmpN),0]
+];
 
 
 gDGGX[m_,NoH_]=m^2/(\[Pi]*((NoH^2*(m^2-1))+1)^2);
@@ -50,7 +62,7 @@ gBrdfFunc[m_,normalDir_,lightDir_,viewDir_,specularColor_:0.99]:=Module[
 	normal=Normalize[normalDir];
 	light=Normalize[lightDir];
 	view=Normalize[viewDir];
-	half=Normalize[(view+light)/2];
+	half=Normalize[view+light];
 	NoL=Clip[Dot[normal,light],{0,1}];
 	NoV=Dot[normal,view];
 	NoH=Dot[normal,half];
