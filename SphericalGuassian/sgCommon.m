@@ -54,7 +54,7 @@ CosTheta=Dot[v,p];
 Assert[CosTheta>=0];
 Assert[\[Lambda]>=sgMinLambda];
 *)
-If[CosTheta<0||\[Lambda]<sgMinLambda,0,\[Mu]*Exp[\[Lambda]*(CosTheta-1)]]
+If[CosTheta<0(*||\[Lambda]<sgMinLambda*),0,\[Mu]*Exp[\[Lambda]*(CosTheta-1)]]
 ];
 
 
@@ -106,7 +106,7 @@ sgPointLightOld[lightCenter_,lightRadius_,lightIntensity_,shadingPos_]:=Module[
 
 
 sgPointLightNew[lightCenter_,lightRadius_,lightIntensity_,shadingPos_]:=Module[
-    {fitParams,d,distPercent,p,\[Lambda],\[Mu],sgPointLightQuadratic},
+    {fitParams,d,distPercent,p,\[Lambda],\[Mu],sgPointLightQuadratic,tmpMu},
     fitParams={
 		{0.791375,-1.89057,1.0872,6.66654,-10.8249,6.76642},
 		{-0.340146,0.0665636,0.236471,3.79125,0.618155,1.38885},
@@ -122,8 +122,10 @@ sgPointLightNew[lightCenter_,lightRadius_,lightIntensity_,shadingPos_]:=Module[
 	Assert[IntegerQ[lightRadius] && 1<=lightRadius<=5];
 	\[Lambda]=sgPointLightQuadratic[distPercent,fitParams[[lightRadius]][[4]],
 			fitParams[[lightRadius]][[5]],fitParams[[lightRadius]][[6]]];
-	\[Mu]=lightIntensity*sgPointLightQuadratic[distPercent,fitParams[[lightRadius]][[1]],
+	tmpMu=lightIntensity*sgPointLightQuadratic[distPercent,fitParams[[lightRadius]][[1]],
 			fitParams[[lightRadius]][[2]],fitParams[[lightRadius]][[3]]];
+	\[Mu]=If[distPercent>=1,0,tmpMu];
+	
 	{p,\[Lambda],\[Mu]}
 ];
 

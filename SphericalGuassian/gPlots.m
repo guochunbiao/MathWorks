@@ -9,6 +9,7 @@ Needs["gUtils`"];
 
 ClearAll[gParamPlot];
 gParamPlot::usage="function{gParamPlot}";
+gParamLobes::usage="aaa";
 
 
 Begin["`Private`"];
@@ -66,6 +67,41 @@ gParamVaryDirectionDisbs[disbInput_,\[Theta]_]:=Module[
 	lightDir=Normalize[disbInput["lightDir"][<|"\[Theta]"->\[Theta]|>]];
 	normalDir=Normalize[disbInput["normalDir"][<|"\[Theta]"->\[Theta]|>]];
 	gParamVaryingDisbShared[disbInput,\[Theta],viewDir,lightDir,normalDir]
+];
+
+
+ClearAll[gParamLobes];
+gParamLobes[lobeInput_,\[Theta]_]:=Module[
+	{lobeOrigin,inputKeys,viewDir,lightDir,normalDir,halfDir,roughness,
+		nol,noh,voh,nov,lobeFunc,
+		lightIntensity,shadingPos,
+		(*point light related*)lightCenter,lightRadius},
+	inputKeys=Keys[lobeInput];
+	(*mandatory inputs*)
+	lobeOrigin=lobeInput["origin"];
+	shadingPos=lobeOrigin;
+	lobeFunc=lobeInput["lobeFunc"];
+	(*optional inputs*)
+	viewDir=If[MemberQ[inputKeys,"viewDir"],
+		Normalize[lobeInput["viewDir"][<|"\[Theta]"->\[Theta]|>]],NaN];
+	lightDir=If[MemberQ[inputKeys,"lightDir"],
+		Normalize[lobeInput["lightDir"][<|"\[Theta]"->\[Theta]|>]],NaN];
+	normalDir=If[MemberQ[inputKeys,"normalDir"],
+		Normalize[lobeInput["normalDir"][<|"\[Theta]"->\[Theta]|>]],NaN];
+	halfDir=Normalize[viewDir+lightDir];
+	roughness=If[MemberQ[inputKeys,"roughness"],lobeInput["roughness"],NaN];
+	lightIntensity=If[MemberQ[inputKeys,"lightIntensity"],lobeInput["lightIntensity"],NaN];
+	lightCenter=If[MemberQ[inputKeys,"lightCenter"],lobeInput["lightCenter"],NaN];
+	lightRadius=If[MemberQ[inputKeys,"lightRadius"],lobeInput["lightRadius"],NaN];
+	nol=Clip[Dot[normalDir,lightDir],{0,1}];
+	noh=Clip[Dot[normalDir,halfDir],{0,1}];
+	voh=Clip[Dot[viewDir,halfDir],{0,1}];
+	nov=Clip[Dot[normalDir,viewDir],{0,1}];
+	
+	lobeFunc[<|"\[Theta]"->\[Theta],"viewDir"->viewDir,"lightDir"->lightDir,"normalDir"->normalDir,
+		"halfDir"->halfDir,"roughness"->roughness,"lightIntensity"->lightIntensity,
+		"shadingPos"->shadingPos,"lightCenter"->lightCenter,"lightRadius"->lightRadius,
+		"nol"->nol,"noh"->noh,"voh"->voh,"nov"->nov|>]
 ];
 
 
@@ -242,6 +278,8 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["sgPointLights",gParamSGPointLight];
 	(*append SG point lights*)
 	collectFunc["sgGroundShading",gParamSGGroundShading];
+	(*append lobes, direction(view or light or normal) might varying with \[Theta]*)
+	collectFunc["lobes",gParamLobes];
 
 	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
 	ParametricPlot[plotList,
