@@ -31,7 +31,29 @@ gParamLine[lineInput_,\[Theta]_]:=Module[
 	startPos=lineInput["startPos"];
 	dirVector=lineInput["dirVec"];
 	length=lineInput["length"];
-	startPos+(length/2\[Pi])*\[Theta]*Normalize[dirVector]
+	startPos+(0.1*length/2\[Pi])*\[Theta]*Normalize[dirVector]
+];
+
+
+ClearAll[gParamCone];
+gParamCone[coneInput_,\[Theta]_]:=Module[
+	{origin,radius,cone,coneCenterTheta,coneDeltaTheta,
+		arcMinTheta,arcMaxTheta,arcRange,rescaledTheta},
+	origin=coneInput["origin"];
+	radius=coneInput["radius"];
+	cone=coneInput["cone"];
+	coneCenterTheta=cone[[1]];
+	coneDeltaTheta=cone[[2]];
+	arcMinTheta=coneCenterTheta-coneDeltaTheta;
+	arcMaxTheta=coneCenterTheta+coneDeltaTheta;
+	arcRange=arcMaxTheta-arcMinTheta;
+	rescaledTheta=Rescale[\[Theta],{0,2\[Pi]},{arcMinTheta,arcMaxTheta}];
+	
+	{
+		(origin+radius*{Cos[rescaledTheta],Sin[rescaledTheta]}),
+		origin+(0.1*radius/2\[Pi])*\[Theta]*FromPolarCoordinates[{1,arcMinTheta}],
+		origin+(0.1*radius/2\[Pi])*\[Theta]*FromPolarCoordinates[{1,arcMaxTheta}]
+	}
 ];
 
 
@@ -247,11 +269,25 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 			elements=inputs[[keyName]];
 			For[i=1,i<=Length[elements],i++,
 				element=elements[[i]];
-				AppendTo[plotList,paramFunc[element,\[Theta]]];
+				evaluated=paramFunc[element,\[Theta]];
+				(*AppendTo[plotList,paramFunc[element,\[Theta]]];*)
 				elementKeys=Keys[element];
-				(*AppendTo[plotStyles,If[MemberQ[elementKeys,"color"],element["color"],Brown]];*)
 				tmpColor=If[MemberQ[elementKeys,"color"],element["color"],LightBrown];
 				tmpThickness=If[MemberQ[elementKeys,"thickness"],element["thickness"],0.01];
+				
+			(*	If[hasSubElement,
+					Block[
+						{},
+						For[j=1,j\[LessEqual]Length[evaluated],j++,
+							AppendTo[plotList,evaluated]
+						]
+					],
+					Block[
+						{},
+						AppendTo[plotList,evaluated];
+					]
+				];*)
+				AppendTo[plotList,evaluated];
 				AppendTo[plotStyles,{tmpColor,Thickness[tmpThickness]}];
 				AppendTo[plotLabels,If[MemberQ[elementKeys,"label"],element["label"],""]];
 			];
@@ -262,6 +298,8 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["circles",gParamCircle];
 	(*append dir lines*)
 	collectFunc["lines",gParamLine];
+	(*append cones*)
+	collectFunc["cones",gParamCone];
 	(*append simple distributions*)
 	collectFunc["basicDisbs",gParamBasicDisb];
 	(*append shading distributions, direction(view or light or normal) varying with \[Theta]*)
