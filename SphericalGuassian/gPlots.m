@@ -9,7 +9,6 @@ Needs["gUtils`"];
 
 ClearAll[gParamPlot];
 gParamPlot::usage="function{gParamPlot}";
-gParamLobes::usage="aaa";
 
 
 Begin["`Private`"];
@@ -264,7 +263,9 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	plotStyles={};
 	plotLabels={};
 	
-	collectFunc[keyName_,paramFunc_]:={
+	collectFunc[keyName_,paramFunc_]:=Block[
+		{elements,element,evaluated,elementKeys,tmpColor,tmpThickness},
+		
 		If[MemberQ[inputKeys,keyName],
 			elements=inputs[[keyName]];
 			For[i=1,i<=Length[elements],i++,
@@ -292,7 +293,7 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 				AppendTo[plotLabels,If[MemberQ[elementKeys,"label"],element["label"],""]];
 			];
 		];
-	};
+	];
 	
 	(*append circles*)
 	collectFunc["circles",gParamCircle];
@@ -321,7 +322,7 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 
 	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
 	ParametricPlot[plotList,
-		{\[Theta],0,2 \[Pi]},
+		{\[Theta],0,2\[Pi]},
 		PlotStyle->plotStyles,
 		PlotLegends->plotLabels,
 		PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent}},

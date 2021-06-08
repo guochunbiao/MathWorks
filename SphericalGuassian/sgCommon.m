@@ -41,6 +41,10 @@ ClearAll[sgNDF];
 sgNDF::usage="function[sgNDF]";
 ClearAll[sgNDFConvLight];
 sgNDFConvLight::usage="function[sgNDFConvLight]";
+ClearAll[asgVector];
+asgVector::usage="function[asgVector]";
+ClearAll[asgPolar];
+asgPolar::usage="function[asgPolar]";
 
 
 Begin["`Private`"];
@@ -49,12 +53,36 @@ On[Assert];
 
 sgVector[v_,{p_,\[Lambda]_,\[Mu]_}]:=Module[
 {CosTheta},
-CosTheta=Dot[v,p];
+CosTheta=Dot[Normalize[v],Normalize[p]];
 (*
 Assert[CosTheta>=0];
 Assert[\[Lambda]>=sgMinLambda];
 *)
-If[CosTheta<0(*||\[Lambda]<sgMinLambda*),0,\[Mu]*Exp[\[Lambda]*(CosTheta-1)]]
+(*If[CosTheta<0(*||\[Lambda]<sgMinLambda*),0,\[Mu]*Exp[\[Lambda]*(CosTheta-1)]]*)
+\[Mu]*Exp[\[Lambda]*(CosTheta-1)]
+];
+
+
+(*
+	z:lobe axis
+	x:tagent axis
+	y:bi-tangent axis
+	\[Lambda]:bandwidth for x-axis
+	\[Mu]:bandwidth for y-axis
+	c:lobe amplitude
+*)
+asgVector[v_,{lobeAxis_,tangentAxis_,bitangentAxis_},
+	{xBandwidth_,yBandwidth_},amplitude_]:=Module[
+	{z,x,y,\[Lambda],\[Mu],c,Svz},
+	z=Normalize[lobeAxis];
+	x=Normalize[tangentAxis];
+	y=Normalize[bitangentAxis];
+	\[Lambda]=xBandwidth;
+	\[Mu]=yBandwidth;
+	c=amplitude;
+	
+	Svz=Max[Dot[v,z],0];
+	c*Svz*Exp[-\[Lambda]*(Dot[v,x])^2-\[Mu]*(Dot[v,y])^2]
 ];
 
 
