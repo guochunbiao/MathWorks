@@ -10,14 +10,16 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      1820,         59]
-NotebookOptionsPosition[      1522,         46]
-NotebookOutlinePosition[      1868,         61]
-CellTagsIndexPosition[      1825,         58]
+NotebookDataLength[     25511,        569]
+NotebookOptionsPosition[     24665,        547]
+NotebookOutlinePosition[     25009,        562]
+CellTagsIndexPosition[     24966,        559]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
+
+Cell[CellGroupData[{
 Cell[BoxData[{
  RowBox[{
   RowBox[{"SetDirectory", "[", 
@@ -37,15 +39,514 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{"Needs", "[", "\"\<gSphericalCap`\>\"", "]"}], ";"}], 
-  "\[IndentingNewLine]", "\[IndentingNewLine]", 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "gPrint", "[", "\"\<Intersection points of two spherical caps\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", "     ", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"centroidPt", "=", 
+     RowBox[{"Quiet", "@", 
+      RowBox[{"gSpherCapIntsCentroid", "[", 
+       RowBox[{
+       "capDir1", ",", "capAperture1", ",", "capDir2", ",", "capAperture2"}], 
+       "]"}]}]}], ";", "\[IndentingNewLine]", "  ", 
+    RowBox[{"gParamPlot3D", "[", "\[IndentingNewLine]", " ", 
+     RowBox[{"<|", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<spheres\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "   ", 
+           RowBox[{
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", 
+               RowBox[{"#intsPoints", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.03"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Red", "]"}]}]}], "|>"}], ",", 
+            "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", 
+               RowBox[{"#intsPoints", "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.03"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Red", "]"}]}]}], "|>"}]}], 
+           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", " ", 
+        RowBox[{"<|", 
+         RowBox[{"\"\<intsPoints\>\"", "\[Rule]", "centroidPt"}], "|>"}], 
+        "]"}], ",", "\[IndentingNewLine]", "   ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<spherCaps\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "   ", 
+           RowBox[{
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "1"}], ",", 
+              RowBox[{"\"\<coneDir\>\"", "\[Rule]", "#capDir1"}], ",", 
+              RowBox[{"\"\<coneAperture\>\"", "\[Rule]", "#capAperture1"}]}], 
+             "|>"}], ",", "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "1"}], ",", 
+              RowBox[{"\"\<coneDir\>\"", "\[Rule]", "#capDir2"}], ",", 
+              RowBox[{"\"\<coneAperture\>\"", "\[Rule]", "#capAperture2"}], 
+              ",", "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "LightBlue", "]"}]}]}], "|>"}]}], 
+           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", 
+        RowBox[{"<|", 
+         RowBox[{
+          RowBox[{"\"\<capDir1\>\"", "\[Rule]", "capDir1"}], ",", 
+          RowBox[{"\"\<capDir2\>\"", "\[Rule]", "capDir2"}], ",", 
+          RowBox[{"\"\<capAperture1\>\"", "\[Rule]", "capAperture1"}], ",", 
+          RowBox[{"\"\<capAperture2\>\"", "\[Rule]", "capAperture2"}]}], 
+         "|>"}], "]"}], ",", "\[IndentingNewLine]", "    ", 
+       RowBox[{"\"\<spherCapInts\>\"", "\[Rule]", 
+        RowBox[{"{", "\[IndentingNewLine]", "\t ", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<spherCapPair\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"1", ",", "2"}], "}"}]}], ",", 
+           RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+            RowBox[{"Function", "[", "Blue", "]"}]}], ",", 
+           RowBox[{"\"\<zbias\>\"", "\[Rule]", "1"}]}], "|>"}], 
+         "\[IndentingNewLine]", "       ", "}"}]}], ",", 
+       "\[IndentingNewLine]", "     ", 
+       RowBox[{"\"\<axisExtent\>\"", "\[Rule]", "1.5"}]}], 
+      "\[IndentingNewLine]", "|>"}], "]"}]}], ",", "\[IndentingNewLine]", 
+   "   ", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"capDir1", ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], "}"}], "}"}], ",", 
+   "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"capDir2", ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", 
+         RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}], ",", "0.001"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1", ",", "1"}], "}"}]}], "}"}], ",", 
+   "\[IndentingNewLine]", "  ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"capAperture1", ",", 
+       RowBox[{"\[Pi]", "/", "3"}]}], "}"}], ",", "0", ",", 
+     RowBox[{"\[Pi]", "/", "2"}]}], "}"}], ",", "\[IndentingNewLine]", "  ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"capAperture2", ",", 
+       RowBox[{"3", 
+        RowBox[{"\[Pi]", "/", "10"}]}]}], "}"}], ",", "0", ",", 
+     RowBox[{"\[Pi]", "/", "2"}]}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"Method", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "False"}], "}"}]}]}], 
+  "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]"}], "Input",
  CellChangeTimes->{{3.8321212842610292`*^9, 3.8321213227938147`*^9}, {
-  3.832210205999543*^9, 3.8322102074834433`*^9}, {3.832210531199204*^9, 
-  3.8322105349599004`*^9}},ExpressionUUID->"f0e648ee-f34f-4104-9ddb-\
-f49c9767f0e9"]
+   3.832210205999543*^9, 3.8322102074834433`*^9}, {3.832210531199204*^9, 
+   3.8322105349599004`*^9}, {3.8322105827189474`*^9, 
+   3.8322105903449945`*^9}, {3.8322106627300854`*^9, 3.832210770938238*^9}, {
+   3.8322199576756883`*^9, 3.8322199971687098`*^9}, 3.8322230471655493`*^9, {
+   3.832223115985383*^9, 3.8322231471058607`*^9}, 3.8322242229456453`*^9, {
+   3.832230164190217*^9, 3.832230179944717*^9}, {3.832232187553664*^9, 
+   3.832232259710579*^9}, {3.8322322955835924`*^9, 3.832232328272789*^9}, {
+   3.8322324090605416`*^9, 3.8322324188293915`*^9}, {3.832232503904131*^9, 
+   3.8322325253668585`*^9}, {3.8322326444125447`*^9, 
+   3.8322326509677362`*^9}, {3.832232871990279*^9, 3.8322328746250467`*^9}, 
+   3.8322329881468315`*^9, 3.8322331016087914`*^9, 3.83223313325909*^9, {
+   3.8322335161492634`*^9, 3.8322335505715113`*^9}, {3.8322359277321916`*^9, 
+   3.832235936282449*^9}},
+ CellLabel->
+  "In[442]:=",ExpressionUUID->"f0e648ee-f34f-4104-9ddb-f49c9767f0e9"],
+
+Cell[BoxData[
+ StyleBox["\<\" Intersection points of two spherical caps\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{
+  3.8322106909632893`*^9, {3.8322199648480825`*^9, 3.8322199773973064`*^9}, 
+   3.8322230187839546`*^9, 3.8322230541231174`*^9, 3.832223118903562*^9, 
+   3.8322231559752226`*^9, 3.83222422360089*^9, {3.832230153080617*^9, 
+   3.832230182059477*^9}, 3.8322308676890945`*^9, 3.8322322040444546`*^9, 
+   3.8322322612603054`*^9, {3.8322323091854897`*^9, 3.832232329081808*^9}, 
+   3.8322324196019135`*^9, {3.8322325110883274`*^9, 3.832232526204382*^9}, 
+   3.8322326515542507`*^9, 3.832232875576206*^9, 3.8322329892191496`*^9, 
+   3.8322331031573305`*^9, 3.8322331341030593`*^9, {3.8322335194669666`*^9, 
+   3.832233551237774*^9}, 3.832233866773921*^9, 3.8322359371118126`*^9},
+ CellLabel->
+  "During evaluation of \
+In[442]:=",ExpressionUUID->"ef255607-164e-4902-bc79-4f4928a4e033"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`capAperture1$$ = Rational[1, 3] 
+    Pi, $CellContext`capAperture2$$ = Rational[3, 10] 
+    Pi, $CellContext`capDir1$$ = {0, 0, 1}, $CellContext`capDir2$$ = {1, -1, 
+    1}, Typeset`show$$ = False, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`capDir1$$], {0, 0, 1}}}, {{
+       Hold[$CellContext`capDir2$$], {1, -1, 1}}, {-1, -1, 0.001}, {1, 1, 
+      1}}, {{
+       Hold[$CellContext`capAperture1$$], Rational[1, 3] Pi}, 0, 
+      Rational[1, 2] Pi}, {{
+       Hold[$CellContext`capAperture2$$], Rational[3, 10] Pi}, 0, 
+      Rational[1, 2] Pi}}, Typeset`size$$ = {85., {47., 53.}}, 
+    Typeset`update$$ = 0, Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`capDir2$27772$$ = {0, 0, 
+    0}, $CellContext`capAperture1$27773$$ = 
+    0, $CellContext`capAperture2$27774$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`capAperture1$$ = 
+        Rational[1, 3] Pi, $CellContext`capAperture2$$ = 
+        Rational[3, 10] Pi, $CellContext`capDir1$$ = {0, 0, 
+         1}, $CellContext`capDir2$$ = {1, -1, 1}}, "ControllerVariables" :> {
+        Hold[$CellContext`capDir2$$, $CellContext`capDir2$27772$$, {0, 0, 0}], 
+        Hold[$CellContext`capAperture1$$, $CellContext`capAperture1$27773$$, 
+         0], 
+        Hold[$CellContext`capAperture2$$, $CellContext`capAperture2$27774$$, 
+         0]}, "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> ($CellContext`centroidPt = Quiet[
+          
+          gSphericalCap`gSpherCapIntsCentroid[$CellContext`capDir1$$, \
+$CellContext`capAperture1$$, $CellContext`capDir2$$, \
+$CellContext`capAperture2$$]]; gPlots3D`gParamPlot3D[
+         Association[
+          ("spheres" -> {
+            Association["center" -> Part[
+               Slot["intsPoints"], 1], "radius" -> 0.03, 
+             "colorFunc" -> (Red& )], 
+            Association["center" -> Part[
+               Slot["intsPoints"], 2], "radius" -> 0.03, 
+             "colorFunc" -> (Red& )]}& )[
+           Association["intsPoints" -> $CellContext`centroidPt]], 
+          ("spherCaps" -> {
+            Association[
+            "center" -> {0, 0, 0}, "radius" -> 1, "coneDir" -> 
+             Slot["capDir1"], "coneAperture" -> Slot["capAperture1"]], 
+            Association[
+            "center" -> {0, 0, 0}, "radius" -> 1, "coneDir" -> 
+             Slot["capDir2"], "coneAperture" -> Slot["capAperture2"], 
+             "colorFunc" -> (LightBlue& )]}& )[
+           Association[
+           "capDir1" -> $CellContext`capDir1$$, 
+            "capDir2" -> $CellContext`capDir2$$, 
+            "capAperture1" -> $CellContext`capAperture1$$, 
+            "capAperture2" -> $CellContext`capAperture2$$]], "spherCapInts" -> {
+            Association[
+            "spherCapPair" -> {1, 2}, "colorFunc" -> (Blue& ), "zbias" -> 1]},
+           "axisExtent" -> 1.5]]), 
+      "Specifications" :> {{{$CellContext`capDir1$$, {0, 0, 
+          1}}}, {{$CellContext`capDir2$$, {1, -1, 1}}, {-1, -1, 0.001}, {1, 1,
+          1}}, {{$CellContext`capAperture1$$, Rational[1, 3] Pi}, 0, 
+         Rational[1, 2] 
+         Pi}, {{$CellContext`capAperture2$$, Rational[3, 10] Pi}, 0, 
+         Rational[1, 2] Pi}}, 
+      "Options" :> {Method -> {"ShowControls" -> False}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{136., {71., 77.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.8322199648909674`*^9, 3.832219977441945*^9}, 
+   3.8322230188288355`*^9, 3.8322230541699886`*^9, 3.8322231189554224`*^9, 
+   3.8322231560211*^9, 3.8322242236388173`*^9, {3.8322301531284885`*^9, 
+   3.83223018210732*^9}, 3.8322308677333956`*^9, 3.8322322040970383`*^9, 
+   3.832232261310172*^9, {3.8322323091834593`*^9, 3.8322323290788155`*^9}, 
+   3.832232419599889*^9, {3.832232511082343*^9, 3.8322325262513294`*^9}, 
+   3.8322326515522547`*^9, 3.8322328756211147`*^9, 3.832232989267061*^9, 
+   3.8322331032013893`*^9, 3.832233134153923*^9, {3.8322335195155544`*^9, 
+   3.832233551283167*^9}, 3.832233866831766*^9, 3.8322359371720295`*^9},
+ CellLabel->
+  "Out[450]=",ExpressionUUID->"eaefeda7-838b-4211-96fd-540477de7415"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "gPrint", "[", 
+   "\"\<Centroid point of the intersection of two spherical caps\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", "     ", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"centroidPt", "=", 
+     RowBox[{"Quiet", "@", 
+      RowBox[{"gSpherCapIntsCentroid", "[", 
+       RowBox[{
+       "capDir1", ",", "capAperture1", ",", "capDir2", ",", "capAperture2"}], 
+       "]"}]}]}], ";", "\[IndentingNewLine]", "  ", 
+    RowBox[{"gParamPlot3D", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"<|", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"\"\<lines\>\"", "\[Rule]", 
+           RowBox[{"{", "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"1", ",", "1", ",", "1"}], "}"}]}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", "1.5"}]}], "|>"}], "\n", 
+            "\t\t", "}"}]}], "&"}], "[", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"\"\<spheres\>\"", "\[Rule]", 
+           RowBox[{"{", "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "#centroidPt"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.03"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Red", "]"}]}]}], "|>"}], 
+            "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", " ", 
+         RowBox[{"<|", 
+          RowBox[{"\"\<centroidPt\>\"", "\[Rule]", "centroidPt"}], "|>"}], 
+         "]"}], ",", "\[IndentingNewLine]", "   ", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"\"\<spherCaps\>\"", "\[Rule]", 
+           RowBox[{"{", "\[IndentingNewLine]", "   ", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<center\>\"", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ",", 
+               RowBox[{"\"\<radius\>\"", "\[Rule]", "1"}], ",", 
+               RowBox[{"\"\<coneDir\>\"", "\[Rule]", "#capDir1"}], ",", 
+               RowBox[{"\"\<coneAperture\>\"", "\[Rule]", "#capAperture1"}]}],
+               "|>"}], ",", "\[IndentingNewLine]", "   ", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<center\>\"", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ",", 
+               RowBox[{"\"\<radius\>\"", "\[Rule]", "1"}], ",", 
+               RowBox[{"\"\<coneDir\>\"", "\[Rule]", "#capDir2"}], ",", 
+               RowBox[{"\"\<coneAperture\>\"", "\[Rule]", "#capAperture2"}], 
+               ",", "\[IndentingNewLine]", "\t", 
+               RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+                RowBox[{"Function", "[", "LightBlue", "]"}]}]}], "|>"}]}], 
+            "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<capDir1\>\"", "\[Rule]", "capDir1"}], ",", 
+           RowBox[{"\"\<capDir2\>\"", "\[Rule]", "capDir2"}], ",", 
+           RowBox[{"\"\<capAperture1\>\"", "\[Rule]", "capAperture1"}], ",", 
+           RowBox[{"\"\<capAperture2\>\"", "\[Rule]", "capAperture2"}]}], 
+          "|>"}], "]"}], ",", "\[IndentingNewLine]", "    ", 
+        RowBox[{"\"\<spherCapInts\>\"", "\[Rule]", 
+         RowBox[{"{", "\[IndentingNewLine]", "\t ", 
+          RowBox[{"<|", 
+           RowBox[{
+            RowBox[{"\"\<spherCapPair\>\"", "\[Rule]", 
+             RowBox[{"{", 
+              RowBox[{"1", ",", "2"}], "}"}]}], ",", 
+            RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+             RowBox[{"Function", "[", "Blue", "]"}]}], ",", 
+            RowBox[{"\"\<zbias\>\"", "\[Rule]", "1"}]}], "|>"}], 
+          "\[IndentingNewLine]", "       ", "}"}]}], ",", 
+        "\[IndentingNewLine]", "     ", 
+        RowBox[{"\"\<axisExtent\>\"", "\[Rule]", "1.5"}]}], 
+       "\[IndentingNewLine]", "|>"}], ",", "Medium"}], "]"}]}], ",", 
+   "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"capDir1", ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], "}"}], "}"}], ",", 
+   "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"capDir2", ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", 
+         RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}], ",", "0.001"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1", ",", "1"}], "}"}]}], "}"}], ",", 
+   "\[IndentingNewLine]", "  ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"capAperture1", ",", 
+       RowBox[{"\[Pi]", "/", "3"}]}], "}"}], ",", "0", ",", 
+     RowBox[{"\[Pi]", "/", "2"}]}], "}"}], ",", "\[IndentingNewLine]", "  ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"capAperture2", ",", 
+       RowBox[{"3", 
+        RowBox[{"\[Pi]", "/", "10"}]}]}], "}"}], ",", "0", ",", 
+     RowBox[{"\[Pi]", "/", "2"}]}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"Method", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "True"}], "}"}]}]}], 
+  "\[IndentingNewLine]", "]"}]}], "Input",
+ CellChangeTimes->{{3.8322338728432245`*^9, 3.8322338880690837`*^9}, {
+   3.8322339230132065`*^9, 3.8322339801315603`*^9}, {3.8322340102226057`*^9, 
+   3.832234013612236*^9}, {3.8322354627707*^9, 3.8322354985792847`*^9}, {
+   3.8322355499613256`*^9, 3.832235554514228*^9}, {3.832235741114032*^9, 
+   3.8322357575210257`*^9}, 3.8322358320352926`*^9, {3.8322358722025166`*^9, 
+   3.8322358777627897`*^9}, {3.83223595649769*^9, 
+   3.8322359903116574`*^9}},ExpressionUUID->"4fe272e8-3b2c-4b18-b7b5-\
+f7a1a2b26511"],
+
+Cell[BoxData[
+ StyleBox["\<\" Centroid point of the intersection of two spherical caps\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{
+  3.8322339121399584`*^9, {3.832233986906575*^9, 3.8322340144160533`*^9}, 
+   3.8322354719710836`*^9, 3.832235833572824*^9, 3.832235879601808*^9},
+ CellLabel->
+  "During evaluation of \
+In[440]:=",ExpressionUUID->"01d70678-b160-4433-a526-21db12aca053"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`capAperture1$$ = Rational[1, 3] 
+    Pi, $CellContext`capAperture2$$ = 
+    0.4963716392671873, $CellContext`capDir1$$ = {0, 0, 
+    1}, $CellContext`capDir2$$ = {0.010000000000000009`, -1, 1}, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`capDir1$$], {0, 0, 1}}}, {{
+       Hold[$CellContext`capDir2$$], {1, -1, 1}}, {-1, -1, 0.001}, {1, 1, 
+      1}}, {{
+       Hold[$CellContext`capAperture1$$], Rational[1, 3] Pi}, 0, 
+      Rational[1, 2] Pi}, {{
+       Hold[$CellContext`capAperture2$$], Rational[3, 10] Pi}, 0, 
+      Rational[1, 2] Pi}}, Typeset`size$$ = {360., {179., 183.}}, 
+    Typeset`update$$ = 0, Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`capDir2$26444$$ = {0, 0, 
+    0}, $CellContext`capAperture1$26445$$ = 
+    0, $CellContext`capAperture2$26446$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`capAperture1$$ = 
+        Rational[1, 3] Pi, $CellContext`capAperture2$$ = 
+        Rational[3, 10] Pi, $CellContext`capDir1$$ = {0, 0, 
+         1}, $CellContext`capDir2$$ = {1, -1, 1}}, "ControllerVariables" :> {
+        Hold[$CellContext`capDir2$$, $CellContext`capDir2$26444$$, {0, 0, 0}], 
+        Hold[$CellContext`capAperture1$$, $CellContext`capAperture1$26445$$, 
+         0], 
+        Hold[$CellContext`capAperture2$$, $CellContext`capAperture2$26446$$, 
+         0]}, "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> ($CellContext`centroidPt = Quiet[
+          
+          gSphericalCap`gSpherCapIntsCentroid[$CellContext`capDir1$$, \
+$CellContext`capAperture1$$, $CellContext`capDir2$$, \
+$CellContext`capAperture2$$]]; gPlots3D`gParamPlot3D[
+         Association[
+          ("lines" -> {
+            Association[
+            "startPos" -> {0, 0, 0}, "dirVec" -> {1, 1, 1}, "length" -> 
+             1.5]}& )[], 
+          ("spheres" -> {
+            Association[
+            "center" -> Slot["centroidPt"], "radius" -> 0.03, 
+             "colorFunc" -> (Red& )]}& )[
+           Association["centroidPt" -> $CellContext`centroidPt]], 
+          ("spherCaps" -> {
+            Association[
+            "center" -> {0, 0, 0}, "radius" -> 1, "coneDir" -> 
+             Slot["capDir1"], "coneAperture" -> Slot["capAperture1"]], 
+            Association[
+            "center" -> {0, 0, 0}, "radius" -> 1, "coneDir" -> 
+             Slot["capDir2"], "coneAperture" -> Slot["capAperture2"], 
+             "colorFunc" -> (LightBlue& )]}& )[
+           Association[
+           "capDir1" -> $CellContext`capDir1$$, 
+            "capDir2" -> $CellContext`capDir2$$, 
+            "capAperture1" -> $CellContext`capAperture1$$, 
+            "capAperture2" -> $CellContext`capAperture2$$]], "spherCapInts" -> {
+            Association[
+            "spherCapPair" -> {1, 2}, "colorFunc" -> (Blue& ), "zbias" -> 1]},
+           "axisExtent" -> 1.5], Medium]), 
+      "Specifications" :> {{{$CellContext`capDir1$$, {0, 0, 
+          1}}}, {{$CellContext`capDir2$$, {1, -1, 1}}, {-1, -1, 0.001}, {1, 1,
+          1}}, {{$CellContext`capAperture1$$, Rational[1, 3] Pi}, 0, 
+         Rational[1, 2] 
+         Pi}, {{$CellContext`capAperture2$$, Rational[3, 10] Pi}, 0, 
+         Rational[1, 2] Pi}}, 
+      "Options" :> {Method -> {"ShowControls" -> True}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{411., {260., 266.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.8322339869591637`*^9, 3.8322340144673595`*^9}, 
+   3.8322354720299253`*^9, 3.8322358336278915`*^9, 3.8322358796577573`*^9},
+ CellLabel->
+  "Out[441]=",ExpressionUUID->"cbfdd28d-f67e-4f50-a611-da2e4d426de7"]
+}, Open  ]]
 },
 WindowSize->{1014, 844},
-WindowMargins->{{Automatic, 125}, {-286, Automatic}},
+WindowMargins->{{Automatic, 214}, {-6, Automatic}},
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
 ]
@@ -60,7 +561,16 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 960, 24, 219, "Input",ExpressionUUID->"f0e648ee-f34f-4104-9ddb-f49c9767f0e9"]
+Cell[CellGroupData[{
+Cell[580, 22, 7150, 162, 656, "Input",ExpressionUUID->"f0e648ee-f34f-4104-9ddb-f49c9767f0e9"],
+Cell[7733, 186, 966, 17, 30, "Print",ExpressionUUID->"ef255607-164e-4902-bc79-4f4928a4e033"],
+Cell[8702, 205, 4901, 93, 167, "Output",ExpressionUUID->"eaefeda7-838b-4211-96fd-540477de7415"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13640, 303, 6132, 139, 523, "Input",ExpressionUUID->"4fe272e8-3b2c-4b18-b7b5-f7a1a2b26511"],
+Cell[19775, 444, 454, 10, 30, "Print",ExpressionUUID->"01d70678-b160-4433-a526-21db12aca053"],
+Cell[20232, 456, 4417, 88, 545, "Output",ExpressionUUID->"cbfdd28d-f67e-4f50-a611-da2e4d426de7"]
+}, Open  ]]
 }
 ]
 *)
