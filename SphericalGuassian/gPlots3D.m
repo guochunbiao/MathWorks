@@ -10,19 +10,74 @@ Needs["gSphericalCap`"];
 
 ClearAll[gParamPlot3D];
 gParamPlot3D::usage="function{gParamPlot3D}";
-gParamSphere::usage="aaa";
 
 
 Begin["`Private`"];
 
 
 ClearAll[gParamSphere];
-gParamSphere[input_,\[Phi]_,\[Theta]_]:=Module[
+gParamSphere[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 	{c,r},
 	c=input["center"];
 	r=input["radius"];
 	
 	c+r*{Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]}
+];
+
+
+ClearAll[gSpherCapVis];
+gSpherCapVis[spherCapInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
+	{center,radius,coneDir,coneAperture,spherePt,deltaCos},
+	center=spherCapInput["center"];
+	radius=spherCapInput["radius"];
+	coneDir=Normalize[spherCapInput["coneDir"]];
+	coneAperture=spherCapInput["coneAperture"];
+	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
+	deltaCos=Dot[spherePt,coneDir];
+	
+	Boole[deltaCos>=Cos[coneAperture]]
+];
+
+
+ClearAll[gParamSpherCap];
+gParamSpherCap[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
+	{center,radius,coneDir,coneAperture,spherePt,deltaCos},
+	center=input["center"];
+	radius=input["radius"];
+	
+	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
+	center+(radius*gSpherCapVis[input,x,y,z,\[Phi],\[Theta]])*spherePt
+];
+
+
+ClearAll[gParamSpherCapInts];
+gParamSpherCapInts[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
+	{inputKeys,capIndex1,capIndex2,zbias,spherCapInputs,spherCapNum,
+		capInput1,capInput2,capVis1,capVis2,
+		capCenter,capRadius,spherePt},
+	inputKeys=Keys[input];
+	
+	capIndex1=input["spherCapPair"][[1]];
+	capIndex2=input["spherCapPair"][[2]];
+	zbias=If[MemberQ[inputKeys,"zbias"],input["zbias"],0];
+	
+	spherCapInputs=globalInput[["spherCaps"]];
+	spherCapNum=Length[spherCapInputs];
+	On[Assert];
+	Assert[capIndex1<=spherCapNum && capIndex2<=spherCapNum];
+	
+	capInput1=spherCapInputs[[capIndex1]];
+	capInput2=spherCapInputs[[capIndex2]];
+	capCenter=capInput1[["center"]];
+	capRadius=capInput1[["radius"]];
+	Assert[capCenter==capInput2[["center"]]];
+	Assert[capRadius==capInput2[["radius"]]];
+	
+	capVis1=gSpherCapVis[capInput1,x,y,z,\[Phi],\[Theta]];
+	capVis2=gSpherCapVis[capInput2,x,y,z,\[Phi],\[Theta]];
+	
+	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
+	capCenter+(capRadius*capVis1*capVis2)*spherePt*(1+zbias*(2^-6))
 ];
 
 
@@ -32,14 +87,16 @@ gMultiColorFunction/:(h:(Plot|Plot3D|ParametricPlot|ParametricPlot3D))[
 		Show[h[#1,before,
 			ColorFunction->#2[[1]],
 			PlotStyle->#2[[2]],
+			PlotPoints->#2[[3]],
+			Mesh->#2[[4]],
 			after]&@@@Transpose[{{fs},cf}]];
 
 
-gParamPlot3D[inputs_,plotPts_:20]:=Module[
+gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	{
 		inputKeys,collectFunc,
 		plotList,colorFuncs,plotLabels,
-		axisExtent
+		axisExtent,viewPoint
 	},
 	inputKeys=Keys[inputs];
 	plotList={};
@@ -48,21 +105,23 @@ gParamPlot3D[inputs_,plotPts_:20]:=Module[
 	
 	collectFunc[keyName_,paramFunc_]:=Block[
 		{elements,element,evaluated,elementKeys,
-			tmpColorFunc,tmpOpacity},
+			tmpColorFunc,tmpOpacity,tmpPlotPts,tmpMeshType},
 		
 		If[MemberQ[inputKeys,keyName],
 			elements=inputs[[keyName]];
 			For[i=1,i<=Length[elements],i++,
 				element=elements[[i]];
-				evaluated=paramFunc[element,\[Phi],\[Theta]];
+				evaluated=paramFunc[element,inputs,x,y,z,\[Phi],\[Theta]];
 				(*AppendTo[plotList,paramFunc[element,\[Phi],\[Theta]]];*)
 				elementKeys=Keys[element];
 				tmpColorFunc=If[MemberQ[elementKeys,"colorFunc"],
-					element["colorFunc"],Function[{\[Phi],\[Theta]},Cyan]];
+					element["colorFunc"],Cyan];
 				tmpOpacity=If[MemberQ[elementKeys,"opacity"],element["opacity"],1];
+				tmpPlotPts=If[MemberQ[elementKeys,"plotPts"],element["plotPts"],20];
+				tmpMeshType=If[MemberQ[elementKeys,"mesh"],element["mesh"],Full];
 				
 				AppendTo[plotList,evaluated];
-				AppendTo[colorFuncs,{tmpColorFunc,Opacity[tmpOpacity]}];
+				AppendTo[colorFuncs,{tmpColorFunc,Opacity[tmpOpacity],tmpPlotPts,tmpMeshType}];
 				AppendTo[plotLabels,If[MemberQ[elementKeys,"label"],element["label"],""]];
 			];
 		];
@@ -70,16 +129,22 @@ gParamPlot3D[inputs_,plotPts_:20]:=Module[
 	
 	(*append spheres*)
 	collectFunc["spheres",gParamSphere];
+	(*apppend spherical caps*)
+	collectFunc["spherCaps",gParamSpherCap];
+	(*apppend intersections of spherical caps*)
+	collectFunc["spherCapInts",gParamSpherCapInts];
 	
 	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];	
+	viewPoint=If[MemberQ[inputKeys,"viewPoint"],inputs[["viewPoint"]],{1.3,-2.4,2}];	
 	ParametricPlot3D[#1,
 		{\[Phi],0,2\[Pi]},{\[Theta],0,\[Pi]},
 		gMultiColorFunction[#2],
 		ColorFunctionScaling->False,
 		PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
-		PlotPoints->plotPts,
-		Mesh->None,
-		AspectRatio->1]&[plotList,colorFuncs]
+		AspectRatio->1,
+		Lighting->{"Ambient",White},
+		ViewPoint->viewPoint,
+		ImageSize->imageSize]&[plotList,colorFuncs]
 ];
 
 
