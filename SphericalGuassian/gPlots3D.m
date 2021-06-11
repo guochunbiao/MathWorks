@@ -28,16 +28,17 @@ gParamLine3D[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 
 ClearAll[gParamSphere];
 gParamSphere[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
-	{c,r},
+	{c,r,zbias},
 	c=input["center"];
 	r=input["radius"];
+	zbias=If[MemberQ[inputKeys,"zbias"],input["zbias"],0];
 	
-	c+r*{Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]}
+	c+r*{Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]}*(1+zbias*2^-6)
 ];
 
 
-ClearAll[gSpherCapVis2];
-gSpherCapVis2[spherCapInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
+ClearAll[gLocalSpherCapVis];
+gLocalSpherCapVis[spherCapInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 	{coneDir,coneAperture},
 	coneDir=Normalize[spherCapInput["coneDir"]];
 	coneAperture=spherCapInput["coneAperture"];
@@ -55,7 +56,26 @@ gParamSpherCap[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 	zbias=If[MemberQ[inputKeys,"zbias"],input["zbias"],0];
 	
 	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
-	center+(radius*gSpherCapVis2[input,x,y,z,\[Phi],\[Theta]])*spherePt*(1+zbias*2^-6)
+	center+(radius*gLocalSpherCapVis[input,x,y,z,\[Phi],\[Theta]])*spherePt*(1+zbias*2^-6)
+];
+
+
+ClearAll[gParamSpherSeg];
+gParamSpherSeg[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
+	{inputKeys,center,radius,zbias,segAxis,segH1,segH2,sphereVec},
+	inputKeys=Keys[input];
+	center=input["center"];
+	radius=input["radius"];
+	zbias=If[MemberQ[inputKeys,"zbias"],input["zbias"],0];
+	segAxis=Normalize[input["segAxis"]];
+	segH1=input["segH1"];
+	segH2=input["segH2"];
+	
+	On[Assert];
+	Assert[segH1>=0&&segH2<=2&&segH1<segH2];
+	
+	sphereVec={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
+	center+(radius*gSpherSegmentVis[segAxis,segH1,segH2,\[Phi],\[Theta]])*sphereVec*(1+zbias*2^-6)
 ];
 
 
@@ -82,8 +102,8 @@ gParamSpherCapInts[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 	Assert[capCenter==capInput2[["center"]]];
 	Assert[capRadius==capInput2[["radius"]]];
 	
-	capVis1=gSpherCapVis2[capInput1,x,y,z,\[Phi],\[Theta]];
-	capVis2=gSpherCapVis2[capInput2,x,y,z,\[Phi],\[Theta]];
+	capVis1=gLocalSpherCapVis[capInput1,x,y,z,\[Phi],\[Theta]];
+	capVis2=gLocalSpherCapVis[capInput2,x,y,z,\[Phi],\[Theta]];
 	
 	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
 	capCenter+(capRadius*capVis1*capVis2)*spherePt*(1+zbias*2^-6)
@@ -105,7 +125,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	{
 		inputKeys,collectFunc,
 		plotList,colorFuncs,plotLabels,
-		axisExtent,viewPoint
+		axisExtent,projSettings,viewPoint,viewProj
 	},
 	inputKeys=Keys[inputs];
 	plotList={};
@@ -144,9 +164,14 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["spherCaps",gParamSpherCap];
 	(*apppend intersections of spherical caps*)
 	collectFunc["spherCapInts",gParamSpherCapInts];
+	(*apppend spherical segments*)
+	collectFunc["spherSegs",gParamSpherSeg];
 	
-	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];	
-	viewPoint=If[MemberQ[inputKeys,"viewPoint"],inputs[["viewPoint"]],{1.3,-2.4,2}];	
+	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
+	projSettings=If[MemberQ[inputKeys,"viewPoint"],
+			{inputs[["viewPoint"]],"Orthographic"},{{1.3,-2.4,2},"Perspective"}];
+	viewPoint=projSettings[[1]];
+	viewProj=projSettings[[2]];
 	ParametricPlot3D[#1,
 		{\[Phi],0,2\[Pi]},{\[Theta],0,\[Pi]},
 		gMultiColorFunction[#2],
@@ -155,6 +180,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 		AspectRatio->1,
 		Lighting->{"Ambient",White},
 		ViewPoint->viewPoint,
+		ViewProjection->viewProj,
 		ImageSize->imageSize]&[plotList,colorFuncs]
 ];
 

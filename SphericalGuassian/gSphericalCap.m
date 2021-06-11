@@ -5,7 +5,7 @@ BeginPackage["gSphericalCap`"];
 
 ClearAll[gSpherCap,gSolveCapIntsPoints,gSpherCapVis,gSpherCapIntsVis,gSpherCapRegion,
 		gSolveSpherCapIntsCentroid,gSolveSpherCapArea,gSpherCapIntsArea,gSpherCapVis2,
-		gSpherCapIntsVis2,gSpherCapIntsAreaError];
+		gSpherCapIntsVis2,gSpherCapIntsAreaError,gSpherSegmentVis,gSpherCapIntsEdgeInfo];
 gSphericalCap::usage="gSphericalCap";
 gSolveCapIntsPoints::usage="gSolveCapIntsPoints";
 gSpherCapVis::usage="gSpherCapVis";
@@ -17,6 +17,7 @@ gSolveSpherCapIntsCentroid::usage="gSolveSpherCapIntsCentroid";
 gSpherCapArea::usage="gSpherCapArea";
 gSpherCapIntsArea::usage="gSpherCapIntsArea";
 gSpherCapIntsAreaError::usage="gSpherCapIntsAreaError";
+gSpherCapIntsEdgeInfo::usage="gSpherCapIntsEdgeInfo";
 
 
 Begin["`Private`"];
@@ -86,6 +87,17 @@ gSpherCapIntsVis2[coneDir1_,coneAperture1_,coneDir2_,coneAperture2_,spherePt_]:=
 ];
 
 
+gSpherSegmentVis[segAxis_,segH1_,segH2_,\[Phi]_,\[Theta]_]:=Module[
+	{spherePt,sphereVec,h},
+	
+	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
+	sphereVec=Normalize[spherePt];
+	h=Dot[sphereVec,Normalize[segAxis]];
+	
+	Boole[segH1<=h<=segH2]
+];
+
+
 gSpherCapRegion[coneDir_,coneAperture_,\[Phi]_,\[Theta]_]:=Module[
 	{spherePt,vis},
 	
@@ -130,7 +142,7 @@ gSpherCapIntsArea[spherCap1_,spherCap2_]:=Module[
 	\[Psi]d=ArcCos[Dot[\[Omega]1,\[Omega]2]];
 	
 	area1=2\[Pi]*(1-Cos[\[Psi]1]);
-	pfunc[x_]=3x^2-2x^3;
+	pfunc[x_]:=3x^2-2x^3;
 	area2=area1*pfunc[(\[Psi]1+\[Psi]2-\[Psi]d)/(2\[Psi]1)];
 	
 	Which[(\[Psi]2-\[Psi]1)>=\[Psi]d,area1,(\[Psi]1+\[Psi]2)<=\[Psi]d,0,True,area2]
@@ -145,6 +157,33 @@ gSpherCapIntsAreaError[spherCap1_,spherCap2_]:=Module[
 			{x,y,z}\[Element]Sphere[],PrecisionGoal->2,AccuracyGoal->2,MaxRecursion->2];
 	
 	Abs[data1-data2]
+];
+
+
+(*returns: 1.apex point covered or not?  2.left edge point. 3.right edge point*)
+gSpherCapIntsEdgeInfo[capAxis1_,capApert1_,capAxis2_,capApert2_]:=Module[
+	{axis1,axis2,edgeAngleL,edgeAngleR,axisDot,\[Psi]1,\[Psi]1L,\[Psi]1R,\[Psi]2,\[Psi]2L,\[Psi]2R,apex1Covered},
+	axis1=Normalize[capAxis1];
+	axis2=Normalize[capAxis2];
+
+	axisDot=Dot[axis1,axis2];
+
+	\[Psi]1=0;
+	\[Psi]1L=\[Psi]1-capApert1;
+	\[Psi]1R=\[Psi]1+capApert1;
+	\[Psi]2=0+ArcCos[axisDot];
+	\[Psi]2L=\[Psi]2-capApert2;
+	\[Psi]2R=\[Psi]2+capApert2;
+
+	edgeAngleL=Max[\[Psi]1L,\[Psi]2L];
+	edgeAngleR=Min[\[Psi]1R,\[Psi]2R];
+	
+	On[Assert];
+	Assert[edgeAngleL<edgeAngleR];
+
+	apex1Covered=Boole[\[Psi]2L<0&&\[Psi]2R>0];
+	(*returns: 1.apex point covered or not?  2.left edge point. 3.right edge point*)
+	{apex1Covered,edgeAngleL,edgeAngleR}
 ];
 
 
