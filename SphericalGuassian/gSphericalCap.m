@@ -5,7 +5,8 @@ BeginPackage["gSphericalCap`"];
 
 ClearAll[gSpherCap,gSolveCapIntsPoints,gSpherCapVis,gSpherCapIntsVis,gSpherCapRegion,
 		gSolveSpherCapIntsCentroid,gSolveSpherCapArea,gSpherCapIntsArea,gSpherCapVis2,
-		gSpherCapIntsVis2,gSpherCapIntsAreaError,gSpherSegmentVis,gSpherCapIntsEdgeInfo];
+		gSpherCapIntsVis2,gSpherCapIntsAreaError,gSpherSegmentVis,gSpherCapIntsEdgeInfo,
+		gSpherCapIntsBaseRefs,gSpherCapIntsRegionVis];
 gSphericalCap::usage="gSphericalCap";
 gSolveCapIntsPoints::usage="gSolveCapIntsPoints";
 gSpherCapVis::usage="gSpherCapVis";
@@ -18,6 +19,8 @@ gSpherCapArea::usage="gSpherCapArea";
 gSpherCapIntsArea::usage="gSpherCapIntsArea";
 gSpherCapIntsAreaError::usage="gSpherCapIntsAreaError";
 gSpherCapIntsEdgeInfo::usage="gSpherCapIntsEdgeInfo";
+gSpherCapIntsBaseRefs::usage="gSpherCapIntsBaseRefs";
+gSpherCapIntsRegionVis::usage="gSpherCapIntsRegionVis";
 
 
 Begin["`Private`"];
@@ -184,6 +187,64 @@ gSpherCapIntsEdgeInfo[capAxis1_,capApert1_,capAxis2_,capApert2_]:=Module[
 	apex1Covered=Boole[\[Psi]2L<0&&\[Psi]2R>0];
 	(*returns: 1.apex point covered or not?  2.left edge point. 3.right edge point*)
 	{apex1Covered,edgeAngleL,edgeAngleR}
+];
+
+
+gSpherCapIntsBaseRefs[capAxis1_,capApert1_,capAxis2_,capApert2_]:=Module[
+	{axis1,axis2,edgeAngleL,edgeAngleR,axisDot,\[Psi]1,\[Psi]1L,\[Psi]1R,\[Psi]2,\[Psi]2L,\[Psi]2R,apex1Covered,
+	baseHemiApert,baseQuaterCenter,baseQuaterApert},
+	axis1=Normalize[capAxis1];
+	axis2=Normalize[capAxis2];
+
+	axisDot=Dot[axis1,axis2];
+
+	\[Psi]1=0;
+	\[Psi]1L=\[Psi]1-capApert1;
+	\[Psi]1R=\[Psi]1+capApert1;
+	\[Psi]2=0+ArcCos[axisDot];
+	\[Psi]2L=\[Psi]2-capApert2;
+	\[Psi]2R=\[Psi]2+capApert2;
+
+	edgeAngleL=Max[\[Psi]1L,\[Psi]2L];
+	edgeAngleR=Min[\[Psi]1R,\[Psi]2R];
+	
+	On[Assert];
+	Assert[edgeAngleL<edgeAngleR];
+
+	apex1Covered=(\[Psi]2L<0&&\[Psi]2R>0);
+	baseHemiApert=If[apex1Covered,Min[Abs[edgeAngleL],Abs[edgeAngleR]],0];
+    baseQuaterApert=If[apex1Covered,0,Abs[edgeAngleR-edgeAngleL]/2];
+    baseQuaterCenter=(edgeAngleR+edgeAngleL)/2;
+    {baseHemiApert,baseQuaterCenter,baseQuaterApert}
+];
+
+
+gSpherCapIntsRegionVis[capAxis1_,capApert1_,capAxis2_,capApert2_,\[Phi]_,\[Theta]_]:=Module[
+	{visHemiA1,visHemiA2,visHemiB1,visHemiB2,visQuaterA1,visQuaterA2,
+	  spherePt,axis1,axis2,edgeAngleL,edgeAngleR,axisDot,\[Psi]1,\[Psi]1L,\[Psi]1R,\[Psi]2,\[Psi]2L,\[Psi]2R,
+	  apex1Covered},
+	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
+	axis1=Normalize[capAxis1];
+	axis2=Normalize[capAxis2];
+
+	axisDot=Dot[axis1,axis2];
+
+	\[Psi]1=0;
+	\[Psi]1L=\[Psi]1-capApert1;
+	\[Psi]1R=\[Psi]1+capApert1;
+	\[Psi]2=0+ArcCos[axisDot];
+	\[Psi]2L=\[Psi]2-capApert2;
+	\[Psi]2R=\[Psi]2+capApert2;
+
+	edgeAngleL=Max[\[Psi]1L,\[Psi]2L];
+	edgeAngleR=Min[\[Psi]1R,\[Psi]2R];
+	
+	On[Assert];
+	Assert[edgeAngleL<edgeAngleR];
+
+	apex1Covered=(\[Psi]2L<0&&\[Psi]2R>0);
+	
+	{}
 ];
 
 
