@@ -40,7 +40,7 @@ gParamSphere[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 
 ClearAll[gParamSpherRange];
 gParamSpherRange[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
-	{inputKeys,c,r,spherePt,axisDir,minTheta,maxTheta,minPhi,maxPhi,vis,zbias,
+	{inputKeys,c,r,spherePt,axisDir,minTheta,maxTheta,minPhi,maxPhi,vis,vis2,zbias,
 		rebasedSpherePt,rebasedPolarPt,rebasedTheta,rebasedPhi},
 	inputKeys=Keys[input];
 	c=input["center"];
@@ -54,9 +54,10 @@ gParamSpherRange[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 	maxPhi=input["rangePhi"][[2]];
 	
 	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};	
-	vis=Boole[minTheta<=\[Theta]<=maxTheta&&minPhi<=\[Phi]<=maxPhi];
+	vis=(minTheta<=\[Theta]<=maxTheta&&minPhi<=\[Phi]<=maxPhi);
+	vis2=If[minPhi<0,minTheta<=\[Theta]<=maxTheta&&(minPhi+2\[Pi])<=\[Phi]<=2\[Pi],0];
 	
-	c+vis*r*spherePt*(1+zbias*2^-6)
+	c+Boole[vis||vis2]*r*spherePt*(1+zbias*2^-6)
 ];
 
 

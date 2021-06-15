@@ -8,7 +8,7 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 sgRawFa,sgFa,sgInvFa,sgPointLightOld,sgPointLightNew,sgClampedCosine,sgDiffuseLighting,
 		 sgRawNDF,sgRawNDFConvHalfVec,sgNDF,sgNDFConvLight,asgVector,asgPolar,
 		 solveSgArea,sgArea,solveSgAsCap,sgAsCap,sgCapIntsArea,sgSolveEnergy,sgEnergy,
-		 asgArea,solveSgCapIntsEnergy];
+		 asgArea,solveSgCapIntsEnergy,sgSolveEnergyInRange,sgEnergyInRange];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -38,6 +38,8 @@ sgAsCap::usage="sgAsCap";
 sgCapIntsArea::usage="sgCapIntsArea";
 sgSolveEnergy::usage="sgSolveEnergy";
 sgEnergy::usage="sgEnergy";
+sgSolveEnergyInRange::usage="sgSolveEnergyInRange";
+sgEnergyInRange::usage="sgEnergyInRange";
 solveSgCapIntsEnergy::usage="solveSgInts";
 
 
@@ -276,6 +278,19 @@ sgSolveEnergy[sg_,\[Epsilon]_:0.01]:=Module[
 
 
 
+sgSolveEnergyInRange[sg_]:=Module[
+	{p,\[Lambda],\[Mu],reg,sol},
+	p=sg[[1]];
+	\[Lambda]=sg[[2]];
+	\[Mu]=sg[[3]];
+	
+	reg=ParametricRegion[{Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]},{{\[Phi],0,2\[Pi]},{\[Theta],\[Pi]/8,\[Pi]/7}}];
+	sol=Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],
+			{x,y,z}\[Element]reg,Assumptions->{\[Lambda]>0,\[Mu]>0}];
+	sol
+];
+
+
 sgEnergy[sg_]:=Module[
 	{p,\[Lambda],\[Mu]},
 	p=sg[[1]];
@@ -285,6 +300,18 @@ sgEnergy[sg_]:=Module[
 	\[Mu] (2\[Pi])/\[Lambda] (1-E^(-2\[Lambda]))
 ];
 
+
+
+sgEnergyInRange[sg_,\[Theta]1_,\[Theta]2_,\[Phi]1_,\[Phi]2_]:=Module[
+	{p,\[Lambda],\[Mu]},
+	p=sg[[1]];
+	\[Lambda]=sg[[2]];
+	\[Mu]=sg[[3]];
+	
+	Assert[\[Theta]1<\[Theta]2];
+	Assert[\[Phi]1<\[Phi]2];
+	\[Mu]/\[Lambda] (E^(\[Lambda]( Cos[\[Theta]1]-1))-E^(\[Lambda] (Cos[\[Theta]2]-1))) (\[Phi]2-\[Phi]1)
+];
 
 
 sgCapIntsArea[sg_,spherCap_]:=Module[

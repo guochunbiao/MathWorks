@@ -5,16 +5,18 @@ BeginPackage["gSphericalCap`"];
 
 ClearAll[gSpherCap,gSolveCapIntsPoints,gSpherCapVis,gSpherCapIntsVis,gSpherCapRegion,
 		gSolveSpherCapIntsCentroid,gSolveSpherCapArea,gSpherCapIntsArea,gSpherCapVis2,
-		gSpherCapIntsVis2,gSpherCapIntsAreaError,gSpherSegmentVis,gSpherCapIntsEdgeInfo,
-		gSpherCapIntsBaseRefs,gSpherCapIntsRegionVis];
+		gSpherCapIntsVis2,gSpherCapIntsVis3,gSpherCapIntsAreaError,gSpherSegmentVis,gSpherCapIntsEdgeInfo,
+		gSpherCapIntsBaseRefs,gSpherCapIntsRegionVis,gApproxCapIntsCentroid];
 gSphericalCap::usage="gSphericalCap";
 gSolveCapIntsPoints::usage="gSolveCapIntsPoints";
 gSpherCapVis::usage="gSpherCapVis";
 gSpherCapVis2::usage="gSpherCapVis2";
 gSpherCapIntsVis::usage="gSpherCapIntsVis";
 gSpherCapIntsVis2::usage="gSpherCapIntsVis2";
+gSpherCapIntsVis3::usage="gSpherCapIntsVis3";
 gSpherCapRegion::usage="gSpherCapRegion";
 gSolveSpherCapIntsCentroid::usage="gSolveSpherCapIntsCentroid";
+gApproxCapIntsCentroid::usage="gApproxCapIntsCentroid";
 gSpherCapArea::usage="gSpherCapArea";
 gSpherCapIntsArea::usage="gSpherCapIntsArea";
 gSpherCapIntsAreaError::usage="gSpherCapIntsAreaError";
@@ -90,6 +92,19 @@ gSpherCapIntsVis2[coneDir1_,coneAperture1_,coneDir2_,coneAperture2_,spherePt_]:=
 ];
 
 
+gSpherCapIntsVis3[coneAperture1_,coneDirCosDot_,coneApertureRatio_,\[Phi]_,\[Theta]_]:=Module[
+	{vis1,vis2,coneDir1,coneDir2,coneAperture2},
+	coneDir1={0,0,1};
+	coneDir2={Sin[coneDirCosDot],0,Cos[coneDirCosDot]};
+	coneAperture2=coneAperture1*coneApertureRatio;
+	
+	vis1=gSpherCapVis[coneDir1,coneAperture1,\[Phi],\[Theta]];
+	vis2=gSpherCapVis[coneDir2,coneAperture2,\[Phi],\[Theta]];
+	
+	vis1*vis2
+];
+
+
 gSpherSegmentVis[segAxis_,segH1_,segH2_,\[Phi]_,\[Theta]_]:=Module[
 	{spherePt,sphereVec,h},
 	
@@ -128,6 +143,28 @@ gSolveSpherCapIntsCentroid[inN1_,\[Theta]1_,inN2_,\[Theta]2_]:=Module[
 			PrecisionGoal->2,AccuracyGoal->2, Method->"QuasiMonteCarlo",MaxRecursion->2]/area;
 			
 	Normalize[{cx,cy,cz}]
+];
+
+
+gApproxCapIntsCentroid[inN1_,\[Theta]1_,inN2_,\[Theta]2_]:=Module[
+	{axis1,axis2,axisDot,\[Psi]1,\[Psi]2,axisPsiRange,edgeInfo,
+		edgePsiL,edgePsiR,centroidPsi,factor,centroidAxis,centroidPt},
+	axis1=Normalize[inN1];
+	axis2=Normalize[inN2];
+	edgeInfo=gSpherCapIntsEdgeInfo[inN1,\[Theta]1,inN2,\[Theta]2];
+	edgePsiL=edgeInfo[[2]];
+	edgePsiR=edgeInfo[[3]];
+	
+	\[Psi]1=0;
+	axisDot=Dot[axis1,axis2];
+	\[Psi]2=0+ArcCos[axisDot];
+	centroidPsi=(edgePsiL+edgePsiR)/2;
+	
+	factor=Abs[centroidPsi-\[Psi]1]/Abs[\[Psi]2-\[Psi]1];
+	centroidAxis=axis1*(1-factor)+axis2*factor;
+	centroidPt=Normalize[centroidAxis];
+	
+	centroidPt
 ];
 
 
