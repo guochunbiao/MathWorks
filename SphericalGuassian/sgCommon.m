@@ -300,9 +300,9 @@ solveSgCapIntsEnergy[sg_,spherCap_]:=Module[
 	{\[Mu]0,areaInts,\[Lambda],\[Mu],dummyP},
 	\[Mu]0=sg[[3]];
 	
-	areaInts=sgCapIntsArea[sg,spherCap];
+(*	areaInts=sgCapIntsArea[sg,spherCap];
 	\[Lambda]=Solve[sgArea[x]==areaInts,x][[All,1,2]][[1]];
-	\[Mu]=Solve[sgEnergy[{dummyP,\[Lambda],\[Mu]}]==\[Mu]0,\[Mu]][[All,1,2]][[1]];
+	\[Mu]=Solve[sgEnergy[{dummyP,\[Lambda],\[Mu]}]==\[Mu]0,\[Mu]][[All,1,2]][[1]];*)
 	
 	{\[Lambda],\[Mu]}
 ];

@@ -28,12 +28,35 @@ gParamLine3D[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 
 ClearAll[gParamSphere];
 gParamSphere[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
-	{c,r,zbias},
+	{inputKeys,c,r,zbias},
+	inputKeys=Keys[input];
 	c=input["center"];
 	r=input["radius"];
 	zbias=If[MemberQ[inputKeys,"zbias"],input["zbias"],0];
 	
 	c+r*{Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]}*(1+zbias*2^-6)
+];
+
+
+ClearAll[gParamSpherRange];
+gParamSpherRange[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
+	{inputKeys,c,r,spherePt,axisDir,minTheta,maxTheta,minPhi,maxPhi,vis,zbias,
+		rebasedSpherePt,rebasedPolarPt,rebasedTheta,rebasedPhi},
+	inputKeys=Keys[input];
+	c=input["center"];
+	r=input["radius"];
+	axisDir=input["axisDir"];
+	zbias=If[MemberQ[inputKeys,"zbias"],input["zbias"],0];
+	
+	minTheta=input["rangeTheta"][[1]];
+	maxTheta=input["rangeTheta"][[2]];
+	minPhi=input["rangePhi"][[1]];
+	maxPhi=input["rangePhi"][[2]];
+	
+	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};	
+	vis=Boole[minTheta<=\[Theta]<=maxTheta&&minPhi<=\[Phi]<=maxPhi];
+	
+	c+vis*r*spherePt*(1+zbias*2^-6)
 ];
 
 
@@ -116,6 +139,7 @@ gMultiColorFunction/:(h:(Plot|Plot3D|ParametricPlot|ParametricPlot3D))[
 		Show[h[#1,before,
 			ColorFunction->#2[[1]],
 			PlotStyle->#2[[2]],
+			(*BoundaryStyle\[Rule]Green,*)
 			PlotPoints->#2[[3]],
 			Mesh->#2[[4]],
 			after]&@@@Transpose[{{fs},cf}]];
@@ -166,6 +190,8 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["spherCapInts",gParamSpherCapInts];
 	(*apppend spherical segments*)
 	collectFunc["spherSegs",gParamSpherSeg];
+	(*apppend spherical ranges*)
+	collectFunc["spherRanges",gParamSpherRange];
 	
 	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
 	projSettings=If[MemberQ[inputKeys,"viewPoint"],
