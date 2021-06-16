@@ -9,7 +9,7 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 sgRawFa,sgFa,sgInvFa,sgPointLightOld,sgPointLightNew,sgClampedCosine,sgDiffuseLighting,
 		 sgRawNDF,sgRawNDFConvHalfVec,sgNDF,sgNDFConvLight,asgVector,asgPolar,
 		 solveSgArea,sgArea,solveSgAsCap,sgAsCap,sgCapIntsArea,sgSolveEnergy,sgEnergy,
-		 asgArea,sgCapIntsEnergy,sgSolveEnergyInRange,sgEnergyInRange];
+		 asgArea,sgCapIntsEnergy,sgSolveEnergyInRange,sgEnergyInRange,sgCapIntsAsNewSG];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -42,6 +42,7 @@ sgEnergy::usage="sgEnergy";
 sgSolveEnergyInRange::usage="sgSolveEnergyInRange";
 sgEnergyInRange::usage="sgEnergyInRange";
 sgCapIntsEnergy::usage="sgCapIntsEnergy";
+sgCapIntsAsNewSG::usage="sgCapIntsAsNewSG";
 
 
 Begin["`Private`"];
@@ -334,10 +335,24 @@ sgCapIntsEnergy[sg_,spherCap_]:=Module[
 	
 	energy0=sgEnergyInRange[sg,0,hemiAperture,0,2\[Pi]];
 	energy1=sgEnergyInRange[sg,quaterRange[[1]],quaterRange[[2]],quaterRange[[3]],quaterRange[[4]]];
-(*	\[Lambda]=Solve[sgArea[x]==areaInts,x][[All,1,2]][[1]];
-	\[Mu]=Solve[sgEnergy[{dummyP,\[Lambda],\[Mu]}]==\[Mu]0,\[Mu]][[All,1,2]][[1]];*)
-	
+
 	energy0+energy1
+];
+
+
+sgCapIntsAsNewSG[sg_,spherCap_]:=Module[
+	{\[Mu]0,sgCap,intsArea,intsEnergy,p,\[Lambda],\[Mu]},
+	\[Mu]0=sg[[3]];
+	sgCap=sgAsCap[sg];
+	
+	intsArea=sgCapIntsArea[sg,spherCap];
+	intsEnergy=sgCapIntsEnergy[sg,spherCap];
+	
+	p=gApproxCapIntsCentroid[sgCap[[1]],sgCap[[2]],spherCap[[1]],spherCap[[2]]];
+	\[Lambda]=Solve[sgArea[x]==intsArea,x][[All,1,2]][[1]];
+	\[Mu]=Solve[sgEnergy[{p,\[Lambda],\[Mu]}]==intsEnergy*\[Mu]0,\[Mu]][[All,1,2]][[1]];
+	
+	{p,\[Lambda],\[Mu]}
 ];
 
 
