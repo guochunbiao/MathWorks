@@ -1,17 +1,21 @@
 (* ::Package:: *)
 
 BeginPackage["gSphericalCap`"];
+Needs["sgCommon`"];
+Needs["gUtils`"];
+Needs["gBRDF`"];
 
 
 ClearAll[gSpherCap,gSolveCapIntsPoints,gSpherCapVis,gSpherCapIntsVis,gSpherCapRegion,
 		gSolveSpherCapIntsCentroid,gSolveSpherCapArea,gSpherCapIntsArea,gSpherCapVis2,
 		gSpherCapIntsVis2,gSpherCapIntsVis3,gSpherCapIntsAreaError,gSpherSegmentVis,gSpherCapIntsEdgeInfo,
 		gSpherCapIntsBaseRefs,gApproxCapIntsCentroid,gCapIntsIntegralFlags,
-		gCapIntsQuaterPart];
+		gCapIntsQuaterPart,gCapIntsHemiPart,gCapIntsAreas,gSpherCapBorderVis];
 gSphericalCap::usage="gSphericalCap";
 gSolveCapIntsPoints::usage="gSolveCapIntsPoints";
 gSpherCapVis::usage="gSpherCapVis";
 gSpherCapVis2::usage="gSpherCapVis2";
+gSpherCapBorderVis::usage="gSpherCapBorderVis";
 gSpherCapIntsVis::usage="gSpherCapIntsVis";
 gSpherCapIntsVis2::usage="gSpherCapIntsVis2";
 gSpherCapIntsVis3::usage="gSpherCapIntsVis3";
@@ -25,6 +29,8 @@ gSpherCapIntsEdgeInfo::usage="gSpherCapIntsEdgeInfo";
 gSpherCapIntsBaseRefs::usage="gSpherCapIntsBaseRefs";
 gCapIntsIntegralFlags::usage="gCapIntsIntegralFlags";
 gCapIntsQuaterPart::usage="gCapIntsQuaterPart";
+gCapIntsHemiPart::usage="gCapIntsHemiPart";
+gCapIntsAreas::usage="gCapIntsAreas";
 
 
 Begin["`Private`"];
@@ -73,6 +79,18 @@ gSpherCapVis2[coneDir_,coneAperture_,spherePt_]:=Module[
 	deltaCos=Dot[spherePt,Normalize[coneDir]];
 	
 	Boole[deltaCos>=Cos[coneAperture]]
+];
+
+
+gSpherCapBorderVis[coneDir_,coneAperture_,\[Phi]_,\[Theta]_]:=Module[
+	{spherePt,deltaCos,border0,border1},
+	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
+	deltaCos=Dot[spherePt,Normalize[coneDir]];
+	
+	border0=Clip[coneAperture-\[Pi]/90,{0,\[Pi]}];
+	border1=Clip[coneAperture+\[Pi]/90,{0,\[Pi]}];
+	
+	Boole[Cos[border1]<=deltaCos<=Cos[border0]]
 ];
 
 
@@ -286,7 +304,9 @@ gCapIntsIntegralFlags[capAxis1_,capApert1_,capAxis2_,capApert2_]:=Module[
 
 
 gCapIntsQuaterPart[capAxis1_,capApert1_,capAxis2_,capApert2_]:=Module[
-	{axis1,axis2,axisDot,integralFlags,quaterFlag,thetaRadius,a1,a1L,a1R,a2,a2L,a2R,ad,
+	{axis1,axis2,axisDot,integralFlags,quaterFlag,thetaRadius,
+		fullPhiRadiusFlag,cap2PhiRadius,tmpPhiRatio1,tmpPhiRadius1,tmpPhiRatio2,tmpPhiRadius2,
+		a1,a1L,a1R,a2,a2L,a2R,ad,
 		phiFactor,phiFactor2,phiRadius,minPhi,maxPhi,minTheta,maxTheta},
 	integralFlags=gCapIntsIntegralFlags[capAxis1,capApert1,capAxis2,capApert2];
 	axis1=Normalize[capAxis1];
@@ -306,22 +326,79 @@ gCapIntsQuaterPart[capAxis1_,capApert1_,capAxis2_,capApert2_]:=Module[
 	
 	quaterFlag=integralFlags[[4]];
 	
-	phiFactor=(a2-a1-capApert1)/capApert2;
+	(*the apex of cap2 is fully inside the hemisphere of cap1*)
+	fullPhiRadiusFlag=(a2-a1)<=capApert1;
+	tmpPhiRatio1=Clip[(a2-a1)/capApert1,{0,1}];
+	tmpPhiRadius1=gLerp[capApert2,(\[Pi]/2)*Clip[capApert2/capApert1,{0,1}],tmpPhiRatio1];
+	
+	(*the apex of cap2 is outside the hemisphere of cap1*)
+	tmpPhiRatio2=Clip[(a2-a1-capApert1)/capApert2,{0,1}];
+	tmpPhiRadius2=gLerp[capApert2,0,tmpPhiRatio2];
+	
+	cap2PhiRadius=If[fullPhiRadiusFlag,tmpPhiRadius1,tmpPhiRadius2];
+	
+(*	phiFactor=(a2-a1-capApert1)/capApert2;
 (* (a2-a1-capApert1)\[Equal](capApert2)	\[Rule]0*)
 	phiFactor=Clip[phiFactor,{0,1}];
 	phiRadius=capApert2*(1-phiFactor);
 	phiFactor2=(capApert1-(a2-a1))/capApert1;
 	phiFactor2=Clip[phiFactor2,{0,1}];
-	phiRadius=phiRadius+(\[Pi]/4)*(phiFactor2);
+	phiRadius=phiRadius+(\[Pi]/4)*(phiFactor2);*)
 	
-	minPhi=-phiRadius;
-	maxPhi=phiRadius;
+	minPhi=-cap2PhiRadius;
+	maxPhi=cap2PhiRadius;
 	
 	If[quaterFlag==1,{minTheta,maxTheta,minPhi,maxPhi},{0,0,0,0}]
 ]
 
 
+gCapIntsHemiPart[capAxis1_,capApert1_,capAxis2_,capApert2_]:=Module[
+	{axis1,axis2,axisDot,integralFlags,hemiFlag,thetaRadius,
+		fullPhiRadiusFlag,cap2PhiRadius,tmpPhiRatio1,tmpPhiRadius1,tmpPhiRatio2,tmpPhiRadius2,
+		a1,a1L,a1R,a2,a2L,a2R,ad,radiusPart1,
+		phiFactor,phiFactor2,phiRadius,
+		minPhiPart2,maxPhiPart2,minThetaPart2,maxThetaPart2,
+		edgeAngleL,edgeAngleR},
+	integralFlags=gCapIntsIntegralFlags[capAxis1,capApert1,capAxis2,capApert2];
+	axis1=Normalize[capAxis1];
+	axis2=Normalize[capAxis2];
 
+	axisDot=Dot[axis1,axis2];
+	
+	a1=0;
+	a1L=a1-capApert1;
+	a1R=a1+capApert1;
+	a2=0+ArcCos[axisDot];
+	a2L=a2-capApert2;
+	a2R=a2+capApert2;
+	
+	edgeAngleL=Max[a1L,a2L];
+	edgeAngleR=Min[a1R,a2R];
+	
+	hemiFlag=integralFlags[[3]];
+	radiusPart1=Min[Abs[edgeAngleL],Abs[edgeAngleR]];
+	
+	minThetaPart2=radiusPart1;
+	maxThetaPart2=Max[Abs[edgeAngleL],Abs[edgeAngleR]];
+	
+	cap2PhiRadius=If[fullPhiRadiusFlag,tmpPhiRadius1,tmpPhiRadius2];
+	
+	If[hemiFlag==1,{radiusPart1,minThetaPart2,maxThetaPart2,-\[Pi]/2,\[Pi]/2},{0,0,0,0,0}]
+]
+
+
+gCapIntsAreas[capAxis1_,capApert1_,capAxis2_,capApert2_]:=Module[
+	{quaterParts,hemiParts,hemiAperture,quaterRange},
+	
+	quaterParts=gCapIntsQuaterPart[capAxis1,capApert1,capAxis2,capApert2];
+	hemiParts=gCapIntsHemiPart[capAxis1,capApert1,capAxis2,capApert2];
+	
+	hemiAperture=hemiParts[[1]];
+	quaterRange=If[hemiAperture==0,quaterParts,
+		{hemiParts[[2]],hemiParts[[3]],hemiParts[[4]],hemiParts[[5]]}];
+	
+	{hemiAperture,quaterRange}
+];
 
 
 End[];

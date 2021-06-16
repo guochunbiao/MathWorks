@@ -10,7 +10,6 @@ Needs["gSphericalCap`"];
 
 ClearAll[gParamPlot3D];
 gParamPlot3D::usage="function{gParamPlot3D}";
-gParamSpherLine::usage="aaa";
 
 
 Begin["`Private`"];
@@ -122,6 +121,32 @@ gParamSpherCap[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 ];
 
 
+ClearAll[gLocalSpherCapBorderVis];
+gLocalSpherCapBorderVis[spherCapInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
+	{coneDir,coneAperture},
+	coneDir=Normalize[spherCapInput["coneDir"]];
+	coneAperture=spherCapInput["coneAperture"];
+	
+	gSpherCapBorderVis[coneDir,coneAperture,\[Phi],\[Theta]]
+];
+
+
+ClearAll[gParamSpherCapBorder];
+gParamSpherCapBorder[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
+	{inputKeys,center,radius,zbias,coneDir,coneAperture,spherePt,deltaCos},
+	inputKeys=Keys[input];
+	center=input["center"];
+	radius=input["radius"];
+	zbias=If[MemberQ[inputKeys,"zbias"],input["zbias"],0];
+	
+	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
+	coneDir=Normalize[input["coneDir"]];
+	coneAperture=input["coneAperture"];
+	
+	center+(radius*gLocalSpherCapBorderVis[input,x,y,z,\[Phi],\[Theta]])*spherePt*(1+zbias*2^-6)
+];
+
+
 ClearAll[gParamSpherSeg];
 gParamSpherSeg[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 	{inputKeys,center,radius,zbias,segAxis,segH1,segH2,sphereVec},
@@ -166,6 +191,35 @@ gParamSpherCapInts[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 	
 	capVis1=gLocalSpherCapVis[capInput1,x,y,z,\[Phi],\[Theta]];
 	capVis2=gLocalSpherCapVis[capInput2,x,y,z,\[Phi],\[Theta]];
+	
+	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
+	capCenter+(capRadius*capVis1*capVis2)*spherePt*(1+zbias*2^-6)
+];
+
+
+ClearAll[gLocalSpherCapVis2];
+gLocalSpherCapVis2[cap_,\[Phi]_,\[Theta]_]:=Module[
+	{},
+
+	gSpherCapVis[cap[[1]],cap[[2]],\[Phi],\[Theta]]
+];
+
+
+ClearAll[gParamSpherCapInts2];
+gParamSpherCapInts2[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
+	{inputKeys,capIndex1,capIndex2,zbias,
+		cap1,cap2,capVis1,capVis2,
+		capCenter,capRadius,spherePt},
+	inputKeys=Keys[input];
+	
+	capCenter=input[["center"]];
+	capRadius=input[["radius"]];
+	cap1=input["cap1"];
+	cap2=input["cap2"];
+	zbias=If[MemberQ[inputKeys,"zbias"],input["zbias"],0];
+	
+	capVis1=gLocalSpherCapVis2[cap1,\[Phi],\[Theta]];
+	capVis2=gLocalSpherCapVis2[cap2,\[Phi],\[Theta]];
 	
 	spherePt={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
 	capCenter+(capRadius*capVis1*capVis2)*spherePt*(1+zbias*2^-6)
@@ -241,8 +295,11 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["spheres",gParamSphere];
 	(*append spherical caps*)
 	collectFunc["spherCaps",gParamSpherCap];
+	(*append spherical cap borders*)
+	collectFunc["spherCapBorders",gParamSpherCapBorder];
 	(*append intersections of spherical caps*)
 	collectFunc["spherCapInts",gParamSpherCapInts];
+	collectFunc["spherCapInts2",gParamSpherCapInts2];
 	(*append spherical segments*)
 	collectFunc["spherSegs",gParamSpherSeg];
 	(*append spherical ranges*)

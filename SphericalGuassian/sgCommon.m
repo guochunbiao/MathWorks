@@ -2,13 +2,14 @@
 
 BeginPackage["sgCommon`"];
 Needs["gSphericalCap`"];
+Needs["gUtils`"];
 
 
 ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinLambda,sgDot,
 		 sgRawFa,sgFa,sgInvFa,sgPointLightOld,sgPointLightNew,sgClampedCosine,sgDiffuseLighting,
 		 sgRawNDF,sgRawNDFConvHalfVec,sgNDF,sgNDFConvLight,asgVector,asgPolar,
 		 solveSgArea,sgArea,solveSgAsCap,sgAsCap,sgCapIntsArea,sgSolveEnergy,sgEnergy,
-		 asgArea,solveSgCapIntsEnergy,sgSolveEnergyInRange,sgEnergyInRange];
+		 asgArea,sgCapIntsEnergy,sgSolveEnergyInRange,sgEnergyInRange];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -40,7 +41,7 @@ sgSolveEnergy::usage="sgSolveEnergy";
 sgEnergy::usage="sgEnergy";
 sgSolveEnergyInRange::usage="sgSolveEnergyInRange";
 sgEnergyInRange::usage="sgEnergyInRange";
-solveSgCapIntsEnergy::usage="solveSgInts";
+sgCapIntsEnergy::usage="sgCapIntsEnergy";
 
 
 Begin["`Private`"];
@@ -322,31 +323,22 @@ sgCapIntsArea[sg_,spherCap_]:=Module[
 ];
 
 
-
-solveSgCapIntsEnergy[sg_,spherCap_]:=Module[
-	{\[Mu]0,areaInts,\[Lambda],\[Mu],dummyP},
-	\[Mu]0=sg[[3]];
+sgCapIntsEnergy[sg_,spherCap_]:=Module[
+	{sgCap,areaInts,hemiAperture,quaterRange,energy0,energy1},
 	
-(*	areaInts=sgCapIntsArea[sg,spherCap];
-	\[Lambda]=Solve[sgArea[x]==areaInts,x][[All,1,2]][[1]];
+	sgCap=sgAsCap[sg];
+	
+	areaInts=gCapIntsAreas[sgCap[[1]],sgCap[[2]],spherCap[[1]],spherCap[[2]]];
+	hemiAperture=areaInts[[1]];
+	quaterRange=areaInts[[2]];
+	
+	energy0=sgEnergyInRange[sg,0,hemiAperture,0,2\[Pi]];
+	energy1=sgEnergyInRange[sg,quaterRange[[1]],quaterRange[[2]],quaterRange[[3]],quaterRange[[4]]];
+(*	\[Lambda]=Solve[sgArea[x]==areaInts,x][[All,1,2]][[1]];
 	\[Mu]=Solve[sgEnergy[{dummyP,\[Lambda],\[Mu]}]==\[Mu]0,\[Mu]][[All,1,2]][[1]];*)
 	
-	{\[Lambda],\[Mu]}
+	energy0+energy1
 ];
-
-
-
-(*solveSgCapIntsEnergy[sg_,spherCap_]:=Module[
-	{\[Mu]0,areaInts,\[Lambda],\[Mu],dummyP},
-	\[Mu]0=sg[[3]];
-	
-	areaInts=sgCapIntsArea[sg,spherCap];
-	\[Lambda]=Solve[sgArea[x]==areaInts,x][[All,1,2]][[1]];
-	\[Mu]=Solve[sgEnergy[{dummyP,\[Lambda],\[Mu]}]==\[Mu]0,\[Mu]][[All,1,2]][[1]];
-	
-	{\[Lambda],\[Mu]}
-];*)
-
 
 
 End[];
