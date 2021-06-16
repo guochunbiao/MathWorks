@@ -8,6 +8,8 @@ gPrintFunc::usage="Print a function";
 gEvalFunc::usage="Evaluate a funciton";
 gQuickFinMin::usage="Quick find minimum";
 gCreateCone::usgae="Create a cone";
+gLerp::usage="gLerp";
+gClampPhi::usage="gClampPhi";
 
 
 ClearAll[gStructRules]
@@ -57,6 +59,25 @@ gCreateCone[originPt_,refPt0_,refPt1_]:=Module[
 	apertureAngle=(maxTheta-minTheta)/2;
 	
 	{dirAngle,apertureAngle}
+];
+
+
+ClearAll[gLerp];
+gLerp[from_,to_,factor_]:=Module[
+	{t,interpolated},
+	t=Clip[factor,{0,1}];
+	
+	interpolated=from+(to-from)*t;
+	interpolated
+];
+
+
+ClearAll[gClampPhi];
+gClampPhi[inPhi_]:=Module[
+	{outPhi},
+	
+	outPhi=If[inPhi<0,inPhi+2\[Pi],inPhi];
+	outPhi
 ];
 
 
