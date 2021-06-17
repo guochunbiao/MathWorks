@@ -7,9 +7,11 @@ Needs["gUtils`"];
 
 ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinLambda,sgDot,
 		 sgRawFa,sgFa,sgInvFa,sgPointLightOld,sgPointLightNew,sgClampedCosine,sgDiffuseLighting,
-		 sgRawNDF,sgRawNDFConvHalfVec,sgNDF,sgNDFConvLight,asgVector,asgPolar,
+		 sgRawNDF,sgRawNDFConvHalfVec,sgNDF,sgNDFConvLight,asgVector,asgPolar,sgTo3D,sgTo2D,
 		 solveSgArea,sgArea,solveSgAsCap,sgAsCap,sgCapIntsArea,sgSolveEnergy,sgEnergy,
-		 asgArea,sgCapIntsEnergy,sgSolveEnergyInRange,sgEnergyInRange,sgCapIntsAsNewSG];
+		 asgArea,sgCapIntsEnergy,sgSolveEnergyInRange,sgEnergyInRange,sgCapIntsAsNewSG,
+		 sgSolveAvgEnergyTheta,sgAvgEnergyTheta,sgCapIntsMaxEnergyTheta,sgEnergyCentroidTheta,
+		 sgCapsIntsEnergyCentroidTheta,sgCapIntsAsNewSGDeprecated];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -21,6 +23,8 @@ sgDot::usage="function[sgDot]";
 sgRawFa::usage="All-Frequency.";
 sgFa::usage="function[sgFa]";
 sgInvFa::usage="function[sgInvFa]";
+sgTo3D::usage="sgTo3D";
+sgTo2D::usage="sgTo2D";
 sgPointLightOld::usage="function[sgPointLightOld]";
 sgPointLightNew::usage="function[sgPointLightNew]"; 
 sgClampedCosine::usage="function[sgClampedCosine]";
@@ -43,6 +47,12 @@ sgSolveEnergyInRange::usage="sgSolveEnergyInRange";
 sgEnergyInRange::usage="sgEnergyInRange";
 sgCapIntsEnergy::usage="sgCapIntsEnergy";
 sgCapIntsAsNewSG::usage="sgCapIntsAsNewSG";
+sgSolveAvgEnergyTheta::usage="sgSolveAvgEnergyTheta";
+sgAvgEnergyTheta::usage="sgAvgEnergyTheta";
+sgCapIntsMaxEnergyTheta::usage="sgCapIntsMaxEnergyTheta";
+sgEnergyCentroidTheta::usage="sgEnergyCentroidTheta";
+sgCapsIntsEnergyCentroidTheta::usage="sgCapsIntsEnergyCentroidTheta";
+sgCapIntsAsNewSGDeprecated::usage="sgCapIntsAsNewSGDeprecated";
 
 
 Begin["`Private`"];
@@ -135,6 +145,7 @@ sgPointLightOld[lightCenter_,lightRadius_,lightIntensity_,shadingPos_]:=Module[
 	{p,\[Lambda],\[Mu]}
 ];
 
+
 sgPointLightNew[lightCenter_,lightRadius_,lightIntensity_,shadingPos_]:=Module[
     {fitParams,d,distPercent,p,\[Lambda],\[Mu],sgPointLightQuadratic,tmpMu},
     fitParams={
@@ -160,9 +171,35 @@ sgPointLightNew[lightCenter_,lightRadius_,lightIntensity_,shadingPos_]:=Module[
 ];
 
 
+sgTo2D[sg_]:=Module[
+	{p,\[Lambda],\[Mu],p2d},
+	
+	p=sg[[1]];
+	\[Lambda]=sg[[2]];
+	\[Mu]=sg[[3]];
+	
+	Assert[Length[p]==3];
+	p2d={p[[1]],p[[2]]};
+	
+	{p2d,\[Lambda],\[Mu]}
+];
+
+
+sgTo3D[sg_]:=Module[
+	{p,\[Lambda],\[Mu],p3d},
+	
+	p=sg[[1]];
+	\[Lambda]=sg[[2]];
+	\[Mu]=sg[[3]];
+	
+	Assert[Length[p]==2];
+	p3d={p[[1]],p[[2]],0};
+	
+	{p3d,\[Lambda],\[Mu]}
+];
+
 
 sgClampedCosine[noramlDir_,lightDir_]:={lightDir,2.01906,1.077094};
-
 
 
 sgDiffuseLighting[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_},diffuseCol_:1]:=
@@ -180,12 +217,10 @@ sgRawNDF[roughness_,normalDir_]:=Module[
 ];
 
 
-
 sgRawNDFConvHalfVec[lightRadius_,shadingDist_,halfVec_,rawSgNdf_]:=Module[
 	{},
 	If[shadingDist>=lightRadius,0,sgDot[halfVec,rawSgNdf]]
 ];
-
 
 
 (*Warped GGX NDF*)
@@ -280,19 +315,6 @@ sgSolveEnergy[sg_,\[Epsilon]_:0.01]:=Module[
 
 
 
-sgSolveEnergyInRange[sg_]:=Module[
-	{p,\[Lambda],\[Mu],reg,sol},
-	p=sg[[1]];
-	\[Lambda]=sg[[2]];
-	\[Mu]=sg[[3]];
-	
-	reg=ParametricRegion[{Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]},{{\[Phi],0,2\[Pi]},{\[Theta],\[Pi]/8,\[Pi]/7}}];
-	sol=Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],
-			{x,y,z}\[Element]reg,Assumptions->{\[Lambda]>0,\[Mu]>0}];
-	sol
-];
-
-
 sgEnergy[sg_]:=Module[
 	{p,\[Lambda],\[Mu]},
 	p=sg[[1]];
@@ -303,6 +325,20 @@ sgEnergy[sg_]:=Module[
 ];
 
 
+sgSolveEnergyInRange[sg_]:=Module[
+	{p,\[Lambda],\[Mu],reg,sol},
+	p=sg[[1]];
+	\[Lambda]=sg[[2]];
+	\[Mu]=sg[[3]];
+	
+	(*Fast way: Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],{z,z1,z2}, z1>z2]*)
+	(*The following is a slow way*)
+	reg=ParametricRegion[{Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]},{{\[Phi],0,2\[Pi]},{\[Theta],\[Pi]/8,\[Pi]/7}}];
+	sol=Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],
+			{x,y,z}\[Element]reg,Assumptions->{\[Lambda]>0,\[Mu]>0}];
+	sol
+];
+
 
 sgEnergyInRange[sg_,\[Theta]1_,\[Theta]2_,\[Phi]1_,\[Phi]2_]:=Module[
 	{p,\[Lambda],\[Mu]},
@@ -310,9 +346,38 @@ sgEnergyInRange[sg_,\[Theta]1_,\[Theta]2_,\[Phi]1_,\[Phi]2_]:=Module[
 	\[Lambda]=sg[[2]];
 	\[Mu]=sg[[3]];
 	
+	Assert[\[Theta]1<=\[Theta]2];
+	Assert[\[Phi]1<=\[Phi]2];
+	(\[Mu]/\[Lambda])*(Exp[\[Lambda](Cos[\[Theta]1]-1)]-Exp[\[Lambda](Cos[\[Theta]2]-1)])*(\[Phi]2-\[Phi]1)
+];
+
+
+sgSolveAvgEnergyTheta[sg_,z1_,z2_]:=Module[
+	{p,\[Lambda],\[Mu],reg,avgEnergy,sol},
+	p=sg[[1]];
+	\[Lambda]=sg[[2]];
+	\[Mu]=sg[[3]];
+	
+	avgEnergy=Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],{z,z1,z2}]/(z2-z1);
+	sol=Solve[avgEnergy==\[Mu]*Exp[\[Lambda]*(x-1)],x];
+	
+	sol
+];
+
+
+sgAvgEnergyTheta[sg_,\[Theta]1_,\[Theta]2_]:=Module[
+	{p,\[Lambda],\[Mu],avgEnergy,avgZ,avgTheta},
+	p=sg[[1]];
+	\[Lambda]=sg[[2]];
+	\[Mu]=sg[[3]];
+	
 	Assert[\[Theta]1<\[Theta]2];
-	Assert[\[Phi]1<\[Phi]2];
-	\[Mu]/\[Lambda] (E^(\[Lambda]( Cos[\[Theta]1]-1))-E^(\[Lambda] (Cos[\[Theta]2]-1))) (\[Phi]2-\[Phi]1)
+	
+	avgEnergy=sgEnergyInRange[sg,\[Theta]1,\[Theta]2,0,1]/(\[Theta]2-\[Theta]1);
+	avgZ=1+Log[avgEnergy/\[Mu]]/\[Lambda];
+	avgTheta=ArcCos[avgZ];
+	
+	avgTheta
 ];
 
 
@@ -340,8 +405,61 @@ sgCapIntsEnergy[sg_,spherCap_]:=Module[
 ];
 
 
-sgCapIntsAsNewSG[sg_,spherCap_]:=Module[
-	{\[Mu]0,sgCap,intsArea,intsEnergy,p,\[Lambda],\[Mu]},
+sgCapIntsMaxEnergyTheta[sg_,spherCap_]:=Module[
+	{sgCap,edgeInfo,edgePsiL,edgePsiR,minTheta},
+	
+	sgCap=sgAsCap[sg];
+	
+	edgeInfo=gSpherCapIntsEdgeInfo[sgCap[[1]],sgCap[[2]],spherCap[[1]],spherCap[[2]]];
+	edgePsiL=edgeInfo[[2]];
+	edgePsiR=edgeInfo[[3]];
+	
+	minTheta=Min[Abs[edgePsiL],Abs[edgePsiR]];
+	
+	If[edgePsiL*edgePsiR<0,0,minTheta]
+];
+
+
+sgEnergyCentroidTheta[sg_,edgePsiL_,edgePsiR_]:=Module[
+	{\[Lambda]0,\[Mu]0,minTheta,maxTheta,apexZ1,bNeedTopPart,energyTop2,energyBtm2,
+		\[Mu],\[Lambda],z1,z2,z,btmPartTheta,topPartTheta,centroidTheta},
+	\[Lambda]0=sg[[2]];
+	\[Mu]0=sg[[3]];
+	
+	minTheta=Min[Abs[edgePsiL],Abs[edgePsiR]];
+	maxTheta=Max[Abs[edgePsiL],Abs[edgePsiR]];
+	
+	bNeedTopPart=(edgePsiL*edgePsiR<0);
+	apexZ1=If[Abs[minTheta-maxTheta]<0.001,0,
+		Integrate[z*\[Mu]*Exp[\[Lambda]*(z-1)],{z,z1,z2}]/
+			Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],{z,z1,z2}]/.{
+				\[Mu]->\[Mu]0,\[Lambda]->\[Lambda]0,z1->Cos[minTheta],z2->Cos[maxTheta]}];
+	btmPartTheta=ArcCos[apexZ1];
+	
+	energyTop2=sgEnergyInRange[sg,0,minTheta,0,2\[Pi]];
+	energyBtm2=sgEnergyInRange[sg,minTheta,maxTheta,0,\[Pi]];
+	topPartTheta=gLerp[0,btmPartTheta,energyBtm2/(energyTop2+energyBtm2)];
+	
+	centroidTheta=If[bNeedTopPart,topPartTheta,btmPartTheta];
+	
+	centroidTheta
+];
+
+
+sgCapsIntsEnergyCentroidTheta[sg_,spherCap_]:=Module[
+	{sgCap,edgeInfo,edgePsiL,edgePsiR},
+	sgCap=sgAsCap[sg];
+	
+	edgeInfo=gSpherCapIntsEdgeInfo[sgCap[[1]],sgCap[[2]],spherCap[[1]],spherCap[[2]]];
+	edgePsiL=edgeInfo[[2]];
+	edgePsiR=edgeInfo[[3]];
+	
+	sgEnergyCentroidTheta[sg,edgePsiL,edgePsiR]
+];
+
+
+sgCapIntsAsNewSGDeprecated[sg_,spherCap_,strategy_:1]:=Module[
+	{\[Mu]0,sgCap,intsArea,intsEnergy,sol,p,\[Lambda],\[Mu]},
 	\[Mu]0=sg[[3]];
 	sgCap=sgAsCap[sg];
 	
@@ -349,10 +467,51 @@ sgCapIntsAsNewSG[sg_,spherCap_]:=Module[
 	intsEnergy=sgCapIntsEnergy[sg,spherCap];
 	
 	p=gApproxCapIntsCentroid[sgCap[[1]],sgCap[[2]],spherCap[[1]],spherCap[[2]]];
-	\[Lambda]=Solve[sgArea[x]==intsArea,x][[All,1,2]][[1]];
-	\[Mu]=Solve[sgEnergy[{p,\[Lambda],\[Mu]}]==intsEnergy*\[Mu]0,\[Mu]][[All,1,2]][[1]];
+	sol=Solve[sgArea[\[Lambda]]==intsArea&&sgEnergy[{p,\[Lambda],\[Mu]}]==intsEnergy,{\[Lambda],\[Mu]}];
+	
+	\[Lambda]=sol[[All, 1, 2]][[1]];
+	\[Mu]=sol[[All, 2, 2]][[1]];
 	
 	{p,\[Lambda],\[Mu]}
+];
+
+
+sgCapIntsAsNewSG[sg_,spherCap_,strategy_:1]:=Module[
+	{\[Lambda]0,\[Mu]0,sgCap,intsArea,intsEnergy,p1,p2,sol1,sol2,sol,p,\[Lambda],\[Mu],
+	maxEnergyTheta,energyCentroidTheta,apexEnergy,apexTheta,newSgAxis,
+	axis1,axis2,axisDot,\[Psi]1,\[Psi]2,factor,centroidAxis,centroidPt,edgeInfo,edgePsiL,edgePsiR},
+	axis1=Normalize[sg[[1]]];
+	axis2=Normalize[spherCap[[1]]];
+	\[Lambda]0=sg[[2]];
+	\[Mu]0=sg[[3]];
+	sgCap=sgAsCap[sg];
+	
+	edgeInfo=gSpherCapIntsEdgeInfo[sgCap[[1]],sgCap[[2]],spherCap[[1]],spherCap[[2]]];
+	edgePsiL=edgeInfo[[2]];
+	edgePsiR=edgeInfo[[3]];
+	
+	intsArea=sgCapIntsArea[sg,spherCap];
+	intsEnergy=sgCapIntsEnergy[sg,spherCap];
+
+	maxEnergyTheta=sgCapIntsMaxEnergyTheta[sg,spherCap];
+	energyCentroidTheta=sgCapsIntsEnergyCentroidTheta[sg,spherCap];
+
+	(*sol2=Solve[sgArea[\[Lambda]]\[Equal]intsArea&&sgPolar[maxEnergyTheta,\[Lambda]0,\[Mu]0]\[Equal]sgPolar[0,\[Lambda],\[Mu]],{\[Lambda],\[Mu]}];*)
+	sol2=Solve[sgArea[\[Lambda],0.1]==intsArea&&sgEnergy[{p,\[Lambda],\[Mu]}]==intsEnergy,{\[Lambda],\[Mu]}];
+	\[Lambda]=sol2[[All, 1, 2]][[1]];
+	\[Mu]=sol2[[All, 2, 2]][[1]];
+	
+	energyCentroidTheta=Min[Abs[energyCentroidTheta],Abs[edgePsiL]];
+	energyCentroidTheta=Min[Abs[energyCentroidTheta],Abs[edgePsiR]];
+
+	\[Psi]1=0;
+	axisDot=Dot[axis1,axis2];
+	\[Psi]2=0+ArcCos[axisDot];
+	factor=Abs[energyCentroidTheta-\[Psi]1]/Abs[\[Psi]2-\[Psi]1];
+	centroidAxis=axis1*(1-factor)+axis2*factor;
+	centroidPt=Normalize[centroidAxis];
+
+	{centroidPt,\[Lambda],\[Mu]}//N
 ];
 
 
