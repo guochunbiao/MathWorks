@@ -1,6 +1,7 @@
 (* ::Package:: *)
 
 BeginPackage["sgCommon`"];
+<<gSphericalCap.m;
 Needs["gSphericalCap`"];
 Needs["gUtils`"];
 
@@ -11,7 +12,8 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 solveSgArea,sgArea,solveSgAsCap,sgAsCap,sgCapIntsArea,sgSolveEnergy,sgEnergy,
 		 asgArea,sgCapIntsEnergy,sgSolveEnergyInRange,sgEnergyInRange,sgCapIntsAsNewSG,
 		 sgSolveAvgEnergyTheta,sgAvgEnergyTheta,sgCapIntsMaxEnergyTheta,sgEnergyCentroidTheta,
-		 sgCapsIntsEnergyCentroidTheta,sgCapIntsAsNewSGDeprecated];
+		 sgCapsIntsEnergyCentroidTheta,sgCapIntsAsNewSGDeprecated,sgProductIntegral,
+		 sgNDFProdIntegrateLight,sgCapIntsEnergyPercent,sgMaxLambda,sgSphereLight];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -19,7 +21,9 @@ sgIntegral::usage="function[sgIntegral]";
 sgIntegral2::usage="function[sgIntegral2]";
 sgFindMinLambda::usage="function[sgFindMinLambda]";
 sgMinLambda=4.60517;
+sgMaxLambda=50;
 sgDot::usage="function[sgDot]";
+sgProductIntegral::usage="sgProductIntegral";
 sgRawFa::usage="All-Frequency.";
 sgFa::usage="function[sgFa]";
 sgInvFa::usage="function[sgInvFa]";
@@ -33,6 +37,7 @@ sgRawNDF::usage="function[sgRawNDF]";
 sgRawNDFConvHalfVec::usage="function[sgRawNDFConvHalfVec]";
 sgNDF::usage="function[sgNDF]";
 sgNDFConvLight::usage="function[sgNDFConvLight]";
+sgNDFProdIntegrateLight::uasge="sgNDFProdIntegrateLight";
 asgVector::usage="function[asgVector]";
 asgPolar::usage="function[asgPolar]";
 solveSgArea::usage="solveSgArea";
@@ -53,6 +58,8 @@ sgCapIntsMaxEnergyTheta::usage="sgCapIntsMaxEnergyTheta";
 sgEnergyCentroidTheta::usage="sgEnergyCentroidTheta";
 sgCapsIntsEnergyCentroidTheta::usage="sgCapsIntsEnergyCentroidTheta";
 sgCapIntsAsNewSGDeprecated::usage="sgCapIntsAsNewSGDeprecated";
+sgCapIntsEnergyPercent::usage="sgCapIntsEnergyPercent";
+sgSphereLight::usage="sgSphereLight";
 
 
 Begin["`Private`"];
@@ -113,10 +120,10 @@ sgIntegral2[{p_,\[Lambda]_,\[Mu]_}]:=sgIntegral[\[Lambda],\[Mu]];
 sgFindMinLambda[\[Epsilon]_]:=Module[
 	{sol1,sol2,min1,min2},
 	(*energy*)
-	sol1=Quiet@Solve[(sgPolar[\[Pi]/2,\[Lambda],1]/sgIntegral[\[Lambda],1])==\[Epsilon] && \[Lambda]>0,\[Lambda]];
+	sol1=Quiet@Solve[(sgPolar[\[Pi]/2,\[Lambda],1]/sgPolar[0,\[Lambda],1])==\[Epsilon] && \[Lambda]>0,\[Lambda]];
 	min1=sol1[[All,1,2]][[1]];
 	(*area*)
-	sol2=Quiet@Solve[-2\[Pi]*Log[0.01]/\[Lambda]==2\[Pi],\[Lambda]];
+	sol2=Quiet@Solve[-2\[Pi]*Log[\[Epsilon]/\[Lambda]]==2\[Pi],\[Lambda]];
 	min2=sol2[[All,1,2]][[1]];
 
 	Max[min1,min2]
@@ -125,6 +132,19 @@ sgFindMinLambda[\[Epsilon]_]:=Module[
 
 sgDot[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_}]:=
 	4\[Pi]*\[Mu]1*\[Mu]2*Sinh[Norm[p1*\[Lambda]1+p2*\[Lambda]2]]/(Exp[\[Lambda]1+\[Lambda]2]*Norm[p1*\[Lambda]1+p2*\[Lambda]2]);
+
+
+sgProductIntegral[{inP1_,\[Lambda]1_,\[Mu]1_},{inP2_,\[Lambda]2_,\[Mu]2_}]:=Module[
+	{p1,p2,\[Lambda]3,c1,c2},
+	p1=Normalize[inP1];
+	p2=Normalize[inP2];
+	
+	c1=\[Lambda]1*\[Lambda]2/(\[Lambda]1+\[Lambda]2);
+	c2=Dot[p1,p2];	
+	\[Lambda]3=\[Lambda]1+\[Lambda]2-c1*(1-c2);
+	
+	\[Mu]1*\[Mu]2*(2\[Pi])/\[Lambda]3 Exp[c1*(c2-1)]
+];
 
 
 sgRawFa[\[Lambda]_,\[Epsilon]_]=-2\[Pi]*Log[\[Epsilon]/\[Lambda]];
@@ -171,6 +191,21 @@ sgPointLightNew[lightCenter_,lightRadius_,lightIntensity_,shadingPos_]:=Module[
 ];
 
 
+sgSphereLight[lightCenter_,lightFadeStart_,lightFadeEnd_,lightIntensity_,shadingPos_]:=Module[
+	{shandingDist,lambdaFactor,p,\[Lambda],\[Mu]},
+	shandingDist=Norm[lightCenter-shadingPos];
+	shandingDist=Clip[shandingDist,{lightFadeStart,lightFadeEnd}];
+	lambdaFactor=(shandingDist-lightFadeStart)/(lightFadeEnd-lightFadeStart);
+	lambdaFactor=Clip[lambdaFactor,{0,1}];
+		
+	p=Normalize[lightCenter-shadingPos];
+	\[Lambda]=gLerp[sgMinLambda,sgMaxLambda,lambdaFactor];
+	\[Mu]=lightIntensity;
+	
+	{p,\[Lambda],\[Mu]}
+];
+
+
 sgTo2D[sg_]:=Module[
 	{p,\[Lambda],\[Mu],p2d},
 	
@@ -179,7 +214,7 @@ sgTo2D[sg_]:=Module[
 	\[Mu]=sg[[3]];
 	
 	Assert[Length[p]==3];
-	p2d={p[[1]],p[[2]]};
+	p2d={p[[1]],p[[3]]};
 	
 	{p2d,\[Lambda],\[Mu]}
 ];
@@ -193,7 +228,7 @@ sgTo3D[sg_]:=Module[
 	\[Mu]=sg[[3]];
 	
 	Assert[Length[p]==2];
-	p3d={p[[1]],p[[2]],0};
+	p3d={p[[1]],0,p[[2]]};
 	
 	{p3d,\[Lambda],\[Mu]}
 ];
@@ -219,7 +254,8 @@ sgRawNDF[roughness_,normalDir_]:=Module[
 
 sgRawNDFConvHalfVec[lightRadius_,shadingDist_,halfVec_,rawSgNdf_]:=Module[
 	{},
-	If[shadingDist>=lightRadius,0,sgDot[halfVec,rawSgNdf]]
+	(*If[shadingDist>=lightRadius,0,sgDot[halfVec,rawSgNdf]]*)
+	sgDot[halfVec,rawSgNdf]
 ];
 
 
@@ -239,9 +275,16 @@ sgNDF[roughness_,lightDir_,viewDir_,normalDir_]:=Module[
 
 sgNDFConvLight[lightRadius_,shadingDist_,sglight_,sgndf_]:=Module[
 	{},
-	If[shadingDist>=lightRadius,0,sgDot[sglight,sgndf]]
+	(*If[shadingDist>=lightRadius,0,sgDot[sglight,sgndf]]*)
+	sgDot[sglight,sgndf]
 ];
 
+
+
+sgNDFProdIntegrateLight[lightRadius_,shadingDist_,sglight_,sgndf_]:=Module[
+	{},
+	If[shadingDist>=lightRadius,0,Abs[sgProductIntegral[sglight,sgndf]]]
+];
 
 
 (*\[Piecewise]	4 \[Pi]	2 \[Lambda]+Log[\[Epsilon]]\[LessEqual]0
@@ -295,7 +338,7 @@ sgAsCap[sg_]:=Module[
 	\[Lambda]=sg[[2]];
 	\[Mu]=sg[[3]];
 	
-	apertAngle=ArcCos[1-sgMinLambda/\[Lambda]];
+	apertAngle=Re[ArcCos[1-sgMinLambda/\[Lambda]]];
 	{p,apertAngle}
 ];
 
@@ -375,7 +418,7 @@ sgAvgEnergyTheta[sg_,\[Theta]1_,\[Theta]2_]:=Module[
 	
 	avgEnergy=sgEnergyInRange[sg,\[Theta]1,\[Theta]2,0,1]/(\[Theta]2-\[Theta]1);
 	avgZ=1+Log[avgEnergy/\[Mu]]/\[Lambda];
-	avgTheta=ArcCos[avgZ];
+	avgTheta=Re[ArcCos[avgZ]];
 	
 	avgTheta
 ];
@@ -402,6 +445,17 @@ sgCapIntsEnergy[sg_,spherCap_]:=Module[
 	energy1=sgEnergyInRange[sg,quaterRange[[1]],quaterRange[[2]],quaterRange[[3]],quaterRange[[4]]];
 
 	energy0+energy1
+];
+
+
+sgCapIntsEnergyPercent[sg_,spherCap_]:=Module[
+	{partEnergy,totalEnergy},
+	
+	partEnergy=sgCapIntsEnergy[sg,spherCap];
+	totalEnergy=sgEnergy[sg];
+	
+	Assert[0<=partEnergy<=totalEnergy];
+	partEnergy/totalEnergy
 ];
 
 
@@ -434,7 +488,7 @@ sgEnergyCentroidTheta[sg_,edgePsiL_,edgePsiR_]:=Module[
 		Integrate[z*\[Mu]*Exp[\[Lambda]*(z-1)],{z,z1,z2}]/
 			Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],{z,z1,z2}]/.{
 				\[Mu]->\[Mu]0,\[Lambda]->\[Lambda]0,z1->Cos[minTheta],z2->Cos[maxTheta]}];
-	btmPartTheta=ArcCos[apexZ1];
+	btmPartTheta=Re[ArcCos[apexZ1]];
 	
 	energyTop2=sgEnergyInRange[sg,0,minTheta,0,2\[Pi]];
 	energyBtm2=sgEnergyInRange[sg,minTheta,maxTheta,0,\[Pi]];
@@ -467,7 +521,7 @@ sgCapIntsAsNewSGDeprecated[sg_,spherCap_,strategy_:1]:=Module[
 	intsEnergy=sgCapIntsEnergy[sg,spherCap];
 	
 	p=gApproxCapIntsCentroid[sgCap[[1]],sgCap[[2]],spherCap[[1]],spherCap[[2]]];
-	sol=Solve[sgArea[\[Lambda]]==intsArea&&sgEnergy[{p,\[Lambda],\[Mu]}]==intsEnergy,{\[Lambda],\[Mu]}];
+	sol=Solve[sgArea[\[Lambda],0.1]==intsArea&&sgEnergy[{p,\[Lambda],\[Mu]}]==intsEnergy,{\[Lambda],\[Mu]}];
 	
 	\[Lambda]=sol[[All, 1, 2]][[1]];
 	\[Mu]=sol[[All, 2, 2]][[1]];
@@ -497,7 +551,7 @@ sgCapIntsAsNewSG[sg_,spherCap_,strategy_:1]:=Module[
 	energyCentroidTheta=sgCapsIntsEnergyCentroidTheta[sg,spherCap];
 
 	(*sol2=Solve[sgArea[\[Lambda]]\[Equal]intsArea&&sgPolar[maxEnergyTheta,\[Lambda]0,\[Mu]0]\[Equal]sgPolar[0,\[Lambda],\[Mu]],{\[Lambda],\[Mu]}];*)
-	sol2=Solve[sgArea[\[Lambda],0.1]==intsArea&&sgEnergy[{p,\[Lambda],\[Mu]}]==intsEnergy,{\[Lambda],\[Mu]}];
+	sol2=Solve[sgArea[\[Lambda]]==intsArea&&sgEnergy[{p,\[Lambda],\[Mu]}]==intsEnergy,{\[Lambda],\[Mu]}];
 	\[Lambda]=sol2[[All, 1, 2]][[1]];
 	\[Mu]=sol2[[All, 2, 2]][[1]];
 	
@@ -506,7 +560,7 @@ sgCapIntsAsNewSG[sg_,spherCap_,strategy_:1]:=Module[
 
 	\[Psi]1=0;
 	axisDot=Dot[axis1,axis2];
-	\[Psi]2=0+ArcCos[axisDot];
+	\[Psi]2=0+Re[ArcCos[axisDot]];
 	factor=Abs[energyCentroidTheta-\[Psi]1]/Abs[\[Psi]2-\[Psi]1];
 	centroidAxis=axis1*(1-factor)+axis2*factor;
 	centroidPt=Normalize[centroidAxis];

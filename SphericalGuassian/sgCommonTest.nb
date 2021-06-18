@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     71146,       1655]
-NotebookOptionsPosition[     65074,       1545]
-NotebookOutlinePosition[     65414,       1560]
-CellTagsIndexPosition[     65371,       1557]
+NotebookDataLength[     72842,       1693]
+NotebookOptionsPosition[     66766,       1583]
+NotebookOutlinePosition[     67109,       1598]
+CellTagsIndexPosition[     67066,       1595]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1121,16 +1121,8 @@ Cell[BoxData[{
    "spherCenter", ",", "spherRadius", ",", "sg", ",", "sgCap", ",", "coneCap",
      ",", "sgTotalEnergy1", ",", "sgTotalArea1", ",", "capTotalArea1", ",", 
     "\[IndentingNewLine]", "\t", "intsArea1", ",", "intsEnergy1", ",", 
-    "newSG1", ",", "newSGArea1", ",", "newSGEnergy1"}], "]"}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"ClearAll", "[", 
-   RowBox[{
-   "spherCenter", ",", "spherRadius", ",", "sg", ",", "sgCap", ",", "coneCap",
-     ",", "sgTotalEnergy1", ",", "sgTotalArea1", ",", "capTotalArea1", ",", 
-    "\[IndentingNewLine]", "\t", "intsArea1", ",", "intsEnergy1", ",", 
-    "newSG1", ",", "newSGArea1", ",", "newSGEnergy1", ",", "sgArray"}], "]"}],
-   ";"}], "\[IndentingNewLine]", 
+    "newSG1", ",", "newSGArea1", ",", "newSGEnergy1", ",", "energyPercent1"}],
+    "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{"Manipulate", "[", "\[IndentingNewLine]", "\t", 
   RowBox[{
    RowBox[{
@@ -1163,9 +1155,10 @@ Cell[BoxData[{
     "\[IndentingNewLine]", "\t", 
     RowBox[{"intsArea1", "=", 
      RowBox[{"Quiet", "@", 
-      RowBox[{"sgCapIntsArea", "[", 
-       RowBox[{"sg", ",", "coneCap"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
-    "\t", 
+      RowBox[{"N", "@", 
+       RowBox[{"sgCapIntsArea", "[", 
+        RowBox[{"sg", ",", "coneCap"}], "]"}]}]}]}], ";", 
+    "\[IndentingNewLine]", "\t", 
     RowBox[{"intsEnergy1", "=", 
      RowBox[{"Quiet", "@", 
       RowBox[{"sgCapIntsEnergy", "[", 
@@ -1185,7 +1178,12 @@ Cell[BoxData[{
     RowBox[{"newSGEnergy1", "=", 
      RowBox[{"N", "@", 
       RowBox[{"sgEnergy", "[", "newSG1", "]"}]}]}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", "\t", 
+    "\[IndentingNewLine]", "\t", 
+    RowBox[{"energyPercent1", "=", 
+     RowBox[{"N", "@", 
+      RowBox[{"sgCapIntsEnergyPercent", "[", 
+       RowBox[{"sg", ",", "coneCap"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", "\t", 
     RowBox[{"sgArray", "=", 
      RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", "\t", 
     RowBox[{"AppendTo", "[", 
@@ -1304,14 +1302,17 @@ Cell[BoxData[{
     RowBox[{"newSGEnergy", ",", "newSGEnergy1"}], "}"}], ",", 
    "\[IndentingNewLine]", "\t", 
    RowBox[{"{", 
-    RowBox[{"newSG", ",", "newSG1"}], "}"}], ",", "\[IndentingNewLine]", 
-   "    ", 
+    RowBox[{"newSG", ",", "newSG1"}], "}"}], ",", "\[IndentingNewLine]", "\t", 
+   RowBox[{"{", 
+    RowBox[{"energyPercent", ",", "energyPercent1"}], "}"}], ",", 
+   "\[IndentingNewLine]", "    ", 
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
       RowBox[{"sgAxis", ",", 
        RowBox[{"{", 
-        RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], "}"}], ",", 
+        RowBox[{
+         RowBox[{"-", "0.7"}], ",", "0.7", ",", "0"}], "}"}]}], "}"}], ",", 
      RowBox[{"{", 
       RowBox[{
        RowBox[{"-", "1"}], ",", 
@@ -1330,13 +1331,29 @@ Cell[BoxData[{
      RowBox[{"{", 
       RowBox[{"sgMu", ",", "1"}], "}"}], ",", "1", ",", "10"}], "}"}], ",", 
    "\[IndentingNewLine]", "    ", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"capDir", ",", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", 
+           RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", 
+         RowBox[{"-", "1"}], ",", 
+         RowBox[{"-", "1"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1", ",", "1"}], "}"}]}], "}"}], ","}], "*)"}], 
+   "\[IndentingNewLine]", "    ", 
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
       RowBox[{"capDir", ",", 
        RowBox[{"{", 
-        RowBox[{"1", ",", 
-         RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "}"}], ",", 
+        RowBox[{"0.23", ",", "0", ",", "1"}], "}"}]}], "}"}], ",", 
      RowBox[{"{", 
       RowBox[{
        RowBox[{"-", "1"}], ",", 
@@ -1348,8 +1365,7 @@ Cell[BoxData[{
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"capAperture", ",", 
-       RowBox[{"\[Pi]", "/", "6"}]}], "}"}], ",", "0.1", ",", 
+      RowBox[{"capAperture", ",", "1"}], "}"}], ",", "0.1", ",", 
      RowBox[{"\[Pi]", "/", "2"}]}], "}"}], ",", "\[IndentingNewLine]", "   ", 
    RowBox[{"Method", "\[Rule]", 
     RowBox[{"{", 
@@ -1361,37 +1377,46 @@ Cell[BoxData[{
    "spherCenter", ",", "spherRadius", ",", "sg", ",", "sgCap", ",", "coneCap",
      ",", "sgTotalEnergy1", ",", "sgTotalArea1", ",", "capTotalArea1", ",", 
     "\[IndentingNewLine]", "\t", "intsArea1", ",", "intsEnergy1", ",", 
-    "newSG1", ",", "newSGArea1", ",", "newSGEnergy1", ",", "sgArray"}], "]"}],
-   ";"}]}], "Input",
+    "newSG1", ",", "newSGArea1", ",", "newSGEnergy1", ",", "energyPercent1"}],
+    "]"}], ";"}]}], "Input",
  CellChangeTimes->{{3.832825030439229*^9, 3.832825044093995*^9}, {
-  3.8328391287362776`*^9, 3.8328391744883633`*^9}, {3.8328392095608215`*^9, 
-  3.8328392140664*^9}, {3.8328402568677273`*^9, 3.8328402629404955`*^9}},
- CellLabel->
-  "In[405]:=",ExpressionUUID->"f04e28d8-c45c-4832-8802-cb6fe8922c27"],
+   3.8328391287362776`*^9, 3.8328391744883633`*^9}, {3.8328392095608215`*^9, 
+   3.8328392140664*^9}, {3.8328402568677273`*^9, 3.8328402629404955`*^9}, 
+   3.8329222255552835`*^9, {3.8329224525770664`*^9, 3.832922454220761*^9}, {
+   3.8329233955495358`*^9, 3.8329234079552126`*^9}, {3.832923438380234*^9, 
+   3.8329234733878984`*^9}, {3.832923651573212*^9, 3.832923714444378*^9}, 
+   3.8329255780303373`*^9, {3.8329256231173925`*^9, 
+   3.8329256272911787`*^9}},ExpressionUUID->"f04e28d8-c45c-4832-8802-\
+cb6fe8922c27"],
 
 Cell[BoxData[
  StyleBox["\<\" New SG by Cone Cut\"\>",
   StripOnInput->False,
   FontSize->18,
   Background->RGBColor[0.87, 0.94, 1]]], "Print",
- CellChangeTimes->{3.8328391760969553`*^9, 3.832839219758552*^9, 
-  3.8328402660731115`*^9},
+ CellChangeTimes->{
+  3.8328391760969553`*^9, 3.832839219758552*^9, 3.8328402660731115`*^9, 
+   3.832910451489871*^9, 3.8329221830172234`*^9, 3.832922464640155*^9, 
+   3.832923415635873*^9, {3.8329234529774213`*^9, 3.83292346878743*^9}, {
+   3.8329236896131845`*^9, 3.832923715841863*^9}},
  CellLabel->
   "During evaluation of \
-In[405]:=",ExpressionUUID->"369a71b5-bc0d-4f5c-9bd2-d21f69517a1b"],
+In[1588]:=",ExpressionUUID->"81269fba-5aed-42ac-8453-37911a5abfa2"],
 
 Cell[BoxData[
  TagBox[
   StyleBox[
    DynamicModuleBox[{$CellContext`capAperture$$ = Rational[1, 6] 
-    Pi, $CellContext`capDir$$ = {1, -1, 1}, $CellContext`capTotalArea$$ = 
-    0.8417872144769332, $CellContext`intsArea$$ = 
-    0.475805665406093, $CellContext`intsEnergy$$ = 
-    0.06295035848256875, $CellContext`newSG$$ = {{
-     0.47195667165822086`, -0.47195667165822086`, 0.7446568338198398}, 
-     60.81293215574924, 0.6092762973592701}, $CellContext`newSGArea$$ = 
-    0.475805665406093, $CellContext`newSGEnergy$$ = 
-    0.06295035848256875, $CellContext`sgAxis$$ = {0, 0, 
+    Pi, $CellContext`capDir$$ = {0.22975292054736127`, 0., 
+    0.9732489894677302}, $CellContext`capTotalArea$$ = 
+    0.8417872144769332, $CellContext`energyPercent$$ = 
+    0.639415238171819, $CellContext`intsArea$$ = 
+    0.8417872144769332, $CellContext`intsEnergy$$ = 
+    0.4017564421387091, $CellContext`newSG$$ = {{0.22296602370837523`, 0., 
+     0.9748262164466425}, 34.37345822321793, 
+     2.1978912931286043`}, $CellContext`newSGArea$$ = 
+    0.8417872144769332, $CellContext`newSGEnergy$$ = 
+    0.40175644213870904`, $CellContext`sgAxis$$ = {0, 0, 
     1}, $CellContext`sgLambda$$ = 10, $CellContext`sgMu$$ = 
     1, $CellContext`sgTotalArea$$ = 
     2.8935137649661855`, $CellContext`sgTotalEnergy$$ = 
@@ -1403,42 +1428,45 @@ Cell[BoxData[
       Hold[$CellContext`sgTotalEnergy$$], 0.6283185294228977}, {
       Hold[$CellContext`sgTotalArea$$], 2.8935137649661855`}, {
       Hold[$CellContext`capTotalArea$$], 0.8417872144769332}, {
-      Hold[$CellContext`intsArea$$], 0.475805665406093}, {
-      Hold[$CellContext`intsEnergy$$], 0.06295035848256875}, {
-      Hold[$CellContext`newSGArea$$], 0.475805665406093}, {
-      Hold[$CellContext`newSGEnergy$$], 0.06295035848256875}, {
-      Hold[$CellContext`newSG$$], {{
-       0.47195667165822086`, -0.47195667165822086`, 0.7446568338198398}, 
-       60.81293215574924, 0.6092762973592701}}, {{
+      Hold[$CellContext`intsArea$$], 0.8417872144769332}, {
+      Hold[$CellContext`intsEnergy$$], 0.4017564421387091}, {
+      Hold[$CellContext`newSGArea$$], 0.8417872144769332}, {
+      Hold[$CellContext`newSGEnergy$$], 0.40175644213870904`}, {
+      Hold[$CellContext`newSG$$], {{0.22296602370837523`, 0., 
+       0.9748262164466425}, 34.37345822321793, 2.1978912931286043`}}, {
+      Hold[$CellContext`energyPercent$$], 0.639415238171819}, {{
        Hold[$CellContext`sgAxis$$], {0, 0, 1}}, {-1, -1, -1}, {1, 1, 1}}, {{
        Hold[$CellContext`sgLambda$$], 10}, 4.60517, 100}, {{
        Hold[$CellContext`sgMu$$], 1}, 1, 10}, {{
-       Hold[$CellContext`capDir$$], {1, -1, 1}}, {-1, -1, -1}, {1, 1, 1}}, {{
+       Hold[$CellContext`capDir$$], {0.22975292054736127`, 0., 
+       0.9732489894677302}}, {-1, -1, -1}, {1, 1, 1}}, {{
        Hold[$CellContext`capAperture$$], Rational[1, 6] Pi}, 0.1, 
       Rational[1, 2] Pi}}, Typeset`size$$ = {91., {47., 53.}}, 
     Typeset`update$$ = 0, Typeset`initDone$$, Typeset`skipInitDone$$ = 
-    True, $CellContext`showNewSG$517477$$ = 
-    0, $CellContext`sgAxis$517478$$ = {0, 0, 
-    0}, $CellContext`sgLambda$517479$$ = 0, $CellContext`sgMu$517480$$ = 
-    0, $CellContext`capAperture$517481$$ = 0}, 
+    True, $CellContext`showNewSG$1448836$$ = 
+    0, $CellContext`sgAxis$1448837$$ = {0, 0, 
+    0}, $CellContext`sgLambda$1448838$$ = 0, $CellContext`sgMu$1448839$$ = 
+    0, $CellContext`capAperture$1448840$$ = 0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
       "Variables" :> {$CellContext`capAperture$$ = 
-        Rational[1, 6] Pi, $CellContext`capDir$$ = {1, -1, 
-         1}, $CellContext`capTotalArea$$ = $CellContext`capTotalArea1, \
-$CellContext`intsArea$$ = $CellContext`intsArea1, $CellContext`intsEnergy$$ = \
-$CellContext`intsEnergy1, $CellContext`newSG$$ = $CellContext`newSG1, \
-$CellContext`newSGArea$$ = $CellContext`newSGArea1, \
-$CellContext`newSGEnergy$$ = $CellContext`newSGEnergy1, $CellContext`sgAxis$$ = \
-{0, 0, 1}, $CellContext`sgLambda$$ = 10, $CellContext`sgMu$$ = 
+        Rational[1, 6] Pi, $CellContext`capDir$$ = {0.22975292054736127`, 0., 
+         0.9732489894677302}, $CellContext`capTotalArea$$ = \
+$CellContext`capTotalArea1, $CellContext`energyPercent$$ = \
+$CellContext`energyPercent1, $CellContext`intsArea$$ = \
+$CellContext`intsArea1, $CellContext`intsEnergy$$ = $CellContext`intsEnergy1, \
+$CellContext`newSG$$ = $CellContext`newSG1, $CellContext`newSGArea$$ = \
+$CellContext`newSGArea1, $CellContext`newSGEnergy$$ = \
+$CellContext`newSGEnergy1, $CellContext`sgAxis$$ = {0, 0, 
+         1}, $CellContext`sgLambda$$ = 10, $CellContext`sgMu$$ = 
         1, $CellContext`sgTotalArea$$ = $CellContext`sgTotalArea1, \
 $CellContext`sgTotalEnergy$$ = $CellContext`sgTotalEnergy1, \
 $CellContext`showNewSG$$ = 0}, "ControllerVariables" :> {
-        Hold[$CellContext`showNewSG$$, $CellContext`showNewSG$517477$$, 0], 
-        Hold[$CellContext`sgAxis$$, $CellContext`sgAxis$517478$$, {0, 0, 0}], 
-        Hold[$CellContext`sgLambda$$, $CellContext`sgLambda$517479$$, 0], 
-        Hold[$CellContext`sgMu$$, $CellContext`sgMu$517480$$, 0], 
-        Hold[$CellContext`capAperture$$, $CellContext`capAperture$517481$$, 
+        Hold[$CellContext`showNewSG$$, $CellContext`showNewSG$1448836$$, 0], 
+        Hold[$CellContext`sgAxis$$, $CellContext`sgAxis$1448837$$, {0, 0, 0}], 
+        Hold[$CellContext`sgLambda$$, $CellContext`sgLambda$1448838$$, 0], 
+        Hold[$CellContext`sgMu$$, $CellContext`sgMu$1448839$$, 0], 
+        Hold[$CellContext`capAperture$$, $CellContext`capAperture$1448840$$, 
          0]}, "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
@@ -1458,8 +1486,9 @@ $CellContext`sgTotalEnergy1 = N[
           
           gSphericalCap`gSpherCapArea[$CellContext`capAperture$$]]; \
 $CellContext`intsArea1 = Quiet[
-          
-          sgCommon`sgCapIntsArea[$CellContext`sg, $CellContext`coneCap]]; \
+          N[
+           
+           sgCommon`sgCapIntsArea[$CellContext`sg, $CellContext`coneCap]]]; \
 $CellContext`intsEnergy1 = Quiet[
           
           sgCommon`sgCapIntsEnergy[$CellContext`sg, $CellContext`coneCap]]; \
@@ -1469,7 +1498,12 @@ $CellContext`newSG1 = Quiet[
 $CellContext`newSGArea1 = N[
           sgCommon`sgArea[
            Part[$CellContext`newSG1, 2]]]; $CellContext`newSGEnergy1 = N[
-          sgCommon`sgEnergy[$CellContext`newSG1]]; $CellContext`sgArray = {}; 
+          
+          sgCommon`sgEnergy[$CellContext`newSG1]]; \
+$CellContext`energyPercent1 = N[
+          
+          sgCommon`sgCapIntsEnergyPercent[$CellContext`sg, \
+$CellContext`coneCap]]; $CellContext`sgArray = {}; 
        AppendTo[$CellContext`sgArray, $CellContext`sg]; 
        AppendTo[$CellContext`sgArray, $CellContext`newSG1]; 
        gPlots3D`gParamPlot3D[
@@ -1484,7 +1518,6 @@ $CellContext`\[Phi]$, $CellContext`\[Theta]$},
                
                sgCommon`sgVector[{$CellContext`x$, $CellContext`y$, \
 $CellContext`z$}, 
-                
                 Part[$CellContext`sgArray, 
                  1 + $CellContext`showNewSG$$]]]]}& )[
            Association[
@@ -1518,10 +1551,12 @@ $CellContext`z$},
 {$CellContext`intsEnergy$$, $CellContext`intsEnergy1}, \
 {$CellContext`newSGArea$$, $CellContext`newSGArea1}, \
 {$CellContext`newSGEnergy$$, $CellContext`newSGEnergy1}, \
-{$CellContext`newSG$$, $CellContext`newSG1}, {{$CellContext`sgAxis$$, {0, 0, 
+{$CellContext`newSG$$, $CellContext`newSG1}, {$CellContext`energyPercent$$, \
+$CellContext`energyPercent1}, {{$CellContext`sgAxis$$, {0, 0, 
           1}}, {-1, -1, -1}, {1, 1, 1}}, {{$CellContext`sgLambda$$, 10}, 
          4.60517, 100}, {{$CellContext`sgMu$$, 1}, 1, 
-         10}, {{$CellContext`capDir$$, {1, -1, 1}}, {-1, -1, -1}, {1, 1, 
+         10}, {{$CellContext`capDir$$, {0.22975292054736127`, 0., 
+          0.9732489894677302}}, {-1, -1, -1}, {1, 1, 
          1}}, {{$CellContext`capAperture$$, Rational[1, 6] Pi}, 0.1, 
          Rational[1, 2] Pi}}, 
       "Options" :> {Method -> {"ShowControls" -> False}}, 
@@ -1537,14 +1572,17 @@ $CellContext`z$},
    Deployed->True,
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
- CellChangeTimes->{3.832839176130619*^9, 3.832839219840517*^9, 
-  3.832840266114024*^9},
+ CellChangeTimes->{
+  3.832839176130619*^9, 3.832839219840517*^9, 3.832840266114024*^9, 
+   3.832910451518108*^9, 3.832922183070083*^9, 3.8329224646770563`*^9, 
+   3.832923415678979*^9, {3.8329234530173473`*^9, 3.8329234688217573`*^9}, {
+   3.8329236896631165`*^9, 3.8329237158984623`*^9}},
  CellLabel->
-  "Out[408]=",ExpressionUUID->"46815513-8d36-41b5-b193-1910871a570b"]
+  "Out[1590]=",ExpressionUUID->"59fb1145-8bb1-4db2-9bee-0cdca64beed9"]
 }, Open  ]]
 },
 WindowSize->{972, 957},
-WindowMargins->{{Automatic, 0}, {0, Automatic}},
+WindowMargins->{{112, Automatic}, {23, Automatic}},
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
 ]
@@ -1653,9 +1691,9 @@ Cell[40839, 1014, 504, 11, 30, "Print",ExpressionUUID->"df543e7e-7976-4514-a63f-
 Cell[41346, 1027, 4186, 81, 167, "Output",ExpressionUUID->"1c5b6755-0c1f-4124-ab1c-f1bc79fe1f11"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[45569, 1113, 10741, 256, 1131, "Input",ExpressionUUID->"f04e28d8-c45c-4832-8802-cb6fe8922c27"],
-Cell[56313, 1371, 342, 9, 30, "Print",ExpressionUUID->"369a71b5-bc0d-4f5c-9bd2-d21f69517a1b"],
-Cell[56658, 1382, 8400, 160, 167, "Output",ExpressionUUID->"46815513-8d36-41b5-b193-1910871a570b"]
+Cell[45569, 1113, 11499, 276, 1150, "Input",ExpressionUUID->"f04e28d8-c45c-4832-8802-cb6fe8922c27"],
+Cell[57071, 1391, 540, 12, 30, "Print",ExpressionUUID->"81269fba-5aed-42ac-8453-37911a5abfa2"],
+Cell[57614, 1405, 9136, 175, 167, "Output",ExpressionUUID->"59fb1145-8bb1-4db2-9bee-0cdca64beed9"]
 }, Open  ]]
 }
 ]
