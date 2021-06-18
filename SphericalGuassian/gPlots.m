@@ -273,7 +273,7 @@ gParamSGGroundShadingWithWalls[input_,\[Theta]_]:=Module[
 		lightFadeStart,lightFadeEnd,normalDir,roughness,sgNDF,sgClampedCos,
 		lightEnergyPercent,oldLightSg2D,oldLightSg3D,newLightSg3D,newLightSg2D,
 		wallXRange,wallHeights,bentCone,coneTheta2D,coneAperture,coneCapAxis,coneCap,
-		energyPercent,bApplyEnergyPercent},
+		energyPercent,areaPercent,sgPercent,sgPercentStrategy},
 	inputKeys=Keys[input];
 	sgLightFunc=input["sgLightFunc"];
 	sgShadingFunc=input["sgShadingFunc"];
@@ -283,8 +283,6 @@ gParamSGGroundShadingWithWalls[input_,\[Theta]_]:=Module[
 	lightRadius=If[MemberQ[inputKeys,"lightRadius"],input["lightRadius"],NaN];
 	lightFadeStart=If[MemberQ[inputKeys,"lightFadeStart"],input["lightFadeStart"],NaN];
 	lightFadeEnd=If[MemberQ[inputKeys,"lightFadeEnd"],input["lightFadeEnd"],NaN];
-	bApplyEnergyPercent=If[MemberQ[inputKeys,"bApplyEnergyPercent"],
-		input["bApplyEnergyPercent"],False];
 	lightIntensity=input["lightIntensity"];
 	roughness=If[MemberQ[inputKeys,"roughness"],input["roughness"],NaN];
 	viewDir=Normalize[If[MemberQ[inputKeys,"viewDir"],input["viewDir"],NaN]];
@@ -305,8 +303,16 @@ gParamSGGroundShadingWithWalls[input_,\[Theta]_]:=Module[
 	coneAperture=bentCone[[2]];
 	coneCapAxis={Cos[coneTheta2D],0,Sin[coneTheta2D]};
 	coneCap={coneCapAxis,coneAperture};
-
-	energyPercent=If[bApplyEnergyPercent,sgCapIntsEnergyPercent[oldLightSg3D,coneCap],1];
+	
+	sgPercentStrategy=If[MemberQ[inputKeys,"sgPercentStrategy"],
+		input["sgPercentStrategy"],1];
+	energyPercent=sgCapIntsEnergyPercent[oldLightSg3D,coneCap];
+	areaPercent=sgCapIntsAreaPercent[oldLightSg3D,coneCap];
+	sgPercent=Which[
+		sgPercentStrategy==2,energyPercent,
+		sgPercentStrategy==3,areaPercent,
+		True,1];
+		
 	newLightSg2D={oldLightSg2D[[1]],oldLightSg2D[[2]],energyPercent*oldLightSg2D[[3]]};
 	 
 	(*calculate new sg light*)
@@ -323,7 +329,7 @@ gParamSGGroundShadingWithWalls[input_,\[Theta]_]:=Module[
 				"sgClampedCos"->sgClampedCos,"sgNDF"->sgNDF,
 				"lightRadius"->lightRadius,"shadingDist"->shadingDist|>];
 	
-	{shadingPos[[1]],sgShading*energyPercent}
+	{shadingPos[[1]],sgShading*sgPercent}
 ];
 
 

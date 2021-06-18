@@ -13,7 +13,8 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 asgArea,sgCapIntsEnergy,sgSolveEnergyInRange,sgEnergyInRange,sgCapIntsAsNewSG,
 		 sgSolveAvgEnergyTheta,sgAvgEnergyTheta,sgCapIntsMaxEnergyTheta,sgEnergyCentroidTheta,
 		 sgCapsIntsEnergyCentroidTheta,sgCapIntsAsNewSGDeprecated,sgProductIntegral,
-		 sgNDFProdIntegrateLight,sgCapIntsEnergyPercent,sgMaxLambda,sgSphereLight];
+		 sgNDFProdIntegrateLight,sgCapIntsEnergyPercent,sgMaxLambda,sgSphereLight,
+		 sgCapIntsAreaPercent];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -60,6 +61,7 @@ sgCapsIntsEnergyCentroidTheta::usage="sgCapsIntsEnergyCentroidTheta";
 sgCapIntsAsNewSGDeprecated::usage="sgCapIntsAsNewSGDeprecated";
 sgCapIntsEnergyPercent::usage="sgCapIntsEnergyPercent";
 sgSphereLight::usage="sgSphereLight";
+sgCapIntsAreaPercent::usage="sgCapIntsAreaPercent";
 
 
 Begin["`Private`"];
@@ -306,8 +308,8 @@ solveSgArea[\[Lambda]_,\[Epsilon]_:0.01]:=Module[
 sgArea[\[Lambda]_,\[Epsilon]_:0.01]:=Module[
 	{},
 	
-	On[Assert];
-	Assert[2\[Lambda]+Log[\[Epsilon]]>0];
+(*	On[Assert];
+	Assert[2\[Lambda]+Log[\[Epsilon]]>0];*)
 	
 	-2\[Pi]*Log[\[Epsilon]]/\[Lambda]
 ];
@@ -456,6 +458,16 @@ sgCapIntsEnergyPercent[sg_,spherCap_]:=Module[
 	
 	Assert[0<=partEnergy<=totalEnergy];
 	partEnergy/totalEnergy
+];
+
+
+sgCapIntsAreaPercent[sg_,spherCap_]:=Module[
+	{partArea,totalArea},
+	
+	partArea=sgCapIntsArea[sg,spherCap];
+	totalArea=sgArea[sg[[2]]];
+	
+	Clip[partArea/totalArea,{0,1}]
 ];
 
 
