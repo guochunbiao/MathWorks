@@ -3,16 +3,17 @@
 BeginPackage["gUtils`"];
 
 
+ClearAll[gStructRules,gPrint,gPrintFunc,gEvalFunc,gCreateCone,gLerp,gRemap,gClampPhi];
 gPrint::usage="Print messages";
 gPrintFunc::usage="Print a function";
 gEvalFunc::usage="Evaluate a funciton";
 gQuickFinMin::usage="Quick find minimum";
 gCreateCone::usgae="Create a cone";
 gLerp::usage="gLerp";
+gRemap::usage="gRemap";
 gClampPhi::usage="gClampPhi";
 
 
-ClearAll[gStructRules]
 SetAttributes[gStructRules,HoldAll]
 gStructRules[rules_,expr_]:=First@PreemptProtect@Internal`InheritedBlock[
 	{Rule,RuleDelayed},
@@ -23,7 +24,6 @@ gStructRules[rules_,expr_]:=First@PreemptProtect@Internal`InheritedBlock[
 Begin["`Private`"];
 
 
-ClearAll[gPrint];
 gPrint[msgs__]:=Module[
 {narg,text},
 narg=Length[List[msgs]];
@@ -33,7 +33,6 @@ For[i=1,i<=narg,i++,text=StringJoin[text," ",ToString[List[msgs][[i]]]]];
 ];
 
 
-ClearAll[gPrintFunc];
 gPrintFunc[name_,func_]:=Module[
 {ret},
 ret=Print[Style[
@@ -43,12 +42,10 @@ ret
 ];
 
 
-ClearAll[gEvalFunc];
 gEvalFunc[name_,func_]:=Print[Style[
 StringJoin[ToString[name],"=",ToString[func]], FontSize->18,Background->LightBlue]];
 
 
-ClearAll[gCreateCone];
 gCreateCone[originPt_,refPt0_,refPt1_]:=Module[
 	{dirAngle,apertureAngle,refTheta0,refTheta1,minTheta,maxTheta},
 	refTheta0=ToPolarCoordinates[refPt0-originPt][[2]];
@@ -62,7 +59,6 @@ gCreateCone[originPt_,refPt0_,refPt1_]:=Module[
 ];
 
 
-ClearAll[gLerp];
 gLerp[from_,to_,factor_]:=Module[
 	{t,interpolated},
 	t=Clip[factor,{0,1}];
@@ -72,7 +68,20 @@ gLerp[from_,to_,factor_]:=Module[
 ];
 
 
-ClearAll[gClampPhi];
+gRemap[x_,oldRange_,newRange_]:=Module[
+	{os,oe,ns,ne,factor,nx},
+	os=oldRange[[1]];
+	oe=oldRange[[2]];
+	ns=newRange[[1]];
+	ne=newRange[[2]];
+	
+	factor=(x-os)/(oe-os);
+	nx=ns+factor*(ne-ns);
+	
+	nx
+];
+
+
 gClampPhi[inPhi_]:=Module[
 	{outPhi},
 	

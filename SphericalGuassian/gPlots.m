@@ -229,19 +229,23 @@ gParamSGPointLight[input_,\[Theta]_]:=Module[
 ClearAll[gParamSGGroundShading];
 gParamSGGroundShading[input_,\[Theta]_]:=Module[
 	{inputKeys,sgLightFunc,sgLight,sgShadingFunc,sgShading,viewDir,lightDir,
-		lightCenter,lightRadius,lightIntensity,shadingPos,shadingDist,
-		lightFadeStart,lightFadeEnd,normalDir,roughness,sgNDF,sgClampedCos},
+		lightCenter,lightRadius,lightIntensity,groundRangeX,shadingPos,shadingDist,
+		lightFadeStart,lightFadeEnd,normalDir,roughness,sgNDF,sgClampedCos,
+		lightEnergyPercent},
 	inputKeys=Keys[input];
 	sgLightFunc=input["sgLightFunc"];
 	sgShadingFunc=input["sgShadingFunc"];
 	lightCenter=input["lightCenter"];
+	lightEnergyPercent=If[MemberQ[inputKeys,"lightEnergyPercent"],
+							input["lightEnergyPercent"],1];
 	lightRadius=If[MemberQ[inputKeys,"lightRadius"],input["lightRadius"],NaN];
 	lightFadeStart=If[MemberQ[inputKeys,"lightFadeStart"],input["lightFadeStart"],NaN];
 	lightFadeEnd=If[MemberQ[inputKeys,"lightFadeEnd"],input["lightFadeEnd"],NaN];
 	lightIntensity=input["lightIntensity"];
 	roughness=If[MemberQ[inputKeys,"roughness"],input["roughness"],NaN];
 	viewDir=Normalize[If[MemberQ[inputKeys,"viewDir"],input["viewDir"],NaN]];
-	shadingPos={\[Theta]-\[Pi],0};
+	groundRangeX=If[MemberQ[inputKeys,"groundRangeX"],input["groundRangeX"],{-\[Pi],\[Pi]}];
+	shadingPos={gRemap[\[Theta],{0,2\[Pi]},groundRangeX],0};
 	normalDir=Normalize[{0,1}];
 	lightDir=Normalize[lightCenter-shadingPos];
 	shadingDist=Norm[lightCenter-shadingPos];
@@ -254,10 +258,72 @@ gParamSGGroundShading[input_,\[Theta]_]:=Module[
 				{NaN,NaN,NaN}];
 				
 	sgClampedCos=sgClampedCosine[normalDir,sgLight[[1]]];
-	sgShading=sgShadingFunc[<|"sgLight"->sgLight,"sgClampedCos"->sgClampedCos,
-				"sgNDF"->sgNDF,"lightRadius"->lightRadius,"shadingDist"->shadingDist|>];
+	sgShading=sgShadingFunc[<|"sgLight"->sgLight,"lightEnergyPercent"->lightEnergyPercent,
+				"sgClampedCos"->sgClampedCos,"sgNDF"->sgNDF,
+				"lightRadius"->lightRadius,"shadingDist"->shadingDist|>];
 	
 	{shadingPos[[1]],sgShading}
+];
+
+
+ClearAll[gParamSGGroundShadingWithWalls];
+gParamSGGroundShadingWithWalls[input_,\[Theta]_]:=Module[
+	{inputKeys,sgLightFunc,sgLight,sgShadingFunc,sgShading,viewDir,lightDir,
+		lightCenter,lightRadius,lightIntensity,shadingPos,shadingDist,
+		lightFadeStart,lightFadeEnd,normalDir,roughness,sgNDF,sgClampedCos,
+		lightEnergyPercent,oldLightSg2D,oldLightSg3D,newLightSg3D,newLightSg2D,
+		wallXRange,wallHeights,bentCone,coneTheta2D,coneAperture,coneCapAxis,coneCap,
+		energyPercent,bApplyEnergyPercent},
+	inputKeys=Keys[input];
+	sgLightFunc=input["sgLightFunc"];
+	sgShadingFunc=input["sgShadingFunc"];
+	lightCenter=input["lightCenter"];
+	lightEnergyPercent=If[MemberQ[inputKeys,"lightEnergyPercent"],
+							input["lightEnergyPercent"],1];
+	lightRadius=If[MemberQ[inputKeys,"lightRadius"],input["lightRadius"],NaN];
+	lightFadeStart=If[MemberQ[inputKeys,"lightFadeStart"],input["lightFadeStart"],NaN];
+	lightFadeEnd=If[MemberQ[inputKeys,"lightFadeEnd"],input["lightFadeEnd"],NaN];
+	bApplyEnergyPercent=If[MemberQ[inputKeys,"bApplyEnergyPercent"],
+		input["bApplyEnergyPercent"],False];
+	lightIntensity=input["lightIntensity"];
+	roughness=If[MemberQ[inputKeys,"roughness"],input["roughness"],NaN];
+	viewDir=Normalize[If[MemberQ[inputKeys,"viewDir"],input["viewDir"],NaN]];
+	wallXRange=input["wallXRange"];
+	wallHeights=input["wallHeights"];
+	shadingPos={gRemap[\[Theta],{0,2\[Pi]},wallXRange],0};
+	normalDir=Normalize[{0,1}];
+	lightDir=Normalize[lightCenter-shadingPos];
+	shadingDist=Norm[lightCenter-shadingPos];
+	
+	(*cone cutting sg light*)
+	oldLightSg2D=sgSphereLight[lightCenter,lightFadeStart,
+			lightFadeEnd,lightIntensity,shadingPos];
+	oldLightSg3D=sgTo3D[oldLightSg2D];
+	bentCone=gCreateCone[shadingPos,
+		{wallXRange[[1]],wallHeights[[1]]},{wallXRange[[2]],wallHeights[[2]]}];
+	coneTheta2D=bentCone[[1]];
+	coneAperture=bentCone[[2]];
+	coneCapAxis={Cos[coneTheta2D],0,Sin[coneTheta2D]};
+	coneCap={coneCapAxis,coneAperture};
+
+	energyPercent=If[bApplyEnergyPercent,sgCapIntsEnergyPercent[oldLightSg3D,coneCap],1];
+	newLightSg2D={oldLightSg2D[[1]],oldLightSg2D[[2]],energyPercent*oldLightSg2D[[3]]};
+	 
+	(*calculate new sg light*)
+	sgLight=sgLightFunc[<|"lightCenter"->lightCenter,"lightRadius"->lightRadius,
+		"lightFadeStart"->lightFadeStart,"lightFadeEnd"->lightFadeEnd,
+		"lightIntensity"->lightIntensity,"shadingPos"->shadingPos|>];
+	sgNDF=If[MemberQ[inputKeys,"sgNDFFunc"],
+				input["sgNDFFunc"][<|"roughness"->roughness,"lightDir"->lightDir,
+							"viewDir"->viewDir,"normalDir"->normalDir|>],
+				{NaN,NaN,NaN}];
+				
+	sgClampedCos=sgClampedCosine[normalDir,sgLight[[1]]];
+	sgShading=sgShadingFunc[<|"sgLight"->sgLight,"lightEnergyPercent"->lightEnergyPercent,
+				"sgClampedCos"->sgClampedCos,"sgNDF"->sgNDF,
+				"lightRadius"->lightRadius,"shadingDist"->shadingDist|>];
+	
+	{shadingPos[[1]],sgShading*energyPercent}
 ];
 
 
@@ -268,43 +334,55 @@ axisExtent: plot range
 *)
 gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	{
-		inputKeys,collectFunc,
-		plotList,plotStyles,plotLabels,
-		axisExtent
-	},
+		inputKeys,collectFunc,plotList,plotStyles,plotLabels,axisExtent,
+		wallElement1,wallStyle1,wallLabel1,
+		wallElement2,wallStyle2,wallLabel2,
+		p1,w1,w2
+	},	
     inputKeys=Keys[inputs];    
 	plotList={};
 	plotStyles={};
 	plotLabels={};
 	
-	collectFunc[keyName_,paramFunc_]:=Block[
+	collectFunc[keyName_,paramFunc_,bComplexPlot_:False]:=Block[
 		{elements,element,evaluated,elementKeys,tmpColor,tmpThickness},
 		
 		If[MemberQ[inputKeys,keyName],
 			elements=inputs[[keyName]];
 			For[i=1,i<=Length[elements],i++,
 				element=elements[[i]];
-				evaluated=paramFunc[element,\[Theta]];
+				evaluated:=paramFunc[element,\[Theta]];
 				(*AppendTo[plotList,paramFunc[element,\[Theta]]];*)
 				elementKeys=Keys[element];
 				tmpColor=If[MemberQ[elementKeys,"color"],element["color"],LightBrown];
 				tmpThickness=If[MemberQ[elementKeys,"thickness"],element["thickness"],0.01];
 				
-			(*	If[hasSubElement,
-					Block[
-						{},
-						For[j=1,j\[LessEqual]Length[evaluated],j++,
-							AppendTo[plotList,evaluated]
-						]
+				If[bComplexPlot,
+					Block[{},						
+						If [i==1,
+							Block[{},
+								wallElement1=element;
+								wallStyle1={tmpColor,Thickness[tmpThickness]};
+								wallLabel1=If[MemberQ[elementKeys,"label"],
+										element["label"],""];
+							],
+							Block[{},
+								wallElement2=element;
+								wallStyle2={tmpColor,Thickness[tmpThickness]};
+								wallLabel2=If[MemberQ[elementKeys,"label"],
+										element["label"],""];
+							]
+						];
 					],
-					Block[
-						{},
+					Block[{},						
 						AppendTo[plotList,evaluated];
+						AppendTo[plotStyles,{tmpColor,Thickness[tmpThickness]}];
+						AppendTo[plotLabels,If[
+								MemberQ[elementKeys,"label"],element["label"],""]];
 					]
-				];*)
-				AppendTo[plotList,evaluated];
-				AppendTo[plotStyles,{tmpColor,Thickness[tmpThickness]}];
-				AppendTo[plotLabels,If[MemberQ[elementKeys,"label"],element["label"],""]];
+				];
+				
+				
 			];
 		];
 	];
@@ -331,17 +409,50 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["sgPointLights",gParamSGPointLight];
 	(*append SG point lights*)
 	collectFunc["sgGroundShading",gParamSGGroundShading];
+	(*append SG point lights*)
+	collectFunc["sgGroundShadingWithWalls",gParamSGGroundShadingWithWalls,True];
 	(*append lobes, direction(view or light or normal) might varying with \[Theta]*)
 	collectFunc["lobes",gParamLobes];
 
 	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
-	ParametricPlot[plotList,
+	
+	p1=ParametricPlot[
+		plotList,
 		{\[Theta],0,2\[Pi]},
 		PlotStyle->plotStyles,
 		PlotLegends->plotLabels,
 		PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
 		AspectRatio->1,
-		ImageSize->imageSize]
+		ImageSize->imageSize];
+	
+	(*special handler for wall elements*)
+	If[ValueQ[wallElement1],
+		w1=ParametricPlot[
+				gParamSGGroundShadingWithWalls[wallElement1,\[Theta]],
+				{\[Theta],0,2\[Pi]},
+				PlotStyle->wallStyle1,
+				PlotLegends->wallLabel1,
+				PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
+				AspectRatio->1,
+				ImageSize->imageSize],
+		Blank[]];
+	If[ValueQ[wallElement2],
+		w2=ParametricPlot[
+				gParamSGGroundShadingWithWalls[wallElement2,\[Theta]],
+				{\[Theta],0,2\[Pi]},
+				PlotStyle->wallStyle2,
+				PlotLegends->wallLabel2,
+				PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
+				AspectRatio->1,
+				ImageSize->imageSize],
+		Blank[]];
+	
+	(*general plot*)
+	Which[
+		ValueQ[wallElement2],Show[p1,w1,w2],
+		ValueQ[wallElement1],Show[p1,w1],
+		True,Show[p1]
+	]
 ];
 
 

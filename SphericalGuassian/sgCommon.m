@@ -530,7 +530,7 @@ sgCapIntsAsNewSGDeprecated[sg_,spherCap_,strategy_:1]:=Module[
 ];
 
 
-sgCapIntsAsNewSG[sg_,spherCap_,strategy_:1]:=Module[
+sgCapIntsAsNewSG[sg_,spherCap_]:=Module[
 	{\[Lambda]0,\[Mu]0,sgCap,intsArea,intsEnergy,p1,p2,sol1,sol2,sol,p,\[Lambda],\[Mu],
 	maxEnergyTheta,energyCentroidTheta,apexEnergy,apexTheta,newSgAxis,
 	axis1,axis2,axisDot,\[Psi]1,\[Psi]2,factor,centroidAxis,centroidPt,edgeInfo,edgePsiL,edgePsiR},

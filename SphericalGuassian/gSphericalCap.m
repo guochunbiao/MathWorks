@@ -377,15 +377,14 @@ gCapIntsHemiPart[capAxis1_,capApert1_,capAxis2_,capApert2_]:=Module[
 	
 	fullFlag=integralFlags[[2]];
 	hemiFlag=integralFlags[[3]];
-	radiusPart1=Min[Abs[edgeAngleL],Abs[edgeAngleR]];
+	radiusPart1:=Min[Abs[edgeAngleL],Abs[edgeAngleR]];
 	
 	minThetaPart2=radiusPart1;
-	maxThetaPart2=Max[Abs[edgeAngleL],Abs[edgeAngleR]];
+	maxThetaPart2:=Max[Abs[edgeAngleL],Abs[edgeAngleR]];
 	
 	cap2PhiRadius=If[fullPhiRadiusFlag,tmpPhiRadius1,tmpPhiRadius2];
 	
-	Which[hemiFlag==1,{radiusPart1,minThetaPart2,maxThetaPart2,-\[Pi]/2,\[Pi]/2},
-		True,{0,0,0,0,0}]
+	If[hemiFlag==1,{radiusPart1,minThetaPart2,maxThetaPart2,-\[Pi]/2,\[Pi]/2},{0,0,0,0,0}]
 ]
 
 
