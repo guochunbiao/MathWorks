@@ -340,7 +340,8 @@ axisExtent: plot range
 *)
 gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	{
-		inputKeys,collectFunc,plotList,plotStyles,plotLabels,axisExtent,
+		inputKeys,collectFunc,complexFunc,
+		plotList,plotStyles,plotLabels,axisExtent,finalPlots,
 		wallElement1,wallStyle1,wallLabel1,
 		wallElement2,wallStyle2,wallLabel2,
 		p1,w1,w2
@@ -350,9 +351,8 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	plotStyles={};
 	plotLabels={};
 	
-	collectFunc[keyName_,paramFunc_,bComplexPlot_:False]:=Block[
+	collectFunc[keyName_,paramFunc_]:=Block[
 		{elements,element,evaluated,elementKeys,tmpColor,tmpThickness},
-		
 		If[MemberQ[inputKeys,keyName],
 			elements=inputs[[keyName]];
 			For[i=1,i<=Length[elements],i++,
@@ -363,32 +363,32 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 				tmpColor=If[MemberQ[elementKeys,"color"],element["color"],LightBrown];
 				tmpThickness=If[MemberQ[elementKeys,"thickness"],element["thickness"],0.01];
 				
-				If[bComplexPlot,
-					Block[{},						
-						If [i==1,
-							Block[{},
-								wallElement1=element;
-								wallStyle1={tmpColor,Thickness[tmpThickness]};
-								wallLabel1=If[MemberQ[elementKeys,"label"],
-										element["label"],""];
-							],
-							Block[{},
-								wallElement2=element;
-								wallStyle2={tmpColor,Thickness[tmpThickness]};
-								wallLabel2=If[MemberQ[elementKeys,"label"],
-										element["label"],""];
-							]
-						];
-					],
-					Block[{},						
-						AppendTo[plotList,evaluated];
-						AppendTo[plotStyles,{tmpColor,Thickness[tmpThickness]}];
-						AppendTo[plotLabels,If[
-								MemberQ[elementKeys,"label"],element["label"],""]];
-					]
-				];
+				AppendTo[plotList,evaluated];
+				AppendTo[plotStyles,{tmpColor,Thickness[tmpThickness]}];
+				AppendTo[plotLabels,If[MemberQ[elementKeys,"label"],element["label"],""]];	
+			];
+		];
+	];
+
+	complexFunc[keyName_,paramFunc_]:=Block[
+		{elements,element,elementKeys,tmpColor,tmpThickness,tmpPlot},
+		If[MemberQ[inputKeys,keyName],
+			elements=inputs[[keyName]];
+			For[i=1,i<=Length[elements],i++,
+				element=elements[[i]];
+				elementKeys=Keys[element];
+				tmpColor=If[MemberQ[elementKeys,"color"],element["color"],LightBrown];
+				tmpThickness=If[MemberQ[elementKeys,"thickness"],element["thickness"],0.01];
 				
-				
+				tmpPlot=ParametricPlot[
+					paramFunc[element,\[Theta]],
+					{\[Theta],0,2\[Pi]},
+					PlotStyle->{tmpColor,Thickness[tmpThickness]},
+					PlotLegends->If[MemberQ[elementKeys,"label"],element["label"],""],
+					PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
+					AspectRatio->1,
+					ImageSize->imageSize];
+				AppendTo[finalPlots,tmpPlot]
 			];
 		];
 	];
@@ -415,13 +415,10 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["sgPointLights",gParamSGPointLight];
 	(*append SG point lights*)
 	collectFunc["sgGroundShading",gParamSGGroundShading];
-	(*append SG point lights*)
-	collectFunc["sgGroundShadingWithWalls",gParamSGGroundShadingWithWalls,True];
 	(*append lobes, direction(view or light or normal) might varying with \[Theta]*)
 	collectFunc["lobes",gParamLobes];
 
 	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
-	
 	p1=ParametricPlot[
 		plotList,
 		{\[Theta],0,2\[Pi]},
@@ -430,35 +427,14 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 		PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
 		AspectRatio->1,
 		ImageSize->imageSize];
+	finalPlots={};
+	AppendTo[finalPlots,p1];
 	
-	(*special handler for wall elements*)
-	If[ValueQ[wallElement1],
-		w1=ParametricPlot[
-				gParamSGGroundShadingWithWalls[wallElement1,\[Theta]],
-				{\[Theta],0,2\[Pi]},
-				PlotStyle->wallStyle1,
-				PlotLegends->wallLabel1,
-				PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
-				AspectRatio->1,
-				ImageSize->imageSize],
-		Blank[]];
-	If[ValueQ[wallElement2],
-		w2=ParametricPlot[
-				gParamSGGroundShadingWithWalls[wallElement2,\[Theta]],
-				{\[Theta],0,2\[Pi]},
-				PlotStyle->wallStyle2,
-				PlotLegends->wallLabel2,
-				PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
-				AspectRatio->1,
-				ImageSize->imageSize],
-		Blank[]];
+	(*append SG point lights*)
+	complexFunc["sgGroundShadingWithWalls",gParamSGGroundShadingWithWalls];
 	
 	(*general plot*)
-	Which[
-		ValueQ[wallElement2],Show[p1,w1,w2],
-		ValueQ[wallElement1],Show[p1,w1],
-		True,Show[p1]
-	]
+	Show[finalPlots]
 ];
 
 
