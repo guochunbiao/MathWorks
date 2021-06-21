@@ -51,7 +51,9 @@ gCreateCone[originPt_,refPt0_,refPt1_]:=Module[
 	refTheta0=ToPolarCoordinates[refPt0-originPt][[2]];
 	refTheta1=ToPolarCoordinates[refPt1-originPt][[2]];
 	minTheta=Min[refTheta0,refTheta1];
+	If[minTheta<0,minTheta=minTheta+2\[Pi]];
 	maxTheta=Max[refTheta0,refTheta1];
+	If[maxTheta<0,maxTheta=maxTheta+2\[Pi]];
 	dirAngle=(maxTheta+minTheta)/2;
 	apertureAngle=(maxTheta-minTheta)/2;
 	
