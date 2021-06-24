@@ -5,7 +5,8 @@ Needs["gUtils`"];
 
 
 ClearAll[gPointLightFallOff,gPhongNDF,gDGGX,gDGGX2,gVisSmith,gFresnelOrigin,gBrdfFunc,
-	gSolveSamplingHalfDir,gSamplingHalfDir,gSamplingLightDir,gSamplingLightDir2D];
+	gSolveSamplingHalfDir,gSamplingHalfDir,gSamplingLightDir,gSamplingLightDir2D,
+	gPlotGgxPdf3D,gPlotGgxPdf2D];
 gPointLightFallOff::usage="function{gPointLightFallOff}";
 gPhongNDF::usage="function[gPhongNDF]";
 gDGGX::usage="function[gDGGX]";
@@ -17,6 +18,8 @@ gSolveSamplingHalfDir::usage="gSolveSamplingHalfDir";
 gSamplingHalfDir::usage="gSamplingHalfDir";
 gSamplingLightDir::usage="gSamplingLightDir";
 gSamplingLightDir2D::usage="gSamplingLightDir2D";
+gPlotGgxPdf3D::usage="gPlotGgxPdf3D";
+gPlotGgxPdf2D::usage="gPlotGgxPdf2D";
 
 
 Begin["`Private`"];
@@ -115,7 +118,7 @@ gSolveSamplingHalfDir[m_,\[Theta]_,\[Phi]_,\[Epsilon]1_,\[Epsilon]2_]:=Module[
 	
 	pdfJacobian[\[Theta]1_]:=Sin[\[Theta]1];
 	pdfSpherical[m1_,\[Theta]1_,\[Phi]1_]:=spherCoordGGX[m1,\[Theta]1,\[Phi]1];
-	pdfCartesian[m1_,\[Theta]1_,\[Phi]1_]:=pdfSpherical[m1,\[Theta]1,\[Phi]1]/Sin[\[Theta]1];
+	pdfCartesian[m1_,\[Theta]1_,\[Phi]1_]:=pdfSpherical[m1,\[Theta]1,\[Phi]1]/pdfJacobian[\[Theta]1];
 	
 	{Solve[\[Epsilon]1==cdfGGX1[m,\[Theta]],\[Theta]],Solve[\[Epsilon]2==1/(2\[Pi]) \[Phi],\[Phi]],pdfCartesian[m,\[Theta],\[Phi]]}
 ];
@@ -156,8 +159,52 @@ gSamplingLightDir[m_,inViewDir_,\[Epsilon]1_,\[Epsilon]2_]:=Module[
 
 
 gSamplingLightDir2D[m_,inViewDir_,\[Epsilon]1_,\[Epsilon]2_]:=Module[
-	{halfSampling,halfDir,pdfHalfDirCCS,viewDir,normalDir,lightDir,
-		pdfJacobian,pdfLightDirCCS,reflectance},
+	{viewDir3D,lightDirSample,lightDir3D,lightDir2D},
+	
+	viewDir3D=Normalize[{inViewDir[[1]],0,inViewDir[[2]]}];
+	lightDirSample=gSamplingLightDir[m,viewDir3D,\[Epsilon]1,\[Epsilon]2];
+	lightDir3D=lightDirSample[[1]];
+	lightDir2D=Normalize[{lightDir3D[[1]],lightDir3D[[3]]}];
+	
+	lightDir2D
+];
+
+
+gPlotGgxPdf3D[roughness_,inViewDir_,\[Theta]_,\[Phi]_]:=Module[
+	{m,viewDir,\[Epsilon]1,\[Epsilon]2,halfSample,halfDir,pdfHalfCCS,
+		lightSample,lightDir,pdfLightCCS},
+		
+	m=roughness;
+	viewDir=Normalize[inViewDir];
+	
+	\[Epsilon]1=\[Theta]/\[Pi];
+	\[Epsilon]2=\[Phi]/(2\[Pi]);
+
+	halfSample=gSamplingHalfDir[m,\[Epsilon]1,\[Epsilon]2];
+	halfDir=halfSample[[1]];
+	pdfHalfCCS=halfSample[[2]];
+
+	lightSample=gSamplingLightDir[m,viewDir,\[Epsilon]1,\[Epsilon]2];
+	lightDir=lightSample[[1]];
+	pdfLightCCS=lightSample[[2]];
+
+	(*halfDir*pdfHalfCCS*)
+	If[!ValueQ[lightSample]||lightDir[[3]]<0,pdfLightCCS=0];
+	lightDir*pdfLightCCS
+];
+
+
+gPlotGgxPdf2D[roughness_,inViewDir_,\[Theta]_]:=Module[
+	{viewDir3D,lightDir3D1,lightDir3D2},
+
+	viewDir3D={inViewDir[[1]],0,inViewDir[[2]]};
+	lightDir3D1=gPlotGgxPdf3D[roughness,viewDir3D,\[Theta],0];
+	lightDir3D2=gPlotGgxPdf3D[roughness,viewDir3D,\[Theta],\[Pi]];
+
+	{
+		{lightDir3D1[[1]],lightDir3D1[[3]]},
+		{lightDir3D2[[1]],lightDir3D2[[3]]}
+	}
 ];
 
 

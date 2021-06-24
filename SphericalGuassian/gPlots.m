@@ -5,6 +5,7 @@ BeginPackage["gPlots`"];
 Needs["sgCommon`"];
 <<gUtils.m;
 Needs["gUtils`"];
+Needs["gBRDF`"];
 
 
 ClearAll[gParamPlot];
@@ -349,6 +350,7 @@ gParamSGRightWallShading[input_,\[Theta]_]:=Module[
 	sgLightFunc=input["sgLightFunc"];
 	sgShadingFunc=input["sgShadingFunc"];
 	lightCenter=input["lightCenter"];
+	bentCone=input["representCone"];
 	lightEnergyPercent=If[MemberQ[inputKeys,"lightEnergyPercent"],
 							input["lightEnergyPercent"],1];
 	lightRadius=If[MemberQ[inputKeys,"lightRadius"],input["lightRadius"],NaN];
@@ -369,8 +371,9 @@ gParamSGRightWallShading[input_,\[Theta]_]:=Module[
 	oldLightSg2D=sgSphereLight[lightCenter,lightFadeStart,
 			lightFadeEnd,lightIntensity,shadingPos];
 	oldLightSg3D=sgTo3D[oldLightSg2D];
-	bentCone=gCreateCone[shadingPos,{wallXRange[[1]],wallHeights[[1]]},
-					{wallXRange[[2]],wallHeights[[2]]+1}];
+	If[!MemberQ[inputKeys,"representCone"],
+		bentCone=gCreateCone[shadingPos,{wallXRange[[1]],wallHeights[[1]]},
+					{wallXRange[[2]],wallHeights[[2]]+1}]];
 	coneTheta2D=bentCone[[1]];
 	coneAperture=bentCone[[2]];
 	coneCapAxis={Cos[coneTheta2D],0,Sin[coneTheta2D]};
@@ -403,6 +406,17 @@ gParamSGRightWallShading[input_,\[Theta]_]:=Module[
 	
 	{wallXRange[[2]]-sgShading*sgPercent,shadingPos[[2]]}
 ];
+
+
+ClearAll[gParamGgxPDF2];
+gParamGgxPDF2[input_,\[Theta]_]:=Module[
+	{center,m,viewDir},
+	center=input[["center"]];
+	m=input[["roughness"]];
+	viewDir=input[["viewDir"]];
+	
+	center+gPlotGgxPdf2D[m,viewDir,\[Theta]]
+]; 
 
 
 (*
@@ -488,6 +502,8 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["sgGroundShading",gParamSGGroundShading];
 	(*append lobes, direction(view or light or normal) might varying with \[Theta]*)
 	collectFunc["lobes",gParamLobes];
+	(*append GGX PDF 2D*)
+	collectFunc["ggxPDF2",gParamGgxPDF2];
 
 	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
 	p1=ParametricPlot[

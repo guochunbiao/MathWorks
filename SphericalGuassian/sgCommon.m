@@ -376,11 +376,10 @@ sgSolveEnergyInRange[sg_]:=Module[
 	\[Lambda]=sg[[2]];
 	\[Mu]=sg[[3]];
 	
-	(*Fast way: Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],{z,z1,z2}, z1>z2]*)
+	(*Fast way: Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],{z,z1,z2}, Assumptions\[Rule]{z1>z2}]*)
 	(*The following is a slow way*)
 	reg=ParametricRegion[{Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]},{{\[Phi],0,2\[Pi]},{\[Theta],\[Pi]/8,\[Pi]/7}}];
-	sol=Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],
-			{x,y,z}\[Element]reg,Assumptions->{\[Lambda]>0,\[Mu]>0}];
+	sol=Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],{x,y,z}\[Element]reg,Assumptions->{\[Lambda]>0,\[Mu]>0}];
 	sol
 ];
 

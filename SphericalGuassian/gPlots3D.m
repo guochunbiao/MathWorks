@@ -226,6 +226,17 @@ gParamSpherCapInts2[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 ];
 
 
+ClearAll[gParamGgxPDF3];
+gParamGgxPDF3[input_,globalInput_,x_,y_,z_,\[Theta]_,\[Phi]_]:=Module[
+	{center,m,viewDir},
+	center=input[["center"]];
+	m=input[["roughness"]];
+	viewDir=input[["viewDir"]];
+
+	center+gPlotGgxPdf3D[m,viewDir,\[Theta],\[Phi]]
+];
+
+
 ClearAll[gMultiColorFunctionBackup];
 gMultiColorFunctionBackup/:(h:(Plot|Plot3D|ParametricPlot|ParametricPlot3D))[
 	{fs__},before___,gMultiColorFunctionBackup[cf__],after___]:=
@@ -306,6 +317,8 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["spherRanges",gParamSpherRange];
 	(*append spherical lines*)
 	collectFunc["spherLines",gParamSpherLine];
+	(*append GGX PDF 3d*)
+	collectFunc["ggxPDF3",gParamGgxPDF3];
 	
 	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
 	projSettings=If[MemberQ[inputKeys,"viewPoint"],
