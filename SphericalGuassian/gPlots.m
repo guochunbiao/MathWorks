@@ -48,6 +48,9 @@ gParamCone[coneInput_,\[Theta]_]:=Module[
 	arcRange=arcMaxTheta-arcMinTheta;
 	rescaledTheta=Rescale[\[Theta],{0,2\[Pi]},{arcMinTheta,arcMaxTheta}];
 	
+	If[arcMinTheta>\[Pi],arcMinTheta=arcMinTheta-2\[Pi]];
+	If[arcMaxTheta>\[Pi],arcMaxTheta=arcMaxTheta-2\[Pi]];
+	
 	{
 		(origin+radius*{Cos[rescaledTheta],Sin[rescaledTheta]}),
 		origin+(0.1*radius/2\[Pi])*\[Theta]*FromPolarCoordinates[{1,arcMinTheta}],
@@ -268,7 +271,7 @@ gParamSGGroundShading[input_,\[Theta]_]:=Module[
 
 ClearAll[gParamSGGroundShadingWithWalls];
 gParamSGGroundShadingWithWalls[input_,\[Theta]_]:=Module[
-	{inputKeys,sgLightFunc,sgLight,sgShadingFunc,sgShading,viewDir,lightDir,
+	{inputKeys,sgLightFunc,sgLight,sgShadingFunc,sgShading,eyePoint,viewDir,lightDir,
 		lightCenter,lightRadius,lightIntensity,shadingPos,shadingDist,
 		lightFadeStart,lightFadeEnd,normalDir,roughness,sgNDF,sgClampedCos,
 		lightEnergyPercent,oldLightSg2D,oldLightSg3D,newLightSg3D,newLightSg2D,
@@ -285,10 +288,11 @@ gParamSGGroundShadingWithWalls[input_,\[Theta]_]:=Module[
 	lightFadeEnd=If[MemberQ[inputKeys,"lightFadeEnd"],input["lightFadeEnd"],NaN];
 	lightIntensity=input["lightIntensity"];
 	roughness=If[MemberQ[inputKeys,"roughness"],input["roughness"],NaN];
-	viewDir=Normalize[If[MemberQ[inputKeys,"viewDir"],input["viewDir"],NaN]];
 	wallXRange=input["wallXRange"];
 	wallHeights=input["wallHeights"];
 	shadingPos={gRemap[\[Theta],{0,2\[Pi]},wallXRange],0};
+	eyePoint=If[MemberQ[inputKeys,"eyePoint"],input["eyePoint"],NaN];
+	viewDir=Normalize[eyePoint-shadingPos];
 	normalDir=Normalize[{0,1}];
 	lightDir=Normalize[lightCenter-shadingPos];
 	shadingDist=Norm[lightCenter-shadingPos];
@@ -330,6 +334,74 @@ gParamSGGroundShadingWithWalls[input_,\[Theta]_]:=Module[
 				"lightRadius"->lightRadius,"shadingDist"->shadingDist|>];
 	
 	{shadingPos[[1]],sgShading*sgPercent}
+];
+
+
+ClearAll[gParamSGRightWallShading];
+gParamSGRightWallShading[input_,\[Theta]_]:=Module[
+	{inputKeys,sgLightFunc,sgLight,sgShadingFunc,sgShading,eyePoint,viewDir,lightDir,
+		lightCenter,lightRadius,lightIntensity,shadingPos,shadingDist,
+		lightFadeStart,lightFadeEnd,normalDir,roughness,sgNDF,sgClampedCos,
+		lightEnergyPercent,oldLightSg2D,oldLightSg3D,newLightSg3D,newLightSg2D,
+		wallXRange,wallHeights,bentCone,coneTheta2D,coneAperture,coneCapAxis,coneCap,
+		energyPercent,areaPercent,sgPercent,sgPercentStrategy},
+	inputKeys=Keys[input];
+	sgLightFunc=input["sgLightFunc"];
+	sgShadingFunc=input["sgShadingFunc"];
+	lightCenter=input["lightCenter"];
+	lightEnergyPercent=If[MemberQ[inputKeys,"lightEnergyPercent"],
+							input["lightEnergyPercent"],1];
+	lightRadius=If[MemberQ[inputKeys,"lightRadius"],input["lightRadius"],NaN];
+	lightFadeStart=If[MemberQ[inputKeys,"lightFadeStart"],input["lightFadeStart"],NaN];
+	lightFadeEnd=If[MemberQ[inputKeys,"lightFadeEnd"],input["lightFadeEnd"],NaN];
+	lightIntensity=input["lightIntensity"];
+	roughness=If[MemberQ[inputKeys,"roughness"],input["roughness"],NaN];
+	wallXRange=input["wallXRange"];
+	wallHeights=input["wallHeights"];
+	shadingPos={wallXRange[[2]],gRemap[\[Theta],{0,2\[Pi]},{0,wallHeights[[2]]}]};
+	eyePoint=If[MemberQ[inputKeys,"eyePoint"],input["eyePoint"],NaN];
+	viewDir=Normalize[eyePoint-shadingPos];
+	normalDir=Normalize[{-1,0}];
+	lightDir=Normalize[lightCenter-shadingPos];
+	shadingDist=Norm[lightCenter-shadingPos];
+	
+	(*cone cutting sg light*)
+	oldLightSg2D=sgSphereLight[lightCenter,lightFadeStart,
+			lightFadeEnd,lightIntensity,shadingPos];
+	oldLightSg3D=sgTo3D[oldLightSg2D];
+	bentCone=gCreateCone[shadingPos,{wallXRange[[1]],wallHeights[[1]]},
+					{wallXRange[[2]],wallHeights[[2]]+1}];
+	coneTheta2D=bentCone[[1]];
+	coneAperture=bentCone[[2]];
+	coneCapAxis={Cos[coneTheta2D],0,Sin[coneTheta2D]};
+	coneCap={coneCapAxis,coneAperture};
+	
+	sgPercentStrategy=If[MemberQ[inputKeys,"sgPercentStrategy"],
+		input["sgPercentStrategy"],1];
+	energyPercent=sgCapIntsEnergyPercent[oldLightSg3D,coneCap];
+	areaPercent=sgCapIntsAreaPercent[oldLightSg3D,coneCap];
+	sgPercent=Which[
+		sgPercentStrategy==2,energyPercent,
+		sgPercentStrategy==3,areaPercent,
+		True,1];
+		
+	newLightSg2D={oldLightSg2D[[1]],oldLightSg2D[[2]],energyPercent*oldLightSg2D[[3]]};
+	 
+	(*calculate new sg light*)
+	sgLight=sgLightFunc[<|"lightCenter"->lightCenter,"lightRadius"->lightRadius,
+		"lightFadeStart"->lightFadeStart,"lightFadeEnd"->lightFadeEnd,
+		"lightIntensity"->lightIntensity,"shadingPos"->shadingPos|>];
+	sgNDF=If[MemberQ[inputKeys,"sgNDFFunc"],
+				input["sgNDFFunc"][<|"roughness"->roughness,"lightDir"->lightDir,
+							"viewDir"->viewDir,"normalDir"->normalDir|>],
+				{NaN,NaN,NaN}];
+				
+	sgClampedCos=sgClampedCosine[normalDir,sgLight[[1]]];
+	sgShading=sgShadingFunc[<|"sgLight"->sgLight,"lightEnergyPercent"->lightEnergyPercent,
+				"sgClampedCos"->sgClampedCos,"sgNDF"->sgNDF,
+				"lightRadius"->lightRadius,"shadingDist"->shadingDist|>];
+	
+	{wallXRange[[2]]-sgShading*sgPercent,shadingPos[[2]]}
 ];
 
 
@@ -413,7 +485,6 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["groundShadings",gParamGroundShading];
 	(*append SG point lights*)
 	collectFunc["sgPointLights",gParamSGPointLight];
-	(*append SG point lights*)
 	collectFunc["sgGroundShading",gParamSGGroundShading];
 	(*append lobes, direction(view or light or normal) might varying with \[Theta]*)
 	collectFunc["lobes",gParamLobes];
@@ -430,8 +501,10 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	finalPlots={};
 	AppendTo[finalPlots,p1];
 	
-	(*append SG point lights*)
+	(*ground shading with walls*)
 	complexFunc["sgGroundShadingWithWalls",gParamSGGroundShadingWithWalls];
+	(*wall shading*)
+	complexFunc["sgRightWallShading",gParamSGRightWallShading];
 	
 	(*general plot*)
 	Show[finalPlots]

@@ -1,20 +1,22 @@
 (* ::Package:: *)
 
 BeginPackage["gBRDF`"];
+Needs["gUtils`"];
 
 
-ClearAll[gPointLightFallOff];
+ClearAll[gPointLightFallOff,gPhongNDF,gDGGX,gDGGX2,gVisSmith,gFresnelOrigin,gBrdfFunc,
+	gSolveSamplingHalfDir,gSamplingHalfDir,gSamplingLightDir,gSamplingLightDir2D];
 gPointLightFallOff::usage="function{gPointLightFallOff}";
-ClearAll[gPhongNDF];
 gPhongNDF::usage="function[gPhongNDF]";
-ClearAll[gDGGX];
 gDGGX::usage="function[gDGGX]";
-ClearAll[gVisSmith];
+gDGGX2::usage="function[gDGGX2]";
 gVisSmith::usage="function[gVisSmithG]";
-ClearAll[gFresnelOrigin];
 gFresnelOrigin::usage="function[gVisSmithG]";
-ClearAll[gBrdfFunc];
 gBrdfFunc::usage="function[gBrdfFunc]";
+gSolveSamplingHalfDir::usage="gSolveSamplingHalfDir";
+gSamplingHalfDir::usage="gSamplingHalfDir";
+gSamplingLightDir::usage="gSamplingLightDir";
+gSamplingLightDir2D::usage="gSamplingLightDir2D";
 
 
 Begin["`Private`"];
@@ -35,7 +37,10 @@ gPhongNDF[m_,noh_]:=Module[
 ];
 
 
-gDGGX[m_,NoH_]=m^2/(\[Pi]*((NoH^2*(m^2-1))+1)^2);
+gDGGX[m_,NoH_]:=m^2/(\[Pi]*((NoH^2*(m^2-1))+1)^2);
+
+
+gDGGX2[m_,\[Theta]_,\[Phi]_]:=m^2/(\[Pi]*((Cos[\[Theta]]^2*(m^2-1))+1)^2);
 
 
 ClearAll[gVisSmithG];
@@ -56,7 +61,7 @@ gFresnelOrigin[VoH_,SpecularColor_:0.99]:=Module[
 ];
 
 
-ClearAll[gBrdfFunc];
+(*D*G*F/(4*NoL*NoV)=D*Vis*F*)
 gBrdfFunc[m_,normalDir_,lightDir_,viewDir_,specularColor_:0.99]:=Module[
 	{normal,light,view,half,NoL,NoV,NoH,VoH,D,Vis,F},
 	normal=Normalize[normalDir];
@@ -71,7 +76,88 @@ gBrdfFunc[m_,normalDir_,lightDir_,viewDir_,specularColor_:0.99]:=Module[
 	D=gDGGX[m,NoH];
 	Vis=gVisSmith[m,NoL,NoV];
 	F=gFresnelOrigin[VoH,specularColor];
+	
+	(*D*G*F/(4*NoL*NoV)=D*Vis*F*)
 	D*Vis*F
+];
+
+
+(*https://agraphicsguy.wordpress.com/2015/11/01/sampling-microfacet-brdf/*)
+(*https://www.tobias-franke.eu/log/2014/03/30/notes_on_importance_sampling.html*)
+gSolveSamplingHalfDir[m_,\[Theta]_,\[Phi]_,\[Epsilon]1_,\[Epsilon]2_]:=Module[
+	{halfVectorGGX,solidAngleGGX,spherCoordGGX,intsGGXPhi,
+		intsGGXTheta,cdfGGX1,cdfGGX2,cdfGGXTheta,pdfSpherical,pdfCartesian,pdfJacobian},
+	
+	(*GGX - half vector space*)
+	halfVectorGGX[m1_,\[Theta]1_,\[Phi]1_]:=gDGGX2[m,\[Theta],\[Phi]];
+	gEvalFunc["halfVectorGGX",TraditionalForm@halfVectorGGX[m,\[Theta],\[Phi]]];
+	(*pdf respecting solid angle - solid angle space*)
+	solidAngleGGX[m1_,\[Theta]1_,\[Phi]1_]:=halfVectorGGX[m1,\[Theta]1,\[Phi]1]*Cos[\[Theta]1];
+	gEvalFunc["solidAngleGGX",TraditionalForm@solidAngleGGX[m,\[Theta],\[Phi]]];
+	(*solid angle to spherical coordinate*)
+	spherCoordGGX[m1_,\[Theta]1_,\[Phi]1_]:=solidAngleGGX[m1,\[Theta]1,\[Phi]1]*Sin[\[Theta]1];
+	gEvalFunc["spherCoordGGX",TraditionalForm@spherCoordGGX[m,\[Theta],\[Phi]]];
+	(*integrating over \[Phi]*)
+	intsGGXPhi[m1_,\[Theta]1_]:=Integrate[spherCoordGGX[m1,\[Theta]1,\[Phi]],{\[Phi],0,2\[Pi]}];
+	gEvalFunc["Integrate Marginal Phi",TraditionalForm@intsGGXPhi[m,\[Theta]]];
+	(*integrating over \[Theta]*)
+	intsGGXTheta[m1_,\[Phi]1_]:=Integrate[spherCoordGGX[m1,\[Theta],\[Phi]1],{\[Theta],0,\[Pi]/2}];
+	gEvalFunc["Integrate Marginal Theta",TraditionalForm@intsGGXTheta[m,\[Phi]]];
+	(*CDF*)
+	cdfGGX1[m1_,\[Theta]1_]:=m1^2/(Cos[\[Theta]1]^2(m1^2-1)^2+(m1^2-1))-1/(m1^2-1);
+	(*cdfGGXTheta[m1_,\[Theta]1_]=Integrate[intsGGXPhi[m1,x],{x,0,\[Theta]1}];*)
+	cdfGGX2[m1_,\[Theta]1_]:=1/(1-m1^2+m1^2 /Sin[\[Theta]1]^2);
+	gEvalFunc["integrateOverHemisphere",Simplify@cdfGGX1[m,\[Pi]/2]];
+	(*Validate the error of solve result*)
+	(*Maximize[{Abs[cdfGGX1[m,\[Theta]]-cdfGGX2[m,\[Theta]]],0.01\[LessEqual]m\[LessEqual]0.99&&0\[LessEqual]\[Theta]\[LessEqual]\[Pi]},{m,\[Theta]}];*)
+	gEvalFunc["cdfGGX1",TraditionalForm@cdfGGX1[m,\[Theta]]];
+	gEvalFunc["cdfGGX2",TraditionalForm@cdfGGX2[m,\[Theta]]];
+	
+	pdfJacobian[\[Theta]1_]:=Sin[\[Theta]1];
+	pdfSpherical[m1_,\[Theta]1_,\[Phi]1_]:=spherCoordGGX[m1,\[Theta]1,\[Phi]1];
+	pdfCartesian[m1_,\[Theta]1_,\[Phi]1_]:=pdfSpherical[m1,\[Theta]1,\[Phi]1]/Sin[\[Theta]1];
+	
+	{Solve[\[Epsilon]1==cdfGGX1[m,\[Theta]],\[Theta]],Solve[\[Epsilon]2==1/(2\[Pi]) \[Phi],\[Phi]],pdfCartesian[m,\[Theta],\[Phi]]}
+];
+
+
+(*sampling half vector*)
+gSamplingHalfDir[m_,\[Epsilon]1_,\[Epsilon]2_]:=Module[
+	{\[Theta],\[Phi],pdfCartesian},
+	
+	\[Theta]=ArcCos[Sqrt[(1-\[Epsilon]1)/(\[Epsilon]1*(m^2-1)+1)]];
+	\[Phi]=2\[Pi]*\[Epsilon]2;
+	pdfCartesian=gDGGX2[m,\[Theta],\[Phi]]*Cos[\[Theta]];
+	
+	{{Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]},pdfCartesian}
+];
+
+
+gSamplingLightDir[m_,inViewDir_,\[Epsilon]1_,\[Epsilon]2_]:=Module[
+	{halfSampling,halfDir,pdfHalfDirCCS,viewDir,normalDir,lightDir,
+		pdfJacobian,pdfLightDirCCS,reflectance},
+	
+	viewDir=Normalize[inViewDir];
+	normalDir={0,0,1};
+	
+	halfSampling=gSamplingHalfDir[m,\[Epsilon]1,\[Epsilon]2];
+	halfDir=halfSampling[[1]];
+	pdfHalfDirCCS=halfSampling[[2]];
+	
+	lightDir=2*Dot[viewDir,halfDir]*halfDir-viewDir;
+	
+	pdfJacobian=4*Dot[viewDir,halfDir];
+	pdfLightDirCCS=pdfHalfDirCCS/pdfJacobian;
+	
+	reflectance=gBrdfFunc[m,normalDir,lightDir,viewDir]/pdfLightDirCCS;
+	
+	{lightDir,pdfLightDirCCS,reflectance}
+];
+
+
+gSamplingLightDir2D[m_,inViewDir_,\[Epsilon]1_,\[Epsilon]2_]:=Module[
+	{halfSampling,halfDir,pdfHalfDirCCS,viewDir,normalDir,lightDir,
+		pdfJacobian,pdfLightDirCCS,reflectance},
 ];
 
 
