@@ -264,7 +264,9 @@ gParamSGGroundShading[input_,\[Theta]_]:=Module[
 	sgClampedCos=sgClampedCosine[normalDir,sgLight[[1]]];
 	sgShading=sgShadingFunc[<|"sgLight"->sgLight,"lightEnergyPercent"->lightEnergyPercent,
 				"sgClampedCos"->sgClampedCos,"sgNDF"->sgNDF,
-				"lightRadius"->lightRadius,"shadingDist"->shadingDist|>];
+				"lightRadius"->lightRadius,"shadingDist"->shadingDist,
+				"viewDir"->viewDir,"normalDir"->normalDir,"lightDir"->lightDir,
+				"roughness"->roughness|>];
 	
 	{shadingPos[[1]],sgShading}
 ];

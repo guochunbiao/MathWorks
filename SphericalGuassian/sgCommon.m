@@ -4,6 +4,7 @@ BeginPackage["sgCommon`"];
 <<gSphericalCap.m;
 Needs["gSphericalCap`"];
 Needs["gUtils`"];
+Needs["gBRDF`"];
 
 
 ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinLambda,sgDot,
@@ -14,7 +15,7 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 sgSolveAvgEnergyTheta,sgAvgEnergyTheta,sgCapIntsMaxEnergyTheta,sgEnergyCentroidTheta,
 		 sgCapsIntsEnergyCentroidTheta,sgCapIntsAsNewSGDeprecated,sgProductIntegral,
 		 sgNDFProdIntegrateLight,sgCapIntsEnergyPercent,sgMaxLambda,sgSphereLight,
-		 sgCapIntsAreaPercent];
+		 sgCapIntsAreaPercent,sgProduct,sgShading];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -24,6 +25,7 @@ sgFindMinLambda::usage="function[sgFindMinLambda]";
 sgMinLambda=4.60517;
 sgMaxLambda=50;
 sgDot::usage="function[sgDot]";
+sgProduct::usage="sgProduct";
 sgProductIntegral::usage="sgProductIntegral";
 sgRawFa::usage="All-Frequency.";
 sgFa::usage="function[sgFa]";
@@ -62,6 +64,7 @@ sgCapIntsAsNewSGDeprecated::usage="sgCapIntsAsNewSGDeprecated";
 sgCapIntsEnergyPercent::usage="sgCapIntsEnergyPercent";
 sgSphereLight::usage="sgSphereLight";
 sgCapIntsAreaPercent::usage="sgCapIntsAreaPercent";
+sgShading::usage="sgShading";
 
 
 Begin["`Private`"];
@@ -136,6 +139,17 @@ sgDot[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_}]:=
 	4\[Pi]*\[Mu]1*\[Mu]2*Sinh[Norm[p1*\[Lambda]1+p2*\[Lambda]2]]/(Exp[\[Lambda]1+\[Lambda]2]*Norm[p1*\[Lambda]1+p2*\[Lambda]2]);
 
 
+sgProduct[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_}]:=Module[
+	{p3,\[Lambda]3,\[Mu]3},
+	
+	\[Lambda]3=(\[Lambda]1+\[Lambda]2)-(\[Lambda]1*\[Lambda]2/(\[Lambda]1+\[Lambda]2))*(1-Dot[p1,p2]);
+	p3=(\[Lambda]1*p1+\[Lambda]2*p2)/\[Lambda]3;
+	\[Mu]3=Exp[\[Lambda]3-(\[Lambda]1+\[Lambda]2)];
+	
+	{p3,\[Lambda]3,\[Mu]3}
+];
+
+
 sgProductIntegral[{inP1_,\[Lambda]1_,\[Mu]1_},{inP2_,\[Lambda]2_,\[Mu]2_}]:=Module[
 	{p1,p2,\[Lambda]3,c1,c2},
 	p1=Normalize[inP1];
@@ -149,7 +163,7 @@ sgProductIntegral[{inP1_,\[Lambda]1_,\[Mu]1_},{inP2_,\[Lambda]2_,\[Mu]2_}]:=Modu
 ];
 
 
-sgRawFa[\[Lambda]_,\[Epsilon]_]=-2\[Pi]*Log[\[Epsilon]/\[Lambda]];
+sgRawFa[\[Lambda]_,\[Epsilon]_]:=-2\[Pi]*Log[\[Epsilon]/\[Lambda]];
 
 
 sgFa[\[Lambda]_]:=sgRawFa[\[Lambda],0.1];
@@ -274,13 +288,29 @@ sgNDF[roughness_,lightDir_,viewDir_,normalDir_]:=Module[
 ];
 
 
-
 sgNDFConvLight[lightRadius_,shadingDist_,sglight_,sgndf_]:=Module[
 	{},
 	(*If[shadingDist>=lightRadius,0,sgDot[sglight,sgndf]]*)
 	sgDot[sglight,sgndf]
 ];
 
+
+sgShading[sglight_,sgndf_,roughness_,viewDir_,normalDir_,lightDir_]:=Module[
+	{normal,light,view,half,NoL,NoV,NoH,VoH,Vis,F},
+	normal=Normalize[normalDir];
+	light=Normalize[lightDir];
+	view=Normalize[viewDir];
+	half=Normalize[view+light];
+	NoL=Clip[Dot[normal,light],{0,1}];
+	NoV=Dot[normal,view];
+	NoH=Dot[normal,half];
+	VoH=Dot[view,half];
+	
+	Vis=gVisSmith[roughness,NoL,NoV];
+	F=gFresnelOrigin[VoH];
+	
+	sgNDFConvLight[NaN,NaN,sglight,sgndf]*Vis*F
+];
 
 
 sgNDFProdIntegrateLight[lightRadius_,shadingDist_,sglight_,sgndf_]:=Module[
