@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     38692,        794]
-NotebookOptionsPosition[     38106,        775]
-NotebookOutlinePosition[     38603,        793]
-CellTagsIndexPosition[     38560,        790]
+NotebookDataLength[     43862,        901]
+NotebookOptionsPosition[     43054,        878]
+NotebookOutlinePosition[     43551,        896]
+CellTagsIndexPosition[     43508,        893]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -49,12 +49,17 @@ Cell[BoxData[{
    RowBox[{"Needs", "[", "\"\<gSphericalCap`\>\"", "]"}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
+  RowBox[{"Off", "[", "Assert", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{"ClearAll", "[", 
    RowBox[{
    "lightCenter", ",", "rightWallHeight", ",", "representPt", ",", 
-    "representCone", ",", "\[IndentingNewLine]", "\t", "groundViewDir", ",", 
-    "groundLightDir", ",", "wallViewDir", ",", "wallLightDir", ",", 
-    "reflectSgAxisPt"}], "]"}], ";"}], "\[IndentingNewLine]", 
+    "representCone", ",", "tangentView", ",", "tangentLight", ",", 
+    "\[IndentingNewLine]", "\t", "representEnergy", ",", "representLight", 
+    ",", "represectNDF", ",", "\[IndentingNewLine]", "\t", "groundViewDir", 
+    ",", "groundLightDir", ",", "wallNormal", ",", "wallViewDir", ",", 
+    "wallLightDir", ",", "reflectSgAxisPt", ",", "disbFunc"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{"Manipulate", "[", "\[IndentingNewLine]", "\t", 
   RowBox[{
    RowBox[{
@@ -68,6 +73,11 @@ Cell[BoxData[{
       RowBox[{"2", ",", 
        RowBox[{"rightWallHeight", "/", "2"}]}], "}"}]}], ";", 
     "\[IndentingNewLine]", "\t", 
+    RowBox[{"wallNormal", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    "\t", 
     RowBox[{"representCone", "=", 
      RowBox[{"gCreateCone", "[", 
       RowBox[{"representPt", ",", 
@@ -93,15 +103,11 @@ Cell[BoxData[{
      RowBox[{"Normalize", "[", 
       RowBox[{
        RowBox[{"{", 
-        RowBox[{"shadingPosX", ",", "0"}], "}"}], "-", 
-       RowBox[{"{", 
-        RowBox[{"2", ",", "rightWallHeight"}], "}"}]}], "]"}]}], ";", 
-    "\[IndentingNewLine]", "\t", 
+        RowBox[{"shadingPosX", ",", "0"}], "}"}], "-", "representPt"}], 
+      "]"}]}], ";", "\[IndentingNewLine]", "\t", 
     RowBox[{"wallLightDir", "=", 
      RowBox[{"Normalize", "[", 
-      RowBox[{"lightCenter", "-", 
-       RowBox[{"{", 
-        RowBox[{"2", ",", "rightWallHeight"}], "}"}]}], "]"}]}], ";", 
+      RowBox[{"lightCenter", "-", "representPt"}], "]"}]}], ";", 
     "\[IndentingNewLine]", "\t", 
     RowBox[{"reflectSgAxisPt", "=", 
      RowBox[{"Block", "[", "\[IndentingNewLine]", "\t", 
@@ -147,7 +153,37 @@ Cell[BoxData[{
             RowBox[{"(", 
              RowBox[{"viewDist", "+", "lightDist"}], ")"}]}]}], "]"}]}], ";", 
         "\[IndentingNewLine]", "\t", "axisPt"}]}], "\[IndentingNewLine]", 
-      "    ", "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", " ", 
+      "    ", "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    "\t", 
+    RowBox[{"tangentView", "=", 
+     RowBox[{"Tan", "[", 
+      RowBox[{"ArcCos", "[", 
+       RowBox[{"Dot", "[", 
+        RowBox[{"wallViewDir", ",", "wallNormal"}], "]"}], "]"}], "]"}]}], 
+    ";", "\[IndentingNewLine]", "\t", 
+    RowBox[{"tangentLight", "=", 
+     RowBox[{"Tan", "[", 
+      RowBox[{"ArcCos", "[", 
+       RowBox[{"Dot", "[", 
+        RowBox[{"wallLightDir", ",", "wallNormal"}], "]"}], "]"}], "]"}]}], 
+    ";", "\[IndentingNewLine]", "\[IndentingNewLine]", "\t", 
+    RowBox[{"representLight", "=", 
+     RowBox[{"sgSphereLight", "[", 
+      RowBox[{
+      "lightCenter", ",", "lightFadeStart", ",", "lightFadeEnd", ",", 
+       "\[IndentingNewLine]", "\t\t", "lightIntensity", ",", 
+       RowBox[{"{", 
+        RowBox[{"shadingPosX", ",", "0"}], "}"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\t", 
+    RowBox[{"represectNDF", "=", 
+     RowBox[{"sgNDF", "[", 
+      RowBox[{
+      "roughness", ",", "wallLightDir", ",", "wallViewDir", ",", 
+       "wallNormal"}], "]"}]}], ";", "\[IndentingNewLine]", "\t", 
+    RowBox[{"representEnergy", "=", 
+     RowBox[{"sgNDFConvLight", "[", 
+      RowBox[{"0", ",", "0", ",", "representLight", ",", "represectNDF"}], 
+      "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", " ", 
     RowBox[{"gParamPlot", "[", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"<|", "\[IndentingNewLine]", 
@@ -363,8 +399,19 @@ Cell[BoxData[{
                 RowBox[{
                  RowBox[{"{", 
                   RowBox[{
-                   RowBox[{"-", "1"}], ",", "0"}], "}"}], ",", "1.5", ",", 
-                 "2"}], "}"}]}], ",", 
+                   RowBox[{"-", "1"}], ",", "0"}], "}"}], ",", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"Max", "[", 
+                  RowBox[{
+                   RowBox[{"1", "*", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1.809"}], "+", 
+                    RowBox[{"3.28", "/", 
+                    RowBox[{"(", 
+                    RowBox[{"tangentView", "*", "tangentLight"}], ")"}]}]}], 
+                    ")"}]}], ",", "sgMinLambda"}], "]"}], ",", 
+                 "representEnergy"}], "}"}]}], ",", 
               RowBox[{"\"\<color\>\"", "\[Rule]", "Gray"}]}], "|>"}], 
             "\[IndentingNewLine]", "}"}]}], "&"}], "[", 
          RowBox[{"<|", 
@@ -381,7 +428,7 @@ Cell[BoxData[{
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"lightCenterY", ",", "4"}], "}"}], ",", "0", ",", "5"}], "}"}], 
+      RowBox[{"lightCenterY", ",", "2"}], "}"}], ",", "0", ",", "5"}], "}"}], 
    ",", "\[IndentingNewLine]", 
    RowBox[{"{", 
     RowBox[{
@@ -451,9 +498,12 @@ Cell[BoxData[{
   RowBox[{"ClearAll", "[", 
    RowBox[{
    "lightCenter", ",", "rightWallHeight", ",", "representPt", ",", 
-    "representCone", ",", "\[IndentingNewLine]", "\t", "groundViewDir", ",", 
-    "groundLightDir", ",", "wallViewDir", ",", "wallLightDir", ",", 
-    "reflectSgAxis"}], "]"}], ";"}]}], "Input",
+    "representCone", ",", "tangentView", ",", "tangentLight", ",", 
+    "\[IndentingNewLine]", "\t", "representEnergy", ",", "representLight", 
+    ",", "represectNDF", ",", "\[IndentingNewLine]", "\t", "groundViewDir", 
+    ",", "groundLightDir", ",", "wallNormal", ",", "wallViewDir", ",", 
+    "wallLightDir", ",", "reflectSgAxisPt", ",", "disbFunc"}], "]"}], 
+  ";"}]}], "Input",
  CellChangeTimes->{{3.8328889412895775`*^9, 3.832888943829444*^9}, 
    3.8329105814363804`*^9, 3.832911658214327*^9, {3.832915422319006*^9, 
    3.832915429550082*^9}, {3.8329154722806787`*^9, 3.832915476772599*^9}, {
@@ -573,24 +623,38 @@ Cell[BoxData[{
    3.8336012207400875`*^9}, {3.8336013450061803`*^9, 
    3.8336013483602858`*^9}, {3.833601433267707*^9, 3.833601533755525*^9}, {
    3.833601755533919*^9, 3.8336018157758064`*^9}, 3.8336018654622183`*^9, {
-   3.8336019717370744`*^9, 3.83360199681855*^9}},
+   3.8336019717370744`*^9, 3.83360199681855*^9}, {3.833770623932353*^9, 
+   3.8337706375978894`*^9}, {3.83377079552612*^9, 3.833770814660884*^9}, {
+   3.8337708863864784`*^9, 3.8337708904981155`*^9}, {3.8337709263430414`*^9, 
+   3.8337709352641816`*^9}, {3.8337709995746346`*^9, 3.833771098371046*^9}, {
+   3.833771338393111*^9, 3.8337713670635285`*^9}, {3.8337714665862885`*^9, 
+   3.8337714677412343`*^9}, 3.8337715447671723`*^9, {3.833771684134333*^9, 
+   3.8337717497734556`*^9}, {3.833772151912898*^9, 3.833772358401018*^9}, {
+   3.83377355158165*^9, 3.8337735763234005`*^9}, {3.8337737018323126`*^9, 
+   3.833773761277417*^9}, {3.8337740921486177`*^9, 3.833774109304488*^9}, {
+   3.8337741623855824`*^9, 3.833774179320955*^9}, {3.8337742217140102`*^9, 
+   3.833774254605995*^9}, {3.833774427875184*^9, 3.8337745047855825`*^9}, {
+   3.8337746627706585`*^9, 3.833774674458459*^9}, {3.8337754151454906`*^9, 
+   3.8337754268988743`*^9}, {3.833775467601567*^9, 3.833775619340825*^9}, 
+   3.833775672158123*^9, {3.833775783857421*^9, 3.833775791195829*^9}},
  CellLabel->
-  "In[481]:=",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
+  "In[918]:=",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
 
 Cell[BoxData[
  TagBox[
   StyleBox[
    DynamicModuleBox[{$CellContext`eyePoint$$ = {-3, 
     3}, $CellContext`leftWallHeight$$ = 0, $CellContext`lightCenterX$$ = 
-    0, $CellContext`lightCenterY$$ = 4, $CellContext`lightFadeEnd$$ = 
+    0, $CellContext`lightCenterY$$ = 2, $CellContext`lightFadeEnd$$ = 
     10, $CellContext`lightFadeStart$$ = 4, $CellContext`lightIntensity$$ = 
     2, $CellContext`lightRadius$$ = 6, $CellContext`roughness$$ = 
-    0.15, $CellContext`shadingPosX$$ = -1, $CellContext`viewDir$$ = {1, 1}, 
-    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
-    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
-    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+    0.15, $CellContext`shadingPosX$$ = 
+    0.040000000000000036`, $CellContext`viewDir$$ = {1, 1}, Typeset`show$$ = 
+    True, Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
        Hold[$CellContext`lightCenterX$$], 0}, -6, 4}, {{
-       Hold[$CellContext`lightCenterY$$], 4}, 0, 5}, {{
+       Hold[$CellContext`lightCenterY$$], 2}, 0, 5}, {{
        Hold[$CellContext`eyePoint$$], {-3, 3}}, {-4, -4}, {4, 4}}, {{
        Hold[$CellContext`lightFadeStart$$], 4}, 1, 6}, {{
        Hold[$CellContext`lightFadeEnd$$], 10}, 3, 20}, {{
@@ -601,38 +665,38 @@ Cell[BoxData[
        Hold[$CellContext`roughness$$], 0.15}, 0.05, 1}, {{
        Hold[$CellContext`shadingPosX$$], -1}, -2, 2}}, Typeset`size$$ = {
     460., {177., 183.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`lightCenterX$2706798$$ = 
-    0, $CellContext`lightCenterY$2706799$$ = 
-    0, $CellContext`eyePoint$2706800$$ = {0, 
-    0}, $CellContext`lightFadeStart$2706801$$ = 
-    0, $CellContext`lightFadeEnd$2706802$$ = 
-    0, $CellContext`lightIntensity$2706803$$ = 
-    0, $CellContext`lightRadius$2706804$$ = 
-    0, $CellContext`viewDir$2706805$$ = {0, 0}}, 
+    Typeset`skipInitDone$$ = True, $CellContext`lightCenterX$6681643$$ = 
+    0, $CellContext`lightCenterY$6681644$$ = 
+    0, $CellContext`eyePoint$6681645$$ = {0, 
+    0}, $CellContext`lightFadeStart$6681646$$ = 
+    0, $CellContext`lightFadeEnd$6681647$$ = 
+    0, $CellContext`lightIntensity$6681648$$ = 
+    0, $CellContext`lightRadius$6681649$$ = 
+    0, $CellContext`viewDir$6681650$$ = {0, 0}}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
       "Variables" :> {$CellContext`eyePoint$$ = {-3, 
          3}, $CellContext`leftWallHeight$$ = 0, $CellContext`lightCenterX$$ = 
-        0, $CellContext`lightCenterY$$ = 4, $CellContext`lightFadeEnd$$ = 
+        0, $CellContext`lightCenterY$$ = 2, $CellContext`lightFadeEnd$$ = 
         10, $CellContext`lightFadeStart$$ = 4, $CellContext`lightIntensity$$ = 
         2, $CellContext`lightRadius$$ = 6, $CellContext`roughness$$ = 
         0.15, $CellContext`shadingPosX$$ = -1, $CellContext`viewDir$$ = {1, 
          1}}, "ControllerVariables" :> {
-        Hold[$CellContext`lightCenterX$$, $CellContext`lightCenterX$2706798$$,
+        Hold[$CellContext`lightCenterX$$, $CellContext`lightCenterX$6681643$$,
           0], 
-        Hold[$CellContext`lightCenterY$$, $CellContext`lightCenterY$2706799$$,
+        Hold[$CellContext`lightCenterY$$, $CellContext`lightCenterY$6681644$$,
           0], 
-        Hold[$CellContext`eyePoint$$, $CellContext`eyePoint$2706800$$, {0, 
+        Hold[$CellContext`eyePoint$$, $CellContext`eyePoint$6681645$$, {0, 
          0}], 
         Hold[$CellContext`lightFadeStart$$, \
-$CellContext`lightFadeStart$2706801$$, 0], 
-        Hold[$CellContext`lightFadeEnd$$, $CellContext`lightFadeEnd$2706802$$,
+$CellContext`lightFadeStart$6681646$$, 0], 
+        Hold[$CellContext`lightFadeEnd$$, $CellContext`lightFadeEnd$6681647$$,
           0], 
         Hold[$CellContext`lightIntensity$$, \
-$CellContext`lightIntensity$2706803$$, 0], 
-        Hold[$CellContext`lightRadius$$, $CellContext`lightRadius$2706804$$, 
+$CellContext`lightIntensity$6681648$$, 0], 
+        Hold[$CellContext`lightRadius$$, $CellContext`lightRadius$6681649$$, 
          0], 
-        Hold[$CellContext`viewDir$$, $CellContext`viewDir$2706805$$, {0, 0}]},
+        Hold[$CellContext`viewDir$$, $CellContext`viewDir$6681650$$, {0, 0}]},
        "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
@@ -641,17 +705,18 @@ $CellContext`lightIntensity$2706803$$, 0],
       "Body" :> ($CellContext`rightWallHeight = 
         2; $CellContext`lightCenter = {$CellContext`lightCenterX$$, \
 $CellContext`lightCenterY$$}; $CellContext`representPt = {
-         2, $CellContext`rightWallHeight/2}; $CellContext`representCone = 
+         2, $CellContext`rightWallHeight/2}; $CellContext`wallNormal = {-1, 
+         0}; $CellContext`representCone = 
         gUtils`gCreateCone[$CellContext`representPt, {-2, \
 $CellContext`leftWallHeight$$}, {2, 10}]; $CellContext`groundViewDir = 
         Normalize[$CellContext`eyePoint$$ - {$CellContext`shadingPosX$$, 
            0}]; $CellContext`groundLightDir = 
         Normalize[$CellContext`lightCenter - {$CellContext`shadingPosX$$, 
            0}]; $CellContext`wallViewDir = 
-        Normalize[{$CellContext`shadingPosX$$, 0} - {
-          2, $CellContext`rightWallHeight}]; $CellContext`wallLightDir = 
-        Normalize[$CellContext`lightCenter - {
-          2, $CellContext`rightWallHeight}]; $CellContext`reflectSgAxisPt = 
+        Normalize[{$CellContext`shadingPosX$$, 
+            0} - $CellContext`representPt]; $CellContext`wallLightDir = 
+        Normalize[$CellContext`lightCenter - $CellContext`representPt]; \
+$CellContext`reflectSgAxisPt = 
         Block[{$CellContext`viewDist, $CellContext`lightDist, \
 $CellContext`viewProjPt, $CellContext`lightProjPt, $CellContext`lerpFactor, \
 $CellContext`axisPt}, $CellContext`viewDist = 
@@ -664,7 +729,25 @@ $CellContext`axisPt}, $CellContext`viewDist =
              Part[$CellContext`lightCenter, 2]}; $CellContext`axisPt = 
            gUtils`gLerp[$CellContext`viewProjPt, $CellContext`lightProjPt, \
 $CellContext`viewDist/($CellContext`viewDist + $CellContext`lightDist)]; \
-$CellContext`axisPt]; gPlots`gParamPlot[
+$CellContext`axisPt]; $CellContext`tangentView = Tan[
+          ArcCos[
+           
+           Dot[$CellContext`wallViewDir, $CellContext`wallNormal]]]; \
+$CellContext`tangentLight = Tan[
+          ArcCos[
+           
+           Dot[$CellContext`wallLightDir, $CellContext`wallNormal]]]; \
+$CellContext`representLight = 
+        sgCommon`sgSphereLight[$CellContext`lightCenter, \
+$CellContext`lightFadeStart$$, $CellContext`lightFadeEnd$$, \
+$CellContext`lightIntensity$$, {$CellContext`shadingPosX$$, 
+           0}]; $CellContext`represectNDF = 
+        sgCommon`sgNDF[$CellContext`roughness$$, $CellContext`wallLightDir, \
+$CellContext`wallViewDir, $CellContext`wallNormal]; \
+$CellContext`representEnergy = 
+        sgCommon`sgNDFConvLight[
+         0, 0, $CellContext`representLight, $CellContext`represectNDF]; 
+       gPlots`gParamPlot[
          Association[
           ("circles" -> {
             Association[
@@ -737,13 +820,16 @@ $CellContext`axisPt]; gPlots`gParamPlot[
             "rightWallHeight" -> $CellContext`rightWallHeight, 
             "roughness" -> $CellContext`roughness$$]], 
           ("sgDisbs" -> {
-            Association[
-            "disbCenter" -> Slot["center"], "sg" -> {{-1, 0}, 1.5, 2}, 
-             "color" -> Gray]}& )[
+            Association["disbCenter" -> Slot["center"], "sg" -> {{-1, 0}, 
+               Max[
+               1 (-1.809 + 
+                 3.28/($CellContext`tangentView $CellContext`tangentLight)), 
+                sgCommon`sgMinLambda], $CellContext`representEnergy}, "color" -> 
+             Gray]}& )[
            Association["center" -> $CellContext`reflectSgAxisPt]], 
           "axisExtent" -> 5], Medium]), 
       "Specifications" :> {{{$CellContext`lightCenterX$$, 0}, -6, 
-         4}, {{$CellContext`lightCenterY$$, 4}, 0, 
+         4}, {{$CellContext`lightCenterY$$, 2}, 0, 
          5}, {{$CellContext`eyePoint$$, {-3, 3}}, {-4, -4}, {4, 
          4}}, {{$CellContext`lightFadeStart$$, 4}, 1, 
          6}, {{$CellContext`lightFadeEnd$$, 10}, 3, 
@@ -766,15 +852,32 @@ $CellContext`axisPt]; gPlots`gParamPlot[
    Deployed->True,
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
- CellChangeTimes->{
-  3.833601438777771*^9, 3.833601535087316*^9, 3.8336018168705006`*^9, 
-   3.833601866062793*^9, {3.833601985217476*^9, 3.8336019976892986`*^9}},
+ CellChangeTimes->{{3.8337723010058765`*^9, 3.833772359411462*^9}, {
+   3.833773724403586*^9, 3.833773748327656*^9}, 3.833773885681699*^9, 
+   3.83377411152674*^9, 3.8337741844226127`*^9, 3.8337742561018963`*^9, {
+   3.83377447391772*^9, 3.833774505439069*^9}, 3.833774604045565*^9, 
+   3.8337746752871637`*^9, 3.8337756737408104`*^9, 3.8337757931649413`*^9},
  CellLabel->
-  "Out[490]=",ExpressionUUID->"5241e0d0-ec12-4d6a-9fdd-6d5cb60e0e99"]
+  "Out[928]=",ExpressionUUID->"a39b0d4a-572b-4e88-b71d-d916789c8639"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"1.2277661068801942`", "/", "\[Pi]"}], "//", "N"}]], "Input",
+ CellChangeTimes->{{3.8337716007750044`*^9, 3.8337716306395416`*^9}},
+ CellLabel->
+  "In[548]:=",ExpressionUUID->"659dd868-9b00-4009-8ac0-b57e7eca2e55"],
+
+Cell[BoxData["0.3908100897413504`"], "Output",
+ CellChangeTimes->{{3.8337716084772635`*^9, 3.8337716314110575`*^9}},
+ CellLabel->
+  "Out[548]=",ExpressionUUID->"1ee77d97-5d7c-4b45-b3d8-9d3db16fd6e1"]
 }, Open  ]]
 },
-WindowSize->{1083, 662},
-WindowMargins->{{Automatic, 464}, {-3, Automatic}},
+WindowSize->{1083, 663},
+WindowMargins->{{Automatic, 384}, {47, Automatic}},
 TaggingRules->{"PresenterSettings" -> {"Dialogs" -> {}}},
 CellContext->Notebook,
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
@@ -793,8 +896,12 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 27376, 555, 1853, "Input",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
-Cell[27959, 579, 10131, 193, 479, "Output",ExpressionUUID->"5241e0d0-ec12-4d6a-9fdd-6d5cb60e0e99"]
+Cell[580, 22, 30620, 618, 2100, "Input",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
+Cell[31203, 642, 11348, 218, 479, "Output",ExpressionUUID->"a39b0d4a-572b-4e88-b71d-d916789c8639"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[42588, 865, 248, 5, 28, "Input",ExpressionUUID->"659dd868-9b00-4009-8ac0-b57e7eca2e55"],
+Cell[42839, 872, 199, 3, 32, "Output",ExpressionUUID->"1ee77d97-5d7c-4b45-b3d8-9d3db16fd6e1"]
 }, Open  ]]
 }
 ]

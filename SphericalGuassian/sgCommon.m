@@ -15,7 +15,7 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 sgSolveAvgEnergyTheta,sgAvgEnergyTheta,sgCapIntsMaxEnergyTheta,sgEnergyCentroidTheta,
 		 sgCapsIntsEnergyCentroidTheta,sgCapIntsAsNewSGDeprecated,sgProductIntegral,
 		 sgNDFProdIntegrateLight,sgCapIntsEnergyPercent,sgMaxLambda,sgSphereLight,
-		 sgCapIntsAreaPercent,sgProduct,sgShading];
+		 sgCapIntsAreaPercent,sgProduct,sgShading,sgSolveOneBounce];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -65,6 +65,7 @@ sgCapIntsEnergyPercent::usage="sgCapIntsEnergyPercent";
 sgSphereLight::usage="sgSphereLight";
 sgCapIntsAreaPercent::usage="sgCapIntsAreaPercent";
 sgShading::usage="sgShading";
+sgSolveOneBounce::usage="sgSolveOneBounce";
 
 
 Begin["`Private`"];
@@ -108,8 +109,8 @@ asgVector[v_,{lobeAxis_,tangentAxis_,bitangentAxis_},
 
 sgPolar[\[Theta]_,\[Lambda]_,\[Mu]_]:=Module[
 {},
-Assert[-\[Pi]/2<=\[Theta]<=\[Pi]/2];
-Assert[\[Lambda]>=sgMinLambda];
+(*Assert[-\[Pi]/2<=\[Theta]<=\[Pi]/2];
+Assert[\[Lambda]>=sgMinLambda];*)
 \[Mu]*Exp[\[Lambda]*(Cos[\[Theta]]-1)]];
 
 
@@ -607,6 +608,13 @@ sgCapIntsAsNewSG[sg_,spherCap_]:=Module[
 	centroidPt=Normalize[centroidAxis];
 
 	{centroidPt,\[Lambda],\[Mu]}//N
+];
+
+
+sgSolveOneBounce[]:=Module[
+	{},
+	
+	{}
 ];
 
 
