@@ -15,7 +15,7 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 sgSolveAvgEnergyTheta,sgAvgEnergyTheta,sgCapIntsMaxEnergyTheta,sgEnergyCentroidTheta,
 		 sgCapsIntsEnergyCentroidTheta,sgCapIntsAsNewSGDeprecated,sgProductIntegral,
 		 sgNDFProdIntegrateLight,sgCapIntsEnergyPercent,sgMaxLambda,sgSphereLight,
-		 sgCapIntsAreaPercent,sgProduct,sgShading,sgSolveOneBounce];
+		 sgCapIntsAreaPercent,sgProduct,sgShading,sgSolveOneBounce1,sgSolveOneBounce2];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -65,7 +65,8 @@ sgCapIntsEnergyPercent::usage="sgCapIntsEnergyPercent";
 sgSphereLight::usage="sgSphereLight";
 sgCapIntsAreaPercent::usage="sgCapIntsAreaPercent";
 sgShading::usage="sgShading";
-sgSolveOneBounce::usage="sgSolveOneBounce";
+sgSolveOneBounce1::usage="sgSolveOneBounce1";
+sgSolveOneBounce2::usage="sgSolveOneBounce2";
 
 
 Begin["`Private`"];
@@ -611,15 +612,106 @@ sgCapIntsAsNewSG[sg_,spherCap_]:=Module[
 ];
 
 
-sgSolveOneBounce[]:=Module[
-	{},
+sgSolveOneBounce1[thetaL_,distOffset_]:=Module[
+	{ 
+	  pG(*ground point which accept reflectance*),
+	  pL(*light point*),
+	  pR(*represent point at wall which generate reflectance*),
+	  dG(*Norm[pG-pR]*),
+	  dL(*Norm[pL-pR]*),
+	  \[Theta]V(*View: ArcCos[pG-pR]*),
+	  \[Theta]VW(*Warped \[Theta] for \[Theta]V*),
+	  \[Theta]L(*Light: ArcCos[pL-pR]*),
+	  \[Theta]LW(*Warped \[Theta] for \[Theta]L*),
+	  sD(*Distance from represent point(wall point)*),
+	  aX(*Sin[\[Theta]L]*),
+	  \[Phi],
+	  \[Phi]W,
+	  detL(*Jacobian determinant of light vector*),
+	  detH(*Jacobian determinant of half vector*),
+	  a1,a2,\[Theta]0,sol
+	},
 	
-	{}
+	\[Theta]L=thetaL;
+	sD=distOffset;
+	
+	aX=Sin[\[Theta]L];
+	\[Theta]LW=ArcTan[Tan[\[Theta]L]*aX/(aX+sD)];
+	\[Phi]W=\[Phi];
+	detL=Det[D[{\[Theta]LW,\[Phi]W},{{\[Theta]L,\[Phi]}}]];
+	
+	gPrint["Jacobian of Light SG(Method 1)"];
+	Print[TraditionalForm@FullSimplify@detL];
+	detL=(sD Sin[\[Theta]L]+Sec[\[Theta]L] (sD+Sin[\[Theta]L]) Tan[\[Theta]L])/(sD^2+2 sD Sin[\[Theta]L]+Tan[\[Theta]L]^2);
+	detH=(sD Sin[\[Theta]V]+Sec[\[Theta]V] (sD+Sin[\[Theta]V]) Tan[\[Theta]V])/(sD^2+2 sD Sin[\[Theta]V]+Tan[\[Theta]V]^2);
+	
+	(*sol=Quiet@FindMinimum[
+	  {
+		NIntegrate[Abs[detL-sgPolar[ArcSin[sD],a1+a2/Tan[\[Theta]L],1]],{sD,0,1},{\[Theta]L,0.1,\[Pi]/4},
+		PrecisionGoal\[Rule]2,AccuracyGoal\[Rule]2, Method->"QuasiMonteCarlo",MaxRecursion->1]
+      },
+	  {a1,50},{a2,1}
+	];*)
+	gPrint["Fit jacobian of light vector: a1->-0.9,a2->1"];
+	
+(*	sol=Quiet@FindMinimum[
+		{
+			NIntegrate[Abs[detL*detH-sgPolar[ArcSin[sD],a+b/(Tan[\[Theta]L]*Tan[\[Theta]V]),1]],
+				{sD,0,1},{\[Theta]L,0.1,\[Pi]/4},{\[Theta]V,0.1,\[Pi]/4},
+				PrecisionGoal\[Rule]2,AccuracyGoal\[Rule]2, Method\[Rule]"QuasiMonteCarlo",MaxRecursion\[Rule]1]
+        },
+		{a,50},{b,1}
+	];*)
+	gPrint["Fit jacobian multiplication: a1->-1.22,a2->1.077"];
+	
+	Blank[]
+];
+
+
+sgSolveOneBounce2[\[Theta]L_,sD_]:=Module[
+	{ 
+	  theta2,theta1,ax,t,phi2,phi1,detH,detH2,detH3,detH6,sol,a,b,thetaV,thetaL
+	},
+	
+	theta2=ArcTan[Tan[theta1]*ax/(ax+t)];
+	phi2=phi1;
+	detH=Det[D[{theta2,phi2},{{theta1,phi1}}]];
+	
+	detH2=detH/.{ax->Sin[theta1]};
+	detH3=FullSimplify@detH2;
+	
+	gPrint["Jacobian of Light SG(Method 2)"];
+	Print[detH3/.{theta1->\[Theta]L,t->sD}];
+	
+	(*Quiet@FindMinimum[
+	{
+	NIntegrate[Abs[detH3-sgPolar[ArcSin[t],a+b/Tan[theta1],1]],
+	{t,0,1},{theta1,0.1,\[Pi]/4},
+	PrecisionGoal\[Rule]2,AccuracyGoal\[Rule]2, Method\[Rule]"QuasiMonteCarlo",MaxRecursion\[Rule]1]
+      },
+	 {a,50},{b,1}
+	];*)
+	gPrint["Fit jacobian of light vector: a1->2.7043,a2->3.1652"];
+	
+	(*TODO: Copy to a note book and run the fitting*)
+(*	ClearAll[thetaV,thetaL,t,a,b,detH6];
+	detH6=(Sec[thetaV] (t+Sin[thetaV]) Tan[thetaV])/(t^2+2 t Sin[thetaV]+Tan[thetaV]^2)*(Sec[thetaL] (t+Sin[thetaL]) Tan[thetaL])/(t^2+2 t Sin[thetaL]+Tan[thetaL]^2);
+	(*TODO: Copy to a note book and run the fitting*)
+	FindMinimum[
+	{
+		NIntegrate[Abs[detH6-sgPolar[ArcSin[t],a+b/(Tan[thetaV]*Tan[thetaL]),1]],
+		{t,0,1},{thetaV,0.1,\[Pi]/4},{thetaL,0.1,\[Pi]/4},
+		PrecisionGoal\[Rule]1,AccuracyGoal\[Rule]1, Method\[Rule]"QuasiMonteCarlo",MaxRecursion\[Rule]1]
+      },
+	 {a,50},{b,1}
+	]*)
+	gPrint["Fit jacobian multiplication: a1->-1.81,a2->3.287"];
+	
+	Blank[]
 ];
 
 
 End[];
-
 
 
 EndPackage[];

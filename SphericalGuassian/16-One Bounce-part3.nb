@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     33150,        749]
-NotebookOptionsPosition[     32622,        732]
-NotebookOutlinePosition[     32967,        747]
-CellTagsIndexPosition[     32924,        744]
+NotebookDataLength[     47331,       1106]
+NotebookOptionsPosition[     45610,       1073]
+NotebookOutlinePosition[     45953,       1088]
+CellTagsIndexPosition[     45910,       1085]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -43,6 +43,347 @@ Cell[BoxData[{
   RowBox[{
    RowBox[{"Needs", "[", "\"\<gSphericalCap`\>\"", "]"}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ClearAll", "[", 
+    RowBox[{
+    "\[Theta]L", ",", "detL", ",", "detH", ",", "\[Theta]L", ",", "\[Theta]V",
+      ",", "sD"}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"gPrint", "[", "\"\<>>>>> Solve One Bounce Method 1\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"FullSimplify", "@", 
+    RowBox[{"sgSolveOneBounce1", "[", 
+     RowBox[{"\[Theta]L", ",", "sD"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"gPrint", "[", "\"\<>>>>> Solve One Bounce Method 2\>\"", "]"}], 
+   ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"sgSolveOneBounce2", "[", 
+    RowBox[{"\[Theta]L", ",", "sD"}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Plot", "[", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", "\t", 
+       RowBox[{
+        RowBox[{
+         FractionBox[
+          RowBox[{
+           RowBox[{"Sec", "[", "\[Theta]V", "]"}], " ", 
+           RowBox[{"(", 
+            RowBox[{"sD", "+", 
+             RowBox[{"Sin", "[", "\[Theta]V", "]"}]}], ")"}], " ", 
+           RowBox[{"Tan", "[", "\[Theta]V", "]"}]}], 
+          RowBox[{
+           SuperscriptBox["sD", "2"], "+", 
+           RowBox[{"2", "sD", " ", "*", 
+            RowBox[{"Sin", "[", "\[Theta]V", "]"}]}], "+", 
+           SuperscriptBox[
+            RowBox[{"Tan", "[", "\[Theta]V", "]"}], "2"]}]], "*", 
+         FractionBox[
+          RowBox[{
+           RowBox[{"Sec", "[", "\[Theta]L", "]"}], " ", 
+           RowBox[{"(", 
+            RowBox[{"sD", "+", 
+             RowBox[{"Sin", "[", "\[Theta]L", "]"}]}], ")"}], " ", 
+           RowBox[{"Tan", "[", "\[Theta]L", "]"}]}], 
+          RowBox[{
+           SuperscriptBox["sD", "2"], "+", 
+           RowBox[{"2", " ", "sD", "*", 
+            RowBox[{"Sin", "[", "\[Theta]L", "]"}]}], "+", 
+           SuperscriptBox[
+            RowBox[{"Tan", "[", "\[Theta]L", "]"}], "2"]}]]}], ",", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"sgPolar", "[", 
+         RowBox[{
+          RowBox[{"ArcSin", "[", "sD", "]"}], ",", 
+          RowBox[{"Max", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"-", "1.22"}], "+", 
+             FractionBox["1.077", 
+              RowBox[{
+               RowBox[{"Tan", "[", "\[Theta]L", "]"}], "*", 
+               RowBox[{"Tan", "[", "\[Theta]V", "]"}]}]]}], ",", 
+            "sgMinLambda"}], "]"}], ",", "1"}], "]"}], ",", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"sgPolar", "[", 
+         RowBox[{
+          RowBox[{"ArcSin", "[", "sD", "]"}], ",", 
+          RowBox[{"Max", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"-", "1.81"}], "+", 
+             FractionBox["3.287", 
+              RowBox[{
+               RowBox[{"Tan", "[", "\[Theta]L", "]"}], "*", 
+               RowBox[{"Tan", "[", "\[Theta]V", "]"}]}]]}], ",", 
+            "sgMinLambda"}], "]"}], ",", "1"}], "]"}]}], 
+       "\[IndentingNewLine]", "\t", "}"}], ",", "\[IndentingNewLine]", "\t", 
+      RowBox[{"{", 
+       RowBox[{"sD", ",", "0", ",", "2"}], "}"}], ",", "\[IndentingNewLine]", 
+      "\t", 
+      RowBox[{"PlotStyle", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"Green", ",", "Blue", ",", "Red"}], "}"}]}], ",", 
+      "\[IndentingNewLine]", "\t", 
+      RowBox[{"ImageSize", "\[Rule]", "Tiny"}]}], "]"}], ",", 
+    "\[IndentingNewLine]", "\t", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\[Theta]V", ",", 
+        RowBox[{"\[Pi]", "/", "5"}]}], "}"}], ",", "0.01", ",", 
+      RowBox[{"\[Pi]", "/", "2"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\[Theta]L", ",", 
+        RowBox[{"\[Pi]", "/", "6"}]}], "}"}], ",", "0.01", ",", 
+      RowBox[{"\[Pi]", "/", "2"}]}], "}"}], ",", "\[IndentingNewLine]", "\t", 
+    RowBox[{"Method", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "False"}], "}"}]}]}], 
+   "\[IndentingNewLine]", "]"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "\[Theta]L", ",", "detL", ",", "detH", ",", "\[Theta]L", ",", "\[Theta]V", 
+    ",", "sD"}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.833602051438299*^9, 3.8336020516146297`*^9}, {
+  3.83377613404555*^9, 3.833776182350959*^9}, {3.8337764193858075`*^9, 
+  3.8337764267033625`*^9}, {3.833838956431242*^9, 3.8338389605527396`*^9}, {
+  3.833839024429834*^9, 3.8338390349218407`*^9}, {3.8338494233294163`*^9, 
+  3.8338494268188367`*^9}, {3.833849466076392*^9, 3.8338495316837664`*^9}},
+ CellLabel->
+  "In[152]:=",ExpressionUUID->"54e5a7de-9769-4fec-8c4d-39d3dc27ee9d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ StyleBox["\<\" >>>>> Solve One Bounce Method 1\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.833849453405979*^9, 3.8338494956639543`*^9}, 
+   3.8338495325092993`*^9},
+ CellLabel->
+  "During evaluation of \
+In[152]:=",ExpressionUUID->"931429f1-ba30-4a97-9cfb-f24d7d3d3702"],
+
+Cell[BoxData[
+ StyleBox["\<\" Jacobian of Light SG(Method 1)\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.833849453405979*^9, 3.8338494956639543`*^9}, 
+   3.8338495325112934`*^9},
+ CellLabel->
+  "During evaluation of \
+In[152]:=",ExpressionUUID->"45183437-4c8f-4f18-8494-b33917d81dc4"],
+
+Cell[BoxData[
+ TagBox[
+  FormBox[
+   FractionBox[
+    RowBox[{
+     RowBox[{"sD", " ", 
+      RowBox[{"sin", "(", "\[Theta]L", ")"}]}], "+", 
+     RowBox[{
+      RowBox[{"tan", "(", "\[Theta]L", ")"}], " ", 
+      RowBox[{"sec", "(", "\[Theta]L", ")"}], " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"sin", "(", "\[Theta]L", ")"}], "+", "sD"}], ")"}]}]}], 
+    RowBox[{
+     RowBox[{
+      SuperscriptBox["tan", "2"], "(", "\[Theta]L", ")"}], "+", 
+     SuperscriptBox["sD", "2"], "+", 
+     RowBox[{"2", " ", "sD", " ", 
+      RowBox[{"sin", "(", "\[Theta]L", ")"}]}]}]],
+   TraditionalForm],
+  TraditionalForm,
+  Editable->True]], "Print",
+ CellChangeTimes->{{3.833849453405979*^9, 3.8338494956639543`*^9}, 
+   3.833849532647929*^9},
+ CellLabel->
+  "During evaluation of \
+In[152]:=",ExpressionUUID->"0cc19627-faac-4d97-8a12-9dfe8429d38d"],
+
+Cell[BoxData[
+ StyleBox["\<\" Fit jacobian of light vector: a1->-0.9,a2->1\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.833849453405979*^9, 3.8338494956639543`*^9}, 
+   3.8338495326499524`*^9},
+ CellLabel->
+  "During evaluation of \
+In[152]:=",ExpressionUUID->"287eca7a-0458-43be-9c97-6cadc0f7c5ee"],
+
+Cell[BoxData[
+ StyleBox["\<\" Fit jacobian multiplication: a1->-1.22,a2->1.077\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.833849453405979*^9, 3.8338494956639543`*^9}, 
+   3.8338495326509514`*^9},
+ CellLabel->
+  "During evaluation of \
+In[152]:=",ExpressionUUID->"aea018ac-a4c6-4180-a4da-2476afb5bdce"],
+
+Cell[BoxData[
+ StyleBox["\<\" >>>>> Solve One Bounce Method 2\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.833849453405979*^9, 3.8338494956639543`*^9}, 
+   3.833849532651947*^9},
+ CellLabel->
+  "During evaluation of \
+In[152]:=",ExpressionUUID->"449e0cbb-e7a3-45d5-b762-fc9998c6d4a0"],
+
+Cell[BoxData[
+ StyleBox["\<\" Jacobian of Light SG(Method 2)\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.833849453405979*^9, 3.8338494956639543`*^9}, 
+   3.8338495327377176`*^9},
+ CellLabel->
+  "During evaluation of \
+In[152]:=",ExpressionUUID->"96732b71-33c8-4d05-a260-a87a9248af14"],
+
+Cell[BoxData[
+ FractionBox[
+  RowBox[{
+   RowBox[{"Sec", "[", "\[Theta]L", "]"}], " ", 
+   RowBox[{"(", 
+    RowBox[{"sD", "+", 
+     RowBox[{"Sin", "[", "\[Theta]L", "]"}]}], ")"}], " ", 
+   RowBox[{"Tan", "[", "\[Theta]L", "]"}]}], 
+  RowBox[{
+   SuperscriptBox["sD", "2"], "+", 
+   RowBox[{"2", " ", "sD", " ", 
+    RowBox[{"Sin", "[", "\[Theta]L", "]"}]}], "+", 
+   SuperscriptBox[
+    RowBox[{"Tan", "[", "\[Theta]L", "]"}], "2"]}]]], "Print",
+ CellChangeTimes->{{3.833849453405979*^9, 3.8338494956639543`*^9}, 
+   3.8338495327397118`*^9},
+ CellLabel->
+  "During evaluation of \
+In[152]:=",ExpressionUUID->"e1f03394-b4df-42a6-afd2-2d147c3ce489"],
+
+Cell[BoxData[
+ StyleBox["\<\" Fit jacobian of light vector: a1->2.7043,a2->3.1652\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.833849453405979*^9, 3.8338494956639543`*^9}, 
+   3.8338495327405467`*^9},
+ CellLabel->
+  "During evaluation of \
+In[152]:=",ExpressionUUID->"6772d13a-09e3-48f3-b643-ba4e4c55fc83"],
+
+Cell[BoxData[
+ StyleBox["\<\" Fit jacobian multiplication: a1->-1.81,a2->3.287\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.833849453405979*^9, 3.8338494956639543`*^9}, 
+   3.833849532743034*^9},
+ CellLabel->
+  "During evaluation of \
+In[152]:=",ExpressionUUID->"bbcd0ee0-428f-4e61-b8aa-f3b9f1e762d5"]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`\[Theta]L$$ = Rational[1, 6] 
+    Pi, $CellContext`\[Theta]V$$ = Rational[1, 5] Pi, Typeset`show$$ = False, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`\[Theta]V$$], Rational[1, 5] Pi}, 0.01, 
+      Rational[1, 2] Pi}, {{
+       Hold[$CellContext`\[Theta]L$$], Rational[1, 6] Pi}, 0.01, 
+      Rational[1, 2] Pi}}, Typeset`size$$ = {100., {31., 35.}}, 
+    Typeset`update$$ = 0, Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`\[Theta]V$179866$$ = 
+    0, $CellContext`\[Theta]L$179867$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`\[Theta]L$$ = 
+        Rational[1, 6] Pi, $CellContext`\[Theta]V$$ = Rational[1, 5] Pi}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`\[Theta]V$$, $CellContext`\[Theta]V$179866$$, 0], 
+        Hold[$CellContext`\[Theta]L$$, $CellContext`\[Theta]L$179867$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      Plot[{(Sec[$CellContext`\[Theta]V$$] ($CellContext`sD + 
+           Sin[$CellContext`\[Theta]V$$]) 
+          Tan[$CellContext`\[Theta]V$$]/($CellContext`sD^2 + 
+          2 $CellContext`sD Sin[$CellContext`\[Theta]V$$] + 
+          Tan[$CellContext`\[Theta]V$$]^2)) (
+          Sec[$CellContext`\[Theta]L$$] ($CellContext`sD + 
+           Sin[$CellContext`\[Theta]L$$]) 
+          Tan[$CellContext`\[Theta]L$$]/($CellContext`sD^2 + 
+          2 $CellContext`sD Sin[$CellContext`\[Theta]L$$] + 
+          Tan[$CellContext`\[Theta]L$$]^2)), 
+         sgCommon`sgPolar[
+          ArcSin[$CellContext`sD], 
+          
+          Max[-1.22 + 
+           1.077/(Tan[$CellContext`\[Theta]L$$] 
+            Tan[$CellContext`\[Theta]V$$]), sgCommon`sgMinLambda], 1], 
+         sgCommon`sgPolar[
+          ArcSin[$CellContext`sD], 
+          
+          Max[-1.81 + 
+           3.287/(Tan[$CellContext`\[Theta]L$$] 
+            Tan[$CellContext`\[Theta]V$$]), sgCommon`sgMinLambda], 
+          1]}, {$CellContext`sD, 0, 2}, PlotStyle -> {Green, Blue, Red}, 
+        ImageSize -> Tiny], 
+      "Specifications" :> {{{$CellContext`\[Theta]V$$, Rational[1, 5] Pi}, 
+         0.01, Rational[1, 2] 
+         Pi}, {{$CellContext`\[Theta]L$$, Rational[1, 6] Pi}, 0.01, 
+         Rational[1, 2] Pi}}, 
+      "Options" :> {Method -> {"ShowControls" -> False}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{151., {54., 60.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.8338494536750507`*^9, 3.833849495925643*^9}, 
+   3.8338495327733507`*^9},
+ CellLabel->
+  "Out[164]=",ExpressionUUID->"adc994e7-6dd6-4edd-a641-4840413bc46f"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
  RowBox[{"gPrint", "[", "\"\<One bounce reflectance as SG\>\"", 
   "]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -399,12 +740,11 @@ Cell[BoxData[{
                   RowBox[{"1", "*", 
                    RowBox[{"(", 
                     RowBox[{
-                    RowBox[{"-", "1.809"}], "+", 
-                    RowBox[{"3.28", "/", 
-                    RowBox[{"(", 
-                    RowBox[{"tangentView", "*", "tangentLight"}], ")"}]}]}], 
-                    ")"}]}], ",", "sgMinLambda"}], "]"}], ",", 
-                "representEnergy"}], "}"}]}], ",", 
+                    RowBox[{"-", "1.81"}], "+", 
+                    FractionBox["3.287", 
+                    RowBox[{"tangentView", "*", "tangentLight"}]]}], ")"}]}], 
+                  ",", "sgMinLambda"}], "]"}], ",", "representEnergy"}], 
+               "}"}]}], ",", 
              RowBox[{"\"\<color\>\"", "\[Rule]", "Gray"}]}], "|>"}], 
            "\[IndentingNewLine]", "}"}]}], "&"}], "[", 
         RowBox[{"<|", 
@@ -497,10 +837,12 @@ Cell[BoxData[{
     "wallLightDir", ",", "reflectSgAxisPt", ",", "disbFunc"}], "]"}], 
   ";"}], "\[IndentingNewLine]"}], "Input",
  CellChangeTimes->{{3.833602051438299*^9, 3.8336020516146297`*^9}, {
-  3.83377613404555*^9, 3.833776182350959*^9}, {3.8337764193858075`*^9, 
-  3.8337764267033625`*^9}},
+   3.83377613404555*^9, 3.833776182350959*^9}, {3.8337764193858075`*^9, 
+   3.8337764267033625`*^9}, {3.833838956431242*^9, 3.8338389605527396`*^9}, {
+   3.833839024429834*^9, 3.8338390349218407`*^9}, 3.8338494233294163`*^9, {
+   3.8338495529732385`*^9, 3.833849556363999*^9}},
  CellLabel->
-  "In[203]:=",ExpressionUUID->"54e5a7de-9769-4fec-8c4d-39d3dc27ee9d"],
+  "In[166]:=",ExpressionUUID->"dde9940d-67b7-4b2b-95ea-3e775ea4b97e"],
 
 Cell[BoxData[
  StyleBox["\<\" One bounce reflectance as SG\"\>",
@@ -508,10 +850,10 @@ Cell[BoxData[
   FontSize->18,
   Background->RGBColor[0.87, 0.94, 1]]], "Print",
  CellChangeTimes->{{3.833776160428157*^9, 3.833776183326446*^9}, 
-   3.833776427479067*^9},
+   3.833776427479067*^9, 3.8338389622341104`*^9, 3.8338495576522284`*^9},
  CellLabel->
   "During evaluation of \
-In[203]:=",ExpressionUUID->"46cc8a0d-bb88-4e85-a1b5-bae77b0b5d94"],
+In[166]:=",ExpressionUUID->"16bfa4cd-451d-4af6-b3d6-0cc5fd11c229"],
 
 Cell[BoxData[
  TagBox[
@@ -537,14 +879,14 @@ Cell[BoxData[
        Hold[$CellContext`roughness$$], 0.15}, 0.05, 1}, {{
        Hold[$CellContext`shadingPosX$$], 0.5}, -2, 2}}, Typeset`size$$ = {
     200., {110., 116.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`lightCenterX$6841819$$ = 
-    0, $CellContext`lightCenterY$6841820$$ = 
-    0, $CellContext`eyePoint$6841821$$ = {0, 
-    0}, $CellContext`lightFadeStart$6841822$$ = 
-    0, $CellContext`lightFadeEnd$6841823$$ = 
-    0, $CellContext`lightIntensity$6841824$$ = 
-    0, $CellContext`lightRadius$6841825$$ = 
-    0, $CellContext`viewDir$6841826$$ = {0, 0}}, 
+    Typeset`skipInitDone$$ = True, $CellContext`lightCenterX$180695$$ = 
+    0, $CellContext`lightCenterY$180696$$ = 
+    0, $CellContext`eyePoint$180697$$ = {0, 
+    0}, $CellContext`lightFadeStart$180698$$ = 
+    0, $CellContext`lightFadeEnd$180699$$ = 
+    0, $CellContext`lightIntensity$180700$$ = 
+    0, $CellContext`lightRadius$180701$$ = 
+    0, $CellContext`viewDir$180702$$ = {0, 0}}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
       "Variables" :> {$CellContext`eyePoint$$ = {-3, 
@@ -554,22 +896,21 @@ Cell[BoxData[
         2, $CellContext`lightRadius$$ = 6, $CellContext`roughness$$ = 
         0.15, $CellContext`shadingPosX$$ = 
         0.5, $CellContext`viewDir$$ = {1, 1}}, "ControllerVariables" :> {
-        Hold[$CellContext`lightCenterX$$, $CellContext`lightCenterX$6841819$$,
-          0], 
-        Hold[$CellContext`lightCenterY$$, $CellContext`lightCenterY$6841820$$,
-          0], 
-        Hold[$CellContext`eyePoint$$, $CellContext`eyePoint$6841821$$, {0, 
-         0}], 
-        Hold[$CellContext`lightFadeStart$$, \
-$CellContext`lightFadeStart$6841822$$, 0], 
-        Hold[$CellContext`lightFadeEnd$$, $CellContext`lightFadeEnd$6841823$$,
-          0], 
-        Hold[$CellContext`lightIntensity$$, \
-$CellContext`lightIntensity$6841824$$, 0], 
-        Hold[$CellContext`lightRadius$$, $CellContext`lightRadius$6841825$$, 
+        Hold[$CellContext`lightCenterX$$, $CellContext`lightCenterX$180695$$, 
          0], 
-        Hold[$CellContext`viewDir$$, $CellContext`viewDir$6841826$$, {0, 0}]},
-       "OtherVariables" :> {
+        Hold[$CellContext`lightCenterY$$, $CellContext`lightCenterY$180696$$, 
+         0], 
+        Hold[$CellContext`eyePoint$$, $CellContext`eyePoint$180697$$, {0, 0}], 
+        Hold[$CellContext`lightFadeStart$$, \
+$CellContext`lightFadeStart$180698$$, 0], 
+        Hold[$CellContext`lightFadeEnd$$, $CellContext`lightFadeEnd$180699$$, 
+         0], 
+        Hold[$CellContext`lightIntensity$$, \
+$CellContext`lightIntensity$180700$$, 0], 
+        Hold[$CellContext`lightRadius$$, $CellContext`lightRadius$180701$$, 
+         0], 
+        Hold[$CellContext`viewDir$$, $CellContext`viewDir$180702$$, {0, 0}]}, 
+      "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
         Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
@@ -694,8 +1035,8 @@ $CellContext`representEnergy =
           ("sgDisbs" -> {
             Association["disbCenter" -> Slot["center"], "sg" -> {{-1, 0}, 
                Max[
-               1 (-1.809 + 
-                 3.28/($CellContext`tangentView $CellContext`tangentLight)), 
+               1 (-1.81 + 
+                 3.287/($CellContext`tangentView $CellContext`tangentLight)), 
                 sgCommon`sgMinLambda], $CellContext`representEnergy}, "color" -> 
              Gray]}& )[
            Association["center" -> $CellContext`reflectSgAxisPt]], 
@@ -725,13 +1066,13 @@ $CellContext`representEnergy =
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
  CellChangeTimes->{{3.8337761604760785`*^9, 3.833776183371297*^9}, 
-   3.8337764275342736`*^9},
+   3.8337764275342736`*^9, 3.8338389622695093`*^9, 3.8338495576831465`*^9},
  CellLabel->
-  "Out[213]=",ExpressionUUID->"96998301-21a3-46fa-acb2-1858e130c1c5"]
+  "Out[169]=",ExpressionUUID->"ee9c9d59-a466-4207-9bb0-90cb1fe09ad0"]
 }, Open  ]]
 },
 WindowSize->{1083, 662},
-WindowMargins->{{437, Automatic}, {103, Automatic}},
+WindowMargins->{{75, Automatic}, {-6, Automatic}},
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
 ]
@@ -747,9 +1088,25 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 20612, 480, 2119, "Input",ExpressionUUID->"54e5a7de-9769-4fec-8c4d-39d3dc27ee9d"],
-Cell[21195, 504, 351, 9, 30, "Print",ExpressionUUID->"46cc8a0d-bb88-4e85-a1b5-bae77b0b5d94"],
-Cell[21549, 515, 11057, 214, 293, "Output",ExpressionUUID->"96998301-21a3-46fa-acb2-1858e130c1c5"]
+Cell[580, 22, 5597, 146, 715, "Input",ExpressionUUID->"54e5a7de-9769-4fec-8c4d-39d3dc27ee9d"],
+Cell[CellGroupData[{
+Cell[6202, 172, 358, 9, 30, "Print",ExpressionUUID->"931429f1-ba30-4a97-9cfb-f24d7d3d3702"],
+Cell[6563, 183, 357, 9, 30, "Print",ExpressionUUID->"45183437-4c8f-4f18-8494-b33917d81dc4"],
+Cell[6923, 194, 853, 26, 44, "Print",ExpressionUUID->"0cc19627-faac-4d97-8a12-9dfe8429d38d"],
+Cell[7779, 222, 371, 9, 30, "Print",ExpressionUUID->"287eca7a-0458-43be-9c97-6cadc0f7c5ee"],
+Cell[8153, 233, 375, 9, 30, "Print",ExpressionUUID->"aea018ac-a4c6-4180-a4da-2476afb5bdce"],
+Cell[8531, 244, 356, 9, 30, "Print",ExpressionUUID->"449e0cbb-e7a3-45d5-b762-fc9998c6d4a0"],
+Cell[8890, 255, 357, 9, 30, "Print",ExpressionUUID->"96732b71-33c8-4d05-a260-a87a9248af14"],
+Cell[9250, 266, 650, 18, 44, "Print",ExpressionUUID->"e1f03394-b4df-42a6-afd2-2d147c3ce489"],
+Cell[9903, 286, 378, 9, 30, "Print",ExpressionUUID->"6772d13a-09e3-48f3-b643-ba4e4c55fc83"],
+Cell[10284, 297, 373, 9, 30, "Print",ExpressionUUID->"bbcd0ee0-428f-4e61-b8aa-f3b9f1e762d5"]
+}, Open  ]],
+Cell[10672, 309, 3392, 71, 133, "Output",ExpressionUUID->"adc994e7-6dd6-4edd-a641-4840413bc46f"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14101, 385, 20009, 459, 2058, "Input",ExpressionUUID->"dde9940d-67b7-4b2b-95ea-3e775ea4b97e"],
+Cell[34113, 846, 399, 9, 30, "Print",ExpressionUUID->"16bfa4cd-451d-4af6-b3d6-0cc5fd11c229"],
+Cell[34515, 857, 11079, 213, 293, "Output",ExpressionUUID->"ee9c9d59-a466-4207-9bb0-90cb1fe09ad0"]
 }, Open  ]]
 }
 ]
