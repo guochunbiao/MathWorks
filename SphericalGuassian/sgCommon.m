@@ -15,7 +15,8 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 sgSolveAvgEnergyTheta,sgAvgEnergyTheta,sgCapIntsMaxEnergyTheta,sgEnergyCentroidTheta,
 		 sgCapsIntsEnergyCentroidTheta,sgCapIntsAsNewSGDeprecated,sgProductIntegral,
 		 sgNDFProdIntegrateLight,sgCapIntsEnergyPercent,sgMaxLambda,sgSphereLight,
-		 sgCapIntsAreaPercent,sgProduct,sgShading,sgSolveOneBounce1,sgSolveOneBounce2];
+		 sgCapIntsAreaPercent,sgProduct,sgShading,sgSolveOneBounce1,sgSolveOneBounce2,
+		 sgCalcEnergyPercent,sgReflectLight,sgRepresentLambda];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -53,6 +54,7 @@ sgSolveEnergy::usage="sgSolveEnergy";
 sgEnergy::usage="sgEnergy";
 sgSolveEnergyInRange::usage="sgSolveEnergyInRange";
 sgEnergyInRange::usage="sgEnergyInRange";
+sgCalcEnergyPercent::usage="sgCalcEnergyPercent";
 sgCapIntsEnergy::usage="sgCapIntsEnergy";
 sgCapIntsAsNewSG::usage="sgCapIntsAsNewSG";
 sgSolveAvgEnergyTheta::usage="sgSolveAvgEnergyTheta";
@@ -63,10 +65,12 @@ sgCapsIntsEnergyCentroidTheta::usage="sgCapsIntsEnergyCentroidTheta";
 sgCapIntsAsNewSGDeprecated::usage="sgCapIntsAsNewSGDeprecated";
 sgCapIntsEnergyPercent::usage="sgCapIntsEnergyPercent";
 sgSphereLight::usage="sgSphereLight";
+sgReflectLight::usage="sgReflectLight";
 sgCapIntsAreaPercent::usage="sgCapIntsAreaPercent";
 sgShading::usage="sgShading";
 sgSolveOneBounce1::usage="sgSolveOneBounce1";
 sgSolveOneBounce2::usage="sgSolveOneBounce2";
+sgRepresentLambda::usage="sgRepresentLambda";
 
 
 Begin["`Private`"];
@@ -221,6 +225,47 @@ sgSphereLight[lightCenter_,lightFadeStart_,lightFadeEnd_,lightIntensity_,shading
 	\[Mu]=lightIntensity;
 	
 	{p,\[Lambda],\[Mu]}
+];
+
+
+sgReflectLight[repCenter_,inRepNormal_,repRadius_,shadingPt_,
+	lightPt_,lightFadeStart_,lightFadeEnd_,lightIntensity_,roughness_]:=Module[
+	{
+		repNormal,repSG,shadingDist,repLightSG,repNDF,repPeakEnergy,
+		repLightDirUnNormed,repLightDir,repViewDirUnNormed,repViewDir,repThetas,
+		shadingDistToDisk,lightDistToDisk,shadingProjPt,lightProjPt,
+		repSgCenter,repSgLambda,energyPercent,
+		tangentView,tangentLight
+	},
+	
+	repNormal=Normalize[inRepNormal];
+	
+	shadingDist=Norm[shadingPt-repCenter];
+	repLightDirUnNormed=lightPt-repCenter;
+	repLightDir=Normalize[repLightDirUnNormed];
+	repViewDirUnNormed=shadingPt-repCenter;
+	repViewDir=Normalize[repViewDirUnNormed];
+	
+    shadingDistToDisk=Dot[repViewDirUnNormed,repNormal];
+    lightDistToDisk=Dot[repLightDirUnNormed,repNormal];
+    shadingProjPt=shadingPt-repNormal*shadingDistToDisk;
+    lightProjPt=lightPt-repNormal*lightDistToDisk;
+    repSgCenter=gLerp[shadingProjPt,lightProjPt,shadingDistToDisk/(shadingDistToDisk+lightDistToDisk)];
+	
+	repLightSG=sgSphereLight[lightPt,lightFadeStart,lightFadeEnd,lightIntensity,shadingPt];
+	repNDF=sgNDF[roughness,repLightDir,repViewDir,repNormal];
+	repPeakEnergy=sgNDFConvLight[0,0,repLightSG,repNDF];
+	
+	tangentView=Tan[ArcCos[Dot[repViewDir,repNormal]]];
+	tangentLight=Tan[ArcCos[Dot[repLightDir,repNormal]]];
+	
+	repSgLambda=sgRepresentLambda[tangentLight,tangentView];
+	
+	repThetas=gCalcRepresentThetas[repCenter,repRadius,shadingDist,repSgCenter,repSgLambda];
+	energyPercent=sgCalcEnergyPercent[{repNormal,repSgLambda,1},repThetas];
+	repSG={repNormal,repSgLambda,repPeakEnergy*energyPercent};
+	
+	{repSgCenter,repSG}
 ];
 
 
@@ -425,6 +470,21 @@ sgEnergyInRange[sg_,\[Theta]1_,\[Theta]2_,\[Phi]1_,\[Phi]2_]:=Module[
 	Assert[\[Theta]1<=\[Theta]2];
 	Assert[\[Phi]1<=\[Phi]2];
 	(\[Mu]/\[Lambda])*(Exp[\[Lambda](Cos[\[Theta]1]-1)]-Exp[\[Lambda](Cos[\[Theta]2]-1)])*(\[Phi]2-\[Phi]1)
+];
+
+
+sgCalcEnergyPercent[sg_,{thetaLowerMin_,thetaLowerMax_,thetaUpper_}]:=Module[
+	{totalEnergy,upperEnergy,lowerEnergy,partialEnergy},
+	
+	totalEnergy=sgEnergy[sg];
+	upperEnergy=sgEnergyInRange[sg,0,thetaUpper,0,2\[Pi]];
+	Assert[upperEnergy>=0];
+	lowerEnergy=sgEnergyInRange[sg,thetaLowerMin,thetaLowerMax,0,\[Pi]];
+	Assert[lowerEnergy>=0];
+	partialEnergy=lowerEnergy+upperEnergy;
+	Assert[partialEnergy<=totalEnergy];
+	
+	partialEnergy/totalEnergy
 ];
 
 
@@ -645,24 +705,25 @@ sgSolveOneBounce1[thetaL_,distOffset_]:=Module[
 	detL=(sD Sin[\[Theta]L]+Sec[\[Theta]L] (sD+Sin[\[Theta]L]) Tan[\[Theta]L])/(sD^2+2 sD Sin[\[Theta]L]+Tan[\[Theta]L]^2);
 	detH=(sD Sin[\[Theta]V]+Sec[\[Theta]V] (sD+Sin[\[Theta]V]) Tan[\[Theta]V])/(sD^2+2 sD Sin[\[Theta]V]+Tan[\[Theta]V]^2);
 	
-	(*sol=Quiet@FindMinimum[
+(*	sol=Quiet@FindMinimum[
 	  {
-		NIntegrate[Abs[detL-sgPolar[ArcSin[sD],a1+a2/Tan[\[Theta]L],1]],{sD,0,1},{\[Theta]L,0.1,\[Pi]/4},
+		NIntegrate[Abs[detL-sgPolar[ArcTan[sD],a1+a2/Tan[\[Theta]L],1]],{sD,0,1},{\[Theta]L,0.1,\[Pi]/4},
 		PrecisionGoal\[Rule]2,AccuracyGoal\[Rule]2, Method->"QuasiMonteCarlo",MaxRecursion->1]
       },
 	  {a1,50},{a2,1}
 	];*)
-	gPrint["Fit jacobian of light vector: a1->-0.9,a2->1"];
+	gPrint["Fit jacobian of light vector: a1->-1.322,a2->1.618"];
 	
-(*	sol=Quiet@FindMinimum[
+(*	sol=FindMinimum[
 		{
-			NIntegrate[Abs[detL*detH-sgPolar[ArcSin[sD],a+b/(Tan[\[Theta]L]*Tan[\[Theta]V]),1]],
+			NIntegrate[Abs[detL*detH-sgPolar[ArcTan[sD],a1+a2/(0.01+Tan[\[Theta]L]*Tan[\[Theta]V]),1]],
 				{sD,0,1},{\[Theta]L,0.1,\[Pi]/4},{\[Theta]V,0.1,\[Pi]/4},
 				PrecisionGoal\[Rule]2,AccuracyGoal\[Rule]2, Method\[Rule]"QuasiMonteCarlo",MaxRecursion\[Rule]1]
         },
-		{a,50},{b,1}
-	];*)
-	gPrint["Fit jacobian multiplication: a1->-1.22,a2->1.077"];
+		{a1,50},{a2,1},{a3,1}
+	];
+	Print[sol];*)
+	gPrint["Fit jacobian multiplication: a1->49.467,a2->-1.234,a3->72.114"];
 	
 	Blank[]
 ];
@@ -683,31 +744,41 @@ sgSolveOneBounce2[\[Theta]L_,sD_]:=Module[
 	gPrint["Jacobian of Light SG(Method 2)"];
 	Print[detH3/.{theta1->\[Theta]L,t->sD}];
 	
-	(*Quiet@FindMinimum[
+	(*sol=Quiet@FindMinimum[
 	{
-	NIntegrate[Abs[detH3-sgPolar[ArcSin[t],a+b/Tan[theta1],1]],
+	NIntegrate[Abs[detH3-sgPolar[ArcTan[t],a+b/Tan[theta1],1]],
 	{t,0,1},{theta1,0.1,\[Pi]/4},
 	PrecisionGoal\[Rule]2,AccuracyGoal\[Rule]2, Method\[Rule]"QuasiMonteCarlo",MaxRecursion\[Rule]1]
       },
 	 {a,50},{b,1}
-	];*)
-	gPrint["Fit jacobian of light vector: a1->2.7043,a2->3.1652"];
+	];
+	Print[sol];*)
+	gPrint["Fit jacobian of light vector: a1->-1.638,a2->2.936"];
 	
 	(*TODO: Copy to a note book and run the fitting*)
 (*	ClearAll[thetaV,thetaL,t,a,b,detH6];
 	detH6=(Sec[thetaV] (t+Sin[thetaV]) Tan[thetaV])/(t^2+2 t Sin[thetaV]+Tan[thetaV]^2)*(Sec[thetaL] (t+Sin[thetaL]) Tan[thetaL])/(t^2+2 t Sin[thetaL]+Tan[thetaL]^2);
 	(*TODO: Copy to a note book and run the fitting*)
-	FindMinimum[
+	sol=FindMinimum[
 	{
-		NIntegrate[Abs[detH6-sgPolar[ArcSin[t],a+b/(Tan[thetaV]*Tan[thetaL]),1]],
+		NIntegrate[Abs[detH6-sgPolar[ArcSin[t],a1+a2/(a3+Tan[thetaV]*Tan[thetaL]),1]],
 		{t,0,1},{thetaV,0.1,\[Pi]/4},{thetaL,0.1,\[Pi]/4},
 		PrecisionGoal\[Rule]1,AccuracyGoal\[Rule]1, Method\[Rule]"QuasiMonteCarlo",MaxRecursion\[Rule]1]
       },
-	 {a,50},{b,1}
-	]*)
-	gPrint["Fit jacobian multiplication: a1->-1.81,a2->3.287"];
+	 {a1,50},{a2,1},{a3,1}
+	];
+	Print[sol];
+	ClearAll[thetaV,thetaL,t,a,b,detH6];*)
+	gPrint["Fit jacobian multiplication: a1->-2.102,a2->3.116"];
 	
 	Blank[]
+];
+
+
+sgRepresentLambda[tangentLight_,tangentView_]:=Module[
+	{},
+	
+	Max[-2.102+3.116/(0.01+tangentLight*tangentView),sgMinLambda]
 ];
 
 

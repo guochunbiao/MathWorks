@@ -35,6 +35,31 @@ gParamLine[lineInput_,\[Theta]_]:=Module[
 ];
 
 
+ClearAll[gParamRect];
+gParamRect[input_,\[Theta]_]:=Module[
+	{centerPt,majorAxis,minorAxis,majorSize,minorSize,
+		btmLeft,btmRight,topLeft,topRight},
+	
+	centerPt=input["center"];
+	majorAxis=Normalize[input["majorAxis"]];
+	minorAxis=Normalize[input["minorAxis"]];
+	majorSize=input["majorSize"];
+	minorSize=input["minorSize"];
+	
+	btmLeft=centerPt-majorSize/2 majorAxis-minorSize/2 minorAxis;
+	btmRight=centerPt-majorSize/2 majorAxis+minorSize/2 minorAxis;
+	topLeft=centerPt+majorSize/2 majorAxis-minorSize/2 minorAxis;
+	topRight=centerPt+majorSize/2 majorAxis+minorSize/2 minorAxis;
+	
+	{
+		btmLeft+minorSize*minorAxis*0.1*(\[Theta]/2\[Pi]),
+		btmRight+majorSize*majorAxis*0.1*(\[Theta]/2\[Pi]),
+		topRight-minorSize*minorAxis*0.1*(\[Theta]/2\[Pi]),
+		topLeft-majorSize*majorAxis*0.1*(\[Theta]/2\[Pi])
+	}
+];
+
+
 ClearAll[gParamCone];
 gParamCone[coneInput_,\[Theta]_]:=Module[
 	{origin,radius,cone,coneCenterTheta,coneDeltaTheta,
@@ -485,6 +510,8 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["circles",gParamCircle];
 	(*append dir lines*)
 	collectFunc["lines",gParamLine];
+	(*append rectangles*)
+	collectFunc["rects",gParamRect];
 	(*append cones*)
 	collectFunc["cones",gParamCone];
 	(*append simple distributions*)

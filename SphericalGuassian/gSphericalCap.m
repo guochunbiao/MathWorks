@@ -10,7 +10,8 @@ ClearAll[gSpherCap,gSolveCapIntsPoints,gSpherCapVis,gSpherCapIntsVis,gSpherCapRe
 		gSolveSpherCapIntsCentroid,gSolveSpherCapArea,gSpherCapIntsArea,gSpherCapVis2,
 		gSpherCapIntsVis2,gSpherCapIntsVis3,gSpherCapIntsAreaError,gSpherSegmentVis,gSpherCapIntsEdgeInfo,
 		gSpherCapIntsBaseRefs,gApproxCapIntsCentroid,gCapIntsIntegralFlags,
-		gCapIntsQuaterPart,gCapIntsHemiPart,gCapIntsFullPart,gCapIntsAreas,gSpherCapBorderVis];
+		gCapIntsQuaterPart,gCapIntsHemiPart,gCapIntsFullPart,gCapIntsAreas,gSpherCapBorderVis,
+		gCalcRepresentThetas];
 gSphericalCap::usage="gSphericalCap";
 gSolveCapIntsPoints::usage="gSolveCapIntsPoints";
 gSpherCapVis::usage="gSpherCapVis";
@@ -32,6 +33,7 @@ gCapIntsQuaterPart::usage="gCapIntsQuaterPart";
 gCapIntsHemiPart::usage="gCapIntsHemiPart";
 gCapIntsFullPart::usage="gCapIntsFullPart";
 gCapIntsAreas::usage="gCapIntsAreas";
+gCalcRepresentThetas::usage="gCalcRepresentThetas";
 
 
 Begin["`Private`"];
@@ -414,6 +416,38 @@ gCapIntsAreas[capAxis1_,capApert1_,capAxis2_,capApert2_]:=Module[
 		{hemiParts[[2]],hemiParts[[3]],hemiParts[[4]],hemiParts[[5]]}];
 	
 	{hemiAperture,quaterRange}
+];
+
+
+(*
+	shadingDist:the distance between shading point and represent point
+	representLambda: the lambda of represent SG
+*)
+gCalcRepresentThetas[representPt_,diskRadius_,shadingDist_,sgCenter_,sgLambda_]:=Module[
+	{
+		representDist,distEdgeMax,distEdgeMin,
+		thetaMax,thetaLowerMin,thetaLowerMax,thetaUpper
+	},
+		
+	(*representDist: the distance between SG center and represent point*)
+	representDist=Norm[sgCenter-representPt];
+	distEdgeMax=diskRadius+representDist;
+	distEdgeMin=diskRadius-representDist;
+	
+	(*Solve[(sgPolar[thetaMax,\[Lambda],1]/sgPolar[0,\[Lambda],1])\[Equal]0.01 && \[Lambda]\[GreaterEqual]sgMinLambda&&thetaMax\[Element]Reals,thetaMax]*)
+	thetaMax=ArcCos[1-sgMinLambda/sgLambda];
+	If[representDist>=diskRadius,
+		
+		thetaUpper=0;
+		thetaLowerMin=ArcTan[Abs[distEdgeMin]/shadingDist];
+		thetaLowerMax=ArcTan[distEdgeMax/shadingDist],
+		
+		thetaUpper=ArcTan[distEdgeMin/shadingDist];
+		thetaLowerMin=thetaUpper;
+		thetaLowerMax=ArcTan[distEdgeMax/shadingDist]
+	];
+	
+	{thetaLowerMin,thetaLowerMax,thetaUpper}
 ];
 
 
