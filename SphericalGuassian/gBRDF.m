@@ -1,5 +1,6 @@
 (* ::Package:: *)
 
+SetDirectory[NotebookDirectory[]];
 BeginPackage["gBRDF`"];
 Needs["gUtils`"];
 

@@ -26,6 +26,103 @@ gParamLine3D[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 ];
 
 
+(*RegionPlot3D*)
+ClearAll[gParamCircle3D];
+gParamCircle3D[input_,globalInput_,x_,y_,z_]:=Module[
+	{center,radius,normalAxis,region},
+	
+	center=input["center"];
+	radius=input["radius"];
+	normalAxis=Normalize[input["normalAxis"]];
+	
+	region=ImplicitRegion[
+		{
+			Dot[{x,y,z}-center,normalAxis]==0&&
+			Norm[{x,y,z}-center]<=radius
+		},
+		{x,y,z}];
+	
+	region
+];
+
+
+(*RegionPlot3D*)
+ClearAll[gParamRect];
+gParamRect[input_,globalInput_,x_,y_,z_]:=Module[
+	{centerPt,normalAxis,majorAxis,minorAxis,majorRadius,minorRadius,
+		region},
+	
+	centerPt=input["center"];
+	normalAxis=Normalize[input["normalAxis"]];
+	majorAxis=Normalize[input["majorAxis"]];
+	Assert[Dot[normalAxis,majorAxis]==0];
+	minorAxis=Normalize@Cross[normalAxis,majorAxis];
+	majorRadius=input["majorRadius"];
+	minorRadius=input["minorRadius"];
+	
+	region=ImplicitRegion[
+		{
+			Dot[{x,y,z}-centerPt,normalAxis]==0&&
+			Abs@Dot[({x,y,z}-centerPt),majorAxis]<=majorRadius&&
+            Abs@Dot[({x,y,z}-centerPt),minorAxis]<=minorRadius
+        },
+		{x,y,z}];
+		
+	region
+];
+
+
+(*projection of rectangle onto sphere*)
+ClearAll[gParamProjRect];
+gParamProjRect[input_,globalInput_,x_,y_,z_]:=Module[
+	{inputKeys,rectInput,rectCenter,rectNormal,rectMajorAxis,rectMinorAxis,
+		rectMajorRadius,rectMinorRadius,rectLT,rectRT,rectLB,rectRB,
+		sphCenter,sphRadius,p1,p2,p3,p4,
+		projFlag,zbias,region},
+		
+	inputKeys=Keys[input];
+	
+	(*rectangle*)
+	rectInput=input["rect"];
+	rectCenter=rectInput[[1]];
+	rectNormal=Normalize[rectInput[[2]]];
+	rectMajorAxis=Normalize[rectInput[[3]]];
+	Assert[Dot[rectNormal,rectMajorAxis]==0];
+	rectMinorAxis=Normalize@Cross[rectNormal,rectMajorAxis];
+	rectMajorRadius=rectInput[[4]];
+	rectMinorRadius=rectInput[[5]];
+	
+	{rectLT,rectRT,rectLB,rectRB}=gCalcRectCorners[rectInput];
+	
+	(*sphere*)
+	sphCenter=input["sphCenter"];
+	sphRadius=input["sphRadius"];
+	
+	{p1,p2,p3,p4}={
+			Normalize[rectLT-sphCenter],
+			Normalize[rectRT-sphCenter],
+			Normalize[rectRB-sphCenter],
+			Normalize[rectLB-sphCenter]
+		};
+		
+	(*project rectangle onto sphere*)
+	projFlag=input["projFlag"];
+	zbias=If[MemberQ[inputKeys,"zbias"],input["zbias"],0];
+	region=ImplicitRegion[
+		{
+			(x-sphCenter[[1]])^2+(y-sphCenter[[2]])^2+(z-sphCenter[[3]])^2==
+				(sphRadius*(1+zbias*2^-6))^2&&
+	   	 projFlag*Normalize[{x,y,z}-sphCenter].Cross[p1,p2]>0&&
+	   	 projFlag*Normalize[{x,y,z}-sphCenter].Cross[p2,p3]>0&&
+	   	 projFlag*Normalize[{x,y,z}-sphCenter].Cross[p3,p4]>0&&
+	   	 projFlag*Normalize[{x,y,z}-sphCenter].Cross[p4,p1]>0
+	   },
+	   {x,y,z}];
+
+	region
+];
+
+
 ClearAll[gParamSpherLine];
 gParamSpherLine[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 	{inputKeys,c,r,zbias,
@@ -252,9 +349,10 @@ gMultiColorFunctionBackup/:(h:(Plot|Plot3D|ParametricPlot|ParametricPlot3D))[
 gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	{
 		inputKeys,collectFunc,plotCmds,
-		plotList,thetaOnlyList,plotStyles,plotLabels,
+		plotList,plotListTypes,plotStyles,plotLabels,
 		colorFuncList,opacityList,thicknessList,plotPtsList,meshTypeList,
-		axisExtent,projSettings,viewPoint,viewProj
+		axisExtent,projSettings,viewPoint,viewProj,
+		tagPlot
 	},
 	inputKeys=Keys[inputs];
 	plotList={};
@@ -265,9 +363,16 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	thicknessList={};
 	plotPtsList={};
 	meshTypeList={};
-	thetaOnlyList={};
+	(*
+		Enumeration for plot types
+		1. ParametricPlot3D(theta, phi)
+		2. ParametricPlot3D(theta)
+		3. RegionPlot3D
+		4. RegionPlot3D[DiscretizeRegion]
+	 *)
+	plotListTypes={};
 	
-	collectFunc[keyName_,paramFunc_,bThetaOnly_:False]:=Block[
+	collectFunc[keyName_,paramFunc_,plotType_:1]:=Block[
 		{elements,element,evaluated,elementKeys,
 			tmpColorFunc,tmpOpacity,tmpThickness,tmpPlotPts,tmpMeshType},
 		
@@ -275,14 +380,19 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 			elements=inputs[[keyName]];
 			For[i=1,i<=Length[elements],i++,
 				element=elements[[i]];
-				evaluated=paramFunc[element,inputs,x,y,z,\[Phi],\[Theta]];
+				evaluated=Which[
+					plotType==1||plotType==2,
+					paramFunc[element,inputs,x,y,z,\[Phi],\[Theta]],
+					plotType==3||plotType==4,
+					paramFunc[element,inputs,x,y,z]
+					];
 				(*AppendTo[plotList,paramFunc[element,\[Phi],\[Theta]]];*)
 				elementKeys=Keys[element];
 				tmpColorFunc=If[MemberQ[elementKeys,"colorFunc"],
 					element["colorFunc"],Cyan];
 				tmpOpacity=If[MemberQ[elementKeys,"opacity"],element["opacity"],1];
 				tmpThickness=If[MemberQ[elementKeys,"thickness"],element["thickness"],0.01];
-				tmpPlotPts=If[MemberQ[elementKeys,"plotPts"],element["plotPts"],20];
+				tmpPlotPts=If[MemberQ[elementKeys,"plotPts"],element["plotPts"],10];
 				tmpMeshType=If[MemberQ[elementKeys,"mesh"],element["mesh"],Full];
 				
 				AppendTo[colorFuncList,tmpColorFunc];
@@ -291,7 +401,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 				AppendTo[plotPtsList,tmpPlotPts];
 				AppendTo[meshTypeList,tmpMeshType];
 				
-				AppendTo[thetaOnlyList,bThetaOnly];
+				AppendTo[plotListTypes,plotType];
 				AppendTo[plotList,evaluated];
 				AppendTo[plotStyles,{tmpColorFunc,{Opacity[tmpOpacity],Thickness[tmpThickness]},
 							tmpPlotPts,tmpMeshType}];
@@ -301,7 +411,13 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	];
 	
 	(*append lines*)
-	collectFunc["lines",gParamLine3D,True];
+	collectFunc["lines",gParamLine3D,2];
+	(*append circles*)
+	collectFunc["circles",gParamCircle3D,4];
+	(*append rectangles*)
+	collectFunc["rects",gParamRect,4];
+	(*append projection of rectangle onto sphere*)
+	collectFunc["projRects",gParamProjRect,4];
 	(*append spheres*)
 	collectFunc["spheres",gParamSphere];
 	(*append spherical caps*)
@@ -325,84 +441,36 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 			{inputs[["viewPoint"]],"Orthographic"},{{1.3,-2.4,2},"Perspective"}];
 	viewPoint=projSettings[[1]];
 	viewProj=projSettings[[2]];
-(*	ParametricPlot3D[#1,
-		{\[Phi],0,2\[Pi]},{\[Theta],0,\[Pi]},
-		gMultiColorFunctionBackup[#2],
-		ColorFunctionScaling\[Rule]False,
+	
+	tagPlot/:(h:(Plot3D|ParametricPlot3D|RegionPlot3D))[
+	before___,tagPlot[i_],after___]:=
+		h[before,
+		ColorFunction->colorFuncList[[i]],
+		PlotStyle->{Opacity[opacityList[[i]]],Thickness[thicknessList[[i]]]},
+		PlotPoints->plotPtsList[[i]],
+		Mesh->meshTypeList[[i]],
+		ColorFunctionScaling->False,
 		PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
+		Axes->True,
 		AspectRatio->1,
+		AxesLabel->{"X","Y","Z"},
+		PlotTheme->"Detailed",
 		Lighting->{"Ambient",White},
 		ViewPoint->viewPoint,
 		ViewProjection->viewProj,
-		ImageSize->imageSize]&[plotList,plotStyles]*)
+		ImageSize->imageSize];
 	
 	plotCmds={};	
 	For[i=1,i<=Length[plotList],i++,
-		If[thetaOnlyList[[i]],
-			AppendTo[
-				plotCmds,
-				ParametricPlot3D[plotList[[i]],
-					{\[Theta],0,\[Pi]},
-					ColorFunction->colorFuncList[[i]],
-					PlotStyle->{Opacity[opacityList[[i]]],Thickness[thicknessList[[i]]]},
-					(*BoundaryStyle\[Rule]Green,*)
-					PlotPoints->plotPtsList[[i]],
-					Mesh->meshTypeList[[i]],
-					ColorFunctionScaling->False,
-					PlotRange->{{-axisExtent,axisExtent},
-						{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
-					AspectRatio->1,
-					Lighting->{"Ambient",White},
-					ViewPoint->viewPoint,
-					ViewProjection->viewProj,
-					ImageSize->imageSize]
-			],
-			AppendTo[
-				plotCmds,
-				ParametricPlot3D[plotList[[i]],
-					{\[Phi],0,2\[Pi]},{\[Theta],0,\[Pi]},
-					ColorFunction->colorFuncList[[i]],
-					PlotStyle->{Opacity[opacityList[[i]]],Thickness[thicknessList[[i]]]},
-					(*BoundaryStyle\[Rule]Green,*)
-					PlotPoints->plotPtsList[[i]],
-					Mesh->meshTypeList[[i]],
-					ColorFunctionScaling->False,
-					PlotRange->{{-axisExtent,axisExtent},
-						{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
-					AspectRatio->1,
-					Lighting->{"Ambient",White},
-					ViewPoint->viewPoint,
-					ViewProjection->viewProj,
-					ImageSize->imageSize]
-			]
+		Which[
+			plotListTypes[[i]]==1,
+			AppendTo[plotCmds,ParametricPlot3D[plotList[[i]],{\[Phi],0,2\[Pi]},{\[Theta],0,\[Pi]},tagPlot[i]]],
+			plotListTypes[[i]]==2,
+			AppendTo[plotCmds,ParametricPlot3D[plotList[[i]],{\[Theta],0,\[Pi]},tagPlot[i]]],
+			plotListTypes[[i]]==4,
+			AppendTo[plotCmds,RegionPlot3D[DiscretizeRegion@plotList[[i]],tagPlot[i]]]
 		];
 	];
-(*	For[i=1,i\[LessEqual]Length[plotList],i++,
-		AppendTo[
-			plotCmds,
-			ParametricPlot3D[plotList[[i]],
-				{\[Phi],0,2\[Pi]},{\[Theta],0,\[Pi]},
-				ColorFunction\[Rule]Function[Green],
-				PlotStyle->{Opacity[1],Thickness[0.02]},
-				PlotPoints\[Rule]20,
-				ViewPoint->viewPoint,
-				ViewProjection->viewProj,
-				ImageSize->imageSize]
-		];
-	];
-	For[i=1,i\[LessEqual]Length[plotList2],i++,
-		AppendTo[
-			plotCmds,
-			ParametricPlot3D[plotList2[[i]],
-				{\[Theta],0,\[Pi]},
-				ColorFunction\[Rule]Function[Blue],
-				PlotStyle->{Opacity[1],Thickness[0.02]},
-				PlotPoints\[Rule]20,
-				ViewPoint->viewPoint,
-				ViewProjection->viewProj,
-				ImageSize->imageSize]
-		];
-	];*)
 	
 	Show[plotCmds]
 ];

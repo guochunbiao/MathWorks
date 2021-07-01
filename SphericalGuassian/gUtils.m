@@ -3,7 +3,8 @@
 BeginPackage["gUtils`"];
 
 
-ClearAll[gStructRules,gPrint,gPrintFunc,gEvalFunc,gCreateCone,gLerp,gRemap,gClampPhi];
+ClearAll[gStructRules,gPrint,gPrintFunc,gEvalFunc,gCreateCone,gLerp,gRemap,gClampPhi,
+	gCalcRectCorners];
 gPrint::usage="Print messages";
 gPrintFunc::usage="Print a function";
 gEvalFunc::usage="Evaluate a funciton";
@@ -12,6 +13,7 @@ gCreateCone::usgae="Create a cone";
 gLerp::usage="gLerp";
 gRemap::usage="gRemap";
 gClampPhi::usage="gClampPhi";
+gCalcRectCorners::usage="gCalcRectCorners";
 
 
 SetAttributes[gStructRules,HoldAll]
@@ -89,6 +91,27 @@ gClampPhi[inPhi_]:=Module[
 	
 	outPhi=If[inPhi<0,inPhi+2\[Pi],inPhi];
 	outPhi
+];
+
+
+gCalcRectCorners[rectInput_]:=Module[
+	{rectCenter,rectNormal,rectMajorAxis,rectMinorAxis,rectMajorRadius,rectMinorRadius,
+		leftTop,rightTop,leftBtm,rightBtm},
+	
+	rectCenter=rectInput[[1]];
+	rectNormal=Normalize[rectInput[[2]]];
+	rectMajorAxis=Normalize[rectInput[[3]]];
+	Assert[Dot[rectNormal,rectMajorAxis]==0];
+	rectMinorAxis=Normalize@Cross[rectNormal,rectMajorAxis];
+	rectMajorRadius=rectInput[[4]];
+	rectMinorRadius=rectInput[[5]];
+	
+	leftTop=rectCenter-rectMinorRadius*rectMinorAxis+rectMajorAxis*rectMajorRadius;
+	rightTop=rectCenter+rectMinorRadius*rectMinorAxis+rectMajorAxis*rectMajorRadius;
+	leftBtm=rectCenter-rectMinorRadius*rectMinorAxis-rectMajorAxis*rectMajorRadius;
+	rightBtm=rectCenter+rectMinorRadius*rectMinorAxis-rectMajorAxis*rectMajorRadius;
+	
+	{leftTop,rightTop,leftBtm,rightBtm}
 ];
 
 
