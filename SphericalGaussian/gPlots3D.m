@@ -27,8 +27,8 @@ gParamLine3D[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 
 
 (*RegionPlot3D*)
-ClearAll[gParamCircle3D];
-gParamCircle3D[input_,globalInput_,x_,y_,z_]:=Module[
+ClearAll[gParamDisk3D];
+gParamDisk3D[input_,globalInput_,x_,y_,z_]:=Module[
 	{center,radius,normalAxis,region},
 	
 	center=input["center"];
@@ -413,7 +413,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	(*append lines*)
 	collectFunc["lines",gParamLine3D,2];
 	(*append circles*)
-	collectFunc["circles",gParamCircle3D,4];
+	collectFunc["disks",gParamDisk3D,4];
 	(*append rectangles*)
 	collectFunc["rects",gParamRect,4];
 	(*append projection of rectangle onto sphere*)
