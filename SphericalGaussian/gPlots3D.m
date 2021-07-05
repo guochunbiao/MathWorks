@@ -129,7 +129,7 @@ gParamProjDisk[input_,globalInput_,x_,y_,z_]:=Module[
 	{inputKeys,diskInput,diskCenter,diskNormal,diskRadius,
 		diskTangentZ,diskBiTangentZ,diskTangent,diskBiTangent,diskPlane,
 		sphCenter,sphRadius,sphPlane,
-		projFlag,zbias,region,transFunc},
+		projType,projFlag,zbias,region,transFunc},
 		
 	inputKeys=Keys[input];
 	
@@ -148,6 +148,9 @@ gParamProjDisk[input_,globalInput_,x_,y_,z_]:=Module[
 	(*sphere*)
 	sphCenter=input["sphCenter"];
 	sphRadius=input["sphRadius"];
+	
+	(*projection type*)
+	projType=If[MemberQ[inputKeys,"projType"],input["projType"],1];
 	
 	(*transformation function from point to disk*)
 	(*https://mathematica.stackexchange.com/questions/63259/compose-many-geometric-transformations-for-3d-graphics*)
@@ -173,17 +176,32 @@ gParamProjDisk[input_,globalInput_,x_,y_,z_]:=Module[
 		
 		(*https://www.rosettacode.org/wiki/Find_the_intersection_of_a_line_with_a_plane#C.2B.2B*)
 		(*c++ code example*)
-		(*rayDir={0,0,1};*)
+		
+		rayDir={0,0,1};
+		diff={x,y,z}-diskCenter;
+		prod1=Dot[diff,diskNormal];
+		prod2=Dot[rayDir,diskNormal];
+		If[
+			prod2==0,
+			flag3=False,
+			prod3=prod1/prod2;
+			intsPt={x,y,z}-rayDir*prod3;
+			flag3=Norm[intsPt-diskCenter]<=diskRadius
+		];
+		(*
 		rayDir={x,y,z};
 		diff={x,y,z}-diskCenter;
 		prod1=Dot[diff,diskNormal];
 		prod2=Dot[rayDir,diskNormal];
 		If[
-			prod2==0,flag3=False,
+			prod2\[Equal]0,
+			flag3=False,
+			True, (*<---------------------------------*)
 			prod3=prod1/prod2;
 			intsPt={x,y,z}-rayDir*prod3;
 			flag3=Norm[intsPt-diskCenter]<=diskRadius
 		];
+	   *)
 	   
 	    flag1&&flag2&&flag3
 	   ],
@@ -418,11 +436,11 @@ gMultiColorFunctionBackup/:(h:(Plot|Plot3D|ParametricPlot|ParametricPlot3D))[
 
 gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	{
-		inputKeys,collectFunc,plotCmds,
+		inputKeys,collectFunc,complexFunc,plotCmds,
 		plotList,plotListTypes,plotStyles,plotLabels,
 		colorFuncList,opacityList,thicknessList,plotPtsList,meshTypeList,
-		axisExtent,projSettings,viewPoint,viewProj,
-		tagPlot
+		axExt,axisExtents,projSettings,viewPoint,viewProj,
+		tagPlot,complexTagPlot
 	},
 	inputKeys=Keys[inputs];
 	plotList={};
@@ -433,6 +451,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	thicknessList={};
 	plotPtsList={};
 	meshTypeList={};
+	plotCmds={};
 	(*
 		Enumeration for plot types
 		1. ParametricPlot3D(theta, phi)
@@ -440,6 +459,9 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 		3. RegionPlot3D
 	 *)
 	plotListTypes={};
+	
+	axExt=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
+	axisExtents={{-axExt,axExt},{-axExt,axExt},{-axExt,axExt}};
 	
 	collectFunc[keyName_,paramFunc_,plotType_:1]:=Block[
 		{elements,element,evaluated,elementKeys,
@@ -479,6 +501,58 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 		];
 	];
 	
+	complexTagPlot/:(h:(Plot3D|ParametricPlot3D|RegionPlot3D))[
+	before___,complexTagPlot[inColorFunc_,inOpacity_,inThickness_,inPlotPts_,
+		inPlotLabel_,inMeshType_],after___]:=
+		h[before,
+		ColorFunction->inColorFunc,
+		PlotStyle->{Opacity[inOpacity],Thickness[inThickness]},
+		PlotPoints->inPlotPts,
+		PlotLegends->inPlotLabel,
+		Mesh->inMeshType,
+		ColorFunctionScaling->False,
+		PlotRange->axisExtents,
+		Axes->True,
+		AspectRatio->1,
+		AxesLabel->{"X","Y","Z"},
+		PlotTheme->"Detailed",
+		Lighting->{"Ambient",White},
+		ViewPoint->viewPoint,
+		ViewProjection->viewProj,
+		ImageSize->imageSize];
+	
+	complexFunc[keyName_,paramFunc_,plotType_:1]:=Block[
+		{elements,element,elementKeys,tmpPlot,
+			tmpColorFunc,tmpOpacity,tmpThickness,tmpPlotPts,tmpMeshType,tmpLabel},
+		
+		If[MemberQ[inputKeys,keyName],
+			elements=inputs[[keyName]];
+			For[i=1,i<=Length[elements],i++,
+				element=elements[[i]];
+				(*AppendTo[plotList,paramFunc[element,\[Phi],\[Theta]]];*)
+				elementKeys=Keys[element];
+				tmpColorFunc=If[MemberQ[elementKeys,"colorFunc"],
+					element["colorFunc"],Cyan];
+				tmpOpacity=If[MemberQ[elementKeys,"opacity"],element["opacity"],1];
+				tmpThickness=If[MemberQ[elementKeys,"thickness"],element["thickness"],0.01];
+				tmpPlotPts=If[MemberQ[elementKeys,"plotPts"],element["plotPts"],10];
+				tmpMeshType=If[MemberQ[elementKeys,"mesh"],element["mesh"],Full];
+				tmpLabel=If[MemberQ[elementKeys,"label"],element["label"],""];
+				
+				Which[
+					plotType==3,
+					tmpPlot=RegionPlot3D[
+						paramFunc[element,inputs,x,y,z],
+						complexTagPlot[tmpColorFunc,tmpOpacity,tmpThickness,
+							tmpPlotPts,tmpLabel,tmpMeshType]],
+					True,
+					Assert[False]
+				];
+				AppendTo[plotCmds,tmpPlot];
+			];
+		];
+	];
+	
 	(*append lines*)
 	collectFunc["lines",gParamLine3D,2];
 	(*append circles*)
@@ -488,7 +562,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	(*append projection of rectangles onto sphere*)
 	collectFunc["projRects",gParamProjRect,3];
 	(*append projection of disks onto sphere*)
-	collectFunc["projDisks",gParamProjDisk,3];
+	(*collectFunc["projDisks",gParamProjDisk,3];*)
 	(*append spheres*)
 	collectFunc["spheres",gParamSphere];
 	(*append spherical caps*)
@@ -507,7 +581,6 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	(*append GGX PDF 3d*)
 	collectFunc["ggxPDF3",gParamGgxPDF3];
 	
-	axisExtent=If[MemberQ[inputKeys,"axisExtent"],inputs[["axisExtent"]],5];
 	projSettings=If[MemberQ[inputKeys,"viewPoint"],
 			{inputs[["viewPoint"]],"Orthographic"},{{1.3,-2.4,2},"Perspective"}];
 	viewPoint=projSettings[[1]];
@@ -522,7 +595,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 		PlotLegends->plotLabels[[i]],
 		Mesh->meshTypeList[[i]],
 		ColorFunctionScaling->False,
-		PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
+		PlotRange->axisExtents,
 		Axes->True,
 		AspectRatio->1,
 		AxesLabel->{"X","Y","Z"},
@@ -532,7 +605,6 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 		ViewProjection->viewProj,
 		ImageSize->imageSize];
 	
-	plotCmds={};	
 	For[i=1,i<=Length[plotList],i++,
 		Which[
 			plotListTypes[[i]]==1,
@@ -540,9 +612,14 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 			plotListTypes[[i]]==2,
 			AppendTo[plotCmds,ParametricPlot3D[plotList[[i]],{\[Theta],0,\[Pi]},tagPlot[i]]],
 			plotListTypes[[i]]==3,
-			AppendTo[plotCmds,RegionPlot3D[plotList[[i]],tagPlot[i]]]
+			AppendTo[plotCmds,RegionPlot3D[plotList[[i]],tagPlot[i]]],
+			True,
+			Assert[False]
 		];
 	];
+	
+	(*append projection of disks onto sphere*)
+	complexFunc["projDisks",gParamProjDisk,3];
 	
 	Show[plotCmds]
 ];
