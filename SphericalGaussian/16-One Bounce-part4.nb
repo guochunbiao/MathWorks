@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     16285,        381]
-NotebookOptionsPosition[     15760,        364]
-NotebookOutlinePosition[     16105,        379]
-CellTagsIndexPosition[     16062,        376]
+NotebookDataLength[     59977,       1366]
+NotebookOptionsPosition[     58890,       1340]
+NotebookOutlinePosition[     59235,       1355]
+CellTagsIndexPosition[     59192,       1352]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -44,81 +44,115 @@ Cell[BoxData[{
    RowBox[{"Needs", "[", "\"\<gSphericalCap`\>\"", "]"}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"gPrint", "[", "\"\<Template\>\"", "]"}], 
+  RowBox[{"gPrint", "[", "\"\<Projection of Disk onto Sphere\>\"", "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"ClearAll", "[", 
    RowBox[{
-   "testRect", ",", "testSphere", ",", "rectCenterPt", ",", "rectMajorAxis", 
-    ",", "rectNormalAxis", ",", "rectMinorAxis"}], "]"}], 
+   "testDisk", ",", "testSphere", ",", "\[IndentingNewLine]", 
+    "diskNormalAxis", ",", "diskTangent", ",", "diskBiTangent", ",", 
+    "diskTangentZ", ",", "diskBiTangentZ"}], "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
   RowBox[{
    RowBox[{
-    RowBox[{"rectCenterPt", "=", 
+    RowBox[{"diskNormalAxis", "=", 
      RowBox[{"{", 
-      RowBox[{"0", ",", "0", ",", "rectCenterZ"}], "}"}]}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{"rectNormalAxis", "=", 
-     RowBox[{"Normalize", "@", 
-      RowBox[{"{", 
-       RowBox[{"rectNormalX", ",", "rectNormalY", ",", "1"}], "}"}]}]}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{"rectMajorAxis", "=", 
-     RowBox[{"Normalize", "@", 
-      RowBox[{"{", 
-       RowBox[{
-       "rectMajorX", ",", "rectMajorY", ",", "\[IndentingNewLine]", "\t\t", 
-        RowBox[{"-", 
-         RowBox[{"(", 
-          RowBox[{
-           RowBox[{"rectNormalX", "*", "rectMajorX"}], "+", 
-           RowBox[{"rectNormalY", "*", "rectMajorY"}]}], ")"}]}]}], "}"}]}]}],
-     ";", "\[IndentingNewLine]", 
-    RowBox[{"rectMinorAxis", "=", 
-     RowBox[{"Normalize", "@", 
-      RowBox[{"Cross", "[", 
-       RowBox[{"rectNormalAxis", ",", "rectMajorAxis"}], "]"}]}]}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{"testRect", "=", "\[IndentingNewLine]", 
+      RowBox[{"diskNormalX", ",", "diskNormalY", ",", 
+       RowBox[{"-", "1"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"testDisk", "=", "\[IndentingNewLine]", 
      RowBox[{"{", "\[IndentingNewLine]", "\t", 
-      RowBox[{"rectCenterPt", ",", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "diskCenterZ"}], "}"}], ",", 
        RowBox[{"(*", 
         RowBox[{"center", " ", "point"}], "*)"}], "\[IndentingNewLine]", "\t",
-        "rectNormalAxis", ",", 
+        "diskNormalAxis", ",", 
        RowBox[{"(*", 
         RowBox[{"normal", " ", "axis"}], "*)"}], "\[IndentingNewLine]", "\t", 
-       "rectMajorAxis", ",", 
-       RowBox[{"(*", 
-        RowBox[{"major", " ", "axis"}], "*)"}], "\[IndentingNewLine]", "\t", 
-       "1", ",", 
-       RowBox[{"(*", 
-        RowBox[{"major", " ", "radius"}], "*)"}], "\[IndentingNewLine]", "\t",
-        "1"}], "   ", 
+       "diskRadius"}], 
       RowBox[{"(*", 
-       RowBox[{"minor", " ", "radius"}], "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"disk", " ", "radius"}], "*)"}], "\[IndentingNewLine]", 
       "}"}]}], ";", "\[IndentingNewLine]", " ", 
     RowBox[{"testSphere", "=", 
      RowBox[{"{", 
       RowBox[{
        RowBox[{"{", 
         RowBox[{"0", ",", "0", ",", "0"}], "}"}], ",", "1"}], "}"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"diskTangentZ", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Solve", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Dot", "[", 
+           RowBox[{"diskNormalAxis", ",", 
+            RowBox[{"{", 
+             RowBox[{"1", ",", "0", ",", "x"}], "}"}]}], "]"}], "\[Equal]", 
+          "0"}], ",", "x"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"All", ",", "1", ",", "2"}], "]"}], "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"diskTangent", "=", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0", ",", "diskTangentZ"}], "}"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"diskBiTangentZ", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Solve", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Dot", "[", 
+           RowBox[{"diskNormalAxis", ",", 
+            RowBox[{"{", 
+             RowBox[{"0", ",", "1", ",", "x"}], "}"}]}], "]"}], "\[Equal]", 
+          "0"}], ",", "x"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"All", ",", "1", ",", "2"}], "]"}], "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"diskBiTangent", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1", ",", "diskBiTangentZ"}], "}"}]}], ";", 
     "\[IndentingNewLine]", "\[IndentingNewLine]", "  ", 
     RowBox[{"gParamPlot3D", "[", "\[IndentingNewLine]", 
-     RowBox[{"<|", "\[IndentingNewLine]", " ", 
+     RowBox[{"<|", "\[IndentingNewLine]", "  ", 
       RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<spheres\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "   ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", 
+              RowBox[{"testSphere", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<radius\>\"", "\[Rule]", 
+              RowBox[{"testSphere", "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+             "\t", 
+             RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", "Green", "]"}]}], ",", 
+             RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.3"}]}], "|>"}], 
+           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", "]"}], ",", 
+       "\[IndentingNewLine]", " ", 
        RowBox[{
         RowBox[{
          RowBox[{"\"\<lines\>\"", "\[Rule]", 
           RowBox[{"{", "\[IndentingNewLine]", " ", 
            RowBox[{"(*", 
-            RowBox[{"rectangle", " ", "axis"}], "*)"}], "\[IndentingNewLine]",
-            "   ", 
+            RowBox[{"disk", " ", "axis"}], "*)"}], "\[IndentingNewLine]", 
+           "   ", 
            RowBox[{
             RowBox[{"<|", 
              RowBox[{
-              RowBox[{"\"\<startPos\>\"", "\[Rule]", "rectCenterPt"}], ",", 
-              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "rectMajorAxis"}], ",", 
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"testDisk", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "diskTangent"}], ",", 
               RowBox[{"\"\<length\>\"", "\[Rule]", "1"}], ",", 
               "\[IndentingNewLine]", "\t", 
               RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
@@ -127,74 +161,34 @@ Cell[BoxData[{
              "\[IndentingNewLine]", "   ", 
             RowBox[{"<|", 
              RowBox[{
-              RowBox[{"\"\<startPos\>\"", "\[Rule]", "rectCenterPt"}], ",", 
-              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "rectMinorAxis"}], ",", 
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"testDisk", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "diskBiTangent"}], ",", 
               RowBox[{"\"\<length\>\"", "\[Rule]", "1"}], ",", 
               "\[IndentingNewLine]", "\t", 
               RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
                RowBox[{"Function", "[", "Red", "]"}]}], ",", 
               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.01"}]}], "|>"}]}], 
            "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", "]"}], ",", 
-       "\[IndentingNewLine]", "  ", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"\"\<spheres\>\"", "\[Rule]", 
-          RowBox[{"{", "\[IndentingNewLine]", 
-           RowBox[{"(*", 
-            RowBox[{"rect", " ", "center"}], "*)"}], "\[IndentingNewLine]", 
-           RowBox[{
-            RowBox[{"<|", 
-             RowBox[{
-              RowBox[{"\"\<center\>\"", "\[Rule]", "rectCenterPt"}], ",", 
-              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.1"}], ",", 
-              "\[IndentingNewLine]", "\t", 
-              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
-               RowBox[{"Function", "[", "Red", "]"}]}], ",", 
-              RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.01"}]}], "|>"}], ",", 
-            "\[IndentingNewLine]", 
-            RowBox[{"(*", 
-             RowBox[{"shading", " ", "sphere"}], "*)"}], 
-            "\[IndentingNewLine]", "   ", 
-            RowBox[{"<|", 
-             RowBox[{
-              RowBox[{"\"\<center\>\"", "\[Rule]", 
-               RowBox[{"testSphere", "[", 
-                RowBox[{"[", "1", "]"}], "]"}]}], ",", 
-              RowBox[{"\"\<radius\>\"", "\[Rule]", 
-               RowBox[{"testSphere", "[", 
-                RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
-              "\t", 
-              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
-              "\[IndentingNewLine]", "\t", 
-              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
-               RowBox[{"Function", "[", "Green", "]"}]}], ",", 
-              RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.3"}]}], "|>"}]}], 
-           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", "]"}], ",", 
        "\[IndentingNewLine]", 
        RowBox[{
         RowBox[{
-         RowBox[{"\"\<rects\>\"", "\[Rule]", 
+         RowBox[{"\"\<disks\>\"", "\[Rule]", 
           RowBox[{"{", "\[IndentingNewLine]", "   ", 
            RowBox[{"<|", 
             RowBox[{
              RowBox[{"\"\<center\>\"", "\[Rule]", 
-              RowBox[{"testRect", "[", 
+              RowBox[{"testDisk", "[", 
                RowBox[{"[", "1", "]"}], "]"}]}], ",", 
              RowBox[{"\"\<normalAxis\>\"", "\[Rule]", 
-              RowBox[{"testRect", "[", 
+              RowBox[{"testDisk", "[", 
                RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
              "\t", 
-             RowBox[{"\"\<majorAxis\>\"", "\[Rule]", 
-              RowBox[{"testRect", "[", 
-               RowBox[{"[", "3", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
-             "\t", 
-             RowBox[{"\"\<majorRadius\>\"", "\[Rule]", 
-              RowBox[{"testRect", "[", 
-               RowBox[{"[", "4", "]"}], "]"}]}], ",", 
-             RowBox[{"\"\<minorRadius\>\"", "\[Rule]", 
-              RowBox[{"testRect", "[", 
-               RowBox[{"[", "5", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
-             "\t", 
+             RowBox[{"\"\<radius\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "3", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.3"}], ",", 
              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
              "\[IndentingNewLine]", "\t", 
              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
@@ -202,151 +196,175 @@ Cell[BoxData[{
                RowBox[{
                 RowBox[{"{", 
                  RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
-                "Red"}], "]"}]}], ",", "\[IndentingNewLine]", "\t", 
-             RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.3"}]}], "|>"}], 
-           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", "]"}], ",", 
-       "\[IndentingNewLine]", "     ", 
+                "Cyan"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", " ", 
+           "}"}]}], "&"}], "[", "]"}], ",", "\[IndentingNewLine]", "  ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<projDisks\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "   ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<disk\>\"", "\[Rule]", "#testDisk"}], ",", 
+             RowBox[{"\"\<sphCenter\>\"", "\[Rule]", 
+              RowBox[{"testSphere", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<sphRadius\>\"", "\[Rule]", 
+              RowBox[{"testSphere", "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+             "\t", 
+             RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+             RowBox[{"\"\<zbias\>\"", "\[Rule]", "1"}], ",", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                "Blue"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", " ", 
+           "}"}]}], "&"}], "[", 
+        RowBox[{"<|", 
+         RowBox[{"\"\<testDisk\>\"", "\[Rule]", "testDisk"}], "|>"}], "]"}], 
+       ",", "\[IndentingNewLine]", "     ", 
        RowBox[{"\"\<axisExtent\>\"", "\[Rule]", "2"}]}], 
       "\[IndentingNewLine]", "|>"}], "]"}]}], ",", "\[IndentingNewLine]", 
    "\[IndentingNewLine]", "  ", 
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"rectCenterZ", ",", "1.2"}], "}"}], ",", "1.1", ",", "2"}], 
+      RowBox[{"diskCenterZ", ",", "1.3"}], "}"}], ",", "1.1", ",", "2"}], 
     "}"}], ",", "\[IndentingNewLine]", " ", 
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"rectNormalX", ",", "0.2"}], "}"}], ",", "0", ",", "10"}], 
+      RowBox[{"diskNormalX", ",", 
+       RowBox[{"-", "0.5"}]}], "}"}], ",", 
+     RowBox[{"-", "3"}], ",", 
+     RowBox[{"-", "0.1"}]}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskNormalY", ",", "0.5"}], "}"}], ",", "0.1", ",", "3"}], 
     "}"}], ",", "\[IndentingNewLine]", " ", 
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"rectNormalY", ",", "0.2"}], "}"}], ",", "0", ",", "10"}], 
-    "}"}], ",", "\[IndentingNewLine]", " ", 
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"{", 
-      RowBox[{"rectMajorX", ",", "1"}], "}"}], ",", "0", ",", "10"}], "}"}], 
-   ",", "\[IndentingNewLine]", " ", 
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"{", 
-      RowBox[{"rectMajorY", ",", "0"}], "}"}], ",", "0", ",", "10"}], "}"}], 
-   ",", "\[IndentingNewLine]", "   ", 
+      RowBox[{"diskRadius", ",", "0.5"}], "}"}], ",", "0.2", ",", "1"}], 
+    "}"}], ",", "\[IndentingNewLine]", "   ", 
    RowBox[{"Method", "\[Rule]", 
     RowBox[{"{", 
      RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "False"}], "}"}]}]}], 
   "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{
-   RowBox[{"ClearAll", "[", 
-    RowBox[{"testRect", ",", "testSphere"}], "]"}], ";"}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "testDisk", ",", "testSphere", ",", "\[IndentingNewLine]", 
+    "diskNormalAxis", ",", "diskTangent", ",", "diskBiTangent", ",", 
+    "diskTangentZ", ",", "diskBiTangentZ"}], "]"}], ";"}]}], "Input",
  CellChangeTimes->{{3.833865632896304*^9, 3.8338656401610823`*^9}, {
   3.8338741808243856`*^9, 3.8338742055056477`*^9}, {3.834013550037419*^9, 
   3.834013561257849*^9}, {3.834015682274337*^9, 3.8340156824331546`*^9}, {
-  3.8341362362500954`*^9, 3.8341362535331683`*^9}},
- CellLabel->
-  "In[112]:=",ExpressionUUID->"86e0cf3d-abd9-4297-9d92-0f04e6b25a7b"],
+  3.8341362362500954`*^9, 3.8341362535331683`*^9}, {3.8344598451268024`*^9, 
+  3.8344599137850122`*^9}, {3.8344600715130796`*^9, 3.8344600716841445`*^9}},
+ CellLabel->"In[4]:=",ExpressionUUID->"86e0cf3d-abd9-4297-9d92-0f04e6b25a7b"],
 
 Cell[BoxData[
- StyleBox["\<\" Template\"\>",
+ StyleBox["\<\" Projection of Disk onto Sphere\"\>",
   StripOnInput->False,
   FontSize->18,
   Background->RGBColor[0.87, 0.94, 1]]], "Print",
- CellChangeTimes->{{3.8341362470825577`*^9, 3.8341362541162977`*^9}},
+ CellChangeTimes->{{3.8341362470825577`*^9, 3.8341362541162977`*^9}, {
+   3.8344598461573105`*^9, 3.834459914876151*^9}, 3.8344600734586096`*^9, 
+   3.834465890416891*^9},
  CellLabel->
   "During evaluation of \
-In[112]:=",ExpressionUUID->"c416484a-c037-4685-87d6-796db0662661"],
+In[4]:=",ExpressionUUID->"edf3ad4c-f4da-41ff-bc57-dd902fc0396d"],
 
 Cell[BoxData[
  TagBox[
   StyleBox[
-   DynamicModuleBox[{$CellContext`rectCenterZ$$ = 
-    1.2, $CellContext`rectMajorX$$ = 1, $CellContext`rectMajorY$$ = 
-    0, $CellContext`rectNormalX$$ = 0.2, $CellContext`rectNormalY$$ = 0.2, 
-    Typeset`show$$ = False, Typeset`bookmarkList$$ = {}, 
-    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
-    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
-       Hold[$CellContext`rectCenterZ$$], 1.2}, 1.1, 2}, {{
-       Hold[$CellContext`rectNormalX$$], 0.2}, 0, 10}, {{
-       Hold[$CellContext`rectNormalY$$], 0.2}, 0, 10}, {{
-       Hold[$CellContext`rectMajorX$$], 1}, 0, 10}, {{
-       Hold[$CellContext`rectMajorY$$], 0}, 0, 10}}, Typeset`size$$ = {
-    100., {45., 49.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`rectCenterZ$438451$$ = 
-    0, $CellContext`rectNormalX$438452$$ = 
-    0, $CellContext`rectNormalY$438453$$ = 
-    0, $CellContext`rectMajorX$438454$$ = 
-    0, $CellContext`rectMajorY$438455$$ = 0}, 
+   DynamicModuleBox[{$CellContext`diskCenterZ$$ = 
+    1.3, $CellContext`diskNormalX$$ = -0.5, $CellContext`diskNormalY$$ = 
+    0.5, $CellContext`diskRadius$$ = 0.5, Typeset`show$$ = False, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`diskCenterZ$$], 1.3}, 1.1, 2}, {{
+       Hold[$CellContext`diskNormalX$$], -0.5}, -3, -0.1}, {{
+       Hold[$CellContext`diskNormalY$$], 0.5}, 0.1, 3}, {{
+       Hold[$CellContext`diskRadius$$], 0.5}, 0.2, 1}}, Typeset`size$$ = {
+    109., {45., 49.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`diskCenterZ$63059$$ = 
+    0, $CellContext`diskNormalX$63060$$ = 
+    0, $CellContext`diskNormalY$63061$$ = 0, $CellContext`diskRadius$63062$$ =
+     0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
-      "Variables" :> {$CellContext`rectCenterZ$$ = 
-        1.2, $CellContext`rectMajorX$$ = 1, $CellContext`rectMajorY$$ = 
-        0, $CellContext`rectNormalX$$ = 0.2, $CellContext`rectNormalY$$ = 
-        0.2}, "ControllerVariables" :> {
-        Hold[$CellContext`rectCenterZ$$, $CellContext`rectCenterZ$438451$$, 
-         0], 
-        Hold[$CellContext`rectNormalX$$, $CellContext`rectNormalX$438452$$, 
-         0], 
-        Hold[$CellContext`rectNormalY$$, $CellContext`rectNormalY$438453$$, 
-         0], 
-        Hold[$CellContext`rectMajorX$$, $CellContext`rectMajorX$438454$$, 0], 
-        Hold[$CellContext`rectMajorY$$, $CellContext`rectMajorY$438455$$, 0]},
-       "OtherVariables" :> {
+      "Variables" :> {$CellContext`diskCenterZ$$ = 
+        1.3, $CellContext`diskNormalX$$ = -0.5, $CellContext`diskNormalY$$ = 
+        0.5, $CellContext`diskRadius$$ = 0.5}, "ControllerVariables" :> {
+        Hold[$CellContext`diskCenterZ$$, $CellContext`diskCenterZ$63059$$, 0], 
+        Hold[$CellContext`diskNormalX$$, $CellContext`diskNormalX$63060$$, 0], 
+        Hold[$CellContext`diskNormalY$$, $CellContext`diskNormalY$63061$$, 0], 
+        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$63062$$, 0]}, 
+      "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
         Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
          Typeset`skipInitDone$$}, 
-      "Body" :> ($CellContext`rectCenterPt = {
-         0, 0, $CellContext`rectCenterZ$$}; $CellContext`rectNormalAxis = 
-        Normalize[{$CellContext`rectNormalX$$, $CellContext`rectNormalY$$, 
-           1}]; $CellContext`rectMajorAxis = 
-        Normalize[{$CellContext`rectMajorX$$, $CellContext`rectMajorY$$, \
--($CellContext`rectNormalX$$ $CellContext`rectMajorX$$ + \
-$CellContext`rectNormalY$$ $CellContext`rectMajorY$$)}]; \
-$CellContext`rectMinorAxis = Normalize[
-          
-          Cross[$CellContext`rectNormalAxis, $CellContext`rectMajorAxis]]; \
-$CellContext`testRect = {$CellContext`rectCenterPt, \
-$CellContext`rectNormalAxis, $CellContext`rectMajorAxis, 1, 
-          1}; $CellContext`testSphere = {{0, 0, 0}, 1}; gPlots3D`gParamPlot3D[
+      "Body" :> ($CellContext`diskNormalAxis = {$CellContext`diskNormalX$$, \
+$CellContext`diskNormalY$$, -1}; $CellContext`testDisk = {{
+          0, 0, $CellContext`diskCenterZ$$}, $CellContext`diskNormalAxis, \
+$CellContext`diskRadius$$}; $CellContext`testSphere = {{0, 0, 0}, 
+          1}; $CellContext`diskTangentZ = Part[
+          Part[
+           Solve[
+           Dot[$CellContext`diskNormalAxis, {1, 0, $CellContext`x}] == 
+            0, $CellContext`x], All, 1, 2], 1]; $CellContext`diskTangent = {
+         1, 0, $CellContext`diskTangentZ}; $CellContext`diskBiTangentZ = Part[
+          Part[
+           Solve[
+           Dot[$CellContext`diskNormalAxis, {0, 1, $CellContext`x}] == 
+            0, $CellContext`x], All, 1, 2], 1]; $CellContext`diskBiTangent = {
+         0, 1, $CellContext`diskBiTangentZ}; gPlots3D`gParamPlot3D[
          Association[
-          ("lines" -> {
-            Association[
-            "startPos" -> $CellContext`rectCenterPt, 
-             "dirVec" -> $CellContext`rectMajorAxis, "length" -> 1, 
-             "colorFunc" -> (Red& ), "thickness" -> 0.01], 
-            Association[
-            "startPos" -> $CellContext`rectCenterPt, 
-             "dirVec" -> $CellContext`rectMinorAxis, "length" -> 1, 
-             "colorFunc" -> (Red& ), "thickness" -> 0.01]}& )[], 
           ("spheres" -> {
-            Association[
-            "center" -> $CellContext`rectCenterPt, "radius" -> 0.1, 
-             "colorFunc" -> (Red& ), "opacity" -> 0.01], 
             Association[
             "center" -> Part[$CellContext`testSphere, 1], "radius" -> 
              Part[$CellContext`testSphere, 2], "mesh" -> None, 
              "colorFunc" -> (Green& ), "opacity" -> 0.3]}& )[], 
-          ("rects" -> {
+          ("lines" -> {
             Association[
-            "center" -> Part[$CellContext`testRect, 1], "normalAxis" -> 
-             Part[$CellContext`testRect, 2], "majorAxis" -> 
-             Part[$CellContext`testRect, 3], "majorRadius" -> 
-             Part[$CellContext`testRect, 4], "minorRadius" -> 
-             Part[$CellContext`testRect, 5], "mesh" -> None, "colorFunc" -> 
+            "startPos" -> Part[$CellContext`testDisk, 1], 
+             "dirVec" -> $CellContext`diskTangent, "length" -> 1, 
+             "colorFunc" -> (Red& ), "thickness" -> 0.01], 
+            Association[
+            "startPos" -> Part[$CellContext`testDisk, 1], 
+             "dirVec" -> $CellContext`diskBiTangent, "length" -> 1, 
+             "colorFunc" -> (Red& ), "thickness" -> 0.01]}& )[], 
+          ("disks" -> {
+            Association[
+            "center" -> Part[$CellContext`testDisk, 1], "normalAxis" -> 
+             Part[$CellContext`testDisk, 2], "radius" -> 
+             Part[$CellContext`testDisk, 3], "opacity" -> 0.3, "mesh" -> None,
+              "colorFunc" -> 
              Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
-$CellContext`p}, Red], "opacity" -> 0.3]}& )[], "axisExtent" -> 2]]), 
-      "Specifications" :> {{{$CellContext`rectCenterZ$$, 1.2}, 1.1, 
-         2}, {{$CellContext`rectNormalX$$, 0.2}, 0, 
-         10}, {{$CellContext`rectNormalY$$, 0.2}, 0, 
-         10}, {{$CellContext`rectMajorX$$, 1}, 0, 
-         10}, {{$CellContext`rectMajorY$$, 0}, 0, 10}}, 
+$CellContext`p}, Cyan]]}& )[], 
+          ("projDisks" -> {
+            Association[
+            "disk" -> Slot["testDisk"], "sphCenter" -> 
+             Part[$CellContext`testSphere, 1], "sphRadius" -> 
+             Part[$CellContext`testSphere, 2], "mesh" -> None, "zbias" -> 1, 
+             "colorFunc" -> 
+             Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, Blue]]}& )[
+           Association["testDisk" -> $CellContext`testDisk]], "axisExtent" -> 
+          2]]), 
+      "Specifications" :> {{{$CellContext`diskCenterZ$$, 1.3}, 1.1, 
+         2}, {{$CellContext`diskNormalX$$, -0.5}, -3, -0.1}, \
+{{$CellContext`diskNormalY$$, 0.5}, 0.1, 
+         3}, {{$CellContext`diskRadius$$, 0.5}, 0.2, 1}}, 
       "Options" :> {Method -> {"ShowControls" -> False}}, 
       "DefaultOptions" :> {}],
-     ImageSizeCache->{151., {68., 74.}},
+     ImageSizeCache->{160., {68., 74.}},
      SingleEvaluation->True],
     Deinitialization:>None,
     DynamicModuleValues:>{},
@@ -357,13 +375,971 @@ $CellContext`p}, Red], "opacity" -> 0.3]}& )[], "axisExtent" -> 2]]),
    Deployed->True,
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
- CellChangeTimes->{{3.834136247111079*^9, 3.834136254144891*^9}},
+ CellChangeTimes->{{3.834136247111079*^9, 3.834136254144891*^9}, {
+   3.8344598461873803`*^9, 3.834459914902367*^9}, 3.834460073485186*^9, 
+   3.8344658904489927`*^9},
+ CellLabel->"Out[13]=",ExpressionUUID->"82f29315-148b-4f1e-947a-018481a02c69"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"gPrint", "[", "\"\<Axes of projected ellipse\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "testDisk", ",", "testSphere", ",", "\[IndentingNewLine]", 
+    "diskNormalAxis", ",", "diskTangent", ",", "diskBiTangent", ",", 
+    "diskTangentZ", ",", "diskBiTangentZ", ",", "\[IndentingNewLine]", 
+    "majorAxis", ",", "majorX", ",", "majorY", ",", "minorAxis", ",", 
+    "minorX", ",", "minorY"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"diskNormalAxis", "=", 
+     RowBox[{"{", 
+      RowBox[{"diskNormalX", ",", "diskNormalY", ",", 
+       RowBox[{"-", "1"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"testDisk", "=", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", "\t", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "diskCenterZ"}], "}"}], ",", 
+       RowBox[{"(*", 
+        RowBox[{"center", " ", "point"}], "*)"}], "\[IndentingNewLine]", "\t",
+        "diskNormalAxis", ",", 
+       RowBox[{"(*", 
+        RowBox[{"normal", " ", "axis"}], "*)"}], "\[IndentingNewLine]", "\t", 
+       "diskRadius"}], 
+      RowBox[{"(*", 
+       RowBox[{"disk", " ", "radius"}], "*)"}], "\[IndentingNewLine]", 
+      "}"}]}], ";", "\[IndentingNewLine]", " ", 
+    RowBox[{"testSphere", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "0"}], "}"}], ",", "1"}], "}"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"solving", " ", "major", " ", "axis"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Assuming", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"a", ",", "b"}], "}"}], "\[Element]", "Reals"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Simplify", "@", 
+         RowBox[{"Solve", "[", 
+          RowBox[{
+           RowBox[{"Rationalize", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Dot", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"n1", ",", "n2", ",", "n3"}], "}"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{"a", ",", "b", ",", "0"}], "}"}]}], "]"}], 
+              "\[Equal]", "0"}], "&&", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"a", "^", "2"}], "+", 
+               RowBox[{"b", "^", "2"}]}], "\[Equal]", 
+              RowBox[{"r", "^", "2"}]}]}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"a", ",", "b"}], "}"}]}], "]"}]}]}], 
+       "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"a", "\[Rule]", 
+           RowBox[{"-", 
+            FractionBox[
+             RowBox[{"n2", " ", "r"}], 
+             SqrtBox[
+              RowBox[{
+               SuperscriptBox["n1", "2"], "+", 
+               SuperscriptBox["n2", "2"]}]]]}]}], ",", 
+          RowBox[{"b", "\[Rule]", 
+           FractionBox[
+            RowBox[{"n1", " ", "r"}], 
+            SqrtBox[
+             RowBox[{
+              SuperscriptBox["n1", "2"], "+", 
+              SuperscriptBox["n2", "2"]}]]]}]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"a", "\[Rule]", 
+           FractionBox[
+            RowBox[{"n2", " ", "r"}], 
+            SqrtBox[
+             RowBox[{
+              SuperscriptBox["n1", "2"], "+", 
+              SuperscriptBox["n2", "2"]}]]]}], ",", 
+          RowBox[{"b", "\[Rule]", 
+           RowBox[{"-", 
+            FractionBox[
+             RowBox[{"n1", " ", "r"}], 
+             SqrtBox[
+              RowBox[{
+               SuperscriptBox["n1", "2"], "+", 
+               SuperscriptBox["n2", "2"]}]]]}]}]}], "}"}]}], "}"}]}], 
+     "\[IndentingNewLine]", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"majorX", "=", 
+     RowBox[{"-", "diskNormalY"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"majorY", "=", "diskNormalX"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"majorAxis", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"{", 
+       RowBox[{"majorX", ",", "majorY", ",", "0"}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"solving", " ", "minor", " ", "axis"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Solve", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"Dot", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"a", ",", "b", ",", "0"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"majorX", ",", "majorY", ",", "0"}], "}"}]}], "]"}], 
+          "\[Equal]", "0"}], "&&", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"a", "^", "2"}], "+", 
+           RowBox[{"b", "^", "2"}]}], "\[Equal]", "1"}]}], ",", 
+        RowBox[{"{", 
+         RowBox[{"a", ",", "b"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"a", "\[Rule]", 
+           RowBox[{"-", 
+            FractionBox["majorY", 
+             SqrtBox[
+              RowBox[{
+               SuperscriptBox["majorX", "2"], "+", 
+               SuperscriptBox["majorY", "2"]}]]]}]}], ",", 
+          RowBox[{"b", "\[Rule]", 
+           FractionBox["majorX", 
+            SqrtBox[
+             RowBox[{
+              SuperscriptBox["majorX", "2"], "+", 
+              SuperscriptBox["majorY", "2"]}]]]}]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"a", "\[Rule]", 
+           FractionBox["majorY", 
+            SqrtBox[
+             RowBox[{
+              SuperscriptBox["majorX", "2"], "+", 
+              SuperscriptBox["majorY", "2"]}]]]}], ",", 
+          RowBox[{"b", "\[Rule]", 
+           RowBox[{"-", 
+            FractionBox["majorX", 
+             SqrtBox[
+              RowBox[{
+               SuperscriptBox["majorX", "2"], "+", 
+               SuperscriptBox["majorY", "2"]}]]]}]}]}], "}"}]}], "}"}]}], 
+     "\[IndentingNewLine]", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"minorX", "=", 
+     RowBox[{"-", "majorY"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"minorY", "=", "majorX"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"minorAxis", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"{", 
+       RowBox[{"minorX", ",", "minorY", ",", "0"}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"diskTangentZ", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Solve", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Dot", "[", 
+           RowBox[{"diskNormalAxis", ",", 
+            RowBox[{"{", 
+             RowBox[{"1", ",", "0", ",", "x"}], "}"}]}], "]"}], "\[Equal]", 
+          "0"}], ",", "x"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"All", ",", "1", ",", "2"}], "]"}], "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"diskTangent", "=", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0", ",", "diskTangentZ"}], "}"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"diskBiTangentZ", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Solve", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Dot", "[", 
+           RowBox[{"diskNormalAxis", ",", 
+            RowBox[{"{", 
+             RowBox[{"0", ",", "1", ",", "x"}], "}"}]}], "]"}], "\[Equal]", 
+          "0"}], ",", "x"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"All", ",", "1", ",", "2"}], "]"}], "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"diskBiTangent", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1", ",", "diskBiTangentZ"}], "}"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", "  ", 
+    RowBox[{"gParamPlot3D", "[", "\[IndentingNewLine]", 
+     RowBox[{"<|", "\[IndentingNewLine]", "  ", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<spheres\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "   ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", 
+              RowBox[{"testSphere", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<radius\>\"", "\[Rule]", 
+              RowBox[{"testSphere", "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+             "\t", 
+             RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", "LightGreen", "]"}]}]}], "|>"}], 
+           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", "]"}], ",", 
+       "\[IndentingNewLine]", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<lines\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", " ", 
+           RowBox[{"(*", 
+            RowBox[{"ellipse", " ", "major", " ", "axis"}], "*)"}], 
+           "\[IndentingNewLine]", "   ", 
+           RowBox[{
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "majorAxis"}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", "1"}], ",", 
+              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "2"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Red", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.01"}]}], "|>"}], ",",
+             "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "minorAxis"}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", "0.5"}], ",", 
+              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "2"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Red", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.01"}]}], "|>"}]}], 
+           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<disks\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "   ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<normalAxis\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+             "\t", 
+             RowBox[{"\"\<radius\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "3", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.3"}], ",", 
+             RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                "Cyan"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", " ", 
+           "}"}]}], "&"}], "[", "]"}], ",", "\[IndentingNewLine]", "  ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<projDisks\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "   ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<disk\>\"", "\[Rule]", "#testDisk"}], ",", 
+             RowBox[{"\"\<sphCenter\>\"", "\[Rule]", 
+              RowBox[{"testSphere", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<sphRadius\>\"", "\[Rule]", 
+              RowBox[{"testSphere", "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+             "\t", 
+             RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+             RowBox[{"\"\<zbias\>\"", "\[Rule]", "1"}], ",", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                "Blue"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", " ", 
+           "}"}]}], "&"}], "[", 
+        RowBox[{"<|", 
+         RowBox[{"\"\<testDisk\>\"", "\[Rule]", "testDisk"}], "|>"}], "]"}], 
+       ",", "\[IndentingNewLine]", "     ", 
+       RowBox[{"\"\<axisExtent\>\"", "\[Rule]", "1.6"}]}], 
+      "\[IndentingNewLine]", "|>"}], "]"}]}], ",", "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", "  ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskCenterZ", ",", "1.3"}], "}"}], ",", "1.1", ",", "2"}], 
+    "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskNormalX", ",", 
+       RowBox[{"-", "0.5"}]}], "}"}], ",", 
+     RowBox[{"-", "3"}], ",", 
+     RowBox[{"-", "0.1"}]}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskNormalY", ",", "0.5"}], "}"}], ",", "0.1", ",", "3"}], 
+    "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskRadius", ",", "0.5"}], "}"}], ",", "0.2", ",", "1"}], 
+    "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"Method", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "False"}], "}"}]}]}], 
+  "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "testDisk", ",", "testSphere", ",", "\[IndentingNewLine]", 
+    "diskNormalAxis", ",", "diskTangent", ",", "diskBiTangent", ",", 
+    "diskTangentZ", ",", "diskBiTangentZ", ",", "\[IndentingNewLine]", 
+    "majorAxis", ",", "majorX", ",", "majorY", ",", "minorAxis", ",", 
+    "minorX", ",", "minorY"}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.8344658815549994`*^9, 3.834465928091008*^9}},
+ CellLabel->"In[19]:=",ExpressionUUID->"d32b68ac-233a-48a4-931a-e35fc18777b2"],
+
+Cell[BoxData[
+ StyleBox["\<\" Axes of projected ellipse\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.8344659109435577`*^9, 3.834465928821842*^9}},
  CellLabel->
-  "Out[121]=",ExpressionUUID->"6ec6767a-d490-4709-8c5f-c27a0a10cab6"]
+  "During evaluation of \
+In[19]:=",ExpressionUUID->"3632cd37-daf2-4188-a3d5-620c0db10342"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`diskCenterZ$$ = 
+    1.3, $CellContext`diskNormalX$$ = -0.5, $CellContext`diskNormalY$$ = 
+    0.5, $CellContext`diskRadius$$ = 0.5, Typeset`show$$ = False, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`diskCenterZ$$], 1.3}, 1.1, 2}, {{
+       Hold[$CellContext`diskNormalX$$], -0.5}, -3, -0.1}, {{
+       Hold[$CellContext`diskNormalY$$], 0.5}, 0.1, 3}, {{
+       Hold[$CellContext`diskRadius$$], 0.5}, 0.2, 1}}, Typeset`size$$ = {
+    109., {44., 50.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`diskCenterZ$86348$$ = 
+    0, $CellContext`diskNormalX$86349$$ = 
+    0, $CellContext`diskNormalY$86350$$ = 0, $CellContext`diskRadius$86351$$ =
+     0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`diskCenterZ$$ = 
+        1.3, $CellContext`diskNormalX$$ = -0.5, $CellContext`diskNormalY$$ = 
+        0.5, $CellContext`diskRadius$$ = 0.5}, "ControllerVariables" :> {
+        Hold[$CellContext`diskCenterZ$$, $CellContext`diskCenterZ$86348$$, 0], 
+        Hold[$CellContext`diskNormalX$$, $CellContext`diskNormalX$86349$$, 0], 
+        Hold[$CellContext`diskNormalY$$, $CellContext`diskNormalY$86350$$, 0], 
+        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$86351$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`diskNormalAxis = {$CellContext`diskNormalX$$, \
+$CellContext`diskNormalY$$, -1}; $CellContext`testDisk = {{
+          0, 0, $CellContext`diskCenterZ$$}, $CellContext`diskNormalAxis, \
+$CellContext`diskRadius$$}; $CellContext`testSphere = {{0, 0, 0}, 
+          1}; $CellContext`majorX = -$CellContext`diskNormalY$$; \
+$CellContext`majorY = $CellContext`diskNormalX$$; $CellContext`majorAxis = 
+        Normalize[{$CellContext`majorX, $CellContext`majorY, 
+           0}]; $CellContext`minorX = -$CellContext`majorY; \
+$CellContext`minorY = $CellContext`majorX; $CellContext`minorAxis = 
+        Normalize[{$CellContext`minorX, $CellContext`minorY, 
+           0}]; $CellContext`diskTangentZ = Part[
+          Part[
+           Solve[
+           Dot[$CellContext`diskNormalAxis, {1, 0, $CellContext`x}] == 
+            0, $CellContext`x], All, 1, 2], 1]; $CellContext`diskTangent = {
+         1, 0, $CellContext`diskTangentZ}; $CellContext`diskBiTangentZ = Part[
+          Part[
+           Solve[
+           Dot[$CellContext`diskNormalAxis, {0, 1, $CellContext`x}] == 
+            0, $CellContext`x], All, 1, 2], 1]; $CellContext`diskBiTangent = {
+         0, 1, $CellContext`diskBiTangentZ}; gPlots3D`gParamPlot3D[
+         Association[
+          ("spheres" -> {
+            Association[
+            "center" -> Part[$CellContext`testSphere, 1], "radius" -> 
+             Part[$CellContext`testSphere, 2], "mesh" -> None, 
+             "colorFunc" -> (LightGreen& )]}& )[], 
+          ("lines" -> {
+            Association[
+            "startPos" -> {0, 0, 1}, "dirVec" -> $CellContext`majorAxis, 
+             "length" -> 1, "plotPts" -> 2, "colorFunc" -> (Red& ), 
+             "thickness" -> 0.01], 
+            Association[
+            "startPos" -> {0, 0, 1}, "dirVec" -> $CellContext`minorAxis, 
+             "length" -> 0.5, "plotPts" -> 2, "colorFunc" -> (Red& ), 
+             "thickness" -> 0.01]}& )[], 
+          ("disks" -> {
+            Association[
+            "center" -> Part[$CellContext`testDisk, 1], "normalAxis" -> 
+             Part[$CellContext`testDisk, 2], "radius" -> 
+             Part[$CellContext`testDisk, 3], "opacity" -> 0.3, "mesh" -> None,
+              "colorFunc" -> 
+             Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, Cyan]]}& )[], 
+          ("projDisks" -> {
+            Association[
+            "disk" -> Slot["testDisk"], "sphCenter" -> 
+             Part[$CellContext`testSphere, 1], "sphRadius" -> 
+             Part[$CellContext`testSphere, 2], "mesh" -> None, "zbias" -> 1, 
+             "colorFunc" -> 
+             Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, Blue]]}& )[
+           Association["testDisk" -> $CellContext`testDisk]], "axisExtent" -> 
+          1.6]]), "Specifications" :> {{{$CellContext`diskCenterZ$$, 1.3}, 
+         1.1, 2}, {{$CellContext`diskNormalX$$, -0.5}, -3, -0.1}, \
+{{$CellContext`diskNormalY$$, 0.5}, 0.1, 
+         3}, {{$CellContext`diskRadius$$, 0.5}, 0.2, 1}}, 
+      "Options" :> {Method -> {"ShowControls" -> False}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{160., {68., 74.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.834465886195533*^9, 3.8344659288477736`*^9}},
+ CellLabel->"Out[21]=",ExpressionUUID->"fac04dfc-793c-4891-8d87-0801b97274bb"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "gPrint", "[", "\"\<Ellipse size and point relationship.\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "testDisk", ",", "testSphere", ",", "diskNormalAxis", ",", 
+    "\[IndentingNewLine]", "majorAxis", ",", "majorX", ",", "majorY", ",", 
+    "minorAxis", ",", "minorX", ",", "minorY", ",", "majorSize", ",", 
+    "minorSize", ",", "\[IndentingNewLine]", "spherePtZSqaure", ",", 
+    "sphereZ", ",", "spherePt", ",", "\[IndentingNewLine]", " ", "diskPt", 
+    ",", "intsPt", ",", "tmpDiff", ",", "tmpProd1", ",", "tmpProd2", ",", 
+    "tmpProd3"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"diskNormalAxis", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"{", 
+       RowBox[{"diskNormalX", ",", "diskNormalY", ",", 
+        RowBox[{"-", "1"}]}], "}"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"testDisk", "=", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", "\t", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "diskCenterZ"}], "}"}], ",", 
+       RowBox[{"(*", 
+        RowBox[{"center", " ", "point"}], "*)"}], "\[IndentingNewLine]", "\t",
+        "diskNormalAxis", ",", 
+       RowBox[{"(*", 
+        RowBox[{"normal", " ", "axis"}], "*)"}], "\[IndentingNewLine]", "\t", 
+       "diskRadius"}], 
+      RowBox[{"(*", 
+       RowBox[{"disk", " ", "radius"}], "*)"}], "\[IndentingNewLine]", 
+      "}"}]}], ";", "\[IndentingNewLine]", " ", 
+    RowBox[{"testSphere", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "0"}], "}"}], ",", "1"}], "}"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"solving", " ", "ellipse", " ", "axes"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"majorX", "=", 
+     RowBox[{"-", "diskNormalY"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"majorY", "=", "diskNormalX"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"majorAxis", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"{", 
+       RowBox[{"majorX", ",", "majorY", ",", "0"}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"minorX", "=", 
+     RowBox[{"-", "majorY"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"minorY", "=", "majorX"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"minorAxis", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"{", 
+       RowBox[{"minorX", ",", "minorY", ",", "0"}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"majorSize", "=", "diskRadius"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"minorSize", "=", 
+     RowBox[{
+      RowBox[{"Dot", "[", 
+       RowBox[{"diskNormalAxis", ",", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], "]"}], "*", 
+      "diskRadius"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"sphere", " ", "point"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"spherePtZSqaure", "=", 
+     RowBox[{"1", "-", 
+      RowBox[{"sphereX", "^", "2"}], "-", 
+      RowBox[{"sphereY", "^", "2"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"spherePtZSqaure", "<", "0"}], ",", 
+      RowBox[{"sphereZ", "=", 
+       RowBox[{"-", "1"}]}], ",", 
+      RowBox[{"sphereZ", "=", 
+       RowBox[{"Sqrt", "[", "spherePtZSqaure", "]"}]}]}], "]"}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"spherePt", "=", 
+     RowBox[{"{", 
+      RowBox[{"sphereX", ",", "sphereY", ",", "sphereZ"}], "}"}]}], ";", "\n",
+     "\n", 
+    RowBox[{"(*", 
+     RowBox[{"disk", " ", "point"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"https", ":"}], "//", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"www", ".", "rosettacode", ".", "org"}], "/", "wiki"}], "/", 
+        "Find_the"}], "_intersection", "_of", "_a", "_line", "_with", "_a", 
+       "_plane", "#C", ".2", "B", ".2", "B"}]}], "*)"}], 
+    "\[IndentingNewLine]", "  ", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"c", "++"}], " ", "code", " ", "example"}], "*)"}], 
+    "\[IndentingNewLine]", "   ", 
+    RowBox[{"tmpDiff", "=", 
+     RowBox[{"spherePt", "-", 
+      RowBox[{"testDisk", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\n", "   ", 
+    RowBox[{"tmpProd1", "=", 
+     RowBox[{"Dot", "[", 
+      RowBox[{"tmpDiff", ",", "diskNormalAxis"}], "]"}]}], ";", "\n", "   ", 
+    RowBox[{"tmpProd2", "=", 
+     RowBox[{"Dot", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "1"}], "}"}], ",", "diskNormalAxis"}], 
+      "]"}]}], ";", "\n", "   ", 
+    RowBox[{"If", "[", "\n", "\t", 
+     RowBox[{
+      RowBox[{"tmpProd2", "\[Equal]", "0"}], ",", 
+      RowBox[{"diskPt", "=", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ",", "\n", "\t", 
+      RowBox[{
+       RowBox[{"tmpProd3", "=", 
+        RowBox[{"tmpProd1", "/", "tmpProd2"}]}], ";", "\n", "\t", 
+       RowBox[{"intsPt", "=", 
+        RowBox[{"spherePt", "-", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"0", ",", "0", ",", "1"}], "}"}], "*", "tmpProd3"}]}]}], 
+       ";", "\n", "\t", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Norm", "[", 
+           RowBox[{"intsPt", "-", 
+            RowBox[{"testDisk", "[", 
+             RowBox[{"[", "1", "]"}], "]"}]}], "]"}], "\[LessEqual]", 
+          "diskRadius"}], ",", 
+         RowBox[{"diskPt", "=", "intsPt"}], ",", 
+         RowBox[{"diskPt", "=", 
+          RowBox[{"{", 
+           RowBox[{"0", ",", "0", ",", "0"}], "}"}]}]}], "]"}]}]}], "\n", 
+     "   ", "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", "  ", 
+    RowBox[{"gParamPlot3D", "[", "\[IndentingNewLine]", 
+     RowBox[{"<|", "\[IndentingNewLine]", "  ", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<spheres\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "  ", 
+           RowBox[{"(*", 
+            RowBox[{"shading", " ", "sphere"}], "*)"}], "\[IndentingNewLine]",
+            "   ", 
+           RowBox[{
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", 
+               RowBox[{"testSphere", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", 
+               RowBox[{"testSphere", "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+              "\t", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "LightGreen", "]"}]}]}], "|>"}], ",", 
+            "\[IndentingNewLine]", "   ", 
+            RowBox[{"(*", 
+             RowBox[{"point", " ", "on", " ", "sphere"}], "*)"}], 
+            "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "spherePt"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.03"}], ",", 
+              RowBox[{"\"\<zbias\>\"", "\[Rule]", "2"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Red", "]"}]}]}], "|>"}], ",", 
+            "\[IndentingNewLine]", "    ", 
+            RowBox[{"(*", 
+             RowBox[{"point", " ", "on", " ", "disk"}], "*)"}], 
+            "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "diskPt"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.03"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Blue", "]"}]}]}], "|>"}]}], 
+           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", "]"}], ",", 
+       "\[IndentingNewLine]", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<lines\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", " ", 
+           RowBox[{"(*", 
+            RowBox[{"ellipse", " ", "major", " ", "axis"}], "*)"}], 
+           "\[IndentingNewLine]", "   ", 
+           RowBox[{
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "majorAxis"}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", "majorSize"}], ",", 
+              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "2"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Green", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+            ",", "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "minorAxis"}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", "minorSize"}], ",", 
+              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "2"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Green", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}]}], 
+           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<disks\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "   ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<normalAxis\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+             "\t", 
+             RowBox[{"\"\<radius\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "3", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.3"}], ",", 
+             RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                "Cyan"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", " ", 
+           "}"}]}], "&"}], "[", "]"}], ",", "\[IndentingNewLine]", "  ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<projDisks\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "   ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<disk\>\"", "\[Rule]", "#testDisk"}], ",", 
+             RowBox[{"\"\<sphCenter\>\"", "\[Rule]", 
+              RowBox[{"testSphere", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<sphRadius\>\"", "\[Rule]", 
+              RowBox[{"testSphere", "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+             "\t", 
+             RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+             RowBox[{"\"\<zbias\>\"", "\[Rule]", "1"}], ",", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                "LightBlue"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", " ", 
+           "}"}]}], "&"}], "[", 
+        RowBox[{"<|", 
+         RowBox[{"\"\<testDisk\>\"", "\[Rule]", "testDisk"}], "|>"}], "]"}], 
+       ",", "\[IndentingNewLine]", "     ", 
+       RowBox[{"\"\<axisExtent\>\"", "\[Rule]", "1.6"}]}], 
+      "\[IndentingNewLine]", "|>"}], "]"}]}], ",", "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", "  ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskCenterZ", ",", "1.3"}], "}"}], ",", "1.1", ",", "2"}], 
+    "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskNormalX", ",", 
+       RowBox[{"-", "0.5"}]}], "}"}], ",", 
+     RowBox[{"-", "3"}], ",", 
+     RowBox[{"-", "0.1"}]}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskNormalY", ",", 
+       RowBox[{"-", "0.5"}]}], "}"}], ",", 
+     RowBox[{"-", "3"}], ",", 
+     RowBox[{"-", "0.1"}]}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskRadius", ",", "0.5"}], "}"}], ",", "0.2", ",", "1"}], 
+    "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"sphereX", ",", "0.2"}], "}"}], ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"sphereY", ",", "0.01"}], "}"}], ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"Method", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "False"}], "}"}]}]}], 
+  "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "testDisk", ",", "testSphere", ",", "diskNormalAxis", ",", 
+    "\[IndentingNewLine]", "majorAxis", ",", "majorX", ",", "majorY", ",", 
+    "minorAxis", ",", "minorX", ",", "minorY", ",", "majorSize", ",", 
+    "minorSize", ",", "\[IndentingNewLine]", "spherePtZSqaure", ",", 
+    "sphereZ", ",", "spherePt", ",", "\[IndentingNewLine]", " ", "diskPt", 
+    ",", "intsPt", ",", "tmpDiff", ",", "tmpProd1", ",", "tmpProd2", ",", 
+    "tmpProd3"}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.8344696288305273`*^9, 3.8344696506394253`*^9}},
+ CellLabel->
+  "In[101]:=",ExpressionUUID->"87cee6b8-3b39-4c6c-a6ad-db22c8b6390b"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`diskCenterZ$$ = 
+    1.3, $CellContext`diskNormalX$$ = -0.5, $CellContext`diskNormalY$$ = \
+-0.5, $CellContext`diskRadius$$ = 0.5, $CellContext`sphereX$$ = 
+    0.2, $CellContext`sphereY$$ = 0.01, Typeset`show$$ = False, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`diskCenterZ$$], 1.3}, 1.1, 2}, {{
+       Hold[$CellContext`diskNormalX$$], -0.5}, -3, -0.1}, {{
+       Hold[$CellContext`diskNormalY$$], -0.5}, -3, -0.1}, {{
+       Hold[$CellContext`diskRadius$$], 0.5}, 0.2, 1}, {{
+       Hold[$CellContext`sphereX$$], 0.2}, -1, 1}, {{
+       Hold[$CellContext`sphereY$$], 0.01}, -1, 1}}, Typeset`size$$ = {
+    109., {54., 60.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`diskCenterZ$129632$$ = 
+    0, $CellContext`diskNormalX$129633$$ = 
+    0, $CellContext`diskNormalY$129634$$ = 
+    0, $CellContext`diskRadius$129635$$ = 0, $CellContext`sphereX$129636$$ = 
+    0, $CellContext`sphereY$129637$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`diskCenterZ$$ = 
+        1.3, $CellContext`diskNormalX$$ = -0.5, $CellContext`diskNormalY$$ = \
+-0.5, $CellContext`diskRadius$$ = 0.5, $CellContext`sphereX$$ = 
+        0.2, $CellContext`sphereY$$ = 0.01}, "ControllerVariables" :> {
+        Hold[$CellContext`diskCenterZ$$, $CellContext`diskCenterZ$129632$$, 
+         0], 
+        Hold[$CellContext`diskNormalX$$, $CellContext`diskNormalX$129633$$, 
+         0], 
+        Hold[$CellContext`diskNormalY$$, $CellContext`diskNormalY$129634$$, 
+         0], 
+        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$129635$$, 0], 
+        Hold[$CellContext`sphereX$$, $CellContext`sphereX$129636$$, 0], 
+        Hold[$CellContext`sphereY$$, $CellContext`sphereY$129637$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`diskNormalAxis = 
+        Normalize[{$CellContext`diskNormalX$$, $CellContext`diskNormalY$$, \
+-1}]; $CellContext`testDisk = {{
+          0, 0, $CellContext`diskCenterZ$$}, $CellContext`diskNormalAxis, \
+$CellContext`diskRadius$$}; $CellContext`testSphere = {{0, 0, 0}, 
+          1}; $CellContext`majorX = -$CellContext`diskNormalY$$; \
+$CellContext`majorY = $CellContext`diskNormalX$$; $CellContext`majorAxis = 
+        Normalize[{$CellContext`majorX, $CellContext`majorY, 
+           0}]; $CellContext`minorX = -$CellContext`majorY; \
+$CellContext`minorY = $CellContext`majorX; $CellContext`minorAxis = 
+        Normalize[{$CellContext`minorX, $CellContext`minorY, 
+           0}]; $CellContext`majorSize = $CellContext`diskRadius$$; \
+$CellContext`minorSize = 
+        Dot[$CellContext`diskNormalAxis, {0, 0, 
+           1}] $CellContext`diskRadius$$; $CellContext`spherePtZSqaure = 
+        1 - $CellContext`sphereX$$^2 - $CellContext`sphereY$$^2; 
+       If[$CellContext`spherePtZSqaure < 
+         0, $CellContext`sphereZ = -1, $CellContext`sphereZ = 
+         Sqrt[$CellContext`spherePtZSqaure]]; $CellContext`spherePt = \
+{$CellContext`sphereX$$, $CellContext`sphereY$$, $CellContext`sphereZ}; \
+$CellContext`tmpDiff = $CellContext`spherePt - 
+         Part[$CellContext`testDisk, 1]; $CellContext`tmpProd1 = 
+        Dot[$CellContext`tmpDiff, $CellContext`diskNormalAxis]; \
+$CellContext`tmpProd2 = Dot[{0, 0, 1}, $CellContext`diskNormalAxis]; 
+       If[$CellContext`tmpProd2 == 
+         0, $CellContext`diskPt = {0, 0, 
+          0}, $CellContext`tmpProd3 = \
+$CellContext`tmpProd1/$CellContext`tmpProd2; $CellContext`intsPt = \
+$CellContext`spherePt - {0, 0, 1} $CellContext`tmpProd3; 
+         If[Norm[$CellContext`intsPt - 
+             Part[$CellContext`testDisk, 
+              1]] <= $CellContext`diskRadius$$, $CellContext`diskPt = \
+$CellContext`intsPt, $CellContext`diskPt = {0, 0, 0}]]; gPlots3D`gParamPlot3D[
+         Association[
+          ("spheres" -> {
+            Association[
+            "center" -> Part[$CellContext`testSphere, 1], "radius" -> 
+             Part[$CellContext`testSphere, 2], "mesh" -> None, 
+             "colorFunc" -> (LightGreen& )], 
+            Association[
+            "center" -> $CellContext`spherePt, "radius" -> 0.03, "zbias" -> 2,
+              "mesh" -> None, "colorFunc" -> (Red& )], 
+            Association[
+            "center" -> $CellContext`diskPt, "radius" -> 0.03, "mesh" -> None,
+              "colorFunc" -> (Blue& )]}& )[], 
+          ("lines" -> {
+            Association[
+            "startPos" -> {0, 0, 1}, "dirVec" -> $CellContext`majorAxis, 
+             "length" -> $CellContext`majorSize, "plotPts" -> 2, 
+             "colorFunc" -> (Green& ), "thickness" -> 0.005], 
+            Association[
+            "startPos" -> {0, 0, 1}, "dirVec" -> $CellContext`minorAxis, 
+             "length" -> $CellContext`minorSize, "plotPts" -> 2, 
+             "colorFunc" -> (Green& ), "thickness" -> 0.005]}& )[], 
+          ("disks" -> {
+            Association[
+            "center" -> Part[$CellContext`testDisk, 1], "normalAxis" -> 
+             Part[$CellContext`testDisk, 2], "radius" -> 
+             Part[$CellContext`testDisk, 3], "opacity" -> 0.3, "mesh" -> None,
+              "colorFunc" -> 
+             Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, Cyan]]}& )[], 
+          ("projDisks" -> {
+            Association[
+            "disk" -> Slot["testDisk"], "sphCenter" -> 
+             Part[$CellContext`testSphere, 1], "sphRadius" -> 
+             Part[$CellContext`testSphere, 2], "mesh" -> None, "zbias" -> 1, 
+             "colorFunc" -> 
+             Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, LightBlue]]}& )[
+           Association["testDisk" -> $CellContext`testDisk]], "axisExtent" -> 
+          1.6]]), "Specifications" :> {{{$CellContext`diskCenterZ$$, 1.3}, 
+         1.1, 2}, {{$CellContext`diskNormalX$$, -0.5}, -3, -0.1}, \
+{{$CellContext`diskNormalY$$, -0.5}, -3, -0.1}, {{$CellContext`diskRadius$$, 
+          0.5}, 0.2, 1}, {{$CellContext`sphereX$$, 0.2}, -1, 
+         1}, {{$CellContext`sphereY$$, 0.01}, -1, 1}}, 
+      "Options" :> {Method -> {"ShowControls" -> False}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{160., {78., 84.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.8344696513680115`*^9, 3.834469658162739*^9}},
+ CellLabel->
+  "Out[103]=",ExpressionUUID->"53e5dd4b-cd82-4d08-b086-5e8b2b3a8e0a"]
 }, Open  ]]
 },
 WindowSize->{1083, 662},
-WindowMargins->{{367, Automatic}, {Automatic, 163}},
+WindowMargins->{{361, Automatic}, {186, Automatic}},
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
 ]
@@ -379,9 +1355,18 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 9676, 228, 1264, "Input",ExpressionUUID->"86e0cf3d-abd9-4297-9d92-0f04e6b25a7b"],
-Cell[10259, 252, 309, 8, 30, "Print",ExpressionUUID->"c416484a-c037-4685-87d6-796db0662661"],
-Cell[10571, 262, 5173, 99, 161, "Output",ExpressionUUID->"6ec6767a-d490-4709-8c5f-c27a0a10cab6"]
+Cell[580, 22, 10355, 244, 1150, "Input",ExpressionUUID->"86e0cf3d-abd9-4297-9d92-0f04e6b25a7b"],
+Cell[10938, 268, 431, 10, 30, "Print",ExpressionUUID->"edf3ad4c-f4da-41ff-bc57-dd902fc0396d"],
+Cell[11372, 280, 5230, 100, 161, "Output",ExpressionUUID->"82f29315-148b-4f1e-947a-018481a02c69"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[16639, 385, 14715, 362, 1490, "Input",ExpressionUUID->"d32b68ac-233a-48a4-931a-e35fc18777b2"],
+Cell[31357, 749, 323, 8, 30, "Print",ExpressionUUID->"3632cd37-daf2-4188-a3d5-620c0db10342"],
+Cell[31683, 759, 5498, 103, 161, "Output",ExpressionUUID->"fac04dfc-793c-4891-8d87-0801b97274bb"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[37218, 867, 14482, 335, 1663, "Input",ExpressionUUID->"87cee6b8-3b39-4c6c-a6ad-db22c8b6390b"],
+Cell[51703, 1204, 7171, 133, 181, "Output",ExpressionUUID->"53e5dd4b-cd82-4d08-b086-5e8b2b3a8e0a"]
 }, Open  ]]
 }
 ]

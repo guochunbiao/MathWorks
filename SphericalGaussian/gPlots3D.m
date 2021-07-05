@@ -35,7 +35,7 @@ gParamDisk3D[input_,globalInput_,x_,y_,z_]:=Module[
 	radius=input["radius"];
 	normalAxis=Normalize[input["normalAxis"]];
 	
-	region=ImplicitRegion[
+	region=DiscretizeRegion@ImplicitRegion[
 		{
 			Dot[{x,y,z}-center,normalAxis]==0&&
 			Norm[{x,y,z}-center]<=radius
@@ -60,7 +60,7 @@ gParamRect[input_,globalInput_,x_,y_,z_]:=Module[
 	majorRadius=input["majorRadius"];
 	minorRadius=input["minorRadius"];
 	
-	region=ImplicitRegion[
+	region=DiscretizeRegion@ImplicitRegion[
 		{
 			Dot[{x,y,z}-centerPt,normalAxis]==0&&
 			Abs@Dot[({x,y,z}-centerPt),majorAxis]<=majorRadius&&
@@ -73,6 +73,8 @@ gParamRect[input_,globalInput_,x_,y_,z_]:=Module[
 
 
 (*projection of rectangle onto sphere*)
+(*https://mathematica.stackexchange.com/questions/83550/projection-of-triangles-onto-a-sphere*)
+(*https://mathematica.stackexchange.com/questions/78705/plot-a-partition-of-the-sphere-given-vertices-of-polygons*)
 ClearAll[gParamProjRect];
 gParamProjRect[input_,globalInput_,x_,y_,z_]:=Module[
 	{inputKeys,rectInput,rectCenter,rectNormal,rectMajorAxis,rectMinorAxis,
@@ -106,9 +108,8 @@ gParamProjRect[input_,globalInput_,x_,y_,z_]:=Module[
 		};
 		
 	(*project rectangle onto sphere*)
-	projFlag=input["projFlag"];
 	zbias=If[MemberQ[inputKeys,"zbias"],input["zbias"],0];
-	region=ImplicitRegion[
+	region=DiscretizeRegion@ImplicitRegion[
 		{
 			(x-sphCenter[[1]])^2+(y-sphCenter[[2]])^2+(z-sphCenter[[3]])^2==
 				(sphRadius*(1+zbias*2^-6))^2&&
@@ -117,6 +118,75 @@ gParamProjRect[input_,globalInput_,x_,y_,z_]:=Module[
 	   	 projFlag*Normalize[{x,y,z}-sphCenter].Cross[p3,p4]>0&&
 	   	 projFlag*Normalize[{x,y,z}-sphCenter].Cross[p4,p1]>0
 	   },
+	   {x,y,z}];
+
+	region
+];
+
+
+ClearAll[gParamProjDisk];
+gParamProjDisk[input_,globalInput_,x_,y_,z_]:=Module[
+	{inputKeys,diskInput,diskCenter,diskNormal,diskRadius,
+		diskTangentZ,diskBiTangentZ,diskTangent,diskBiTangent,diskPlane,
+		sphCenter,sphRadius,sphPlane,
+		projFlag,zbias,region,transFunc},
+		
+	inputKeys=Keys[input];
+	
+	(*disk*)
+	diskInput=input["disk"];
+	diskCenter=diskInput[[1]];
+	diskNormal=Normalize[diskInput[[2]]];
+	diskRadius=diskInput[[3]];
+	
+	diskTangentZ=Solve[Dot[diskNormal,{1,0,x}]==0,x][[All,1,2]][[1]];
+	diskTangent=Normalize[{1,0,diskTangentZ}];
+	diskBiTangentZ=Solve[Dot[diskNormal,{0,1,x}]==0,x][[All,1,2]][[1]];
+	diskBiTangent=Normalize[{0,1,diskBiTangentZ}];
+	diskPlane=InfinitePlane[diskCenter,{diskTangent,diskBiTangent}];
+	
+	(*sphere*)
+	sphCenter=input["sphCenter"];
+	sphRadius=input["sphRadius"];
+	
+	(*transformation function from point to disk*)
+	(*https://mathematica.stackexchange.com/questions/63259/compose-many-geometric-transformations-for-3d-graphics*)
+	transFunc=Composition@@{RotationTransform[
+		ArcCos@Dot[{0,0,1},diskNormal],{0,0,1}],TranslationTransform[-diskCenter]};
+		
+	(*project rectangle onto sphere*)
+	zbias=If[MemberQ[inputKeys,"zbias"],input["zbias"],0];
+	region=DiscretizeRegion@ImplicitRegion[
+	   Block[
+	   {flag1,flag2,flag3,transPt,diff,prod1,prod2,prod3,rayDir,intsPt},
+		
+		(*zbias*)
+		flag1=(x-sphCenter[[1]])^2+(y-sphCenter[[2]])^2+(z-sphCenter[[3]])^2==
+				(sphRadius*(1+zbias*2^-6))^2;	
+		(*point on hemi-sphere*)
+		flag2=(z-sphCenter[[3]]>=0);
+		(*sphere points can be projected onto disk*)
+		(*transformed point on disk space*)
+		(*transPt=transFunc[{x,y,z}];
+		transPt[[3]]=0;
+		flag3=((Norm@transPt)\[LessEqual]diskRadius);*)
+		
+		(*https://www.rosettacode.org/wiki/Find_the_intersection_of_a_line_with_a_plane#C.2B.2B*)
+		(*c++ code example*)
+		(*rayDir={0,0,1};*)
+		rayDir={x,y,z};
+		diff={x,y,z}-diskCenter;
+		prod1=Dot[diff,diskNormal];
+		prod2=Dot[rayDir,diskNormal];
+		If[
+			prod2==0,flag3=False,
+			prod3=prod1/prod2;
+			intsPt={x,y,z}-rayDir*prod3;
+			flag3=Norm[intsPt-diskCenter]<=diskRadius
+		];
+	   
+	    flag1&&flag2&&flag3
+	   ],
 	   {x,y,z}];
 
 	region
@@ -368,7 +438,6 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 		1. ParametricPlot3D(theta, phi)
 		2. ParametricPlot3D(theta)
 		3. RegionPlot3D
-		4. RegionPlot3D[DiscretizeRegion]
 	 *)
 	plotListTypes={};
 	
@@ -383,7 +452,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 				evaluated=Which[
 					plotType==1||plotType==2,
 					paramFunc[element,inputs,x,y,z,\[Phi],\[Theta]],
-					plotType==3||plotType==4,
+					plotType==3,
 					paramFunc[element,inputs,x,y,z]
 					];
 				(*AppendTo[plotList,paramFunc[element,\[Phi],\[Theta]]];*)
@@ -413,11 +482,13 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	(*append lines*)
 	collectFunc["lines",gParamLine3D,2];
 	(*append circles*)
-	collectFunc["disks",gParamDisk3D,4];
+	collectFunc["disks",gParamDisk3D,3];
 	(*append rectangles*)
-	collectFunc["rects",gParamRect,4];
-	(*append projection of rectangle onto sphere*)
-	collectFunc["projRects",gParamProjRect,4];
+	collectFunc["rects",gParamRect,3];
+	(*append projection of rectangles onto sphere*)
+	collectFunc["projRects",gParamProjRect,3];
+	(*append projection of disks onto sphere*)
+	collectFunc["projDisks",gParamProjDisk,3];
 	(*append spheres*)
 	collectFunc["spheres",gParamSphere];
 	(*append spherical caps*)
@@ -448,6 +519,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 		ColorFunction->colorFuncList[[i]],
 		PlotStyle->{Opacity[opacityList[[i]]],Thickness[thicknessList[[i]]]},
 		PlotPoints->plotPtsList[[i]],
+		PlotLegends->plotLabels[[i]],
 		Mesh->meshTypeList[[i]],
 		ColorFunctionScaling->False,
 		PlotRange->{{-axisExtent,axisExtent},{-axisExtent,axisExtent},{-axisExtent,axisExtent}},
@@ -467,8 +539,8 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 			AppendTo[plotCmds,ParametricPlot3D[plotList[[i]],{\[Phi],0,2\[Pi]},{\[Theta],0,\[Pi]},tagPlot[i]]],
 			plotListTypes[[i]]==2,
 			AppendTo[plotCmds,ParametricPlot3D[plotList[[i]],{\[Theta],0,\[Pi]},tagPlot[i]]],
-			plotListTypes[[i]]==4,
-			AppendTo[plotCmds,RegionPlot3D[DiscretizeRegion@plotList[[i]],tagPlot[i]]]
+			plotListTypes[[i]]==3,
+			AppendTo[plotCmds,RegionPlot3D[plotList[[i]],tagPlot[i]]]
 		];
 	];
 	
