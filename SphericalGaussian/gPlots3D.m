@@ -438,7 +438,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	{
 		inputKeys,collectFunc,complexFunc,plotCmds,
 		plotList,plotListTypes,plotStyles,plotLabels,
-		colorFuncList,opacityList,thicknessList,plotPtsList,meshTypeList,
+		colorFuncList,cfScaleList,opacityList,thicknessList,plotPtsList,meshTypeList,
 		axExt,axisExtents,projSettings,viewPoint,viewProj,
 		tagPlot,complexTagPlot
 	},
@@ -447,6 +447,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	plotStyles={};
 	plotLabels={};
 	colorFuncList={};
+	cfScaleList={};
 	opacityList={};
 	thicknessList={};
 	plotPtsList={};
@@ -465,7 +466,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	
 	collectFunc[keyName_,paramFunc_,plotType_:1]:=Block[
 		{elements,element,evaluated,elementKeys,
-			tmpColorFunc,tmpOpacity,tmpThickness,tmpPlotPts,tmpMeshType},
+			tmpColorFunc,tmpCfScale,tmpOpacity,tmpThickness,tmpPlotPts,tmpMeshType},
 		
 		If[MemberQ[inputKeys,keyName],
 			elements=inputs[[keyName]];
@@ -481,12 +482,14 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 				elementKeys=Keys[element];
 				tmpColorFunc=If[MemberQ[elementKeys,"colorFunc"],
 					element["colorFunc"],Cyan];
+				tmpCfScale=If[MemberQ[elementKeys,"cfScale"],element["cfScale"],False];
 				tmpOpacity=If[MemberQ[elementKeys,"opacity"],element["opacity"],1];
 				tmpThickness=If[MemberQ[elementKeys,"thickness"],element["thickness"],0.01];
 				tmpPlotPts=If[MemberQ[elementKeys,"plotPts"],element["plotPts"],10];
 				tmpMeshType=If[MemberQ[elementKeys,"mesh"],element["mesh"],Full];
 				
 				AppendTo[colorFuncList,tmpColorFunc];
+				AppendTo[cfScaleList,tmpCfScale];
 				AppendTo[opacityList,tmpOpacity];
 				AppendTo[thicknessList,tmpThickness];
 				AppendTo[plotPtsList,tmpPlotPts];
@@ -502,7 +505,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	];
 	
 	complexTagPlot/:(h:(Plot3D|ParametricPlot3D|RegionPlot3D))[
-	before___,complexTagPlot[inColorFunc_,inOpacity_,inThickness_,inPlotPts_,
+	before___,complexTagPlot[inColorFunc_,inCfScale_,inOpacity_,inThickness_,inPlotPts_,
 		inPlotLabel_,inMeshType_],after___]:=
 		h[before,
 		ColorFunction->inColorFunc,
@@ -510,6 +513,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 		PlotPoints->inPlotPts,
 		PlotLegends->inPlotLabel,
 		Mesh->inMeshType,
+		(*ColorFunctionScaling->inCfScale,*)
 		ColorFunctionScaling->False,
 		PlotRange->axisExtents,
 		Axes->True,
@@ -523,7 +527,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	
 	complexFunc[keyName_,paramFunc_,plotType_:1]:=Block[
 		{elements,element,elementKeys,tmpPlot,
-			tmpColorFunc,tmpOpacity,tmpThickness,tmpPlotPts,tmpMeshType,tmpLabel},
+			tmpColorFunc,tmpCfScale,tmpOpacity,tmpThickness,tmpPlotPts,tmpMeshType,tmpLabel},
 		
 		If[MemberQ[inputKeys,keyName],
 			elements=inputs[[keyName]];
@@ -533,6 +537,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 				elementKeys=Keys[element];
 				tmpColorFunc=If[MemberQ[elementKeys,"colorFunc"],
 					element["colorFunc"],Cyan];
+				tmpCfScale=If[MemberQ[elementKeys,"cfScale"],element["cfScale"],False];
 				tmpOpacity=If[MemberQ[elementKeys,"opacity"],element["opacity"],1];
 				tmpThickness=If[MemberQ[elementKeys,"thickness"],element["thickness"],0.01];
 				tmpPlotPts=If[MemberQ[elementKeys,"plotPts"],element["plotPts"],10];
@@ -543,7 +548,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 					plotType==3,
 					tmpPlot=RegionPlot3D[
 						paramFunc[element,inputs,x,y,z],
-						complexTagPlot[tmpColorFunc,tmpOpacity,tmpThickness,
+						complexTagPlot[tmpColorFunc,tmpCfScale,tmpOpacity,tmpThickness,
 							tmpPlotPts,tmpLabel,tmpMeshType]],
 					True,
 					Assert[False]
@@ -594,6 +599,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 		PlotPoints->plotPtsList[[i]],
 		PlotLegends->plotLabels[[i]],
 		Mesh->meshTypeList[[i]],
+		(*ColorFunctionScaling\[Rule]cfScaleList[[i]],*)
 		ColorFunctionScaling->False,
 		PlotRange->axisExtents,
 		Axes->True,

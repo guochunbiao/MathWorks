@@ -7,7 +7,7 @@ Needs["gUtils`"];
 
 ClearAll[gPointLightFallOff,gPhongNDF,gDGGX,gDGGX2,gVisSmith,gFresnelOrigin,gBrdfFunc,
 	gSolveSamplingHalfDir,gSamplingHalfDir,gSamplingLightDir,gSamplingLightDir2D,
-	gPlotGgxPdf3D,gPlotGgxPdf2D];
+	gPlotGgxPdf3D,gPlotGgxPdf2D,gCalcGgxPeakOnPlane,gCalcGgxPeakForLight];
 gPointLightFallOff::usage="function{gPointLightFallOff}";
 gPhongNDF::usage="function[gPhongNDF]";
 gDGGX::usage="function[gDGGX]";
@@ -21,6 +21,8 @@ gSamplingLightDir::usage="gSamplingLightDir";
 gSamplingLightDir2D::usage="gSamplingLightDir2D";
 gPlotGgxPdf3D::usage="gPlotGgxPdf3D";
 gPlotGgxPdf2D::usage="gPlotGgxPdf2D";
+gCalcGgxPeakOnPlane::usage="gCalcGgxPeakOnPlane";
+gCalcGgxPeakForLight::usage="gCalcGgxPeakForLight";
 
 
 Begin["`Private`"];
@@ -206,6 +208,43 @@ gPlotGgxPdf2D[roughness_,inViewDir_,\[Theta]_]:=Module[
 		{lightDir3D1[[1]],lightDir3D1[[3]]},
 		{lightDir3D2[[1]],lightDir3D2[[3]]}
 	}
+];
+
+
+gCalcGgxPeakOnPlane[planePt_,planeNormal_,lightPt_,viewPt_]:=Module[
+	{normalDir,tmpLightDir,tmpViewDir,lightCosine,viewCosine,
+		lightVerticalDist,viewVerticalDist,lightProjPt,viewProjPt,lerpFactor,peakPt},
+	
+	normalDir=Normalize[planeNormal];
+	tmpLightDir=Normalize[lightPt-planePt];
+	tmpViewDir=Normalize[viewPt-planePt];
+	
+	lightCosine=Dot[planeNormal, tmpLightDir];
+	viewCosine=Dot[planeNormal,tmpViewDir];
+	Assert[lightCosine>=0&&viewCosine>=0];
+	
+	lightVerticalDist=Norm[lightPt-planePt]*lightCosine;
+	viewVerticalDist=Norm[viewPt-planePt]*viewCosine;
+	
+	lightProjPt=lightPt-normalDir*lightVerticalDist;
+	viewProjPt=viewPt-normalDir*viewVerticalDist;
+	
+	lerpFactor=lightVerticalDist/(lightVerticalDist+viewVerticalDist);
+	peakPt=gLerp[lightProjPt,viewProjPt,lerpFactor];
+	
+	peakPt
+];
+
+
+gCalcGgxPeakForLight[peakPt_,planeNormal_,viewPt_]:=Module[
+	{halfDir,viewDir,lightDir},
+	
+	halfDir=Normalize[planeNormal];
+	viewDir=Normalize[viewPt-peakPt];
+	
+	lightDir=2*Dot[viewDir,halfDir]*halfDir-viewDir;
+	
+	lightDir
 ];
 
 

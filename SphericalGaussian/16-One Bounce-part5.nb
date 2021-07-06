@@ -1,0 +1,1361 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     64938,       1353]
+NotebookOptionsPosition[     64086,       1331]
+NotebookOutlinePosition[     64431,       1346]
+CellTagsIndexPosition[     64388,       1343]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gUtils`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gBRDF`\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<sgCommon`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlots`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlots3D`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Needs", "[", "\"\<gSphericalCap`\>\"", "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "gPrint", "[", "\"\<Offset radius and angle from Disk Center\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "testDisk", ",", "testSphere", ",", "diskNormalAxis", ",", "peakLightDir", 
+    ",", "lightCenter", ",", "\[IndentingNewLine]", "   ", "majorAxis", ",", 
+    "majorX", ",", "majorY", ",", "minorAxis", ",", "minorX", ",", "minorY", 
+    ",", "majorSize", ",", "minorSize", ",", "\[IndentingNewLine]", "  ", 
+    "diskTangent", ",", "diskBiTangent", ",", "diskTangentZ", ",", 
+    "diskBiTangentZ", ",", "\[IndentingNewLine]", "  ", "peakDiskPt", ",", 
+    "diskShadingFunc"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"diskNormalAxis", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"{", 
+       RowBox[{"diskNormalX", ",", "diskNormalY", ",", 
+        RowBox[{"-", "1"}]}], "}"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"testDisk", "=", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", "\t", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "diskCenterZ"}], "}"}], ",", 
+       RowBox[{"(*", 
+        RowBox[{"center", " ", "point"}], "*)"}], "\[IndentingNewLine]", "\t",
+        "diskNormalAxis", ",", 
+       RowBox[{"(*", 
+        RowBox[{"normal", " ", "axis"}], "*)"}], "\[IndentingNewLine]", "\t", 
+       "diskRadius"}], 
+      RowBox[{"(*", 
+       RowBox[{"disk", " ", "radius"}], "*)"}], "\[IndentingNewLine]", 
+      "}"}]}], ";", "\[IndentingNewLine]", " ", 
+    RowBox[{"testSphere", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "0"}], "}"}], ",", "1"}], "}"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"peakLightDir", "=", 
+     RowBox[{"gCalcGgxPeakForLight", "[", 
+      RowBox[{
+       RowBox[{"testDisk", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], ",", "diskNormalAxis", ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"lightCenter", "=", 
+     RowBox[{
+      RowBox[{"testDisk", "[", 
+       RowBox[{"[", "1", "]"}], "]"}], "+", 
+      RowBox[{"Normalize", "@", "peakLightDir"}]}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "solve", " ", "tangent", " ", "and", " ", "bitangent", " ", "for", " ", 
+      "Disk"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"diskTangentZ", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Solve", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Dot", "[", 
+           RowBox[{"diskNormalAxis", ",", 
+            RowBox[{"{", 
+             RowBox[{"1", ",", "0", ",", "x"}], "}"}]}], "]"}], "\[Equal]", 
+          "0"}], ",", "x"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"All", ",", "1", ",", "2"}], "]"}], "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"diskTangent", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0", ",", "diskTangentZ"}], "}"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"diskBiTangentZ", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Solve", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Dot", "[", 
+           RowBox[{"diskNormalAxis", ",", 
+            RowBox[{"{", 
+             RowBox[{"0", ",", "1", ",", "x"}], "}"}]}], "]"}], "\[Equal]", 
+          "0"}], ",", "x"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"All", ",", "1", ",", "2"}], "]"}], "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"diskBiTangent", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1", ",", "diskBiTangentZ"}], "}"}]}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"solving", " ", "ellipse", " ", "axes"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"majorX", "=", 
+     RowBox[{"-", "diskNormalY"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"majorY", "=", "diskNormalX"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"majorAxis", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"{", 
+       RowBox[{"majorX", ",", "majorY", ",", "0"}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"minorX", "=", 
+     RowBox[{"-", "majorY"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"minorY", "=", "majorX"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"minorAxis", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"{", 
+       RowBox[{"minorX", ",", "minorY", ",", "0"}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"majorSize", "=", "diskRadius"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"minorSize", "=", 
+     RowBox[{
+      RowBox[{"Dot", "[", 
+       RowBox[{"diskNormalAxis", ",", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], "]"}], "*", 
+      "diskRadius"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"shading", " ", "function", " ", "on", " ", "disk"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"diskShadingFunc", "=", 
+     RowBox[{"Block", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "shadingPt", ",", "roughness", ",", "sglight", ",", "refLightDir", 
+         ",", "refViewDir", ",", "\[IndentingNewLine]", "\t", "refNormal", 
+         ",", "sgndf", ",", "diskLighting1"}], "}"}], ",", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"shadingPt", "=", 
+         RowBox[{"{", 
+          RowBox[{"x", ",", "y", ",", "z"}], "}"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"roughness", "=", "0.1"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"sglight", "=", 
+         RowBox[{"sgSphereLight", "[", 
+          RowBox[{
+          "lightCenter", ",", "10", ",", "20", ",", "1", ",", "shadingPt"}], 
+          "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"refLightDir", "=", 
+         RowBox[{"Normalize", "[", 
+          RowBox[{"lightCenter", "-", "shadingPt"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"refViewDir", "=", 
+         RowBox[{"Normalize", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"0", ",", "0", ",", "0"}], "}"}], "-", "shadingPt"}], 
+          "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"refNormal", "=", "diskNormalAxis"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"sgndf", "=", 
+         RowBox[{"sgNDF", "[", 
+          RowBox[{
+          "roughness", ",", "refLightDir", ",", "refViewDir", ",", 
+           "refNormal"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"diskLighting1", "=", 
+         RowBox[{"sgDot", "[", 
+          RowBox[{"sglight", ",", "sgndf"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"diskLighting1", "*", "shadingColorScaling"}]}]}], 
+      "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "calculate", " ", "GGX", " ", "peak", " ", "point", " ", "on", " ", 
+      "Disk"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"peakDiskPt", "=", 
+     RowBox[{"gCalcGgxPeakOnPlane", "[", 
+      RowBox[{
+       RowBox[{"testDisk", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], ",", "diskNormalAxis", ",", 
+       "lightCenter", ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", "  ", 
+    RowBox[{"gParamPlot3D", "[", "\[IndentingNewLine]", 
+     RowBox[{"<|", "\[IndentingNewLine]", "  ", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<spheres\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "  ", 
+           RowBox[{"(*", "light", "*)"}], "\[IndentingNewLine]", "   ", 
+           RowBox[{
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "lightCenter"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.05"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Magenta", "]"}]}]}], "|>"}], ",", 
+            "\[IndentingNewLine]", "  ", 
+            RowBox[{"(*", 
+             RowBox[{"shading", " ", "sphere"}], "*)"}], 
+            "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", 
+               RowBox[{"testSphere", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", 
+               RowBox[{"testSphere", "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], ",", 
+              RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.3"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "LightGreen", "]"}]}]}], "|>"}], ",", 
+            "\[IndentingNewLine]", "  ", 
+            RowBox[{"(*", 
+             RowBox[{
+             "GGX", " ", "peak", " ", "point", " ", "on", " ", "Disk"}], 
+             "*)"}], "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "peakDiskPt"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.03"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Red", "]"}]}]}], "|>"}]}], 
+           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", "]"}], ",", 
+       "\[IndentingNewLine]", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<lines\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", " ", 
+           RowBox[{"(*", 
+            RowBox[{"ellipse", " ", "major", " ", "axis"}], "*)"}], 
+           "\[IndentingNewLine]", "   ", 
+           RowBox[{
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "majorAxis"}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", "majorSize"}], ",", 
+              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "2"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Green", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+            ",", "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "minorAxis"}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", "minorSize"}], ",", 
+              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "2"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Green", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+            ",", "\[IndentingNewLine]", "   ", 
+            RowBox[{"(*", 
+             RowBox[{"Disk", " ", "Offset"}], "*)"}], "\[IndentingNewLine]", 
+            "    ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"testDisk", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+              "\t ", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"Cos", "[", "#angle", "]"}], "*", "diskTangent"}], 
+                 "+", 
+                 RowBox[{
+                  RowBox[{"Sin", "[", "#angle", "]"}], "*", 
+                  "diskBiTangent"}]}], ")"}]}], ",", "\[IndentingNewLine]", 
+              "\t", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", "#radius"}], ",", 
+              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "2"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Red", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}]}], 
+           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", 
+        RowBox[{"<|", 
+         RowBox[{
+          RowBox[{"\"\<angle\>\"", "\[Rule]", "diskOffsetAngle"}], ",", 
+          RowBox[{"\"\<radius\>\"", "\[Rule]", "diskOffsetRadius"}]}], "|>"}],
+         "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<disks\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "   ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<normalAxis\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+             "\t", 
+             RowBox[{"\"\<radius\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "3", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<opacity\>\"", "\[Rule]", "1"}], ",", 
+             RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                "diskShadingFunc"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]",
+            " ", "}"}]}], "&"}], "[", "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"(*", "  ", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"\"\<projDisks\>\"", "\[Rule]", 
+            RowBox[{"{", "\[IndentingNewLine]", "   ", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<disk\>\"", "\[Rule]", "#testDisk"}], ",", 
+               RowBox[{"\"\<sphCenter\>\"", "\[Rule]", 
+                RowBox[{"testSphere", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+               RowBox[{"\"\<sphRadius\>\"", "\[Rule]", 
+                RowBox[{"testSphere", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]",
+                "\t", 
+               RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+               RowBox[{"\"\<zbias\>\"", "\[Rule]", "1"}], ",", 
+               RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+                RowBox[{"Function", "[", 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                  "LightBlue"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", 
+             " ", "}"}]}], "&"}], "[", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<testDisk\>\"", "\[Rule]", "testDisk"}], "|>"}], "]"}],
+          ","}], "*)"}], "\[IndentingNewLine]", "     ", 
+       RowBox[{"\"\<axisExtent\>\"", "\[Rule]", "1.6"}]}], 
+      "\[IndentingNewLine]", "|>"}], "]"}]}], ",", "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskCenterZ", ",", "1.3"}], "}"}], ",", "1.1", ",", "2"}], 
+    "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskNormalX", ",", 
+       RowBox[{"-", "0.5"}]}], "}"}], ",", 
+     RowBox[{"-", "3"}], ",", 
+     RowBox[{"-", "0.1"}]}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskNormalY", ",", 
+       RowBox[{"-", "0.5"}]}], "}"}], ",", 
+     RowBox[{"-", "3"}], ",", 
+     RowBox[{"-", "0.1"}]}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskRadius", ",", "0.5"}], "}"}], ",", "0.2", ",", "1"}], 
+    "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"shadingColorScaling", ",", "0.3"}], "}"}], ",", "0.1", ",", 
+     "1"}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskOffsetRadius", ",", "0.2"}], "}"}], ",", "0.1", ",", 
+     "0.5"}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskOffsetAngle", ",", "0"}], "}"}], ",", "0", ",", 
+     RowBox[{"2", "\[Pi]"}]}], "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"Method", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "False"}], "}"}]}]}], 
+  "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "testDisk", ",", "testSphere", ",", "diskNormalAxis", ",", "peakLightDir", 
+    ",", "lightCenter", ",", "\[IndentingNewLine]", "   ", "majorAxis", ",", 
+    "majorX", ",", "majorY", ",", "minorAxis", ",", "minorX", ",", "minorY", 
+    ",", "majorSize", ",", "minorSize", ",", "\[IndentingNewLine]", "  ", 
+    "diskTangent", ",", "diskBiTangent", ",", "diskTangentZ", ",", 
+    "diskBiTangentZ", ",", "\[IndentingNewLine]", "  ", "peakDiskPt", ",", 
+    "diskShadingFunc"}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.834531156059202*^9, 3.8345311562907352`*^9}, {
+   3.834545765866564*^9, 3.8345457924400845`*^9}, 3.834545843686191*^9},
+ CellLabel->"In[70]:=",ExpressionUUID->"3205859a-4f04-4be1-bcde-119750f91baa"],
+
+Cell[BoxData[
+ StyleBox["\<\" Offset radius and angle from Disk Center\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{3.834545793283369*^9, 3.834546848775446*^9},
+ CellLabel->
+  "During evaluation of \
+In[70]:=",ExpressionUUID->"1b8a235d-d954-4665-a3eb-294e0890e245"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`diskCenterZ$$ = 
+    1.3, $CellContext`diskNormalX$$ = -0.5, $CellContext`diskNormalY$$ = \
+-0.5, $CellContext`diskOffsetAngle$$ = 0, $CellContext`diskOffsetRadius$$ = 
+    0.2, $CellContext`diskRadius$$ = 0.5, $CellContext`shadingColorScaling$$ =
+     0.3, Typeset`show$$ = False, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`diskCenterZ$$], 1.3}, 1.1, 2}, {{
+       Hold[$CellContext`diskNormalX$$], -0.5}, -3, -0.1}, {{
+       Hold[$CellContext`diskNormalY$$], -0.5}, -3, -0.1}, {{
+       Hold[$CellContext`diskRadius$$], 0.5}, 0.2, 1}, {{
+       Hold[$CellContext`shadingColorScaling$$], 0.3}, 0.1, 1}, {{
+       Hold[$CellContext`diskOffsetRadius$$], 0.2}, 0.1, 0.5}, {{
+       Hold[$CellContext`diskOffsetAngle$$], 0}, 0, 2 Pi}}, Typeset`size$$ = {
+    109., {54., 60.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`diskCenterZ$1117770$$ = 
+    0, $CellContext`diskNormalX$1117771$$ = 
+    0, $CellContext`diskNormalY$1117772$$ = 
+    0, $CellContext`diskRadius$1117773$$ = 
+    0, $CellContext`shadingColorScaling$1117774$$ = 
+    0, $CellContext`diskOffsetRadius$1117775$$ = 
+    0, $CellContext`diskOffsetAngle$1117776$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`diskCenterZ$$ = 
+        1.3, $CellContext`diskNormalX$$ = -0.5, $CellContext`diskNormalY$$ = \
+-0.5, $CellContext`diskOffsetAngle$$ = 0, $CellContext`diskOffsetRadius$$ = 
+        0.2, $CellContext`diskRadius$$ = 
+        0.5, $CellContext`shadingColorScaling$$ = 0.3}, "ControllerVariables" :> {
+        Hold[$CellContext`diskCenterZ$$, $CellContext`diskCenterZ$1117770$$, 
+         0], 
+        Hold[$CellContext`diskNormalX$$, $CellContext`diskNormalX$1117771$$, 
+         0], 
+        Hold[$CellContext`diskNormalY$$, $CellContext`diskNormalY$1117772$$, 
+         0], 
+        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$1117773$$, 0], 
+        Hold[$CellContext`shadingColorScaling$$, \
+$CellContext`shadingColorScaling$1117774$$, 0], 
+        Hold[$CellContext`diskOffsetRadius$$, \
+$CellContext`diskOffsetRadius$1117775$$, 0], 
+        Hold[$CellContext`diskOffsetAngle$$, \
+$CellContext`diskOffsetAngle$1117776$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`diskNormalAxis = 
+        Normalize[{$CellContext`diskNormalX$$, $CellContext`diskNormalY$$, \
+-1}]; $CellContext`testDisk = {{
+          0, 0, $CellContext`diskCenterZ$$}, $CellContext`diskNormalAxis, \
+$CellContext`diskRadius$$}; $CellContext`testSphere = {{0, 0, 0}, 
+          1}; $CellContext`peakLightDir = gBRDF`gCalcGgxPeakForLight[
+          Part[$CellContext`testDisk, 1], $CellContext`diskNormalAxis, {0, 0, 
+          0}]; $CellContext`lightCenter = 
+        Part[$CellContext`testDisk, 1] + 
+         Normalize[$CellContext`peakLightDir]; $CellContext`diskTangentZ = 
+        Part[
+          Part[
+           Solve[
+           Dot[$CellContext`diskNormalAxis, {1, 0, $CellContext`x}] == 
+            0, $CellContext`x], All, 1, 2], 1]; $CellContext`diskTangent = 
+        Normalize[{
+          1, 0, $CellContext`diskTangentZ}]; $CellContext`diskBiTangentZ = 
+        Part[
+          Part[
+           Solve[
+           Dot[$CellContext`diskNormalAxis, {0, 1, $CellContext`x}] == 
+            0, $CellContext`x], All, 1, 2], 1]; $CellContext`diskBiTangent = 
+        Normalize[{
+          0, 1, $CellContext`diskBiTangentZ}]; $CellContext`majorX = \
+-$CellContext`diskNormalY$$; $CellContext`majorY = $CellContext`diskNormalX$$; \
+$CellContext`majorAxis = 
+        Normalize[{$CellContext`majorX, $CellContext`majorY, 
+           
+           0}]; $CellContext`minorX = -$CellContext`majorY; \
+$CellContext`minorY = $CellContext`majorX; $CellContext`minorAxis = 
+        Normalize[{$CellContext`minorX, $CellContext`minorY, 
+           0}]; $CellContext`majorSize = $CellContext`diskRadius$$; \
+$CellContext`minorSize = 
+        Dot[$CellContext`diskNormalAxis, {0, 0, 
+           1}] $CellContext`diskRadius$$; $CellContext`diskShadingFunc = 
+        Block[{$CellContext`shadingPt, $CellContext`roughness, \
+$CellContext`sglight, $CellContext`refLightDir, $CellContext`refViewDir, \
+$CellContext`refNormal, $CellContext`sgndf, $CellContext`diskLighting1}, \
+$CellContext`shadingPt = {$CellContext`x, $CellContext`y, $CellContext`z}; \
+$CellContext`roughness = 0.1; $CellContext`sglight = 
+           sgCommon`sgSphereLight[$CellContext`lightCenter, 10, 20, 
+             1, $CellContext`shadingPt]; $CellContext`refLightDir = 
+           Normalize[$CellContext`lightCenter - $CellContext`shadingPt]; \
+$CellContext`refViewDir = 
+           Normalize[{0, 0, 
+              0} - $CellContext`shadingPt]; $CellContext`refNormal = \
+$CellContext`diskNormalAxis; $CellContext`sgndf = 
+           sgCommon`sgNDF[$CellContext`roughness, $CellContext`refLightDir, \
+$CellContext`refViewDir, $CellContext`refNormal]; $CellContext`diskLighting1 = 
+           sgCommon`sgDot[$CellContext`sglight, $CellContext`sgndf]; \
+$CellContext`diskLighting1 $CellContext`shadingColorScaling$$]; \
+$CellContext`peakDiskPt = gBRDF`gCalcGgxPeakOnPlane[
+          
+          Part[$CellContext`testDisk, 
+           1], $CellContext`diskNormalAxis, $CellContext`lightCenter, {0, 0, 
+          0}]; gPlots3D`gParamPlot3D[
+         Association[
+          ("spheres" -> {
+            Association[
+            "center" -> $CellContext`lightCenter, "radius" -> 0.05, "mesh" -> 
+             None, "colorFunc" -> (Magenta& )], 
+            Association[
+            "center" -> Part[$CellContext`testSphere, 1], "radius" -> 
+             Part[$CellContext`testSphere, 2], "opacity" -> 0.3, "mesh" -> 
+             None, "colorFunc" -> (LightGreen& )], 
+            Association[
+            "center" -> $CellContext`peakDiskPt, "radius" -> 0.03, "mesh" -> 
+             None, "colorFunc" -> (Red& )]}& )[], 
+          ("lines" -> {
+            Association[
+            "startPos" -> {0, 0, 1}, "dirVec" -> $CellContext`majorAxis, 
+             "length" -> $CellContext`majorSize, "plotPts" -> 2, 
+             "colorFunc" -> (Green& ), "thickness" -> 0.005], 
+            Association[
+            "startPos" -> {0, 0, 1}, "dirVec" -> $CellContext`minorAxis, 
+             "length" -> $CellContext`minorSize, "plotPts" -> 2, 
+             "colorFunc" -> (Green& ), "thickness" -> 0.005], 
+            Association[
+            "startPos" -> Part[$CellContext`testDisk, 1], "dirVec" -> Cos[
+                 Slot["angle"]] $CellContext`diskTangent + Sin[
+                 Slot["angle"]] $CellContext`diskBiTangent, "length" -> 
+             Slot["radius"], "plotPts" -> 2, "colorFunc" -> (Red& ), 
+             "thickness" -> 0.005]}& )[
+           Association[
+           "angle" -> $CellContext`diskOffsetAngle$$, 
+            "radius" -> $CellContext`diskOffsetRadius$$]], 
+          ("disks" -> {
+            Association[
+            "center" -> Part[$CellContext`testDisk, 1], "normalAxis" -> 
+             Part[$CellContext`testDisk, 2], "radius" -> 
+             Part[$CellContext`testDisk, 3], "opacity" -> 1, "mesh" -> None, 
+             "colorFunc" -> 
+             Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, $CellContext`diskShadingFunc]]}& )[], "axisExtent" -> 1.6]]),
+       "Specifications" :> {{{$CellContext`diskCenterZ$$, 1.3}, 1.1, 
+         2}, {{$CellContext`diskNormalX$$, -0.5}, -3, -0.1}, \
+{{$CellContext`diskNormalY$$, -0.5}, -3, -0.1}, {{$CellContext`diskRadius$$, 
+          0.5}, 0.2, 1}, {{$CellContext`shadingColorScaling$$, 0.3}, 0.1, 
+         1}, {{$CellContext`diskOffsetRadius$$, 0.2}, 0.1, 
+         0.5}, {{$CellContext`diskOffsetAngle$$, 0}, 0, 2 Pi}}, 
+      "Options" :> {Method -> {"ShowControls" -> False}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{160., {78., 84.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.834545793313799*^9, 3.834546848801571*^9},
+ CellLabel->"Out[79]=",ExpressionUUID->"401737d7-f852-4975-b2d0-81e31e94bfe6"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "gPrint", "[", "\"\<Disk Shading Attenuation by Offset Distance/Angle\>\"", 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ClearAll", "[", "testDiskOffsetShadingFunc", "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"testDiskOffsetShadingFunc", "[", 
+     RowBox[{"offsetDist_", ",", "offsetAngle_"}], "]"}], ":=", 
+    RowBox[{"Block", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "diskCenterPt", ",", "viewPt", ",", "lightPt", ",", "diskNormal", ",", 
+        "viewDir", ",", "lightDir", ",", "halfDir", ",", "NoH", ",", 
+        "\[IndentingNewLine]", "diskTangentZ", ",", "diskTangent", ",", 
+        "diskBiTangentZ", ",", "diskBiTangent", ",", "\[IndentingNewLine]", 
+        "shadingPt", ",", "roughness", ",", "sglight", ",", "refLightDir", 
+        ",", "refViewDir", ",", "\[IndentingNewLine]", "\t", "refNormal", ",",
+         "sgndf", ",", "diskLighting1"}], "}"}], ",", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"diskCenterPt", "=", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "0", ",", "1.3"}], "}"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"viewPt", "=", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"lightPt", "=", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "0.666667"}], ",", 
+          RowBox[{"-", "0.666667"}], ",", "0.966667"}], "}"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"diskNormal", "=", 
+        RowBox[{"Normalize", "@", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "0.408248"}], ",", 
+           RowBox[{"-", "0.408248"}], ",", 
+           RowBox[{"-", "0.816497"}]}], "}"}]}]}], ";", "\[IndentingNewLine]",
+        "\[IndentingNewLine]", 
+       RowBox[{"viewDir", "=", 
+        RowBox[{"Normalize", "[", 
+         RowBox[{"viewPt", "-", "diskCenterPt"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"lightDir", "=", 
+        RowBox[{"Normalize", "[", 
+         RowBox[{"lightPt", "-", "diskCenterPt"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"halfDir", "=", 
+        RowBox[{"Normalize", "[", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"viewDir", "+", "lightDir"}], ")"}], "/", "2"}], "]"}]}], 
+       ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"NoH", "=", 
+        RowBox[{"Dot", "[", 
+         RowBox[{"diskNormal", ",", "halfDir"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"diskTangentZ", "=", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Solve", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Dot", "[", 
+              RowBox[{"diskNormal", ",", 
+               RowBox[{"{", 
+                RowBox[{"1", ",", "0", ",", "x"}], "}"}]}], "]"}], "\[Equal]",
+              "0"}], ",", "x"}], "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"All", ",", "1", ",", "2"}], "]"}], "]"}], "[", 
+         RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"diskTangent", "=", 
+        RowBox[{"Normalize", "@", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", "0", ",", "diskTangentZ"}], "}"}]}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"diskBiTangentZ", "=", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Solve", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Dot", "[", 
+              RowBox[{"diskNormal", ",", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "1", ",", "x"}], "}"}]}], "]"}], "\[Equal]",
+              "0"}], ",", "x"}], "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"All", ",", "1", ",", "2"}], "]"}], "]"}], "[", 
+         RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"diskBiTangent", "=", 
+        RowBox[{"Normalize", "@", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", "1", ",", "diskBiTangentZ"}], "}"}]}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"shadingPt", "=", 
+        RowBox[{"diskCenterPt", "+", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Cos", "[", "offsetAngle", "]"}], "*", "diskTangent"}], 
+            "+", 
+            RowBox[{
+             RowBox[{"Sin", "[", "offsetAngle", "]"}], "*", 
+             "diskBiTangent"}]}], ")"}], "*", "offsetDist"}]}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"roughness", "=", "0.1"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"sglight", "=", 
+        RowBox[{"sgSphereLight", "[", 
+         RowBox[{
+         "lightCenter", ",", "10", ",", "20", ",", "1", ",", "shadingPt"}], 
+         "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"refLightDir", "=", 
+        RowBox[{"Normalize", "[", 
+         RowBox[{"lightCenter", "-", "shadingPt"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"refViewDir", "=", 
+        RowBox[{"Normalize", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"0", ",", "0", ",", "0"}], "}"}], "-", "shadingPt"}], 
+         "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"refNormal", "=", "diskNormalAxis"}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"sgndf", "=", 
+        RowBox[{"sgNDF", "[", 
+         RowBox[{
+         "roughness", ",", "refLightDir", ",", "refViewDir", ",", 
+          "refNormal"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"diskLighting1", "=", 
+        RowBox[{"sgDot", "[", 
+         RowBox[{"sglight", ",", "sgndf"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", "diskLighting1"}]}], 
+     "\[IndentingNewLine]", "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"p1", "=", 
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"testDiskOffsetShadingFunc", "[", 
+       RowBox[{"0.5", ",", "\[Theta]"}], "]"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\[Theta]", ",", "0", ",", 
+       RowBox[{"2", "\[Pi]"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"p2", "=", 
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"testDiskOffsetShadingFunc", "[", 
+        RowBox[{"r", ",", "0"}], "]"}], ",", 
+       RowBox[{"testDiskOffsetShadingFunc", "[", 
+        RowBox[{"r", ",", 
+         RowBox[{"\[Pi]", "/", "2"}]}], "]"}], ",", 
+       RowBox[{"testDiskOffsetShadingFunc", "[", 
+        RowBox[{"r", ",", "\[Pi]"}], "]"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"r", ",", "0", ",", "1"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"p1", ",", "p2"}], "}"}], "//", "GraphicsRow"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", "testDiskOffsetShadingFunc", "]"}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.8345468567591047`*^9, 3.834546914031228*^9}},
+ CellLabel->"In[81]:=",ExpressionUUID->"dce31108-ec64-408e-b0f6-4c5325fb3c53"],
+
+Cell[BoxData[
+ StyleBox["\<\" Disk Shading Attenuation by Offset Distance/Angle\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{3.834546914948637*^9},
+ CellLabel->
+  "During evaluation of \
+In[81]:=",ExpressionUUID->"bca3f8c9-5b6b-428c-b8ce-c17a8e9fa235"],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {InsetBox[
+     GraphicsBox[{{{}, {}, 
+        TagBox[
+         {RGBColor[0.368417, 0.506779, 0.709798], AbsoluteThickness[1.6], 
+          Opacity[1.], LineBox[CompressedData["
+1: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
+NlreLoSmww5f3/j/0/8BKCSoSw==
+           "]]},
+         Annotation[#, "Charting`Private`Tag$1118598#1"]& ]}, {}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, 0.7865055451539916},
+      DisplayFunction->Identity,
+      Frame->{{False, False}, {False, False}},
+      FrameLabel->{{None, None}, {None, None}},
+      FrameTicks->{{Automatic, 
+         Charting`ScaledFrameTicks[{Identity, Identity}]}, {Automatic, 
+         Charting`ScaledFrameTicks[{Identity, Identity}]}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImagePadding->{{17.173469387755105`, 1.552083333333428}, {
+       6.4524301409774125`, 0.5000000000000568}},
+      Method->{
+       "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultMeshStyle" -> AbsolutePointSize[6], "ScalingFunctions" -> 
+        None, "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            (Identity[#]& )[
+             Part[#, 1]], 
+            (Identity[#]& )[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            (Identity[#]& )[
+             Part[#, 1]], 
+            (Identity[#]& )[
+             Part[#, 2]]}& )}},
+      PlotRange->
+       NCache[{{0, 2 Pi}, {0.7865055451539916, 1.018786766342214}}, {{
+         0, 6.283185307179586}, {0.7865055451539916, 1.018786766342214}}],
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], {192., -116.80842387373012}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996212}], InsetBox[
+     GraphicsBox[{{{}, {}, 
+        TagBox[
+         {RGBColor[0.368417, 0.506779, 0.709798], AbsoluteThickness[1.6], 
+          Opacity[1.], LineBox[CompressedData["
+1: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
+f6yyCFA=
+           "]]},
+         Annotation[#, "Charting`Private`Tag$1122085#1"]& ], 
+        TagBox[
+         {RGBColor[0.880722, 0.611041, 0.142051], AbsoluteThickness[1.6], 
+          Opacity[1.], LineBox[CompressedData["
+1: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
+f6yyCFA=
+           "]]},
+         Annotation[#, "Charting`Private`Tag$1122085#2"]& ], 
+        TagBox[
+         {RGBColor[0.560181, 0.691569, 0.194885], AbsoluteThickness[1.6], 
+          Opacity[1.], LineBox[CompressedData["
+1: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
+AeXU6UI=
+           "]]},
+         Annotation[#, "Charting`Private`Tag$1122085#3"]& ]}, {}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, 0},
+      DisplayFunction->Identity,
+      Frame->{{False, False}, {False, False}},
+      FrameLabel->{{None, None}, {None, None}},
+      FrameTicks->{{Automatic, 
+         Charting`ScaledFrameTicks[{Identity, Identity}]}, {Automatic, 
+         Charting`ScaledFrameTicks[{Identity, Identity}]}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImagePadding->{{17.173469387755105`, 1.552083333333428}, {
+       6.4524301409774125`, 0.5000000000000568}},
+      Method->{
+       "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultMeshStyle" -> AbsolutePointSize[6], "ScalingFunctions" -> 
+        None, "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            (Identity[#]& )[
+             Part[#, 1]], 
+            (Identity[#]& )[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            (Identity[#]& )[
+             Part[#, 1]], 
+            (Identity[#]& )[
+             Part[#, 2]]}& )}},
+      PlotRange->{{0, 1}, {0., 3.0379003393890653`}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], {576., -116.80842387373012}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996212}]}, {}},
+  ContentSelectable->True,
+  ImageSize->{
+    UpTo[600], 
+    UpTo[360]},
+  PlotRangePadding->{6, 5}]], "Output",
+ CellChangeTimes->{3.8345469165708556`*^9},
+ CellLabel->"Out[86]=",ExpressionUUID->"ea27e755-ab95-4bae-bce3-f876c6fb66e1"]
+}, Open  ]]
+},
+WindowSize->{1083, 662},
+WindowMargins->{{124, Automatic}, {Automatic, 128}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 18846, 434, 2119, "Input",ExpressionUUID->"3205859a-4f04-4be1-bcde-119750f91baa"],
+Cell[19429, 458, 334, 8, 30, "Print",ExpressionUUID->"1b8a235d-d954-4665-a3eb-294e0890e245"],
+Cell[19766, 468, 8813, 164, 181, "Output",ExpressionUUID->"401737d7-f852-4975-b2d0-81e31e94bfe6"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[28616, 637, 7228, 182, 827, "Input",ExpressionUUID->"dce31108-ec64-408e-b0f6-4c5325fb3c53"],
+Cell[35847, 821, 321, 8, 30, "Print",ExpressionUUID->"bca3f8c9-5b6b-428c-b8ce-c17a8e9fa235"],
+Cell[36171, 831, 27899, 497, 214, "Output",ExpressionUUID->"ea27e755-ab95-4bae-bce3-f876c6fb66e1"]
+}, Open  ]]
+}
+]
+*)
+
