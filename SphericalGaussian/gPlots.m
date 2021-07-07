@@ -453,7 +453,7 @@ axisExtent: plot range
 *)
 gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	{
-		inputKeys,collectFunc,complexFunc,
+		inputKeys,collectFunc,complexFunc,customPlots,
 		plotList,plotStyles,plotLabels,axisExtent,finalPlots,
 		wallElement1,wallStyle1,wallLabel1,
 		wallElement2,wallStyle2,wallLabel2,
@@ -550,6 +550,9 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	complexFunc["sgGroundShadingWithWalls",gParamSGGroundShadingWithWalls];
 	(*wall shading*)
 	complexFunc["sgRightWallShading",gParamSGRightWallShading];
+	
+	customPlots=If[MemberQ[inputKeys,"customPlots"],inputs["customPlots"],{}];
+	AppendTo[finalPlots,customPlots];
 	
 	(*general plot*)
 	Show[finalPlots]

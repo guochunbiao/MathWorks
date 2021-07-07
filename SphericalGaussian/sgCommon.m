@@ -112,6 +112,10 @@ asgVector[v_,{lobeAxis_,tangentAxis_,bitangentAxis_},
 ];
 
 
+asgPolar[\[Theta]_,\[Phi]_,{lobeAxis_,tangentAxis_,bitangentAxis_},
+	{xBandwidth_,yBandwidth_},amplitude_]
+
+
 sgPolar[\[Theta]_,\[Lambda]_,\[Mu]_]:=Module[
 {},
 (*Assert[-\[Pi]/2<=\[Theta]<=\[Pi]/2];

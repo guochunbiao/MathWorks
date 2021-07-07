@@ -72,6 +72,39 @@ gParamRect[input_,globalInput_,x_,y_,z_]:=Module[
 ];
 
 
+ClearAll[gParamArc3D];
+gParamArc3D[input_,globalInput_,x_,y_,z_]:=Module[
+	{center,radius,normalDir,axisDir,thetaSpan,thickness,region},
+	
+	center=input["center"];
+	radius=input["radius"];
+	normalDir=Normalize@input["normalDir"];
+	axisDir=Normalize@input["axisDir"];
+	thetaSpan=input["thetaSpan"];
+	thickness=input["thickness"];
+	Assert[0<thetaSpan<=2\[Pi]];
+	
+	region=DiscretizeRegion@ImplicitRegion[
+		Block[
+			{flag1,flag2,flag3,ptDir},
+			
+			ptDir=Normalize[{x,y,z}-center];
+			
+			(*on arc's plane*)
+			flag1=Dot[{x,y,z}-center,normalDir]==0;
+			(*on arc's sphere*)
+			flag2=Abs[Norm[{x,y,z}-center]-radius]<=thickness;
+			(*within theta span*)
+			flag3=Dot[ptDir,axisDir]>=Cos[thetaSpan/2];
+			
+			flag1&&flag2&&flag3
+		],
+		{x,y,z}];
+		
+	region
+];
+
+
 (*projection of rectangle onto sphere*)
 (*https://mathematica.stackexchange.com/questions/83550/projection-of-triangles-onto-a-sphere*)
 (*https://mathematica.stackexchange.com/questions/78705/plot-a-partition-of-the-sphere-given-vertices-of-polygons*)
@@ -177,7 +210,7 @@ gParamProjDisk[input_,globalInput_,x_,y_,z_]:=Module[
 		(*https://www.rosettacode.org/wiki/Find_the_intersection_of_a_line_with_a_plane#C.2B.2B*)
 		(*c++ code example*)
 		
-		rayDir={0,0,1};
+		(*rayDir={0,0,1};
 		diff={x,y,z}-diskCenter;
 		prod1=Dot[diff,diskNormal];
 		prod2=Dot[rayDir,diskNormal];
@@ -187,21 +220,21 @@ gParamProjDisk[input_,globalInput_,x_,y_,z_]:=Module[
 			prod3=prod1/prod2;
 			intsPt={x,y,z}-rayDir*prod3;
 			flag3=Norm[intsPt-diskCenter]<=diskRadius
-		];
-		(*
+		];*)
+		
 		rayDir={x,y,z};
 		diff={x,y,z}-diskCenter;
 		prod1=Dot[diff,diskNormal];
 		prod2=Dot[rayDir,diskNormal];
 		If[
-			prod2\[Equal]0,
+			prod2==0,
 			flag3=False,
 			True, (*<---------------------------------*)
 			prod3=prod1/prod2;
 			intsPt={x,y,z}-rayDir*prod3;
 			flag3=Norm[intsPt-diskCenter]<=diskRadius
 		];
-	   *)
+	   
 	   
 	    flag1&&flag2&&flag3
 	   ],
@@ -440,7 +473,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 		plotList,plotListTypes,plotStyles,plotLabels,
 		colorFuncList,cfScaleList,opacityList,thicknessList,plotPtsList,meshTypeList,
 		axExt,axisExtents,projSettings,viewPoint,viewProj,
-		tagPlot,complexTagPlot
+		tagPlot,complexTagPlot,customPlots
 	},
 	inputKeys=Keys[inputs];
 	plotList={};
@@ -560,8 +593,10 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	
 	(*append lines*)
 	collectFunc["lines",gParamLine3D,2];
-	(*append circles*)
+	(*append disks*)
 	collectFunc["disks",gParamDisk3D,3];
+	(*append arcs*)
+	collectFunc["arcs",gParamArc3D,3];
 	(*append rectangles*)
 	collectFunc["rects",gParamRect,3];
 	(*append projection of rectangles onto sphere*)
@@ -626,6 +661,9 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	
 	(*append projection of disks onto sphere*)
 	complexFunc["projDisks",gParamProjDisk,3];
+	
+	customPlots=If[MemberQ[inputKeys,"customPlots"],inputs["customPlots"],{}];
+	AppendTo[plotCmds,customPlots];
 	
 	Show[plotCmds]
 ];
