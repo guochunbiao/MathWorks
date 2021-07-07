@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    137642,       3024]
-NotebookOptionsPosition[    136453,       2997]
-NotebookOutlinePosition[    136799,       3012]
-CellTagsIndexPosition[    136756,       3009]
+NotebookDataLength[    203600,       4470]
+NotebookOptionsPosition[    201949,       4435]
+NotebookOutlinePosition[    202293,       4450]
+CellTagsIndexPosition[    202250,       4447]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -2658,15 +2658,20 @@ Cell[BoxData[{
     ",", "minorAxis", ",", "minorX", ",", "minorY", ",", "majorSize", ",", 
     "minorSize", ",", "\[IndentingNewLine]", "  ", "peakDiskPt", ",", 
     "peakSpherePt", ",", "tmpSquareZ", ",", "sphereShadingFunc", ",", 
-    "\[IndentingNewLine]", "  ", "arc0Center", ",", "arc0Radius", ",", 
-    "arc0Normal", ",", "arc0Axis", ",", "arc0ThetaSpan", ",", 
-    "\[IndentingNewLine]", "  ", "arc1Center", ",", "arc1Radius", ",", 
+    "\[IndentingNewLine]", "  ", "theta0", ",", "arc0Center", ",", 
+    "arc0Radius", ",", "arc0Normal", ",", "arc0Axis", ",", "arc0ThetaSpan", 
+    ",", "\[IndentingNewLine]", "  ", "arc1Center", ",", "arc1Radius", ",", 
     "arc1Normal", ",", "arc1Axis", ",", "arc1ThetaSpan", ",", 
-    "\[IndentingNewLine]", "  ", "leftDiskEdge", ",", "topTriPt"}], "]"}], 
+    "\[IndentingNewLine]", "  ", "theta2", ",", "arc2Line0", ",", "arc2Line1",
+     ",", "arc2Center", ",", "arc2Radius", ",", "arc2Normal", ",", "arc2Axis",
+     ",", "arc2ThetaSpan", ",", "\[IndentingNewLine]", "  ", "theta3", ",", 
+    "arc3Line0", ",", "arc3Line1", ",", "arc3Center", ",", "arc3Radius", ",", 
+    "arc3Normal", ",", "arc3Axis", ",", "arc3ThetaSpan", ",", 
+    "\[IndentingNewLine]", "  ", "rightDiskEdge", ",", "topTriPt"}], "]"}], 
   ";"}]}], "Input",
- CellChangeTimes->{{3.834643899706645*^9, 3.834643916448992*^9}},
- CellLabel->
-  "In[986]:=",ExpressionUUID->"0ad24e45-6966-41b9-ad57-fa66a82a42d1"],
+ CellChangeTimes->{{3.834643899706645*^9, 3.834643916448992*^9}, 
+   3.8346440729308367`*^9},ExpressionUUID->"0ad24e45-6966-41b9-ad57-\
+fa66a82a42d1"],
 
 Cell[BoxData[
  StyleBox["\<\" Calculate size of right minor axis(Ellipse)\"\>",
@@ -2993,10 +2998,1443 @@ $CellContext`p}, Green]]}& )[], "customPlots" -> {
  CellChangeTimes->{{3.834643904706702*^9, 3.8346439217923145`*^9}},
  CellLabel->
   "Out[988]=",ExpressionUUID->"0e5785b9-bb36-430e-9860-6ba12aef96a6"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"gPrint", "[", "\"\<Jacobian of left minor axis\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ClearAll", "[", 
+    RowBox[{
+    "testDisk", ",", "testSphere", ",", "diskNormalAxis", ",", "roughness", 
+     ",", "lightCenter", ",", "\[IndentingNewLine]", "  ", "diskTangent", ",",
+      "diskBiTangent", ",", "diskTangentZ", ",", "diskBiTangentZ", ",", 
+     "\[IndentingNewLine]", "   ", "majorAxis", ",", "majorX", ",", "majorY", 
+     ",", "minorAxis", ",", "minorX", ",", "minorY", ",", "majorSize", ",", 
+     "minorSize", ",", "\[IndentingNewLine]", "  ", "peakDiskPt", ",", 
+     "peakSpherePt", ",", "tmpSquareZ", ",", "sphereShadingFunc", ",", 
+     "\[IndentingNewLine]", "  ", "theta0", ",", "arc0Center", ",", 
+     "arc0Radius", ",", "arc0Normal", ",", "arc0Axis", ",", "arc0ThetaSpan", 
+     ",", "\[IndentingNewLine]", "  ", "arc1Center", ",", "arc1Radius", ",", 
+     "arc1Normal", ",", "arc1Axis", ",", "arc1ThetaSpan", ",", 
+     "\[IndentingNewLine]", "  ", "shadingPt1", ",", "viewDir", ",", 
+     "lightDir0", ",", "lightDir1", ",", "lightDist0", ",", "lightDist0Proj", 
+     ",", "\[IndentingNewLine]", "  ", "theta2", ",", "arc2Center", ",", 
+     "arc2Radius", ",", "arc2Normal", ",", "arc2Axis", ",", "arc2ThetaSpan", 
+     ",", "\[IndentingNewLine]", "  ", "arc3Center", ",", "arc3Radius", ",", 
+     "arc3Normal", ",", "arc3Axis", ",", "arc3ThetaSpan", ",", 
+     "\[IndentingNewLine]", "  ", "helperPt1", ",", "\[IndentingNewLine]", 
+     "  ", "t2", ",", "t1", ",", "p2", ",", "p1", ",", "ld", ",", "dx", ",", 
+     "detH"}], "\[IndentingNewLine]", "  ", "]"}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", "\[IndentingNewLine]", "\t ", 
+   RowBox[{"t2", ":", " ", 
+    RowBox[{"theta2", "\[IndentingNewLine]", "   ", "t1"}], ":", " ", 
+    RowBox[{"theta1", "\[IndentingNewLine]", "   ", 
+     RowBox[{"p2", ":", " ", 
+      RowBox[{"phi2", "\[IndentingNewLine]", " ", "p1"}], ":", " ", 
+      RowBox[{"phi1", "\[IndentingNewLine]", " ", 
+       RowBox[{"ld", ":", " ", 
+        RowBox[{"light", " ", "distance", "\[IndentingNewLine]", "dx"}], ":", 
+        " ", 
+        RowBox[{"delta", " ", "x"}]}]}]}]}]}], "\[IndentingNewLine]", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"theta2", "=", 
+     RowBox[{"ArcCot", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Cot", "[", "theta0", "]"}], "*", "lightDist0Proj"}], ")"}], 
+       "/", 
+       RowBox[{"(", 
+        RowBox[{"lightDist0Proj", "-", "shadingOffset"}], ")"}]}], "]"}]}], 
+    ";"}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"t2", "=", 
+     RowBox[{"ArcCot", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Cot", "[", "t1", "]"}], "*", "ld", "*", 
+         RowBox[{"Sin", "[", "t1", "]"}]}], ")"}], "/", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"ld", "*", 
+          RowBox[{"Sin", "[", "t1", "]"}]}], "-", "dx"}], ")"}]}], "]"}]}], 
+    ";"}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"t2", "=", 
+   RowBox[{"ArcCot", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"Cot", "[", "t1", "]"}], "*", "ld", "*", 
+       RowBox[{"Sin", "[", "t1", "]"}]}], ")"}], "/", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"ld", "*", 
+        RowBox[{"Sin", "[", "t1", "]"}]}], "-", "dx"}], ")"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"p2", "=", "p1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"detH", "=", 
+   RowBox[{"Det", "[", 
+    RowBox[{"D", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"t2", ",", "p2"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"{", 
+        RowBox[{"t1", ",", "p1"}], "}"}], "}"}]}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"gPrint", "[", 
+    RowBox[{"TraditionalForm", "@", 
+     RowBox[{"FullSimplify", "@", "detH"}]}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"diskNormalAxis", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"{", 
+       RowBox[{"diskNormalX", ",", "diskNormalY", ",", 
+        RowBox[{"-", "1"}]}], "}"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"testDisk", "=", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", "\t", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "diskCenterZ"}], "}"}], ",", 
+       RowBox[{"(*", 
+        RowBox[{"center", " ", "point"}], "*)"}], "\[IndentingNewLine]", "\t",
+        "diskNormalAxis", ",", 
+       RowBox[{"(*", 
+        RowBox[{"normal", " ", "axis"}], "*)"}], "\[IndentingNewLine]", "\t", 
+       "diskRadius"}], 
+      RowBox[{"(*", 
+       RowBox[{"disk", " ", "radius"}], "*)"}], "\[IndentingNewLine]", 
+      "}"}]}], ";", "\[IndentingNewLine]", " ", 
+    RowBox[{"testSphere", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "0"}], "}"}], ",", "1"}], "}"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"peakLightDir", "=", 
+     RowBox[{"gCalcGgxPeakForLight", "[", 
+      RowBox[{
+       RowBox[{"testDisk", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], ",", "diskNormalAxis", ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"lightCenter", "=", 
+     RowBox[{
+      RowBox[{"testDisk", "[", 
+       RowBox[{"[", "1", "]"}], "]"}], "+", 
+      RowBox[{"Normalize", "@", "peakLightDir"}]}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"solving", " ", "ellipse", " ", "axes"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"majorX", "=", 
+     RowBox[{"-", "diskNormalY"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"majorY", "=", "diskNormalX"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"majorAxis", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"{", 
+       RowBox[{"majorX", ",", "majorY", ",", "0"}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"minorX", "=", "majorY"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"minorY", "=", 
+     RowBox[{"-", "majorX"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"minorAxis", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"{", 
+       RowBox[{"minorX", ",", "minorY", ",", "0"}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"majorSize", "=", "diskRadius"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"solving", " ", "disk", " ", "tangents"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"diskTangentZ", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Solve", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Dot", "[", 
+           RowBox[{"diskNormalAxis", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"majorAxis", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{"majorAxis", "[", 
+               RowBox[{"[", "2", "]"}], "]"}], ",", "z"}], "}"}]}], "]"}], 
+          "\[Equal]", "0"}], ",", "z"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"All", ",", "1", ",", "2"}], "]"}], "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"diskTangent", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"majorAxis", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], ",", 
+        RowBox[{"majorAxis", "[", 
+         RowBox[{"[", "2", "]"}], "]"}], ",", "diskTangentZ"}], "}"}]}]}], 
+    ";", "\[IndentingNewLine]", 
+    RowBox[{"diskBiTangentZ", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Solve", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Dot", "[", 
+           RowBox[{"diskNormalAxis", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"minorAxis", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{"minorAxis", "[", 
+               RowBox[{"[", "2", "]"}], "]"}], ",", "z"}], "}"}]}], "]"}], 
+          "\[Equal]", "0"}], ",", "z"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"All", ",", "1", ",", "2"}], "]"}], "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"diskBiTangent", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"minorAxis", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], ",", 
+        RowBox[{"minorAxis", "[", 
+         RowBox[{"[", "2", "]"}], "]"}], ",", "diskBiTangentZ"}], "}"}]}]}], 
+    ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"theta0", "=", 
+     RowBox[{"ArcCos", "[", 
+      RowBox[{"Dot", "[", 
+       RowBox[{
+        RowBox[{"Normalize", "[", "diskNormalAxis", "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "0", ",", 
+          RowBox[{"-", "1"}]}], "}"}]}], "]"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"helperPt1", "=", 
+     RowBox[{
+      RowBox[{"testDisk", "[", 
+       RowBox[{"[", "1", "]"}], "]"}], "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Sin", "[", "theta0", "]"}], "*", 
+         RowBox[{"Norm", "[", 
+          RowBox[{"lightCenter", "-", 
+           RowBox[{"testDisk", "[", 
+            RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ")"}], "*", 
+       "diskBiTangent"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"shading", " ", "info"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"viewDir", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "0"}], "}"}], "-", 
+       RowBox[{"testDisk", "[", 
+        RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"lightDir0", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"lightCenter", "-", 
+       RowBox[{"testDisk", "[", 
+        RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"shadingPt1", "=", 
+     RowBox[{
+      RowBox[{"testDisk", "[", 
+       RowBox[{"[", "1", "]"}], "]"}], "+", 
+      RowBox[{"diskBiTangent", "*", "shadingOffset"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"lightDir1", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"lightCenter", "-", "shadingPt1"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "arc", " ", "between", " ", "disk", " ", "normal", " ", "and", " ", 
+      "view"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"arc0Center", "=", 
+     RowBox[{"testDisk", "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arc0Radius", "=", "0.1"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arc0Normal", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"Cross", "[", 
+       RowBox[{"diskNormalAxis", ",", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "0", ",", 
+          RowBox[{"-", "1"}]}], "}"}]}], "]"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"arc0Axis", "=", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"Normalize", "[", "diskNormalAxis", "]"}], "+", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "0", ",", 
+          RowBox[{"-", "1"}]}], "}"}]}], ")"}], "/", "2"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"arc0ThetaSpan", "=", "theta0"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "arc", " ", "between", " ", "disk", " ", "normal", " ", "and", " ", 
+      "origin", " ", "light", " ", "dir"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"arc1Center", "=", 
+     RowBox[{"testDisk", "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arc1Radius", "=", "0.1"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arc1Normal", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"Cross", "[", 
+       RowBox[{"diskNormalAxis", ",", "lightDir0"}], "]"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"arc1Axis", "=", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"Normalize", "@", "diskNormalAxis"}], "+", 
+        RowBox[{"Normalize", "@", "lightDir0"}]}], ")"}], "/", "2"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"arc1ThetaSpan", "=", "theta0"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "arc", " ", "between", " ", "disk", " ", "normal", " ", "and", " ", 
+      "new", " ", "light", " ", "dir"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"lightDist0", "=", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"lightCenter", "-", 
+       RowBox[{"testDisk", "[", 
+        RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"lightDist0Proj", "=", 
+     RowBox[{"lightDist0", "*", 
+      RowBox[{"Sin", "[", "theta0", "]"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Cot", "[", "theta0", "]"}], "*", "lightDist0Proj"}], 
+      "\[Equal]", 
+      RowBox[{
+       RowBox[{"Cot", "[", "theta2", "]"}], "*", 
+       RowBox[{"(", 
+        RowBox[{"lightDist0Proj", "-", "shadingOffset"}], ")"}]}]}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"theta2", "=", 
+     RowBox[{"ArcCot", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Cot", "[", "theta0", "]"}], "*", "lightDist0Proj"}], ")"}], 
+       "/", 
+       RowBox[{"(", 
+        RowBox[{"lightDist0Proj", "-", "shadingOffset"}], ")"}]}], "]"}]}], 
+    ";", "\[IndentingNewLine]", 
+    RowBox[{"arc2Center", "=", "shadingPt1"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arc2Radius", "=", "0.1"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arc2Normal", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"Cross", "[", 
+       RowBox[{"diskNormalAxis", ",", "lightDir1"}], "]"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"arc2Axis", "=", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"Normalize", "@", "diskNormalAxis"}], "+", 
+        RowBox[{"Normalize", "@", "lightDir1"}]}], ")"}], "/", "2"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"arc2ThetaSpan", "=", "theta2"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"arc3Center", "=", "lightCenter"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arc3Radius", "=", "0.1"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arc3Normal", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"Cross", "[", 
+       RowBox[{
+        RowBox[{"-", "diskNormalAxis"}], ",", 
+        RowBox[{"-", "lightDir1"}]}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arc3Axis", "=", 
+     RowBox[{
+      RowBox[{"-", "1"}], "*", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Normalize", "@", "diskNormalAxis"}], "+", 
+         RowBox[{"Normalize", "@", "lightDir1"}]}], ")"}], "/", "2"}]}]}], 
+    ";", "\[IndentingNewLine]", 
+    RowBox[{"arc3ThetaSpan", "=", "theta2"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "solve", " ", "left", " ", "minor", " ", "size", " ", "of", " ", 
+      "ellipse"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"x", "/", 
+        RowBox[{"(", 
+         RowBox[{"diskRadius", "*", 
+          RowBox[{"Cos", "[", "theta0", "]"}]}], ")"}]}], "\[Equal]", 
+       RowBox[{"1", "/", 
+        RowBox[{"(", 
+         RowBox[{"1", "+", 
+          RowBox[{"diskRadius", "*", 
+           RowBox[{"Sin", "[", "theta0", "]"}]}]}], ")"}]}]}], ";"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"minorSize", "=", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"diskRadius", "*", 
+        RowBox[{"Cos", "[", "theta0", "]"}]}], ")"}], "/", 
+      RowBox[{"(", 
+       RowBox[{"1", "+", 
+        RowBox[{"diskRadius", "*", 
+         RowBox[{"Sin", "[", "theta0", "]"}]}]}], ")"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"maxLeftThetaD", "=", 
+     RowBox[{"ArcTan", "[", 
+      RowBox[{"minorSize", "/", "1"}], 
+      RowBox[{"(*", "sphereRadius", "*)"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"shading", " ", "function", " ", "on", " ", "disk"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"sphereShadingFunc", ":=", 
+     RowBox[{"Block", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "spherePt", ",", "diskPt", ",", "tmpRayDir", ",", "tmpDiff", ",", 
+         "tmpProd1", ",", "tmpProd2", ",", "tmpProd3", ",", "intsPt", ",", 
+         "\[IndentingNewLine]", "\t", "sglight", ",", "refLightDir", ",", 
+         "refViewDir", ",", "\[IndentingNewLine]", "\t", "refNormal", ",", 
+         "sgndf", ",", "diskLighting1", ",", "finalLighting"}], "}"}], ",", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"spherePt", "=", 
+         RowBox[{"{", 
+          RowBox[{"x", ",", "y", ",", "z"}], "}"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"hemi", "-", 
+          RowBox[{"sphere", " ", "only"}]}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"z", "<", "0"}], ",", 
+          RowBox[{"Return", "[", "0", "]"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+         "find", " ", "related", " ", "point", " ", "on", " ", "disk"}], 
+         "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{"https", ":"}], "//", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"www", ".", "rosettacode", ".", "org"}], "/", "wiki"}], 
+            "/", "Find_the"}], "_intersection", "_of", "_a", "_line", "_with",
+            "_a", "_plane", "#C", ".2", "B", ".2", "B"}]}], "*)"}], "\n", 
+        "       ", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{"c", "++"}], " ", "code", " ", "example"}], "*)"}], 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{"tmpRayDir", "=", 
+           RowBox[{"{", 
+            RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], ";"}], "*)"}], 
+        "\[IndentingNewLine]", 
+        RowBox[{"tmpRayDir", "=", 
+         RowBox[{"Normalize", "@", "spherePt"}]}], ";", "\[IndentingNewLine]",
+         " ", 
+        RowBox[{"tmpDiff", "=", 
+         RowBox[{"spherePt", "-", 
+          RowBox[{"testDisk", "[", 
+           RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\n", "        ", 
+        RowBox[{"tmpProd1", "=", 
+         RowBox[{"Dot", "[", 
+          RowBox[{"tmpDiff", ",", "diskNormalAxis"}], "]"}]}], ";", "\n", 
+        "        ", 
+        RowBox[{"tmpProd2", "=", 
+         RowBox[{"Dot", "[", 
+          RowBox[{"tmpRayDir", ",", "diskNormalAxis"}], "]"}]}], ";", "\n", 
+        "\t", 
+        RowBox[{"tmpProd3", "=", 
+         RowBox[{"tmpProd1", "/", "tmpProd2"}]}], ";", "\n", "\t ", 
+        RowBox[{"intsPt", "=", 
+         RowBox[{"spherePt", "-", 
+          RowBox[{"tmpRayDir", "*", "tmpProd3"}]}]}], ";", 
+        "\[IndentingNewLine]", "  ", 
+        RowBox[{"diskPt", "=", "intsPt"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Norm", "[", 
+            RowBox[{"intsPt", "-", 
+             RowBox[{"testDisk", "[", 
+              RowBox[{"[", "1", "]"}], "]"}]}], "]"}], ">", "diskRadius"}], 
+          ",", 
+          RowBox[{"Return", "[", "0", "]"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"calculate", " ", "shading", " ", "on", " ", "disk"}], 
+         "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"sglight", "=", 
+         RowBox[{"sgSphereLight", "[", 
+          RowBox[{
+          "lightCenter", ",", "10", ",", "20", ",", "1", ",", "diskPt"}], 
+          "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"refLightDir", "=", 
+         RowBox[{"Normalize", "[", 
+          RowBox[{"lightCenter", "-", "diskPt"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"refViewDir", "=", 
+         RowBox[{"Normalize", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"0", ",", "0", ",", "0"}], "}"}], "-", "diskPt"}], 
+          "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"refNormal", "=", "diskNormalAxis"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"sgndf", "=", 
+         RowBox[{"sgNDF", "[", 
+          RowBox[{
+          "roughness", ",", "refLightDir", ",", "refViewDir", ",", 
+           "refNormal"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"diskLighting1", "=", 
+         RowBox[{"sgDot", "[", 
+          RowBox[{"sglight", ",", "sgndf"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"finalLighting", "=", 
+         RowBox[{"diskLighting1", "*", "shadingColorScaling"}]}], ";", 
+        "\[IndentingNewLine]", "finalLighting"}]}], "\[IndentingNewLine]", 
+      "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "calculate", " ", "GGX", " ", "peak", " ", "point", " ", "on", " ", 
+      "Disk"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"peakDiskPt", "=", 
+     RowBox[{"gCalcGgxPeakOnPlane", "[", 
+      RowBox[{
+       RowBox[{"testDisk", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], ",", "diskNormalAxis", ",", 
+       "lightCenter", ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "calculate", " ", "GGX", " ", "peak", " ", "point", " ", "on", " ", 
+      "Sphere"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"peakSpherePt", "=", "peakDiskPt"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"tmpSquareZ", "=", 
+     RowBox[{"1", "-", 
+      RowBox[{
+       RowBox[{"peakDiskPt", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "^", "2"}], "-", 
+      RowBox[{
+       RowBox[{"peakDiskPt", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "^", "2"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"peakSpherePt", "[", 
+      RowBox[{"[", "3", "]"}], "]"}], "=", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"tmpSquareZ", "<", "0"}], ",", "0", ",", 
+       RowBox[{"Abs", "@", 
+        RowBox[{"Sqrt", "[", "tmpSquareZ", "]"}]}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", "  ", 
+    RowBox[{"gParamPlot3D", "[", "\[IndentingNewLine]", 
+     RowBox[{"<|", "\[IndentingNewLine]", "  ", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<spheres\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "  ", 
+           RowBox[{"(*", "light", "*)"}], "\[IndentingNewLine]", "   ", 
+           RowBox[{
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "lightCenter"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.05"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Magenta", "]"}]}]}], "|>"}], ",", 
+            "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.03"}], ",", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Green", "]"}]}]}], "|>"}], ",", 
+            "\[IndentingNewLine]", "  ", 
+            RowBox[{"(*", 
+             RowBox[{"shading", " ", "sphere"}], "*)"}], 
+            "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", 
+               RowBox[{"testSphere", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", 
+               RowBox[{"testSphere", "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], ",", 
+              RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.1"}], ",", 
+              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "30"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
+                 "LightBlue"}], 
+                RowBox[{"(*", "sphereShadingFunc", " ", "*)"}], "]"}]}]}], 
+             "|>"}], ",", "\[IndentingNewLine]", "  ", 
+            RowBox[{"(*", 
+             RowBox[{
+             "GGX", " ", "peak", " ", "point", " ", "on", " ", "Sphere"}], 
+             "*)"}], "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "peakSpherePt"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.03"}], ",", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Blue", "]"}]}]}], "|>"}], ",", 
+            "\[IndentingNewLine]", "  ", 
+            RowBox[{"(*", 
+             RowBox[{"helper", " ", "points"}], "*)"}], "\[IndentingNewLine]",
+             "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "shadingPt1"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.03"}], ",", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Red", "]"}]}]}], "|>"}], ",", 
+            "\[IndentingNewLine]", "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "helperPt1"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "0.03"}], ",", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Gray", "]"}]}]}], "|>"}]}], 
+           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", "]"}], ",", 
+       "\[IndentingNewLine]", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<lines\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", " ", 
+           RowBox[{"(*", 
+            RowBox[{"ellipse", " ", "major", " ", "axis"}], "*)"}], 
+           "\[IndentingNewLine]", 
+           RowBox[{"(*", "   ", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], ",", 
+               RowBox[{"\"\<dirVec\>\"", "\[Rule]", "majorAxis"}], ",", 
+               RowBox[{"\"\<length\>\"", "\[Rule]", "majorSize"}], ",", 
+               RowBox[{"\"\<plotPts\>\"", "\[Rule]", "2"}], ",", 
+               "\[IndentingNewLine]", "\t", 
+               RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+                RowBox[{"Function", "[", "Green", "]"}]}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+             ","}], "*)"}], "\[IndentingNewLine]", " ", 
+           RowBox[{"(*", 
+            RowBox[{"disk", " ", "axis"}], "*)"}], "\[IndentingNewLine]", 
+           RowBox[{"(*", "   ", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+                RowBox[{"testDisk", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+               RowBox[{"\"\<dirVec\>\"", "\[Rule]", "diskTangent"}], ",", 
+               RowBox[{"\"\<length\>\"", "\[Rule]", "#diskRadius"}], ",", 
+               "\[IndentingNewLine]", "\t", 
+               RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+                RowBox[{"Function", "[", "Green", "]"}]}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+             ","}], "*)"}], "\[IndentingNewLine]", "   ", 
+           RowBox[{
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"testDisk", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "diskBiTangent"}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", "#diskRadius"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Green", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+            ",", "\[IndentingNewLine]", 
+            RowBox[{"(*", 
+             RowBox[{"disk", " ", "normal"}], "*)"}], "\[IndentingNewLine]", 
+            "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"testDisk", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "diskNormalAxis"}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", "1"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Green", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+            ",", "\[IndentingNewLine]", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", "1"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Green", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+            ",", "\[IndentingNewLine]", 
+            RowBox[{"(*", 
+             RowBox[{"light", " ", "dirs"}], "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+               RowBox[{"testDisk", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "lightDir0"}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", 
+               RowBox[{"Norm", "[", 
+                RowBox[{"lightCenter", "-", 
+                 RowBox[{"testDisk", "[", 
+                  RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Blue", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+            ",", "\[IndentingNewLine]", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", "shadingPt1"}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "lightDir1"}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", 
+               RowBox[{"Norm", "[", 
+                RowBox[{"lightCenter", "-", "shadingPt1"}], "]"}]}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Red", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+            ",", "\[IndentingNewLine]", " ", 
+            RowBox[{"(*", 
+             RowBox[{"helper", " ", "lines"}], "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", "helperPt1"}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", "diskNormalAxis"}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", 
+               RowBox[{
+                RowBox[{"Norm", "[", 
+                 RowBox[{"lightCenter", "-", 
+                  RowBox[{"testDisk", "[", 
+                   RowBox[{"[", "1", "]"}], "]"}]}], "]"}], "*", 
+                RowBox[{"Cos", "[", "theta0", "]"}]}]}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Gray", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+            ",", "\[IndentingNewLine]", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<startPos\>\"", "\[Rule]", "helperPt1"}], ",", 
+              RowBox[{"\"\<dirVec\>\"", "\[Rule]", 
+               RowBox[{"-", "diskBiTangent"}]}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", 
+               RowBox[{"(", 
+                RowBox[{"Norm", "[", 
+                 RowBox[{"helperPt1", "-", "shadingPt1"}], "]"}], ")"}]}], 
+              ",", "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", "Gray", "]"}]}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}]}], 
+           "\[IndentingNewLine]", " ", "}"}]}], "&"}], "[", 
+        RowBox[{"<|", 
+         RowBox[{"\"\<diskRadius\>\"", "\[Rule]", "diskRadius"}], "|>"}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<disks\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "   ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<normalAxis\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+             "\t", 
+             RowBox[{"\"\<radius\>\"", "\[Rule]", 
+              RowBox[{"testDisk", "[", 
+               RowBox[{"[", "3", "]"}], "]"}]}], ",", 
+             RowBox[{"\"\<opacity\>\"", "\[Rule]", "0"}], ",", 
+             RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                "Cyan"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", " ", 
+           "}"}]}], "&"}], "[", "]"}], ",", "\[IndentingNewLine]", "  ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"\"\<arcs\>\"", "\[Rule]", 
+          RowBox[{"{", "\[IndentingNewLine]", "   ", 
+           RowBox[{
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "arc0Center"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "arc0Radius"}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.01"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<normalDir\>\"", "\[Rule]", "arc0Normal"}], ",", 
+              RowBox[{"\"\<axisDir\>\"", "\[Rule]", "arc0Axis"}], ",", 
+              RowBox[{"\"\<thetaSpan\>\"", "\[Rule]", "arc0ThetaSpan"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                 "Green"}], "]"}]}]}], "|>"}], ",", "\[IndentingNewLine]", 
+            "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "arc1Center"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "arc1Radius"}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.01"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<normalDir\>\"", "\[Rule]", "arc1Normal"}], ",", 
+              RowBox[{"\"\<axisDir\>\"", "\[Rule]", "arc1Axis"}], ",", 
+              RowBox[{"\"\<thetaSpan\>\"", "\[Rule]", "arc1ThetaSpan"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                 "Blue"}], "]"}]}]}], "|>"}], ",", "\[IndentingNewLine]", 
+            "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "arc2Center"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "arc2Radius"}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.01"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<normalDir\>\"", "\[Rule]", "arc2Normal"}], ",", 
+              RowBox[{"\"\<axisDir\>\"", "\[Rule]", "arc2Axis"}], ",", 
+              RowBox[{"\"\<thetaSpan\>\"", "\[Rule]", "arc2ThetaSpan"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                 "Red"}], "]"}]}]}], "|>"}], ",", "\[IndentingNewLine]", 
+            "   ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "arc3Center"}], ",", 
+              RowBox[{"\"\<radius\>\"", "\[Rule]", "arc3Radius"}], ",", 
+              RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.01"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<normalDir\>\"", "\[Rule]", "arc3Normal"}], ",", 
+              RowBox[{"\"\<axisDir\>\"", "\[Rule]", "arc3Axis"}], ",", 
+              RowBox[{"\"\<thetaSpan\>\"", "\[Rule]", "arc3ThetaSpan"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                 "Red"}], "]"}]}]}], "|>"}]}], "\[IndentingNewLine]", " ", 
+           "}"}]}], "&"}], "[", "]"}], ",", "\[IndentingNewLine]", "    ", 
+       RowBox[{"\"\<customPlots\>\"", "\[Rule]", 
+        RowBox[{"{", "\[IndentingNewLine]", "\t", 
+         RowBox[{"(*", 
+          RowBox[{"label", " ", "of", " ", "arc0"}], "*)"}], 
+         "\[IndentingNewLine]", "\t", 
+         RowBox[{
+          RowBox[{"Graphics3D", "[", 
+           RowBox[{"{", 
+            RowBox[{"Text", "[", 
+             RowBox[{
+              RowBox[{"Style", "[", 
+               RowBox[{"\"\<\[Theta]0\>\"", ",", "18"}], "]"}], ",", 
+              RowBox[{"arc0Center", "+", 
+               RowBox[{"arc0Axis", "*", 
+                RowBox[{"(", 
+                 RowBox[{"arc0Radius", "+", "0.1"}], ")"}]}]}]}], "]"}], 
+            "}"}], "]"}], ",", "\[IndentingNewLine]", "\t", 
+          RowBox[{"(*", 
+           RowBox[{"label", " ", "of", " ", "arc1"}], "*)"}], 
+          "\[IndentingNewLine]", "\t", 
+          RowBox[{"Graphics3D", "[", 
+           RowBox[{"{", 
+            RowBox[{"Text", "[", 
+             RowBox[{
+              RowBox[{"Style", "[", 
+               RowBox[{"\"\<\[Theta]0\>\"", ",", "18"}], "]"}], ",", 
+              RowBox[{"arc1Center", "+", 
+               RowBox[{"arc1Axis", "*", 
+                RowBox[{"(", 
+                 RowBox[{"arc1Radius", "+", "0.1"}], ")"}]}]}]}], "]"}], 
+            "}"}], "]"}], ",", "\[IndentingNewLine]", "\t", 
+          RowBox[{"(*", 
+           RowBox[{"label", " ", "of", " ", "arc2"}], "*)"}], 
+          "\[IndentingNewLine]", "\t", 
+          RowBox[{"Graphics3D", "[", 
+           RowBox[{"{", 
+            RowBox[{"Text", "[", 
+             RowBox[{
+              RowBox[{"Style", "[", 
+               RowBox[{"\"\<\[Theta]2\>\"", ",", "18"}], "]"}], ",", 
+              RowBox[{"arc2Center", "+", 
+               RowBox[{"arc2Axis", "*", 
+                RowBox[{"(", 
+                 RowBox[{"arc2Radius", "+", "0.1"}], ")"}]}]}]}], "]"}], 
+            "}"}], "]"}], ",", "\[IndentingNewLine]", "\t", 
+          RowBox[{"(*", 
+           RowBox[{"label", " ", "of", " ", "arc3"}], "*)"}], 
+          "\[IndentingNewLine]", "\t", 
+          RowBox[{"Graphics3D", "[", 
+           RowBox[{"{", 
+            RowBox[{"Text", "[", 
+             RowBox[{
+              RowBox[{"Style", "[", 
+               RowBox[{"\"\<\[Theta]2\>\"", ",", "18"}], "]"}], ",", 
+              RowBox[{"arc3Center", "+", 
+               RowBox[{"arc3Axis", "*", 
+                RowBox[{"(", 
+                 RowBox[{"arc3Radius", "+", "0.1"}], ")"}]}]}]}], "]"}], 
+            "}"}], "]"}]}], "\[IndentingNewLine]", " ", "}"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"(*", "  ", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"\"\<projDisks\>\"", "\[Rule]", 
+            RowBox[{"{", "\[IndentingNewLine]", "   ", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<disk\>\"", "\[Rule]", "#testDisk"}], ",", 
+               RowBox[{"\"\<sphCenter\>\"", "\[Rule]", 
+                RowBox[{"testSphere", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+               RowBox[{"\"\<sphRadius\>\"", "\[Rule]", 
+                RowBox[{"testSphere", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]",
+                "\t", 
+               RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+               RowBox[{"\"\<zbias\>\"", "\[Rule]", "1"}], ",", 
+               RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+                RowBox[{"Function", "[", 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                  "LightBlue"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", 
+             " ", "}"}]}], "&"}], "[", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<testDisk\>\"", "\[Rule]", "testDisk"}], "|>"}], "]"}],
+          ","}], "*)"}], "\[IndentingNewLine]", "     ", 
+       RowBox[{"\"\<axisExtent\>\"", "\[Rule]", "1.6"}], ",", 
+       "\[IndentingNewLine]", "     ", 
+       RowBox[{"\"\<viewPoint\>\"", "\[Rule]", "Front"}]}], 
+      "\[IndentingNewLine]", "|>"}], "]"}]}], ",", "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", "  ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskCenterZ", ",", "1"}], "}"}], ",", "1", ",", "1"}], "}"}], 
+   ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskNormalX", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"-", "3"}], ",", 
+     RowBox[{"-", "0.1"}]}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskNormalY", ",", "0"}], "}"}], ",", 
+     RowBox[{"-", "3"}], ",", "0"}], "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskRadius", ",", "0.5"}], "}"}], ",", "0.2", ",", "1"}], 
+    "}"}], ",", "\[IndentingNewLine]", "  ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"roughness", ",", "0.1"}], "}"}], ",", "0.01", ",", "0.99"}], 
+    "}"}], ",", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"shadingColorScaling", ",", "0.3"}], "}"}], ",", "0.1", ",", 
+     "1"}], "}"}], ",", "\[IndentingNewLine]", "  ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"shadingOffset", ",", "0.3"}], "}"}], ",", "0", ",", 
+     "diskRadius"}], "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"Method", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "False"}], "}"}]}]}], 
+  "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "testDisk", ",", "testSphere", ",", "diskNormalAxis", ",", "roughness", 
+    ",", "lightCenter", ",", "\[IndentingNewLine]", "  ", "diskTangent", ",", 
+    "diskBiTangent", ",", "diskTangentZ", ",", "diskBiTangentZ", ",", 
+    "\[IndentingNewLine]", "   ", "majorAxis", ",", "majorX", ",", "majorY", 
+    ",", "minorAxis", ",", "minorX", ",", "minorY", ",", "majorSize", ",", 
+    "minorSize", ",", "\[IndentingNewLine]", "  ", "peakDiskPt", ",", 
+    "peakSpherePt", ",", "tmpSquareZ", ",", "sphereShadingFunc", ",", 
+    "\[IndentingNewLine]", "  ", "theta0", ",", "arc0Center", ",", 
+    "arc0Radius", ",", "arc0Normal", ",", "arc0Axis", ",", "arc0ThetaSpan", 
+    ",", "\[IndentingNewLine]", "  ", "arc1Center", ",", "arc1Radius", ",", 
+    "arc1Normal", ",", "arc1Axis", ",", "arc1ThetaSpan", ",", 
+    "\[IndentingNewLine]", "  ", "shadingPt1", ",", "viewDir", ",", 
+    "lightDir0", ",", "lightDir1", ",", "lightDist0", ",", "lightDist0Proj", 
+    ",", "\[IndentingNewLine]", "  ", "theta2", ",", "arc2Center", ",", 
+    "arc2Radius", ",", "arc2Normal", ",", "arc2Axis", ",", "arc2ThetaSpan", 
+    ",", "\[IndentingNewLine]", "  ", "arc3Center", ",", "arc3Radius", ",", 
+    "arc3Normal", ",", "arc3Axis", ",", "arc3ThetaSpan", ",", 
+    "\[IndentingNewLine]", "  ", "helperPt1", ",", "\[IndentingNewLine]", 
+    "  ", "t2", ",", "t1", ",", "p2", ",", "p1", ",", "ld", ",", "dx", ",", 
+    "detH"}], "\[IndentingNewLine]", "  ", "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.8346561653432426`*^9, 3.8346562534032507`*^9}},
+ CellLabel->
+  "In[1014]:=",ExpressionUUID->"80dd8bcf-3c10-4c3b-a15c-9fd056da5029"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ StyleBox["\<\" Jacobian of left minor axis\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.834656188492676*^9, 3.8346562595222244`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[1014]:=",ExpressionUUID->"7590cfd3-2aed-4a87-ac8b-ca15bc9a6ece"],
+
+Cell[BoxData[
+ StyleBox["\<\" \\!\\(\\*FormBox[FractionBox[RowBox[{\\\"ld\\\", \\\" \\\", \
+RowBox[{\\\"(\\\", RowBox[{\\\"ld\\\", \\\"-\\\", RowBox[{\\\"dx\\\", \\\" \\\
+\", RowBox[{\\\"sin\\\", \\\"(\\\", \\\"t1\\\", \\\")\\\"}]}]}], \
+\\\")\\\"}]}], RowBox[{SuperscriptBox[\\\"dx\\\", \\\"2\\\"], \\\"-\\\", \
+RowBox[{\\\"2\\\", \\\" \\\", \\\"dx\\\", \\\" \\\", \\\"ld\\\", \\\" \\\", \
+RowBox[{\\\"sin\\\", \\\"(\\\", \\\"t1\\\", \\\")\\\"}]}], \\\"+\\\", \
+SuperscriptBox[\\\"ld\\\", \\\"2\\\"]}]], TraditionalForm]\\)\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.834656188492676*^9, 3.8346562595262136`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[1014]:=",ExpressionUUID->"785314c8-cca0-4f3f-b72d-de02885bc8d9"]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`diskCenterZ$$ = 
+    1, $CellContext`diskNormalX$$ = -1, $CellContext`diskNormalY$$ = 
+    0, $CellContext`diskRadius$$ = 0.5, $CellContext`roughness$$ = 
+    0.1, $CellContext`shadingColorScaling$$ = 
+    0.3, $CellContext`shadingOffset$$ = 0.3, Typeset`show$$ = False, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`diskCenterZ$$], 1}, 1, 1}, {{
+       Hold[$CellContext`diskNormalX$$], -1}, -3, -0.1}, {{
+       Hold[$CellContext`diskNormalY$$], 0}, -3, 0}, {{
+       Hold[$CellContext`diskRadius$$], 0.5}, 0.2, 1}, {{
+       Hold[$CellContext`roughness$$], 0.1}, 0.01, 0.99}, {{
+       Hold[$CellContext`shadingColorScaling$$], 0.3}, 0.1, 1}, {{
+       Hold[$CellContext`shadingOffset$$], 0.3}, 0, 
+      Dynamic[$CellContext`diskRadius$$]}}, Typeset`size$$ = {
+    94., {148., 154.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`diskCenterZ$6968363$$ = 
+    0, $CellContext`diskNormalX$6968364$$ = 
+    0, $CellContext`diskNormalY$6968365$$ = 
+    0, $CellContext`diskRadius$6968366$$ = 
+    0, $CellContext`roughness$6968367$$ = 
+    0, $CellContext`shadingColorScaling$6968368$$ = 
+    0, $CellContext`shadingOffset$6968369$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`diskCenterZ$$ = 
+        1, $CellContext`diskNormalX$$ = -1, $CellContext`diskNormalY$$ = 
+        0, $CellContext`diskRadius$$ = 0.5, $CellContext`roughness$$ = 
+        0.1, $CellContext`shadingColorScaling$$ = 
+        0.3, $CellContext`shadingOffset$$ = 0.3}, "ControllerVariables" :> {
+        Hold[$CellContext`diskCenterZ$$, $CellContext`diskCenterZ$6968363$$, 
+         0], 
+        Hold[$CellContext`diskNormalX$$, $CellContext`diskNormalX$6968364$$, 
+         0], 
+        Hold[$CellContext`diskNormalY$$, $CellContext`diskNormalY$6968365$$, 
+         0], 
+        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$6968366$$, 0], 
+        Hold[$CellContext`roughness$$, $CellContext`roughness$6968367$$, 0], 
+        Hold[$CellContext`shadingColorScaling$$, \
+$CellContext`shadingColorScaling$6968368$$, 0], 
+        Hold[$CellContext`shadingOffset$$, \
+$CellContext`shadingOffset$6968369$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`diskNormalAxis = 
+        Normalize[{$CellContext`diskNormalX$$, $CellContext`diskNormalY$$, \
+-1}]; $CellContext`testDisk = {{
+          0, 0, $CellContext`diskCenterZ$$}, $CellContext`diskNormalAxis, \
+$CellContext`diskRadius$$}; $CellContext`testSphere = {{0, 0, 0}, 
+          1}; $CellContext`peakLightDir = gBRDF`gCalcGgxPeakForLight[
+          Part[$CellContext`testDisk, 1], $CellContext`diskNormalAxis, {0, 0, 
+          0}]; $CellContext`lightCenter = 
+        Part[$CellContext`testDisk, 1] + 
+         Normalize[$CellContext`peakLightDir]; $CellContext`majorX = \
+-$CellContext`diskNormalY$$; $CellContext`majorY = $CellContext`diskNormalX$$; \
+$CellContext`majorAxis = 
+        Normalize[{$CellContext`majorX, $CellContext`majorY, 
+           0}]; $CellContext`minorX = $CellContext`majorY; \
+$CellContext`minorY = -$CellContext`majorX; $CellContext`minorAxis = 
+        Normalize[{$CellContext`minorX, $CellContext`minorY, 
+           0}]; $CellContext`majorSize = $CellContext`diskRadius$$; \
+$CellContext`diskTangentZ = Part[
+          Part[
+           Solve[Dot[$CellContext`diskNormalAxis, {
+               Part[$CellContext`majorAxis, 1], 
+               Part[$CellContext`majorAxis, 2], $CellContext`z}] == 
+            0, $CellContext`z], All, 1, 2], 1]; $CellContext`diskTangent = 
+        Normalize[{
+           Part[$CellContext`majorAxis, 1], 
+           
+           Part[$CellContext`majorAxis, 
+            2], $CellContext`diskTangentZ}]; $CellContext`diskBiTangentZ = 
+        Part[
+          Part[
+           Solve[Dot[$CellContext`diskNormalAxis, {
+               Part[$CellContext`minorAxis, 1], 
+               Part[$CellContext`minorAxis, 2], $CellContext`z}] == 
+            0, $CellContext`z], All, 1, 2], 1]; $CellContext`diskBiTangent = 
+        Normalize[{
+           Part[$CellContext`minorAxis, 1], 
+           
+           Part[$CellContext`minorAxis, 
+            2], $CellContext`diskBiTangentZ}]; $CellContext`theta0 = ArcCos[
+          Dot[
+           Normalize[$CellContext`diskNormalAxis], {0, 
+           0, -1}]]; $CellContext`helperPt1 = 
+        Part[$CellContext`testDisk, 1] + (Sin[$CellContext`theta0] 
+           Norm[$CellContext`lightCenter - 
+             Part[$CellContext`testDisk, 
+              1]]) $CellContext`diskBiTangent; $CellContext`viewDir = 
+        Normalize[{0, 0, 0} - 
+          Part[$CellContext`testDisk, 1]]; $CellContext`lightDir0 = 
+        Normalize[$CellContext`lightCenter - 
+          Part[$CellContext`testDisk, 1]]; $CellContext`shadingPt1 = 
+        Part[$CellContext`testDisk, 
+           1] + $CellContext`diskBiTangent $CellContext`shadingOffset$$; \
+$CellContext`lightDir1 = 
+        Normalize[$CellContext`lightCenter - $CellContext`shadingPt1]; \
+$CellContext`arc0Center = 
+        Part[$CellContext`testDisk, 1]; $CellContext`arc0Radius = 
+        0.1; $CellContext`arc0Normal = Normalize[
+          
+          Cross[$CellContext`diskNormalAxis, {0, 
+           0, -1}]]; $CellContext`arc0Axis = (
+          Normalize[$CellContext`diskNormalAxis] + {0, 0, -1})/
+         2; $CellContext`arc0ThetaSpan = $CellContext`theta0; \
+$CellContext`arc1Center = 
+        Part[$CellContext`testDisk, 1]; $CellContext`arc1Radius = 
+        0.1; $CellContext`arc1Normal = Normalize[
+          
+          Cross[$CellContext`diskNormalAxis, $CellContext`lightDir0]]; \
+$CellContext`arc1Axis = (Normalize[$CellContext`diskNormalAxis] + 
+          Normalize[$CellContext`lightDir0])/
+         2; $CellContext`arc1ThetaSpan = $CellContext`theta0; \
+$CellContext`lightDist0 = 
+        Norm[$CellContext`lightCenter - 
+          Part[$CellContext`testDisk, 
+           1]]; $CellContext`lightDist0Proj = $CellContext`lightDist0 
+         Sin[$CellContext`theta0]; $CellContext`theta2 = 
+        ArcCot[(Cot[$CellContext`theta0] \
+$CellContext`lightDist0Proj)/($CellContext`lightDist0Proj - \
+$CellContext`shadingOffset$$)]; $CellContext`arc2Center = \
+$CellContext`shadingPt1; $CellContext`arc2Radius = 
+        0.1; $CellContext`arc2Normal = Normalize[
+          
+          Cross[$CellContext`diskNormalAxis, $CellContext`lightDir1]]; \
+$CellContext`arc2Axis = (Normalize[$CellContext`diskNormalAxis] + 
+          Normalize[$CellContext`lightDir1])/
+         2; $CellContext`arc2ThetaSpan = $CellContext`theta2; \
+$CellContext`arc3Center = $CellContext`lightCenter; $CellContext`arc3Radius = 
+        0.1; $CellContext`arc3Normal = Normalize[
+          
+          Cross[-$CellContext`diskNormalAxis, -$CellContext`lightDir1]]; \
+$CellContext`arc3Axis = -((Normalize[$CellContext`diskNormalAxis] + 
+           Normalize[$CellContext`lightDir1])/
+          2); $CellContext`arc3ThetaSpan = $CellContext`theta2; \
+$CellContext`minorSize = ($CellContext`diskRadius$$ 
+          Cos[$CellContext`theta0])/(
+         1 + $CellContext`diskRadius$$ 
+          Sin[$CellContext`theta0]); $CellContext`maxLeftThetaD = 
+        ArcTan[$CellContext`minorSize/1]; $CellContext`sphereShadingFunc := 
+        Block[{$CellContext`spherePt, $CellContext`diskPt, \
+$CellContext`tmpRayDir, $CellContext`tmpDiff, $CellContext`tmpProd1, \
+$CellContext`tmpProd2, $CellContext`tmpProd3, $CellContext`intsPt, \
+$CellContext`sglight, $CellContext`refLightDir, $CellContext`refViewDir, \
+$CellContext`refNormal, $CellContext`sgndf, $CellContext`diskLighting1, \
+$CellContext`finalLighting}, $CellContext`spherePt = {$CellContext`x, \
+$CellContext`y, $CellContext`z}; If[$CellContext`z < 0, 
+            Return[0]]; $CellContext`tmpRayDir = 
+           Normalize[$CellContext`spherePt]; $CellContext`tmpDiff = \
+$CellContext`spherePt - Part[$CellContext`testDisk, 1]; $CellContext`tmpProd1 = 
+           
+           Dot[$CellContext`tmpDiff, $CellContext`diskNormalAxis]; \
+$CellContext`tmpProd2 = 
+           Dot[$CellContext`tmpRayDir, $CellContext`diskNormalAxis]; \
+$CellContext`tmpProd3 = $CellContext`tmpProd1/$CellContext`tmpProd2; \
+$CellContext`intsPt = $CellContext`spherePt - $CellContext`tmpRayDir \
+$CellContext`tmpProd3; $CellContext`diskPt = $CellContext`intsPt; 
+          If[Norm[$CellContext`intsPt - 
+              Part[$CellContext`testDisk, 1]] > $CellContext`diskRadius$$, 
+            Return[0]]; $CellContext`sglight = 
+           sgCommon`sgSphereLight[$CellContext`lightCenter, 10, 20, 
+             1, $CellContext`diskPt]; $CellContext`refLightDir = 
+           Normalize[$CellContext`lightCenter - $CellContext`diskPt]; \
+$CellContext`refViewDir = 
+           Normalize[{0, 0, 
+              0} - $CellContext`diskPt]; $CellContext`refNormal = \
+$CellContext`diskNormalAxis; $CellContext`sgndf = 
+           sgCommon`sgNDF[$CellContext`roughness$$, $CellContext`refLightDir, \
+$CellContext`refViewDir, $CellContext`refNormal]; $CellContext`diskLighting1 = 
+           sgCommon`sgDot[$CellContext`sglight, $CellContext`sgndf]; \
+$CellContext`finalLighting = $CellContext`diskLighting1 \
+$CellContext`shadingColorScaling$$; $CellContext`finalLighting]; \
+$CellContext`peakDiskPt = gBRDF`gCalcGgxPeakOnPlane[
+          
+          Part[$CellContext`testDisk, 
+           1], $CellContext`diskNormalAxis, $CellContext`lightCenter, {0, 0, 
+          0}]; $CellContext`peakSpherePt = $CellContext`peakDiskPt; \
+$CellContext`tmpSquareZ = 
+        1 - Part[$CellContext`peakDiskPt, 1]^2 - 
+         Part[$CellContext`peakDiskPt, 2]^2; 
+       Part[$CellContext`peakSpherePt, 3] = If[$CellContext`tmpSquareZ < 0, 0, 
+          Abs[
+           Sqrt[$CellContext`tmpSquareZ]]]; gPlots3D`gParamPlot3D[
+         Association[
+          ("spheres" -> {
+            Association[
+            "center" -> $CellContext`lightCenter, "radius" -> 0.05, "mesh" -> 
+             None, "colorFunc" -> (Magenta& )], 
+            Association[
+            "center" -> {0, 0, 0}, "radius" -> 0.03, "mesh" -> None, 
+             "colorFunc" -> (Green& )], 
+            Association[
+            "center" -> Part[$CellContext`testSphere, 1], "radius" -> 
+             Part[$CellContext`testSphere, 2], "opacity" -> 0.1, "plotPts" -> 
+             30, "mesh" -> None, "colorFunc" -> 
+             Function[{$CellContext`x, $CellContext`y, $CellContext`z}, 
+               LightBlue]], 
+            Association[
+            "center" -> $CellContext`peakSpherePt, "radius" -> 0.03, "mesh" -> 
+             None, "colorFunc" -> (Blue& )], 
+            Association[
+            "center" -> $CellContext`shadingPt1, "radius" -> 0.03, "mesh" -> 
+             None, "colorFunc" -> (Red& )], 
+            Association[
+            "center" -> $CellContext`helperPt1, "radius" -> 0.03, "mesh" -> 
+             None, "colorFunc" -> (Gray& )]}& )[], 
+          ("lines" -> {
+            Association[
+            "startPos" -> Part[$CellContext`testDisk, 1], 
+             "dirVec" -> $CellContext`diskBiTangent, "length" -> 
+             Slot["diskRadius"], "colorFunc" -> (Green& ), "thickness" -> 
+             0.005], 
+            Association[
+            "startPos" -> Part[$CellContext`testDisk, 1], 
+             "dirVec" -> $CellContext`diskNormalAxis, "length" -> 1, 
+             "colorFunc" -> (Green& ), "thickness" -> 0.005], 
+            Association[
+            "startPos" -> {0, 0, 0}, "dirVec" -> {0, 0, 1}, "length" -> 1, 
+             "colorFunc" -> (Green& ), "thickness" -> 0.005], 
+            Association[
+            "startPos" -> Part[$CellContext`testDisk, 1], 
+             "dirVec" -> $CellContext`lightDir0, "length" -> 
+             Norm[$CellContext`lightCenter - Part[$CellContext`testDisk, 1]], 
+             "colorFunc" -> (Blue& ), "thickness" -> 0.005], 
+            Association[
+            "startPos" -> $CellContext`shadingPt1, 
+             "dirVec" -> $CellContext`lightDir1, "length" -> 
+             Norm[$CellContext`lightCenter - $CellContext`shadingPt1], 
+             "colorFunc" -> (Red& ), "thickness" -> 0.005], 
+            Association[
+            "startPos" -> $CellContext`helperPt1, 
+             "dirVec" -> $CellContext`diskNormalAxis, "length" -> 
+             Norm[$CellContext`lightCenter - Part[$CellContext`testDisk, 1]] 
+              Cos[$CellContext`theta0], "colorFunc" -> (Gray& ), "thickness" -> 
+             0.005], 
+            Association[
+            "startPos" -> $CellContext`helperPt1, 
+             "dirVec" -> -$CellContext`diskBiTangent, "length" -> 
+             Norm[$CellContext`helperPt1 - $CellContext`shadingPt1], 
+             "colorFunc" -> (Gray& ), "thickness" -> 0.005]}& )[
+           Association["diskRadius" -> $CellContext`diskRadius$$]], 
+          ("disks" -> {
+            Association[
+            "center" -> Part[$CellContext`testDisk, 1], "normalAxis" -> 
+             Part[$CellContext`testDisk, 2], "radius" -> 
+             Part[$CellContext`testDisk, 3], "opacity" -> 0, "mesh" -> None, 
+             "colorFunc" -> 
+             Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, Cyan]]}& )[], 
+          ("arcs" -> {
+            Association[
+            "center" -> $CellContext`arc0Center, 
+             "radius" -> $CellContext`arc0Radius, "thickness" -> 0.01, 
+             "normalDir" -> $CellContext`arc0Normal, 
+             "axisDir" -> $CellContext`arc0Axis, 
+             "thetaSpan" -> $CellContext`arc0ThetaSpan, "mesh" -> None, 
+             "colorFunc" -> 
+             Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, Green]], 
+            Association[
+            "center" -> $CellContext`arc1Center, 
+             "radius" -> $CellContext`arc1Radius, "thickness" -> 0.01, 
+             "normalDir" -> $CellContext`arc1Normal, 
+             "axisDir" -> $CellContext`arc1Axis, 
+             "thetaSpan" -> $CellContext`arc1ThetaSpan, "mesh" -> None, 
+             "colorFunc" -> 
+             Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, Blue]], 
+            Association[
+            "center" -> $CellContext`arc2Center, 
+             "radius" -> $CellContext`arc2Radius, "thickness" -> 0.01, 
+             "normalDir" -> $CellContext`arc2Normal, 
+             "axisDir" -> $CellContext`arc2Axis, 
+             "thetaSpan" -> $CellContext`arc2ThetaSpan, "mesh" -> None, 
+             "colorFunc" -> 
+             Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, Red]], 
+            Association[
+            "center" -> $CellContext`arc3Center, 
+             "radius" -> $CellContext`arc3Radius, "thickness" -> 0.01, 
+             "normalDir" -> $CellContext`arc3Normal, 
+             "axisDir" -> $CellContext`arc3Axis, 
+             "thetaSpan" -> $CellContext`arc3ThetaSpan, "mesh" -> None, 
+             "colorFunc" -> 
+             Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, Red]]}& )[], "customPlots" -> {
+            Graphics3D[{
+              Text[
+               Style[
+               "\[Theta]0", 
+                18], $CellContext`arc0Center + $CellContext`arc0Axis \
+($CellContext`arc0Radius + 0.1)]}], 
+            Graphics3D[{
+              Text[
+               Style[
+               "\[Theta]0", 
+                18], $CellContext`arc1Center + $CellContext`arc1Axis \
+($CellContext`arc1Radius + 0.1)]}], 
+            Graphics3D[{
+              Text[
+               Style[
+               "\[Theta]2", 
+                18], $CellContext`arc2Center + $CellContext`arc2Axis \
+($CellContext`arc2Radius + 0.1)]}], 
+            Graphics3D[{
+              Text[
+               Style[
+               "\[Theta]2", 
+                18], $CellContext`arc3Center + $CellContext`arc3Axis \
+($CellContext`arc3Radius + 0.1)]}]}, "axisExtent" -> 1.6, "viewPoint" -> 
+          Front]]), 
+      "Specifications" :> {{{$CellContext`diskCenterZ$$, 1}, 1, 
+         1}, {{$CellContext`diskNormalX$$, -1}, -3, -0.1}, \
+{{$CellContext`diskNormalY$$, 0}, -3, 0}, {{$CellContext`diskRadius$$, 0.5}, 
+         0.2, 1}, {{$CellContext`roughness$$, 0.1}, 0.01, 
+         0.99}, {{$CellContext`shadingColorScaling$$, 0.3}, 0.1, 
+         1}, {{$CellContext`shadingOffset$$, 0.3}, 0, 
+         Dynamic[$CellContext`diskRadius$$]}}, 
+      "Options" :> {Method -> {"ShowControls" -> False}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{145., {172., 178.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.834656188588086*^9, 3.8346562595616016`*^9}},
+ CellLabel->
+  "Out[1020]=",ExpressionUUID->"cedf39af-f65b-415e-a693-69164bdf6f74"]
 }, Open  ]]
 },
 WindowSize->{1082, 988},
-WindowMargins->{{465, Automatic}, {-125, Automatic}},
+WindowMargins->{{198, Automatic}, {12, Automatic}},
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
 ]
@@ -3022,9 +4460,17 @@ Cell[65158, 1468, 343, 8, 30, "Print",ExpressionUUID->"9d645f11-69e5-4171-a875-0
 Cell[65504, 1478, 13838, 268, 317, "Output",ExpressionUUID->"2a3f7018-52f5-4cf0-8046-e659bfc955a9"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[79379, 1751, 40755, 917, 4019, "Input",ExpressionUUID->"0ad24e45-6966-41b9-ad57-fa66a82a42d1"],
-Cell[120137, 2670, 340, 8, 30, "Print",ExpressionUUID->"305e5f6a-a342-49ee-bf4a-bb1a2285d0c4"],
-Cell[120480, 2680, 15957, 314, 317, "Output",ExpressionUUID->"0e5785b9-bb36-430e-9860-6ba12aef96a6"]
+Cell[79379, 1751, 41150, 922, 4057, "Input",ExpressionUUID->"0ad24e45-6966-41b9-ad57-fa66a82a42d1"],
+Cell[120532, 2675, 340, 8, 30, "Print",ExpressionUUID->"305e5f6a-a342-49ee-bf4a-bb1a2285d0c4"],
+Cell[120875, 2685, 15957, 314, 317, "Output",ExpressionUUID->"0e5785b9-bb36-430e-9860-6ba12aef96a6"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[136869, 3004, 46481, 1056, 4627, "Input",ExpressionUUID->"80dd8bcf-3c10-4c3b-a15c-9fd056da5029"],
+Cell[CellGroupData[{
+Cell[183375, 4064, 327, 8, 30, "Print",ExpressionUUID->"7590cfd3-2aed-4a87-ac8b-ca15bc9a6ece"],
+Cell[183705, 4074, 794, 14, 55, "Print",ExpressionUUID->"785314c8-cca0-4f3f-b72d-de02885bc8d9"]
+}, Open  ]],
+Cell[184514, 4091, 17419, 341, 369, "Output",ExpressionUUID->"cedf39af-f65b-415e-a693-69164bdf6f74"]
 }, Open  ]]
 }
 ]
