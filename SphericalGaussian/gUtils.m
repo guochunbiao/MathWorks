@@ -4,7 +4,7 @@ BeginPackage["gUtils`"];
 
 
 ClearAll[gStructRules,gPrint,gPrintFunc,gEvalFunc,gCreateCone,gLerp,gRemap,gClampPhi,
-	gCalcRectCorners];
+	gCalcRectCorners,gReflectVector];
 gPrint::usage="Print messages";
 gPrintFunc::usage="Print a function";
 gEvalFunc::usage="Evaluate a funciton";
@@ -14,6 +14,7 @@ gLerp::usage="gLerp";
 gRemap::usage="gRemap";
 gClampPhi::usage="gClampPhi";
 gCalcRectCorners::usage="gCalcRectCorners";
+gReflectVector::usage="gReflectVector";
 
 
 SetAttributes[gStructRules,HoldAll]
@@ -112,6 +113,17 @@ gCalcRectCorners[rectInput_]:=Module[
 	rightBtm=rectCenter+rectMinorRadius*rectMinorAxis-rectMajorAxis*rectMajorRadius;
 	
 	{leftTop,rightTop,leftBtm,rightBtm}
+];
+
+
+gReflectVector[viewOrLight_,half_]:=Module[
+	{o,h,i},
+	
+	o=Normalize@viewOrLight;
+	h=Normalize@half;
+	i=Normalize[2Dot[o,h]*h-o];
+	
+	i
 ];
 
 

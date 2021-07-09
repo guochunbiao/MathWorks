@@ -16,7 +16,7 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 sgCapsIntsEnergyCentroidTheta,sgCapIntsAsNewSGDeprecated,sgProductIntegral,
 		 sgNDFProdIntegrateLight,sgCapIntsEnergyPercent,sgMaxLambda,sgSphereLight,
 		 sgCapIntsAreaPercent,sgProduct,sgShading,sgSolveOneBounce1,sgSolveOneBounce2,
-		 sgCalcEnergyPercent,sgReflectLight,sgRepresentLambda];
+		 sgCalcEnergyPercent,sgReflectLight,sgRepresentLambda,sgDirLight];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -71,6 +71,7 @@ sgShading::usage="sgShading";
 sgSolveOneBounce1::usage="sgSolveOneBounce1";
 sgSolveOneBounce2::usage="sgSolveOneBounce2";
 sgRepresentLambda::usage="sgRepresentLambda";
+sgDirLight::usage="sgDirLight";
 
 
 Begin["`Private`"];
@@ -112,8 +113,8 @@ asgVector[v_,{lobeAxis_,tangentAxis_,bitangentAxis_},
 ];
 
 
-asgPolar[\[Theta]_,\[Phi]_,{lobeAxis_,tangentAxis_,bitangentAxis_},
-	{xBandwidth_,yBandwidth_},amplitude_]
+(*asgPolar[\[Theta]_,\[Phi]_,{lobeAxis_,tangentAxis_,bitangentAxis_},
+	{xBandwidth_,yBandwidth_},amplitude_]*)
 
 
 sgPolar[\[Theta]_,\[Lambda]_,\[Mu]_]:=Module[
@@ -164,6 +165,8 @@ sgProductIntegral[{inP1_,\[Lambda]1_,\[Mu]1_},{inP2_,\[Lambda]2_,\[Mu]2_}]:=Modu
 	{p1,p2,\[Lambda]3,c1,c2},
 	p1=Normalize[inP1];
 	p2=Normalize[inP2];
+	p1=inP1;
+	p2=inP2;
 	
 	c1=\[Lambda]1*\[Lambda]2/(\[Lambda]1+\[Lambda]2);
 	c2=Dot[p1,p2];	
@@ -226,6 +229,17 @@ sgSphereLight[lightCenter_,lightFadeStart_,lightFadeEnd_,lightIntensity_,shading
 		
 	p=Normalize[lightCenter-shadingPos];
 	\[Lambda]=gLerp[sgMinLambda,sgMaxLambda,lambdaFactor];
+	\[Mu]=lightIntensity;
+	
+	{p,\[Lambda],\[Mu]}
+];
+
+
+sgDirLight[lightDir_,lightIntensity_,sgLambda_]:=Module[
+	{p,\[Lambda],\[Mu]},
+	
+	p=Normalize[lightDir];
+	\[Lambda]=sgLambda;
 	\[Mu]=lightIntensity;
 	
 	{p,\[Lambda],\[Mu]}
