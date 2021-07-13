@@ -113,8 +113,14 @@ asgVector[v_,{lobeAxis_,tangentAxis_,bitangentAxis_},
 ];
 
 
-(*asgPolar[\[Theta]_,\[Phi]_,{lobeAxis_,tangentAxis_,bitangentAxis_},
-	{xBandwidth_,yBandwidth_},amplitude_]*)
+asgPolar[\[Theta]_,\[Theta]1_,\[Theta]2_,xBandwidth_,yBandwidth_,amplitude_]:=Module[
+	{\[Lambda],\[Mu],c},
+	\[Lambda]=xBandwidth;
+	\[Mu]=yBandwidth;
+	c=amplitude;
+	
+	c*Cos[\[Theta]]*Exp[-\[Lambda]*Cos[\[Theta]1]^2-\[Mu]*Cos[\[Theta]2]^2]
+];
 
 
 sgPolar[\[Theta]_,\[Lambda]_,\[Mu]_]:=Module[
@@ -461,7 +467,7 @@ sgEnergy[sg_]:=Module[
 	\[Lambda]=sg[[2]];
 	\[Mu]=sg[[3]];
 	
-	\[Mu] (2\[Pi])/\[Lambda] (1-E^(-2\[Lambda]))
+	(2 (1-E^(-2 \[Lambda])) \[Pi] \[Mu])/\[Lambda]
 ];
 
 
@@ -473,8 +479,10 @@ sgSolveEnergyInRange[sg_]:=Module[
 	
 	(*Fast way: Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],{z,z1,z2}, Assumptions\[Rule]{z1>z2}]*)
 	(*The following is a slow way*)
-	reg=ParametricRegion[{Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]},{{\[Phi],0,2\[Pi]},{\[Theta],\[Pi]/8,\[Pi]/7}}];
-	sol=Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],{x,y,z}\[Element]reg,Assumptions->{\[Lambda]>0,\[Mu]>0}];
+	(*reg=ParametricRegion[{Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]},{{\[Phi],0,2\[Pi]},{\[Theta],\[Pi]/8,\[Pi]/7}}];
+	sol=Integrate[\[Mu]*Exp[\[Lambda]*(z-1)],{x,y,z}\[Element]reg,Assumptions->{\[Lambda]>0,\[Mu]>0}];*)
+	sol=Integrate[\[Mu]*Exp[\[Lambda]*(Cos[\[Theta]]-1)]*Sin[\[Theta]],{\[Theta],0,\[Pi]},{\[Phi],0,2\[Pi]}];
+	
 	sol
 ];
 
