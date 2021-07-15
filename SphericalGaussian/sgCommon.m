@@ -98,8 +98,8 @@ Assert[\[Lambda]>=sgMinLambda];
 	\[Mu]:bandwidth for y-axis
 	c:lobe amplitude
 *)
-asgVector[v_,{lobeAxis_,tangentAxis_,bitangentAxis_},
-	{xBandwidth_,yBandwidth_},amplitude_]:=Module[
+asgVector[v_,{lobeAxis_,tangentAxis_,bitangentAxis_,
+	xBandwidth_,yBandwidth_,amplitude_}]:=Module[
 	{z,x,y,\[Lambda],\[Mu],c,Svz},
 	z=Normalize[lobeAxis];
 	x=Normalize[tangentAxis];

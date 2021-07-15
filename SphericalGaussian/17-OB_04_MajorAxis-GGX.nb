@@ -1,0 +1,904 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     39411,        896]
+NotebookOptionsPosition[     38883,        879]
+NotebookOutlinePosition[     39228,        894]
+CellTagsIndexPosition[     39185,        891]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gUtils`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gBRDF`\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<sgCommon`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlots`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlots3D`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Needs", "[", "\"\<gSphericalCap`\>\"", "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"gPrint", "[", "\"\<Major axis\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ClearAll", "[", 
+    RowBox[{
+    "lightDir", ",", "viewPoint", ",", "\[IndentingNewLine]", "\t     ", 
+     "arc1AngleA", ",", "arc1AngleB", ",", "theta1", ",", " ", "shadingPt0", 
+     ",", "viewDir0", ",", "viewDist0", ",", "halfDir0", ",", 
+     "\[IndentingNewLine]", "\t     ", "arc2AngleA", ",", "arc2AngleB", ",", 
+     "theta2", ",", " ", "shadingPt1", ",", "viewDir1", ",", "viewDist1", ",",
+      "halfDir1", ",", "\[IndentingNewLine]", "\t     ", "thetaL", ",", 
+     "arcLAngleA", ",", "arcLAngleB", ",", "\[IndentingNewLine]", "\t     ", 
+     "thetaH1", ",", "arcH1AngleA", ",", "arcH1AngleB", ",", 
+     "\[IndentingNewLine]", "\t     ", "thetaH2", ",", "arcH2AngleA", ",", 
+     "arcH2AngleB", ",", "\[IndentingNewLine]", "\t", "deltaX", ",", 
+     "diskRadius", ",", "distNormal", ",", "viewProjPt", ",", 
+     "viewProjDistToCenter"}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"diskRadius", "=", "1"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"distNormal", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"viewPoint", "=", 
+     RowBox[{"{", 
+      RowBox[{"viewPointX", ",", "viewPointY"}], "}"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"shadingPt0", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"viewDir0", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"viewPoint", "-", "shadingPt0"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"viewDist0", "=", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"viewPoint", "-", "shadingPt0"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"halfDir0", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"lightDir", "=", 
+     RowBox[{"gReflectVector", "[", 
+      RowBox[{"viewDir0", ",", "halfDir0"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"shadingPt1", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"shadingPt0", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], "+", "shadingPt1Offset"}], ",", 
+       "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"viewDir1", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{"viewPoint", "-", "shadingPt1"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"viewDist1", "=", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"viewPoint", "-", "shadingPt1"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"halfDir1", "=", 
+     RowBox[{"Normalize", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"lightDir", "+", "viewDir1"}], ")"}], "/", "2"}], "]"}]}], 
+    ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"theta1", "=", 
+     RowBox[{"ArcCos", "@", 
+      RowBox[{"Dot", "[", 
+       RowBox[{"viewDir0", ",", "distNormal"}], "]"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"theta2", "=", 
+     RowBox[{"ArcCos", "@", 
+      RowBox[{"Dot", "[", 
+       RowBox[{"viewDir1", ",", "distNormal"}], "]"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"thetaL", "=", 
+     RowBox[{"ArcCos", "@", 
+      RowBox[{"Dot", "[", 
+       RowBox[{"lightDir", ",", "distNormal"}], "]"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"thetaH1", "=", "0"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"thetaH2", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"theta2", "+", "thetaL"}], ")"}], "/", "2"}], "-", 
+      "theta2"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"arc", " ", "angles"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"arc1AngleA", "=", 
+     RowBox[{"3", 
+      RowBox[{"\[Pi]", "/", "2"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arc1AngleB", "=", 
+     RowBox[{
+      RowBox[{"3", 
+       RowBox[{"\[Pi]", "/", "2"}]}], "+", "theta1"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"arc2AngleA", "=", 
+     RowBox[{"3", 
+      RowBox[{"\[Pi]", "/", "2"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arc2AngleB", "=", 
+     RowBox[{
+      RowBox[{"3", 
+       RowBox[{"\[Pi]", "/", "2"}]}], "+", "theta2"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"arcLAngleA", "=", 
+     RowBox[{"3", 
+      RowBox[{"\[Pi]", "/", "2"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arcLAngleB", "=", 
+     RowBox[{
+      RowBox[{"3", 
+       RowBox[{"\[Pi]", "/", "2"}]}], "-", "thetaL"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"arcH1AngleA", "=", 
+     RowBox[{"\[Pi]", "/", "2"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arcH1AngleB", "=", 
+     RowBox[{"arcH1AngleA", "+", "thetaH1"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arcH2AngleA", "=", 
+     RowBox[{"\[Pi]", "/", "2"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"arcH2AngleB", "=", 
+     RowBox[{"arcH2AngleA", "-", "thetaH2"}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"viewProjPt", "=", 
+     RowBox[{"viewPoint", "-", 
+      RowBox[{"viewDist0", "*", 
+       RowBox[{"Dot", "[", 
+        RowBox[{"viewDir0", ",", "distNormal"}], "]"}], "*", 
+       "distNormal"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"viewProjDistToCenter", "=", 
+     RowBox[{"viewDist0", "*", 
+      RowBox[{"Sin", "[", "theta1", "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"deltaX", "=", 
+     RowBox[{"Norm", "[", 
+      RowBox[{"shadingPt1", "-", "shadingPt0"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"validate", " ", "transform", " ", "equation"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"If", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"shadingPt1Offset", ">", "0"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"Assert", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Cot", "[", "theta1", "]"}], "*", 
+         RowBox[{"(", "viewProjDistToCenter", ")"}]}], "\[Equal]", 
+        RowBox[{
+         RowBox[{"Cot", "[", "theta2", "]"}], "*", 
+         RowBox[{"(", 
+          RowBox[{"viewProjDistToCenter", "+", "deltaX"}], ")"}]}]}], "]"}], 
+      ",", "\[IndentingNewLine]", 
+      RowBox[{"Assert", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Cot", "[", "theta1", "]"}], "*", 
+         RowBox[{"(", "viewProjDistToCenter", ")"}]}], "\[Equal]", 
+        RowBox[{
+         RowBox[{"Cot", "[", "theta2", "]"}], "*", 
+         RowBox[{"(", 
+          RowBox[{"viewProjDistToCenter", "-", "deltaX"}], ")"}]}]}], "]"}]}],
+      "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", " ", 
+    RowBox[{"gParamPlot", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"<|", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"\"\<circles\>\"", "\[Rule]", 
+           RowBox[{"{", "\[IndentingNewLine]", 
+            RowBox[{"(*", 
+             RowBox[{"view", " ", "point"}], "*)"}], "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<center\>\"", "\[Rule]", "viewPoint"}], ",", 
+               RowBox[{"\"\<radius\>\"", "\[Rule]", "0.02"}], ",", 
+               RowBox[{"\"\<color\>\"", "\[Rule]", "Magenta"}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.01"}]}], "|>"}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<center\>\"", "\[Rule]", "shadingPt1"}], ",", 
+               RowBox[{"\"\<radius\>\"", "\[Rule]", "0.01"}], ",", 
+               RowBox[{"\"\<color\>\"", "\[Rule]", "Red"}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.01"}]}], "|>"}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{"helper", " ", "points"}], "*)"}], 
+             "\[IndentingNewLine]", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<center\>\"", "\[Rule]", "viewProjPt"}], ",", 
+               RowBox[{"\"\<radius\>\"", "\[Rule]", "0.01"}], ",", 
+               RowBox[{"\"\<color\>\"", "\[Rule]", "Gray"}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.01"}]}], "|>"}]}], 
+            "\[IndentingNewLine]", "}"}]}], "&"}], "[", "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"\"\<lines\>\"", "\[Rule]", 
+           RowBox[{"{", "\[IndentingNewLine]", 
+            RowBox[{"(*", "ground", "*)"}], "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"-", "diskRadius"}], ",", "0"}], "}"}]}], ",", 
+               RowBox[{"\"\<dirVec\>\"", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{"1", ",", "0"}], "}"}]}], ",", 
+               RowBox[{"\"\<length\>\"", "\[Rule]", 
+                RowBox[{"(", 
+                 RowBox[{"2", "*", "diskRadius"}], ")"}]}], ",", 
+               "\[IndentingNewLine]", "     ", 
+               RowBox[{"\"\<color\>\"", "\[Rule]", "Green"}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{"view", " ", "dirs"}], "*)"}], "\[IndentingNewLine]", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<startPos\>\"", "\[Rule]", "viewPoint"}], ",", 
+               RowBox[{"\"\<dirVec\>\"", "\[Rule]", 
+                RowBox[{"-", "viewDir0"}]}], ",", 
+               RowBox[{"\"\<length\>\"", "\[Rule]", 
+                RowBox[{"viewDist0", "+", "0.5"}]}], ",", 
+               "\[IndentingNewLine]", "    ", 
+               RowBox[{"\"\<color\>\"", "\[Rule]", "LightGray"}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<startPos\>\"", "\[Rule]", "viewPoint"}], ",", 
+               RowBox[{"\"\<dirVec\>\"", "\[Rule]", 
+                RowBox[{"-", "viewDir1"}]}], ",", 
+               RowBox[{"\"\<length\>\"", "\[Rule]", 
+                RowBox[{"viewDist1", "+", "0.5"}]}], ",", 
+               "\[IndentingNewLine]", "    ", 
+               RowBox[{"\"\<color\>\"", "\[Rule]", "LightGray"}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{"light", " ", "dirs"}], "*)"}], "\[IndentingNewLine]", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "0"}], "}"}]}], ",", 
+               RowBox[{"\"\<dirVec\>\"", "\[Rule]", "lightDir"}], ",", 
+               RowBox[{"\"\<length\>\"", "\[Rule]", "1"}], ",", 
+               "\[IndentingNewLine]", "    ", 
+               RowBox[{"\"\<color\>\"", "\[Rule]", "Green"}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+                RowBox[{"shadingPt1", "-", 
+                 RowBox[{"lightDir", "*", "0.25"}]}]}], ",", 
+               RowBox[{"\"\<dirVec\>\"", "\[Rule]", "lightDir"}], ",", 
+               RowBox[{"\"\<length\>\"", "\[Rule]", "1"}], ",", 
+               "\[IndentingNewLine]", "    ", 
+               RowBox[{"\"\<color\>\"", "\[Rule]", "Green"}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+             ",", "\[IndentingNewLine]", "  ", 
+             RowBox[{"(*", 
+              RowBox[{"half", " ", "dirs"}], "*)"}], "\[IndentingNewLine]", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "0"}], "}"}]}], ",", 
+               RowBox[{"\"\<dirVec\>\"", "\[Rule]", "halfDir0"}], ",", 
+               RowBox[{"\"\<length\>\"", "\[Rule]", "0.5"}], ",", 
+               "\[IndentingNewLine]", "    ", 
+               RowBox[{"\"\<color\>\"", "\[Rule]", "Blue"}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<startPos\>\"", "\[Rule]", "shadingPt1"}], ",", 
+               RowBox[{"\"\<dirVec\>\"", "\[Rule]", "halfDir1"}], ",", 
+               RowBox[{"\"\<length\>\"", "\[Rule]", "0.5"}], ",", 
+               "\[IndentingNewLine]", "    ", 
+               RowBox[{"\"\<color\>\"", "\[Rule]", "Red"}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+             ",", "\[IndentingNewLine]", "  ", 
+             RowBox[{"(*", 
+              RowBox[{"helper", " ", "lines"}], "*)"}], "\[IndentingNewLine]", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+                RowBox[{"shadingPt1", "-", 
+                 RowBox[{"{", 
+                  RowBox[{"0", ",", "0.5"}], "}"}]}]}], ",", 
+               RowBox[{"\"\<dirVec\>\"", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "1"}], "}"}]}], ",", 
+               RowBox[{"\"\<length\>\"", "\[Rule]", "1"}], ",", 
+               "\[IndentingNewLine]", "    ", 
+               RowBox[{"\"\<color\>\"", "\[Rule]", "Gray"}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "0"}], "}"}]}], ",", 
+               RowBox[{"\"\<dirVec\>\"", "\[Rule]", 
+                RowBox[{"Normalize", "[", 
+                 RowBox[{"viewProjPt", "-", 
+                  RowBox[{"{", 
+                   RowBox[{"0", ",", "0"}], "}"}]}], "]"}]}], ",", 
+               "\[IndentingNewLine]", "    ", 
+               RowBox[{"\"\<length\>\"", "\[Rule]", "viewProjDistToCenter"}], 
+               ",", "\[IndentingNewLine]", "    ", 
+               RowBox[{"\"\<color\>\"", "\[Rule]", "Gray"}], ",", 
+               RowBox[{"\"\<thickness\>\"", "\[Rule]", "0.005"}]}], "|>"}]}], 
+            "\[IndentingNewLine]", "}"}]}], "&"}], "[", "]"}], ",", 
+        "\[IndentingNewLine]", "  ", 
+        RowBox[{"\"\<customPlots\>\"", "\[Rule]", 
+         RowBox[{"{", "\[IndentingNewLine]", "    ", 
+          RowBox[{"(*", 
+           RowBox[{"line", " ", "labels"}], "*)"}], "\[IndentingNewLine]", 
+          "    ", 
+          RowBox[{
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Text", "[", 
+              RowBox[{
+               RowBox[{"Style", "[", 
+                RowBox[{"\"\<l\>\"", ",", "Medium"}], "]"}], ",", 
+               RowBox[{"shadingPt1", "+", 
+                RowBox[{"lightDir", "*", "0.8"}]}]}], "]"}], "}"}], "]"}], 
+           ",", "\[IndentingNewLine]", "    ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Text", "[", 
+              RowBox[{
+               RowBox[{"Style", "[", 
+                RowBox[{"\"\<n\>\"", ",", "Medium"}], "]"}], ",", 
+               RowBox[{"shadingPt1", "+", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"0", ",", "1"}], "}"}], "*", "0.55"}]}]}], "]"}], 
+             "}"}], "]"}], ",", "\[IndentingNewLine]", "    ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Text", "[", 
+              RowBox[{
+               RowBox[{"Style", "[", 
+                RowBox[{"\"\<h\>\"", ",", "Medium"}], "]"}], ",", 
+               RowBox[{"shadingPt1", "+", 
+                RowBox[{"halfDir1", "*", "0.55"}]}]}], "]"}], "}"}], "]"}], 
+           ",", "\[IndentingNewLine]", "    ", 
+           RowBox[{"(*", 
+            RowBox[{"light", " ", "dir"}], "*)"}], "\[IndentingNewLine]", 
+           "     ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Blue", ",", 
+              RowBox[{"Arrow", "[", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"2", ",", "2"}], "}"}], ",", 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{"2", ",", "2"}], "}"}], "-", "lightDir"}]}], "}"}],
+                "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", "    ", 
+           RowBox[{"(*", "arc0", "*)"}], "\[IndentingNewLine]", "     ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Blue", ",", 
+              RowBox[{"Circle", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "0"}], "}"}], ",", "0.1", ",", 
+                RowBox[{"{", 
+                 RowBox[{"arc1AngleA", ",", "arc1AngleB"}], "}"}]}], "]"}]}], 
+             "}"}], "]"}], ",", "\[IndentingNewLine]", "     ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Text", "[", 
+              RowBox[{
+               RowBox[{"Style", "[", 
+                RowBox[{
+                "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(1\)]\)\>\"", ",", 
+                 "Medium"}], "]"}], ",", "\[IndentingNewLine]", "\t", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"Cos", "[", 
+                   RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"arc1AngleA", "+", "arc1AngleB"}], ")"}], "/", 
+                    "2"}], "]"}], ",", 
+                  RowBox[{"Sin", "[", 
+                   RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"arc1AngleA", "+", "arc1AngleB"}], ")"}], "/", 
+                    "2"}], "]"}]}], "}"}], "*", "0.2"}]}], "]"}], "}"}], 
+            "]"}], ",", "\[IndentingNewLine]", "    ", 
+           RowBox[{"(*", "arc1", "*)"}], "\[IndentingNewLine]", "     ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Red", ",", 
+              RowBox[{"Circle", "[", 
+               RowBox[{"shadingPt1", ",", "0.1", ",", 
+                RowBox[{"{", 
+                 RowBox[{"arc2AngleA", ",", "arc2AngleB"}], "}"}]}], "]"}]}], 
+             "}"}], "]"}], ",", "\[IndentingNewLine]", "     ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Text", "[", 
+              RowBox[{
+               RowBox[{"Style", "[", 
+                RowBox[{
+                "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(2\)]\)\>\"", ",", 
+                 "Medium"}], "]"}], ",", 
+               RowBox[{"shadingPt1", "+", "\[IndentingNewLine]", "\t", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"Cos", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"arc2AngleA", "+", "arc2AngleB"}], ")"}], "/", 
+                    "2"}], "]"}], ",", 
+                   RowBox[{"Sin", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"arc2AngleA", "+", "arc2AngleB"}], ")"}], "/", 
+                    "2"}], "]"}]}], "}"}], "*", "0.2"}]}]}], "]"}], "}"}], 
+            "]"}], ",", "\[IndentingNewLine]", "    ", 
+           RowBox[{"(*", "arcL", "*)"}], "\[IndentingNewLine]", "     ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Blue", ",", 
+              RowBox[{"Circle", "[", 
+               RowBox[{"shadingPt1", ",", "0.2", ",", 
+                RowBox[{"{", 
+                 RowBox[{"arcLAngleA", ",", "arcLAngleB"}], "}"}]}], "]"}]}], 
+             "}"}], "]"}], ",", "\[IndentingNewLine]", "     ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Text", "[", 
+              RowBox[{
+               RowBox[{"Style", "[", 
+                RowBox[{
+                "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(L\)]\)\>\"", ",", 
+                 "Medium"}], "]"}], ",", 
+               RowBox[{"shadingPt1", "+", "\[IndentingNewLine]", "\t", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"Cos", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"arcLAngleA", "+", "arcLAngleB"}], ")"}], "/", 
+                    "2"}], "]"}], ",", 
+                   RowBox[{"Sin", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"arcLAngleA", "+", "arcLAngleB"}], ")"}], "/", 
+                    "2"}], "]"}]}], "}"}], "*", "0.3"}]}]}], "]"}], "}"}], 
+            "]"}], ",", "\[IndentingNewLine]", "    ", 
+           RowBox[{"(*", "arcH1", "*)"}], "\[IndentingNewLine]", "     ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Blue", ",", 
+              RowBox[{"Circle", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "0"}], "}"}], ",", "0.2", ",", 
+                RowBox[{"{", 
+                 RowBox[{"arcH1AngleA", ",", "arcH1AngleB"}], "}"}]}], 
+               "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", "     ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Text", "[", 
+              RowBox[{
+               RowBox[{"Style", "[", 
+                RowBox[{
+                "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(H1\)]\)\>\"", ",", 
+                 "Medium"}], "]"}], ",", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "0"}], "}"}], "+", "\[IndentingNewLine]", 
+                "\t", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"Cos", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"arcH1AngleA", "+", "arcH1AngleB"}], ")"}], "/", 
+                    "2"}], "]"}], ",", 
+                   RowBox[{"Sin", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"arcH1AngleA", "+", "arcH1AngleB"}], ")"}], "/", 
+                    "2"}], "]"}]}], "}"}], "*", "0.2"}]}]}], "]"}], "}"}], 
+            "]"}], ",", "\[IndentingNewLine]", "    ", 
+           RowBox[{"(*", "arcH2", "*)"}], "\[IndentingNewLine]", "     ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Blue", ",", 
+              RowBox[{"Circle", "[", 
+               RowBox[{"shadingPt1", ",", "0.2", ",", 
+                RowBox[{"{", 
+                 RowBox[{"arcH2AngleA", ",", "arcH2AngleB"}], "}"}]}], 
+               "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", "     ", 
+           RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+             RowBox[{"Text", "[", 
+              RowBox[{
+               RowBox[{"Style", "[", 
+                RowBox[{
+                "\"\<\!\(\*SubscriptBox[\(\[Theta]\), \(H2\)]\)\>\"", ",", 
+                 "Medium"}], "]"}], ",", 
+               RowBox[{"shadingPt1", "+", "\[IndentingNewLine]", "\t", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"Cos", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"arcH2AngleA", "+", "arcH2AngleB"}], ")"}], "/", 
+                    "2"}], "]"}], ",", 
+                   RowBox[{"Sin", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"arcH2AngleA", "+", "arcH2AngleB"}], ")"}], "/", 
+                    "2"}], "]"}]}], "}"}], "*", "0.2"}]}]}], "]"}], "}"}], 
+            "]"}]}], "\[IndentingNewLine]", "  ", "}"}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"\"\<axisExtent\>\"", "\[Rule]", "2"}]}], 
+       "\[IndentingNewLine]", "|>"}], ",", "Large"}], "]"}]}], ",", 
+   "\[IndentingNewLine]", "\t", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"viewPointX", ",", 
+       RowBox[{"-", "1.6"}]}], "}"}], ",", 
+     RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"viewPointY", ",", "0.5"}], "}"}], ",", 
+     RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"shadingPt1Offset", ",", 
+       RowBox[{"-", "1.5"}]}], "}"}], ",", 
+     RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"Method", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "True"}], "}"}]}]}], 
+  "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "lightDir", ",", "viewPoint", ",", "\[IndentingNewLine]", "\t     ", 
+    "arc1AngleA", ",", "arc1AngleB", ",", "theta1", ",", " ", "shadingPt0", 
+    ",", "viewDir0", ",", "viewDist0", ",", "halfDir0", ",", 
+    "\[IndentingNewLine]", "\t     ", "arc2AngleA", ",", "arc2AngleB", ",", 
+    "theta2", ",", " ", "shadingPt1", ",", "viewDir1", ",", "viewDist1", ",", 
+    "halfDir1", ",", "\[IndentingNewLine]", "\t     ", "thetaL", ",", 
+    "arcLAngleA", ",", "arcLAngleB", ",", "\[IndentingNewLine]", "\t     ", 
+    "thetaH1", ",", "arcH1AngleA", ",", "arcH1AngleB", ",", 
+    "\[IndentingNewLine]", "\t     ", "thetaH2", ",", "arcH2AngleA", ",", 
+    "arcH2AngleB", ",", "\[IndentingNewLine]", "\t", "deltaX", ",", 
+    "diskRadius", ",", "distNormal", ",", "viewProjPt", ",", 
+    "viewProjDistToCenter"}], "]"}], ";"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{
+  3.8353286839278593`*^9, {3.8353287201439123`*^9, 3.8353287203506503`*^9}, {
+   3.835328770488923*^9, 3.835328779619835*^9}},
+ CellLabel->
+  "In[834]:=",ExpressionUUID->"61af0d58-2f26-4f9c-a4a1-9e561e9e1b28"],
+
+Cell[BoxData[
+ StyleBox["\<\" Major axis\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{3.835328780307745*^9},
+ CellLabel->
+  "During evaluation of \
+In[834]:=",ExpressionUUID->"5871ab16-8ee9-48a4-a7ac-d51eb89bfcef"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`shadingPt1Offset$$ = -1.5, \
+$CellContext`viewPointX$$ = -1.6, $CellContext`viewPointY$$ = 0.5, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`viewPointX$$], -1.6}, -2, 2}, {{
+       Hold[$CellContext`viewPointY$$], 0.5}, -2, 2}, {{
+       Hold[$CellContext`shadingPt1Offset$$], -1.5}, -2, 2}}, 
+    Typeset`size$$ = {662., {287., 293.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`viewPointX$3741602$$ = 
+    0, $CellContext`viewPointY$3741603$$ = 
+    0, $CellContext`shadingPt1Offset$3741604$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`shadingPt1Offset$$ = -1.5, \
+$CellContext`viewPointX$$ = -1.6, $CellContext`viewPointY$$ = 0.5}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`viewPointX$$, $CellContext`viewPointX$3741602$$, 0], 
+        Hold[$CellContext`viewPointY$$, $CellContext`viewPointY$3741603$$, 0], 
+        Hold[$CellContext`shadingPt1Offset$$, \
+$CellContext`shadingPt1Offset$3741604$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`diskRadius = 
+        1; $CellContext`distNormal = {0, 
+         1}; $CellContext`viewPoint = {$CellContext`viewPointX$$, \
+$CellContext`viewPointY$$}; $CellContext`shadingPt0 = {0, 
+         0}; $CellContext`viewDir0 = 
+        Normalize[$CellContext`viewPoint - $CellContext`shadingPt0]; \
+$CellContext`viewDist0 = 
+        Norm[$CellContext`viewPoint - $CellContext`shadingPt0]; \
+$CellContext`halfDir0 = {0, 1}; $CellContext`lightDir = 
+        gUtils`gReflectVector[$CellContext`viewDir0, $CellContext`halfDir0]; \
+$CellContext`shadingPt1 = {
+         Part[$CellContext`shadingPt0, 1] + $CellContext`shadingPt1Offset$$, 
+          0}; $CellContext`viewDir1 = 
+        Normalize[$CellContext`viewPoint - $CellContext`shadingPt1]; \
+$CellContext`viewDist1 = 
+        Norm[$CellContext`viewPoint - $CellContext`shadingPt1]; \
+$CellContext`halfDir1 = 
+        Normalize[($CellContext`lightDir + $CellContext`viewDir1)/
+          2]; $CellContext`theta1 = ArcCos[
+          
+          Dot[$CellContext`viewDir0, $CellContext`distNormal]]; \
+$CellContext`theta2 = ArcCos[
+          
+          Dot[$CellContext`viewDir1, $CellContext`distNormal]]; \
+$CellContext`thetaL = ArcCos[
+          
+          Dot[$CellContext`lightDir, $CellContext`distNormal]]; \
+$CellContext`thetaH1 = 
+        0; $CellContext`thetaH2 = ($CellContext`theta2 + $CellContext`thetaL)/
+          2 - $CellContext`theta2; $CellContext`arc1AngleA = 
+        3 (Pi/2); $CellContext`arc1AngleB = 
+        3 (Pi/2) + $CellContext`theta1; $CellContext`arc2AngleA = 
+        3 (Pi/2); $CellContext`arc2AngleB = 
+        3 (Pi/2) + $CellContext`theta2; $CellContext`arcLAngleA = 
+        3 (Pi/2); $CellContext`arcLAngleB = 
+        3 (Pi/2) - $CellContext`thetaL; $CellContext`arcH1AngleA = 
+        Pi/2; $CellContext`arcH1AngleB = $CellContext`arcH1AngleA + \
+$CellContext`thetaH1; $CellContext`arcH2AngleA = 
+        Pi/2; $CellContext`arcH2AngleB = $CellContext`arcH2AngleA - \
+$CellContext`thetaH2; $CellContext`viewProjPt = $CellContext`viewPoint - \
+$CellContext`viewDist0 
+         Dot[$CellContext`viewDir0, $CellContext`distNormal] \
+$CellContext`distNormal; $CellContext`viewProjDistToCenter = \
+$CellContext`viewDist0 Sin[$CellContext`theta1]; $CellContext`deltaX = 
+        Norm[$CellContext`shadingPt1 - $CellContext`shadingPt0]; 
+       If[$CellContext`shadingPt1Offset$$ > 0, 
+         Assert[
+         Cot[$CellContext`theta1] $CellContext`viewProjDistToCenter == 
+          Cot[$CellContext`theta2] ($CellContext`viewProjDistToCenter + \
+$CellContext`deltaX)], 
+         Assert[
+         Cot[$CellContext`theta1] $CellContext`viewProjDistToCenter == 
+          Cot[$CellContext`theta2] ($CellContext`viewProjDistToCenter - \
+$CellContext`deltaX)]]; gPlots`gParamPlot[
+         Association[
+          ("circles" -> {
+            Association[
+            "center" -> $CellContext`viewPoint, "radius" -> 0.02, "color" -> 
+             Magenta, "thickness" -> 0.01], 
+            Association[
+            "center" -> $CellContext`shadingPt1, "radius" -> 0.01, "color" -> 
+             Red, "thickness" -> 0.01], 
+            Association[
+            "center" -> $CellContext`viewProjPt, "radius" -> 0.01, "color" -> 
+             Gray, "thickness" -> 0.01]}& )[], 
+          ("lines" -> {
+            Association[
+            "startPos" -> {-$CellContext`diskRadius, 0}, "dirVec" -> {1, 0}, 
+             "length" -> 2 $CellContext`diskRadius, "color" -> Green, 
+             "thickness" -> 0.005], 
+            Association[
+            "startPos" -> $CellContext`viewPoint, 
+             "dirVec" -> -$CellContext`viewDir0, 
+             "length" -> $CellContext`viewDist0 + 0.5, "color" -> LightGray, 
+             "thickness" -> 0.005], 
+            Association[
+            "startPos" -> $CellContext`viewPoint, 
+             "dirVec" -> -$CellContext`viewDir1, 
+             "length" -> $CellContext`viewDist1 + 0.5, "color" -> LightGray, 
+             "thickness" -> 0.005], 
+            Association[
+            "startPos" -> {0, 0}, "dirVec" -> $CellContext`lightDir, "length" -> 
+             1, "color" -> Green, "thickness" -> 0.005], 
+            Association[
+            "startPos" -> $CellContext`shadingPt1 - $CellContext`lightDir 
+              0.25, "dirVec" -> $CellContext`lightDir, "length" -> 1, "color" -> 
+             Green, "thickness" -> 0.005], 
+            Association[
+            "startPos" -> {0, 0}, "dirVec" -> $CellContext`halfDir0, "length" -> 
+             0.5, "color" -> Blue, "thickness" -> 0.005], 
+            Association[
+            "startPos" -> $CellContext`shadingPt1, 
+             "dirVec" -> $CellContext`halfDir1, "length" -> 0.5, "color" -> 
+             Red, "thickness" -> 0.005], 
+            Association[
+            "startPos" -> $CellContext`shadingPt1 - {0, 0.5}, 
+             "dirVec" -> {0, 1}, "length" -> 1, "color" -> Gray, "thickness" -> 
+             0.005], 
+            Association[
+            "startPos" -> {0, 0}, "dirVec" -> 
+             Normalize[$CellContext`viewProjPt - {0, 0}], 
+             "length" -> $CellContext`viewProjDistToCenter, "color" -> Gray, 
+             "thickness" -> 0.005]}& )[], "customPlots" -> {
+            Graphics[{
+              Text[
+               Style[
+               "l", Medium], $CellContext`shadingPt1 + $CellContext`lightDir 
+                0.8]}], 
+            Graphics[{
+              Text[
+               Style["n", Medium], $CellContext`shadingPt1 + {0, 1} 0.55]}], 
+            Graphics[{
+              Text[
+               Style[
+               "h", Medium], $CellContext`shadingPt1 + $CellContext`halfDir1 
+                0.55]}], 
+            Graphics[{Blue, 
+              Arrow[{{2, 2}, {2, 2} - $CellContext`lightDir}]}], 
+            Graphics[{Blue, 
+              
+              Circle[{0, 0}, 
+               0.1, {$CellContext`arc1AngleA, $CellContext`arc1AngleB}]}], 
+            Graphics[{
+              Text[
+               Style["\!\(\*SubscriptBox[\(\[Theta]\), \(1\)]\)", Medium], {
+                 Cos[($CellContext`arc1AngleA + $CellContext`arc1AngleB)/2], 
+                 Sin[($CellContext`arc1AngleA + $CellContext`arc1AngleB)/2]} 
+               0.2]}], 
+            Graphics[{Red, 
+              
+              Circle[$CellContext`shadingPt1, 
+               0.1, {$CellContext`arc2AngleA, $CellContext`arc2AngleB}]}], 
+            Graphics[{
+              Text[
+               Style[
+               "\!\(\*SubscriptBox[\(\[Theta]\), \(2\)]\)", 
+                Medium], $CellContext`shadingPt1 + {
+                  Cos[($CellContext`arc2AngleA + $CellContext`arc2AngleB)/2], 
+                  Sin[($CellContext`arc2AngleA + $CellContext`arc2AngleB)/2]} 
+                0.2]}], 
+            Graphics[{Blue, 
+              
+              Circle[$CellContext`shadingPt1, 
+               0.2, {$CellContext`arcLAngleA, $CellContext`arcLAngleB}]}], 
+            Graphics[{
+              Text[
+               Style[
+               "\!\(\*SubscriptBox[\(\[Theta]\), \(L\)]\)", 
+                Medium], $CellContext`shadingPt1 + {
+                  Cos[($CellContext`arcLAngleA + $CellContext`arcLAngleB)/2], 
+                  Sin[($CellContext`arcLAngleA + $CellContext`arcLAngleB)/2]} 
+                0.3]}], 
+            Graphics[{Blue, 
+              
+              Circle[{0, 0}, 
+               0.2, {$CellContext`arcH1AngleA, $CellContext`arcH1AngleB}]}], 
+            Graphics[{
+              Text[
+               Style[
+               "\!\(\*SubscriptBox[\(\[Theta]\), \(H1\)]\)", Medium], {0, 0} + {
+                  
+                  Cos[($CellContext`arcH1AngleA + $CellContext`arcH1AngleB)/
+                   2], 
+                  
+                  Sin[($CellContext`arcH1AngleA + $CellContext`arcH1AngleB)/
+                   2]} 0.2]}], 
+            Graphics[{Blue, 
+              
+              Circle[$CellContext`shadingPt1, 
+               0.2, {$CellContext`arcH2AngleA, $CellContext`arcH2AngleB}]}], 
+            Graphics[{
+              Text[
+               Style[
+               "\!\(\*SubscriptBox[\(\[Theta]\), \(H2\)]\)", 
+                Medium], $CellContext`shadingPt1 + {
+                  
+                  Cos[($CellContext`arcH2AngleA + $CellContext`arcH2AngleB)/
+                   2], 
+                  
+                  Sin[($CellContext`arcH2AngleA + $CellContext`arcH2AngleB)/
+                   2]} 0.2]}]}, "axisExtent" -> 2], Large]), 
+      "Specifications" :> {{{$CellContext`viewPointX$$, -1.6}, -2, 
+         2}, {{$CellContext`viewPointY$$, 0.5}, -2, 
+         2}, {{$CellContext`shadingPt1Offset$$, -1.5}, -2, 2}}, 
+      "Options" :> {Method -> {"ShowControls" -> True}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{713., {362., 368.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.8353287803448763`*^9},
+ CellLabel->
+  "Out[843]=",ExpressionUUID->"3292f96b-92f0-4b7c-aa55-8fea90295952"]
+}, Open  ]]
+},
+WindowSize->{1082, 812},
+WindowMargins->{{Automatic, 435}, {-62, Automatic}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 27163, 613, 2708, "Input",ExpressionUUID->"61af0d58-2f26-4f9c-a4a1-9e561e9e1b28"],
+Cell[27746, 637, 283, 8, 30, "Print",ExpressionUUID->"5871ab16-8ee9-48a4-a7ac-d51eb89bfcef"],
+Cell[28032, 647, 10835, 229, 749, "Output",ExpressionUUID->"3292f96b-92f0-4b7c-aa55-8fea90295952"]
+}, Open  ]]
+}
+]
+*)
+
