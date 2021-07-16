@@ -38,8 +38,9 @@ gPhongNDF[m_,noh_]:=Module[
 	{a2,tmpN},
 	a2=m*m;
 	tmpN=2/a2-2;
-	tmpN=Max[tmpN,0.001];
-	(tmpN+2)/(2 \[Pi])*Max[(noh^tmpN),0]
+	(*tmpN=Max[tmpN,0.001];
+	(tmpN+2)/(2 \[Pi])*Max[(noh^tmpN),0]*)
+	(tmpN+2)/(2 \[Pi])*(noh^tmpN)
 ];
 
 

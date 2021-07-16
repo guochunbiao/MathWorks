@@ -72,16 +72,12 @@ gParamRect[input_,globalInput_,x_,y_,z_]:=Module[
 ];
 
 
-ClearAll[gParamArc3D];
-gParamArc3D[input_,globalInput_,x_,y_,z_]:=Module[
-	{center,radius,normalDir,axisDir,thetaSpan,thickness,region},
+ClearAll[gParamArc3DShared];
+gParamArc3DShared[center_,radius_,normalDir_,axisDir_,inThetaSpan_,thickness_,
+	x_,y_,z_]:=Module[
+	{region,thetaSpan},
 	
-	center=input["center"];
-	radius=input["radius"];
-	normalDir=Normalize@input["normalDir"];
-	axisDir=Normalize@input["axisDir"];
-	thetaSpan=input["thetaSpan"];
-	thickness=input["thickness"];
+	thetaSpan=If[thetaSpan<0,inThetaSpan+2\[Pi],inThetaSpan];
 	Assert[0<thetaSpan<=2\[Pi]];
 	
 	region=DiscretizeRegion@ImplicitRegion[
@@ -102,6 +98,39 @@ gParamArc3D[input_,globalInput_,x_,y_,z_]:=Module[
 		{x,y,z}];
 		
 	region
+];
+
+
+ClearAll[gParamArc3D];
+gParamArc3D[input_,globalInput_,x_,y_,z_]:=Module[
+	{center,radius,normalDir,axisDir,thetaSpan,thickness},
+	
+	center=input["center"];
+	radius=input["radius"];
+	normalDir=Normalize@input["normalDir"];
+	axisDir=Normalize@input["axisDir"];
+	thetaSpan=input["thetaSpan"];
+	thickness=input["thickness"];
+	
+	gParamArc3DShared[center,radius,normalDir,axisDir,thetaSpan,thickness,x,y,z]
+];
+
+
+ClearAll[gParamArc3DEx];
+gParamArc3DEx[input_,globalInput_,x_,y_,z_]:=Module[
+	{center,radius,normalDir,leftDir,rightDir,axisDir,thetaSpan,thickness},
+	
+	center=input["center"];
+	radius=input["radius"];
+	leftDir=Normalize@input["leftDir"];
+	rightDir=Normalize@input["rightDir"];
+	thickness=input["thickness"];
+	
+	axisDir=Normalize[(leftDir+rightDir)/2];
+	normalDir=Normalize@Cross[leftDir,rightDir];
+	thetaSpan=ArcCos@Dot[leftDir,rightDir];
+	
+	gParamArc3DShared[center,radius,normalDir,axisDir,thetaSpan,thickness,x,y,z]
 ];
 
 
@@ -597,6 +626,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	collectFunc["disks",gParamDisk3D,3];
 	(*append arcs*)
 	collectFunc["arcs",gParamArc3D,3];
+	collectFunc["arcsEx",gParamArc3DEx,3];
 	(*append rectangles*)
 	collectFunc["rects",gParamRect,3];
 	(*append projection of rectangles onto sphere*)
