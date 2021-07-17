@@ -26,7 +26,6 @@ gCalcGgxPeakForLight::usage="gCalcGgxPeakForLight";
 
 
 Begin["`Private`"];
-On[Assert];
 
 
 (*https://neil3d.github.io/assets/pdf/s2013_pbs_epic_notes_v2.pdf Page 12*)
