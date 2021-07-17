@@ -15,6 +15,14 @@ gParamPlot3D::usage="function{gParamPlot3D}";
 Begin["`Private`"];
 
 
+ClearAll[gDummyPlot];
+gDummyPlot[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
+	{},
+	
+	Nothing
+];
+
+
 ClearAll[gParamLine3D];
 gParamLine3D[input_,globalInput_,x_,y_,z_,\[Phi]_,\[Theta]_]:=Module[
 	{startPos,dirVector,length},
@@ -670,7 +678,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 		Axes->True,
 		AspectRatio->1,
 		AxesLabel->{"X","Y","Z"},
-		PlotTheme->"Detailed",
+		(*PlotTheme->"Detailed",*)
 		Lighting->{"Ambient",White},
 		ViewPoint->viewPoint,
 		ViewProjection->viewProj,
@@ -692,7 +700,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 	(*append projection of disks onto sphere*)
 	complexFunc["projDisks",gParamProjDisk,3];
 	
-	customPlots=If[MemberQ[inputKeys,"customPlots"],inputs["customPlots"],{}];
+	customPlots=If[MemberQ[inputKeys,"customPlots"],inputs["customPlots"],Nothing];
 	AppendTo[plotCmds,customPlots];
 	
 	Show[plotCmds]

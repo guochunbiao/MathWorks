@@ -3,11 +3,13 @@
 SetDirectory[NotebookDirectory[]];
 BeginPackage["gBlochSphere`"];
 Needs["gUtils`"];
+Needs["gTexStyles`"];
 
 
 ClearAll[blInitOffset,blCirclePrec,blTransFuncXZ,blTransFuncXY,blTransFuncYZ,
 	blCalcPoint,blCalcPointEx,blCalcAngle,blCalcAngleEx,blCalcTheta,blCalcPhi,
-	blBasicXYCircle,blBasicXZCircle];
+	blBasicXYCircle,blBasicXZCircle,blBasicYZCircle,blSphereArrow,blSphereAxes,
+	blWholeSphere,blHemiSphere];
 blInitOffset=0.1\[Pi];
 blCirclePrec=\[Pi]/120;
 blTransFuncXZ=Composition@@{RotationTransform[-blInitOffset,{0,0,1}],
@@ -23,6 +25,11 @@ blCalcTheta::usage="blCalcTheta";
 blCalcPhi::usage="blCalcPhi";
 blBasicXYCircle::usage="blBasicXYCircle";
 blBasicXZCircle::usage="blBasicYZCircle";
+blBasicYZCircle::usage="blBasicYZCircle";
+blSphereArrow::usage="blSphereArrow";
+blSphereAxes::usage="blSphereAxes";
+blWholeSphere::usage="blWholeSphere";
+blHemiSphere::usage="blHemiSphere";
 
 
 Begin["`Private`"];
@@ -126,10 +133,13 @@ blBasicXYCircle[\[Theta]_]:=Module[
 ];
 
 
-blBasicXZCircle[]:=Module[
-	{\[Phi],\[Theta]0,\[Theta]1,\[Theta]2,\[Theta]3,\[Theta]4},
+blBasicXZCircle[y_]:=Module[
+	{\[Phi],r,\[Theta]0,\[Theta]1,\[Theta]2,\[Theta]3,\[Theta]4},
 	
 	\[Phi]=0;
+	(*radius*)
+	r=Sqrt[1-y^2];
+	
 	\[Theta]0=blCalcTheta[0,\[Phi]];(**)
 	\[Theta]1=blCalcTheta[\[Pi]/2,\[Phi]];(**)
 	\[Theta]2=blCalcTheta[\[Pi],\[Phi]];(**)
@@ -138,15 +148,71 @@ blBasicXZCircle[]:=Module[
 
 	{
 		(*0--\[Pi]/2*)
-		{Line[Table[blTransFuncXZ@{Sin[\[Theta]],-Cos[\[Theta]],0},{\[Theta],0,\[Theta]1,blCirclePrec}]]},
+		{Line[Table[blTransFuncXZ@{r*Sin[\[Theta]],-r*Cos[\[Theta]],y},{\[Theta],0,\[Theta]1,blCirclePrec}]]},
 		(*\[Pi]/2--\[Pi]*)
-		{Line[Table[blTransFuncXZ@{Sin[\[Theta]],-Cos[\[Theta]],0},{\[Theta],\[Theta]1,\[Theta]2,blCirclePrec}]]},
+		{Line[Table[blTransFuncXZ@{r*Sin[\[Theta]],-r*Cos[\[Theta]],y},{\[Theta],\[Theta]1,\[Theta]2,blCirclePrec}]]},
 		(*\[Pi]--3\[Pi]/2*)
-		{Dashed,Line[Table[blTransFuncXZ@{Sin[\[Theta]],-Cos[\[Theta]],0},{\[Theta],\[Theta]2,\[Theta]3,blCirclePrec}]]},
+		{Dashed,Line[Table[blTransFuncXZ@{r*Sin[\[Theta]],-r*Cos[\[Theta]],y},{\[Theta],\[Theta]2,\[Theta]3,blCirclePrec}]]},
 		(*3\[Pi]/2--2\[Pi]*)
-		{Dashed,Line[Table[blTransFuncXZ@{Sin[\[Theta]],-Cos[\[Theta]],0},{\[Theta],\[Theta]3,2\[Pi],blCirclePrec}]]}
+		{Dashed,Line[Table[blTransFuncXZ@{r*Sin[\[Theta]],-r*Cos[\[Theta]],y},{\[Theta],\[Theta]3,2\[Pi],blCirclePrec}]]}
 	}
 ];
+
+
+blBasicYZCircle[bHemi_:False]:=Module[
+	{},
+	
+	{
+		If[bHemi,Blank[],{Line[Table[blTransFuncYZ@{Cos[a],Sin[a],0},{a,0,\[Pi]/2,\[Pi]/120}]]}],
+		{Line[Table[blTransFuncYZ@{Cos[a],Sin[a],0},{a,\[Pi]/2,3\[Pi]/2,\[Pi]/120}]]},
+		If[bHemi,Blank[],{Line[Table[blTransFuncYZ@{Cos[a],Sin[a],0},{a,3\[Pi]/2,2\[Pi],\[Pi]/120}]]}]
+	}
+];
+
+
+blSphereArrow[inDir_,length_]:=Module[
+	{originPt,oldDir,newDir,oldPt,newPt},
+	
+	originPt={0,0,0};
+	oldDir=Normalize@inDir;
+	oldPt=originPt+oldDir;
+	newPt=blCalcPoint[oldPt];
+	newDir=Normalize[newPt-originPt];
+	
+	newPt=originPt+newDir*length;
+	
+	{Arrowheads[{{.03,1,texArrowHead}}],Arrow[{originPt,newPt}]}
+];
+
+
+blSphereAxes[size_]:=Module[
+	{},
+	
+	blSphereArrow[#[[1]],#[[2]]]&/@{{{0,0,1},size},{{0,1,0},size},{{1,0,0},size}}
+];
+
+
+blWholeSphere[axisSize_:1.3]:=Module[
+	{},
+	
+	{
+	(*x-y circle*)
+	blBasicXYCircle[\[Pi]/2],
+	(*x-z circle*)
+	blBasicXZCircle[0],
+	(*y-z circle*)
+	blBasicYZCircle[],
+
+	(*sphere center at origin point*)
+	{{Black,PointSize[Large],Point[{0,0,0}]}},
+
+	(*axes*)
+	blSphereAxes[axisSize]
+	}
+];
+
+
+blHemiSphere[]:=Module[];
 
 
 End[];
