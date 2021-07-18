@@ -676,6 +676,7 @@ gParamPlot3D[inputs_,imageSize_:Tiny]:=Module[
 		ColorFunctionScaling->False,
 		PlotRange->axisExtents,
 		Axes->True,
+		Boxed->False,
 		AspectRatio->1,
 		AxesLabel->{"X","Y","Z"},
 		(*PlotTheme->"Detailed",*)
