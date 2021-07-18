@@ -12,7 +12,8 @@ ClearAll[blInitOffset,blDefaultThickness,blCirclePrec,blTransFuncXZ,blTransFuncX
 	blWholeSphere,blHemiSphere,
 	(*paper related*)
 	blPaperSphere01,
-	blPaperIntsDisk01];
+	blPaperIntsDisk01,blPaperIntsDisk02,blPaperIntsDisk03
+	];
 blInitOffset=0.1\[Pi];
 blDefaultThickness=1.5;
 blCirclePrec=\[Pi]/120;
@@ -36,6 +37,8 @@ blWholeSphere::usage="blWholeSphere";
 blHemiSphere::usage="blHemiSphere";
 blPaperSphere01::usage="blPaperSphere01";
 blPaperIntsDisk01::usage="blPaperIntsDisk01";
+blPaperIntsDisk02::usage="blPaperIntsDisk02";
+blPaperIntsDisk03::usage="blPaperIntsDisk03";
 
 
 Begin["`Private`"];
@@ -293,6 +296,52 @@ blPaperIntsDisk01[inCenter_,inNormal_,radius_]:=Module[
 		RegionPlot3D[outReg,BoundaryStyle->None,Mesh->None,PlotStyle->{Opacity[0.2],Blue}],
 		(*part of disk that inside the sphere*)
 		RegionPlot3D[inReg,BoundaryStyle->None,Mesh->None,PlotStyle->{Opacity[0.2],Red}]
+	}
+];
+
+
+blPaperIntsDisk02[inCenter_,inNormal_,radius_]:=Module[
+	{c,nlTheta,nlPhi,nlFunc},
+	
+	c=blCalcPoint@Normalize[inCenter-{0,0,0}];
+	nlTheta=inNormalEuler[[1]];
+	nlPhi=inNormalEuler[[2]];
+	
+	nlFunc[\[Theta]_,\[Phi]_]:={Sin[\[Theta]]*Cos[\[Phi]],Sin[\[Theta]]*Sin[\[Phi]],Cos[\[Theta]]};
+		
+	{
+		ParametricPlot3D[RotationMatrix[{{0,0,1},nlFunc[nlTheta,nlPhi]}].
+			(r*({Sin[Pi/2]*Cos[\[Phi]],Sin[\[Pi]/2]Sin[\[Phi]],Cos[\[Pi]/2]}-c)),
+			{r,0,radius},{\[Phi],0,2\[Pi]},
+			BoundaryStyle->None,Mesh->None,(*PlotPoints\[Rule]20,*)
+			PlotStyle->{Opacity[0.2],Blue}]
+	}
+];
+
+
+blPaperIntsDisk03[inCenter_,inNormal_,radius_]:=Module[
+	{c,n,r,sol1,sol2,intsPt1,intsPt2},
+	
+	c=blCalcPoint@Normalize[inCenter-{0,0,0}];
+	n=Normalize@inNormal;
+	r=radius;
+	
+	sol1=FindInstance[
+		(*on sphere*)
+		x^2+y^2+z^2==1&&
+		(*on disk*)
+		Norm[{x,y,z}-c]==r&&
+		Dot[{x,y,z}-c,n]==0,
+		{x,y,z},Reals,2];
+	sol2=Transpose@sol1;
+	intsPt1=sol2[[All,1,2]];
+	intsPt2=sol2[[All,2,2]];
+		
+	{
+		(*intersection points*)
+		Graphics3D[{{Black,PointSize[Large],Point[{intsPt1,intsPt2}]}}],
+		(*disk center point*)
+		Graphics3D[{{Blue,PointSize[Large],Point[c]}}]
 	}
 ];
 
