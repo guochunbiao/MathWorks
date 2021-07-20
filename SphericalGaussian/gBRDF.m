@@ -7,7 +7,8 @@ Needs["gUtils`"];
 
 ClearAll[gPointLightFallOff,gPhongNDF,gDGGX,gDGGX2,gVisSmith,gFresnelOrigin,gBrdfFunc,
 	gSolveSamplingHalfDir,gSamplingHalfDir,gSamplingLightDir,gSamplingLightDir2D,
-	gPlotGgxPdf3D,gPlotGgxPdf2D,gCalcGgxPeakOnPlane,gCalcGgxPeakForLight];
+	gPlotGgxPdf3D,gPlotGgxPdf2D,gCalcGgxPeakOnPlane,gCalcGgxPeakForLight,
+	gIntegrateDiskLighting];
 gPointLightFallOff::usage="function{gPointLightFallOff}";
 gPhongNDF::usage="function[gPhongNDF]";
 gDGGX::usage="function[gDGGX]";
@@ -23,6 +24,7 @@ gPlotGgxPdf3D::usage="gPlotGgxPdf3D";
 gPlotGgxPdf2D::usage="gPlotGgxPdf2D";
 gCalcGgxPeakOnPlane::usage="gCalcGgxPeakOnPlane";
 gCalcGgxPeakForLight::usage="gCalcGgxPeakForLight";
+gIntegrateDiskLighting::usage="gIntegrateDiskLighting";
 
 
 Begin["`Private`"];
@@ -245,6 +247,23 @@ gCalcGgxPeakForLight[peakPt_,planeNormal_,viewPt_]:=Module[
 	lightDir=2*Dot[viewDir,halfDir]*halfDir-viewDir;
 	
 	lightDir
+];
+
+
+gIntegrateDiskLighting[shadingPt_,diskPt_,diskNormal_,diskRadius_,
+	lightDir_,lightIntensity_,roughness_]:=Module[
+	{m,n,l,nol,dr,percentSum,lighting},
+	
+	m=roughness;
+	n=Normalize[diskNormal];
+	l=Normalize[lightDir];
+	nol=Dot[n,l];
+	dr=diskRadius/Norm[diskPt-shadingPt];
+	
+	percentSum=Min[dr/Sqrt[1+dr^2],(3.672 m)/(1+nol)];
+	lighting=percentSum*gDGGX[m,1]*nol*lightIntensity;
+	
+	lighting
 ];
 
 

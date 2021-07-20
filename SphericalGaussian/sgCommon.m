@@ -16,7 +16,8 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 sgCapsIntsEnergyCentroidTheta,sgCapIntsAsNewSGDeprecated,sgProductIntegral,
 		 sgNDFProdIntegrateLight,sgCapIntsEnergyPercent,sgMaxLambda,sgSphereLight,
 		 sgCapIntsAreaPercent,sgProduct,sgShading,sgSolveOneBounce1,sgSolveOneBounce2,
-		 sgCalcEnergyPercent,sgReflectLight,sgRepresentLambda,sgDirLight];
+		 sgCalcEnergyPercent,sgReflectLight,sgRepresentLambda,sgDirLight,
+		 asgEnergy,asgCalcBandwidth,asgCalcAmplitude,asgDotSg,asgReflectLight];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -47,6 +48,11 @@ asgPolar::usage="function[asgPolar]";
 solveSgArea::usage="solveSgArea";
 sgArea::usage="sgArea";
 asgArea::usage="asgArea";
+asgEnergy::usage="asgEnergy";
+asgCalcBandwidth::usage="asgCalcBandwidth";
+asgCalcAmplitude::usage="asgCalcAmplitude";
+asgDotSg::usage="asgDotSg";
+asgReflectLight::usage="asgReflectLight";
 solveSgAsCap::usage="solveSgAsCap";
 sgAsCap::usage="sgAsCap";
 sgCapIntsArea::usage="sgCapIntsArea";
@@ -120,6 +126,83 @@ asgPolar[\[Theta]_,\[Theta]1_,\[Theta]2_,xBandwidth_,yBandwidth_,amplitude_]:=Mo
 	c=amplitude;
 	
 	c*Cos[\[Theta]]*Exp[-\[Lambda]*Cos[\[Theta]1]^2-\[Mu]*Cos[\[Theta]2]^2]
+];
+
+
+asgEnergy[\[Lambda]_,\[Mu]_,c_]:=Module[
+	{},
+	
+	c*\[Pi]/Sqrt[\[Lambda]*\[Mu]]
+];
+
+
+(*dr \[Equal] diskRadius/reflectPtDist*)
+asgCalcBandwidth[dr_]:=Module[
+	{},
+	
+	Max[5,-(((1+dr^2) (-5.991+Log[1+dr^2]))/(2 dr^2))]
+];
+
+
+asgCalcAmplitude[\[Lambda]_,\[Mu]_,totalEnergy_]:=Module[
+	{},
+	
+	(totalEnergy*Sqrt[\[Lambda]*\[Mu]])/\[Pi]
+];
+
+
+asgDotSg[{inAsgZ_,inAsgX_,inAsgY_,asgL_,asgM_,asgC_},{inSgP_,inSgLambda_,sgC_}]:=Module[
+	{asgZ,asgX,asgY,sgP,
+		sgN,convZ,convX,convY,convL,convM,convC,ret0},
+	asgZ=Normalize@inAsgZ;
+	asgX=Normalize@inAsgX;
+	asgY=Normalize@inAsgY;
+	sgP=Normalize@inSgP;
+
+	sgN=inSgLambda/2;
+	convZ=asgZ;
+	convX=asgX;
+	convY=asgY;
+	convL=sgN*asgL/(sgN+asgL);
+	convM=sgN*asgM/(sgN+asgM);
+	convC=\[Pi]/Sqrt[(sgN+asgL)(sgN+asgM)];
+	
+	ret0=asgVector[sgP,{convZ,convX,convY,convL,convM,1}];
+	
+	ret0*asgC*sgC
+];
+
+
+asgReflectLight[shadingPt_,lightDir_,lightIntensity_,roughness_,
+	{diskCenter_,diskNormal_,diskRadius_}]:=Module[
+	{shadingDist,dr,refViewDir,
+		majorAxis,minorAxis,majorSize,minorSize,
+		(*asgL<=asgM && Length[asgAxisL]>=Length[asgAxisM]*)
+		asgAxis,asgAxisL,asgAxisM,asgL,asgM,asgC,asgEnergy,asgLight},
+	
+	shadingDist=Norm[shadingPt-diskCenter];
+	Assert[shadingDist>0.001];
+	dr=diskRadius/shadingDist;
+	refViewDir=Normalize[shadingPt-diskCenter];
+	
+	majorAxis=Normalize@Cross[diskNormal,refViewDir];
+	minorAxis=Normalize@Cross[asgAxisL,refViewDir];
+	Assert[diskRadius>0];
+	majorSize=diskRadius/shadingDist;
+	minorSize=Dot[diskNormal,refViewDir]*diskRadius/shadingDist;
+	Assert[minorSize>0];
+	
+	asgAxis=-refViewDir;
+	asgAxisL=majorAxis;
+	asgAxisM=minorAxis;
+	asgL=asgCalcBandwidth[majorSize];
+	asgM=asgCalcBandwidth[minorSize];
+	asgEnergy=gIntegrateDiskLighting[shadingPt,diskCenter,diskNormal,diskRadius,
+		lightDir,lightIntensity,roughness];
+	asgC=asgCalcAmplitude[asgL,asgM,asgEnergy];
+	asgLight={asgAxis,asgAxisL,asgAxisM,asgL,asgM,asgC};
+	
+	asgLight
 ];
 
 
