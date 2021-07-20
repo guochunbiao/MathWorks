@@ -4,7 +4,7 @@ BeginPackage["gUtils`"];
 
 
 ClearAll[gStructRules,gPrint,gPrintFunc,gEvalFunc,gCreateCone,gLerp,gRemap,gClampPhi,
-	gCalcRectCorners,gReflectVector];
+	gCalcRectCorners,gReflectVector,gAssocData,gAssocDataOpt];
 gPrint::usage="Print messages";
 gPrintFunc::usage="Print a function";
 gEvalFunc::usage="Evaluate a funciton";
@@ -15,6 +15,8 @@ gRemap::usage="gRemap";
 gClampPhi::usage="gClampPhi";
 gCalcRectCorners::usage="gCalcRectCorners";
 gReflectVector::usage="gReflectVector";
+gAssocData::usage="gAssocData";
+gAssocDataOpt::usage="gAssocDataOpt";
 
 
 SetAttributes[gStructRules,HoldAll]
@@ -124,6 +126,21 @@ gReflectVector[viewOrLight_,half_]:=Module[
 	i=Normalize[2Dot[o,h]*h-o];
 	
 	i
+];
+
+
+gAssocData[assoc_,key_]:=Module[
+	{},
+	
+	Assert[MemberQ[Keys[assoc],key]];
+	assoc[key]
+];
+
+
+gAssocDataOpt[assoc_,key_,default_]:=Module[
+	{},
+	
+	If[MemberQ[Keys[assoc],key],assoc[key],default]
 ];
 
 
