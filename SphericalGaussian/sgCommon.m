@@ -17,7 +17,7 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 sgNDFProdIntegrateLight,sgCapIntsEnergyPercent,sgMaxLambda,sgSphereLight,
 		 sgCapIntsAreaPercent,sgProduct,sgShading,sgSolveOneBounce1,sgSolveOneBounce2,
 		 sgCalcEnergyPercent,sgReflectLight,sgRepresentLambda,sgDirLight,
-		 asgEnergy,asgCalcBandwidth,asgCalcAmplitude,asgDotSg,asgReflectLight];
+		 asgEnergy,asgEnergyEx,asgCalcBandwidth,asgCalcAmplitude,asgDotSg,asgReflectLight];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -49,6 +49,7 @@ solveSgArea::usage="solveSgArea";
 sgArea::usage="sgArea";
 asgArea::usage="asgArea";
 asgEnergy::usage="asgEnergy";
+asgEnergyEx::usage="asgEnergyEx";
 asgCalcBandwidth::usage="asgCalcBandwidth";
 asgCalcAmplitude::usage="asgCalcAmplitude";
 asgDotSg::usage="asgDotSg";
@@ -104,9 +105,10 @@ Assert[\[Lambda]>=sgMinLambda];
 	\[Mu]:bandwidth for y-axis
 	c:lobe amplitude
 *)
-asgVector[v_,{lobeAxis_,tangentAxis_,bitangentAxis_,
+asgVector[inV_,{lobeAxis_,tangentAxis_,bitangentAxis_,
 	xBandwidth_,yBandwidth_,amplitude_}]:=Module[
-	{z,x,y,\[Lambda],\[Mu],c,Svz},
+	{v,z,x,y,\[Lambda],\[Mu],c,Svz},
+	v=Normalize@inV;
 	z=Normalize[lobeAxis];
 	x=Normalize[tangentAxis];
 	y=Normalize[bitangentAxis];
@@ -133,6 +135,13 @@ asgEnergy[\[Lambda]_,\[Mu]_,c_]:=Module[
 	{},
 	
 	c*\[Pi]/Sqrt[\[Lambda]*\[Mu]]
+];
+
+
+asgEnergyEx[{inAsgZ_,inAsgX_,inAsgY_,asgL_,asgM_,asgC_}]:=Module[
+	{},
+	
+	asgEnergy[asgL,asgM,asgC]
 ];
 
 

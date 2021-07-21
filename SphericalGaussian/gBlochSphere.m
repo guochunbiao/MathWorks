@@ -300,7 +300,7 @@ blPaperIntsDisk01[inCenter_,inNormal_,radius_]:=Module[
 ];
 
 
-blPaperIntsDisk02[inCenter_,inNormal_,radius_]:=Module[
+blPaperIntsDisk02[inCenter_,inNormalEuler_,radius_]:=Module[
 	{c,nlTheta,nlPhi,nlFunc},
 	
 	c=blCalcPoint@Normalize[inCenter-{0,0,0}];
@@ -310,8 +310,8 @@ blPaperIntsDisk02[inCenter_,inNormal_,radius_]:=Module[
 	nlFunc[\[Theta]_,\[Phi]_]:={Sin[\[Theta]]*Cos[\[Phi]],Sin[\[Theta]]*Sin[\[Phi]],Cos[\[Theta]]};
 		
 	{
-		ParametricPlot3D[RotationMatrix[{{0,0,1},nlFunc[nlTheta,nlPhi]}].
-			(r*({Sin[Pi/2]*Cos[\[Phi]],Sin[\[Pi]/2]Sin[\[Phi]],Cos[\[Pi]/2]}-c)),
+		ParametricPlot3D[(RotationMatrix[{{0,0,1},nlFunc[nlTheta,nlPhi]}].
+			(r*({Sin[\[Pi]/2]*Cos[\[Phi]],Sin[\[Pi]/2]Sin[\[Phi]],Cos[\[Pi]/2]})))+c,
 			{r,0,radius},{\[Phi],0,2\[Pi]},
 			BoundaryStyle->None,Mesh->None,(*PlotPoints\[Rule]20,*)
 			PlotStyle->{Opacity[0.2],Blue}]
