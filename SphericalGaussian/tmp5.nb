@@ -10,14 +10,16 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     49474,       1105]
-NotebookOptionsPosition[     47189,       1060]
-NotebookOutlinePosition[     47588,       1077]
-CellTagsIndexPosition[     47545,       1074]
+NotebookDataLength[     33633,        727]
+NotebookOptionsPosition[     33084,        709]
+NotebookOutlinePosition[     33451,        725]
+CellTagsIndexPosition[     33408,        722]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
+
+Cell[CellGroupData[{
 Cell[BoxData[{
  RowBox[{"SetOptions", "[", 
   RowBox[{
@@ -56,15 +58,75 @@ Cell[BoxData[{
    RowBox[{"Needs", "[", "\"\<gTexStyles`\>\"", "]"}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"ClearAll", "[", 
+  RowBox[{
+   RowBox[{"ClearAll", "[", 
+    RowBox[{
+    "lightDir", ",", "dynViewPt", ",", "debugViewPoint", ",", "viewPoint", 
+     ",", "realViewDir", ",", "\[IndentingNewLine]", "\t", "horzCenter", ",", 
+     "horzNormal", ",", "vertCenter", ",", "vertNormal", ",", "reflPeakPt", 
+     ",", "\[IndentingNewLine]", "\t", "reflLightingFunc", ",", "reflSgLight",
+      ",", "sgDisplayPt", ",", "getDisplaySg", ",", "sgndf", ",", 
+     "reflShading", ",", "\[IndentingNewLine]", "\t", "reflLightingFunc", ",",
+      "getDisplaySgFunc"}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{
-   "lightDir", ",", "dynViewPt", ",", "debugViewPoint", ",", "viewPoint", ",",
-     "realViewDir", ",", "\[IndentingNewLine]", "\t", "horzCenter", ",", 
-    "horzNormal", ",", "vertCenter", ",", "vertNormal", ",", "reflPeakPt", 
-    ",", "\[IndentingNewLine]", "\t", "reflLightingFunc", ",", "reflAsgLight",
-     ",", "reflAsgEnergy", ",", "asgDisplayPt", ",", "\[IndentingNewLine]", 
-    "\t", "reflDisplayAsg", ",", "sgndf", ",", "sgndfEnergy", ",", 
-    "reflShading"}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{"reflLightingFunc", "[", 
+     RowBox[{
+     "reflPt_", ",", "shadingPt_", ",", "reflRoughness_", ",", 
+      "lightIntensity_"}], "]"}], ":=", 
+    RowBox[{"Module", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "reflViewPt", ",", "reflView", ",", "reflHalf", ",", "noh", ",", "nol",
+         ",", "lighting"}], "}"}], ",", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"reflViewPt", "=", "shadingPt"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"reflView", "=", 
+        RowBox[{"Normalize", "[", 
+         RowBox[{"reflViewPt", "-", "reflPt"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"reflHalf", "=", 
+        RowBox[{"Normalize", "[", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"reflView", "+", "lightDir"}], ")"}], "/", "2"}], "]"}]}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{"noh", "=", 
+        RowBox[{"Dot", "[", 
+         RowBox[{"vertNormal", ",", "reflHalf"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"nol", "=", 
+        RowBox[{"Dot", "[", 
+         RowBox[{"vertNormal", ",", "lightDir"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"lighting", "=", 
+        RowBox[{
+         RowBox[{"gDGGX", "[", 
+          RowBox[{"reflRoughness", ",", "noh"}], "]"}], "*", "nol", "*", 
+         "lightIntensity"}]}], ";", "\[IndentingNewLine]", "lighting"}]}], 
+     "\[IndentingNewLine]", "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"getDisplaySgFunc", "[", "sg_", "]"}], ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", "dispSg", "}"}], ",", 
+      RowBox[{
+       RowBox[{"dispSg", "=", "sg"}], ";", 
+       RowBox[{
+        RowBox[{"dispSg", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], "=", 
+        RowBox[{
+         RowBox[{"-", "1"}], "*", 
+         RowBox[{"dispSg", "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "dispSg"}]}], "]"}]}], 
+   ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -75,14 +137,16 @@ Cell[BoxData[{
         RowBox[{"lightDirX", ",", 
          RowBox[{"-", "1"}], ",", "lightDirZ"}], "}"}]}]}], ";", 
      "\[IndentingNewLine]", 
-     RowBox[{"dynViewPt", "=", 
+     RowBox[{"(*", 
       RowBox[{
-       RowBox[{"Options", "[", 
-        RowBox[{"Graphics3D", ",", "ViewPoint"}], "]"}], "[", 
-       RowBox[{"[", 
-        RowBox[{"1", ",", "2"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"debugViewPoint", "=", 
-      RowBox[{"Dynamic", "[", "dynViewPt", "]"}]}], ";", 
+       RowBox[{"dynViewPt", "=", 
+        RowBox[{
+         RowBox[{"Options", "[", 
+          RowBox[{"Graphics3D", ",", "ViewPoint"}], "]"}], "[", 
+         RowBox[{"[", 
+          RowBox[{"1", ",", "2"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"debugViewPoint", "=", 
+        RowBox[{"Dynamic", "[", "dynViewPt", "]"}]}], ";"}], "*)"}], 
      "\[IndentingNewLine]", 
      RowBox[{"(*", 
       RowBox[{
@@ -111,94 +175,41 @@ Cell[BoxData[{
          RowBox[{"-", "1"}], ",", "0"}], "}"}]}]}], ";", 
      "\[IndentingNewLine]", 
      RowBox[{"horzCenter", "=", 
-      RowBox[{"Normalize", "@", 
-       RowBox[{"{", 
-        RowBox[{"0", ",", "0", ",", 
-         RowBox[{"-", "0.5"}]}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0", ",", 
+        RowBox[{"-", "0.5"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"vertCenter", "=", 
-      RowBox[{"Normalize", "@", 
-       RowBox[{"{", 
-        RowBox[{"0", ",", "1", ",", "0"}], "}"}]}]}], ";", 
-     "\[IndentingNewLine]", "\[IndentingNewLine]", 
-     RowBox[{"reflPeakPt", "=", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]",
+      "\[IndentingNewLine]", 
+     RowBox[{"reflPeakPt", ":=", 
       RowBox[{"gCalcPeakPoint", "[", 
        RowBox[{
        "vertNormal", ",", "vertCenter", ",", "lightDir", ",", "shadingPt"}], 
        "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"reflLightingFunc", "[", "reflPt_", "]"}], ":=", 
-      RowBox[{"Module", "[", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"{", 
-         RowBox[{
-         "reflViewPt", ",", "reflView", ",", "reflHalf", ",", "noh", ",", 
-          "nol", ",", "lighting"}], "}"}], ",", "\[IndentingNewLine]", 
-        "\[IndentingNewLine]", 
-        RowBox[{
-         RowBox[{"reflViewPt", "=", "shadingPt"}], ";", "\[IndentingNewLine]", 
-         RowBox[{"reflView", "=", 
-          RowBox[{"Normalize", "[", 
-           RowBox[{"reflViewPt", "-", "reflPt"}], "]"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{"reflHalf", "=", 
-          RowBox[{"Normalize", "[", 
-           RowBox[{
-            RowBox[{"(", 
-             RowBox[{"reflView", "+", "lightDir"}], ")"}], "/", "2"}], 
-           "]"}]}], ";", "\[IndentingNewLine]", 
-         RowBox[{"noh", "=", 
-          RowBox[{"Dot", "[", 
-           RowBox[{"vertNormal", ",", "reflHalf"}], "]"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{"nol", "=", 
-          RowBox[{"Dot", "[", 
-           RowBox[{"vertNormal", ",", "lightDir"}], "]"}]}], ";", 
-         "\[IndentingNewLine]", "\[IndentingNewLine]", 
-         RowBox[{"lighting", "=", 
-          RowBox[{
-           RowBox[{"gDGGX", "[", 
-            RowBox[{"vertRoughness", ",", "noh"}], "]"}], "*", "nol", "*", 
-           "lightIntensity"}]}], ";", "\[IndentingNewLine]", "lighting"}]}], 
-       "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
-     "\[IndentingNewLine]", 
-     RowBox[{"reflAsgLight", "=", 
-      RowBox[{"asgReflectLight", "[", 
+     RowBox[{"reflSgLight", "=", 
+      RowBox[{"sgReflectLight", "[", 
        RowBox[{
        "shadingPt", ",", "lightDir", ",", "lightIntensity", ",", 
         "vertRoughness", ",", 
         RowBox[{"{", 
          RowBox[{"reflPeakPt", ",", "vertNormal", ",", "samplingRadius"}], 
          "}"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"asgDisplayPt", "=", 
+     RowBox[{"sgDisplayPt", "=", 
       RowBox[{"{", 
        RowBox[{
         RowBox[{"-", "0.5"}], ",", 
         RowBox[{"-", "0.5"}], ",", "0.5"}], "}"}]}], ";", 
-     "\[IndentingNewLine]", 
-     RowBox[{"reflDisplayAsg", "=", "reflAsgLight"}], ";", 
-     "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"reflDisplayAsg", "[", 
-       RowBox[{"[", "1", "]"}], "]"}], "=", 
-      RowBox[{
-       RowBox[{"-", "1"}], "*", 
-       RowBox[{"reflDisplayAsg", "[", 
-        RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"reflAsgEnergy", "=", 
-      RowBox[{"asgEnergyEx", "[", "reflAsgLight", "]"}]}], ";", 
      "\[IndentingNewLine]", "\[IndentingNewLine]", 
      RowBox[{"sgndf", "=", 
       RowBox[{"sgNDF", "[", 
        RowBox[{"horzRoughness", ",", 
-        RowBox[{"reflAsgLight", "[", 
+        RowBox[{"reflSgLight", "[", 
          RowBox[{"[", "1", "]"}], "]"}], ",", "realViewDir", ",", 
         "horzNormal"}], "]"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"sgndfEnergy", "=", 
-      RowBox[{"sgEnergy", "[", "sgndf", "]"}]}], ";", "\[IndentingNewLine]", 
-     "\[IndentingNewLine]", 
-     RowBox[{"reflShading", "=", 
-      RowBox[{"asgDotSg", "[", 
-       RowBox[{"reflAsgLight", ",", "sgndf"}], "]"}]}], ";", 
+     RowBox[{"reflShading", ":=", 
+      RowBox[{"sgDot", "[", 
+       RowBox[{"reflSgLight", ",", "sgndf"}], "]"}]}], ";", 
      "\[IndentingNewLine]", "\[IndentingNewLine]", 
      RowBox[{"Show", "[", "\[IndentingNewLine]", 
       RowBox[{
@@ -220,7 +231,7 @@ Cell[BoxData[{
                 RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ",", 
               RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "1"}], ",", 
               RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "0.5"}], ",", 
-              RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.3"}], ",", 
+              RowBox[{"\"\<opacity\>\"", "\[Rule]", "1"}], ",", 
               "\[IndentingNewLine]", "\t", 
               RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
                RowBox[{"Function", "[", 
@@ -257,10 +268,12 @@ Cell[BoxData[{
                   RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
                  RowBox[{"Hue", "@", 
                   RowBox[{"reflLightingFunc", "[", 
-                   RowBox[{"{", 
-                    RowBox[{"x", ",", "y", ",", "z"}], "}"}], "]"}]}]}], 
-                "]"}]}]}], "|>"}], "\[IndentingNewLine]", "  ", "]"}], "&"}], 
-          "[", 
+                   RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
+                    "shadingPt", ",", "vertRoughness", ",", 
+                    "lightIntensity"}], "]"}]}]}], "]"}]}]}], "|>"}], 
+            "\[IndentingNewLine]", "  ", "]"}], "&"}], "[", 
           RowBox[{"<|", 
            RowBox[{"\"\<roughness\>\"", "\[Rule]", "vertRoughness"}], "|>"}], 
           "]"}], ",", "\[IndentingNewLine]", "   ", 
@@ -310,14 +323,14 @@ Cell[BoxData[{
            RowBox[{"\"\<radius\>\"", "\[Rule]", "samplingRadius"}], "|>"}], 
           "]"}], ",", "\[IndentingNewLine]", "   ", 
          RowBox[{"(*", 
-          RowBox[{"ASG", " ", "Reflection", " ", "Light"}], "*)"}], 
+          RowBox[{"SG", " ", "Reflection", " ", "Light"}], "*)"}], 
          "\[IndentingNewLine]", "   ", 
          RowBox[{
           RowBox[{
            RowBox[{"pltSphere3D", "[", " ", 
             RowBox[{"<|", 
              RowBox[{
-              RowBox[{"\"\<center\>\"", "\[Rule]", "asgDisplayPt"}], ",", 
+              RowBox[{"\"\<center\>\"", "\[Rule]", "sgDisplayPt"}], ",", 
               RowBox[{"\"\<radius\>\"", "\[Rule]", "0.5"}], ",", 
               RowBox[{"\"\<plotPts\>\"", "\[Rule]", "50"}], ",", 
               RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
@@ -328,16 +341,18 @@ Cell[BoxData[{
                  RowBox[{"{", 
                   RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
                  RowBox[{"Hue", "@", 
-                  RowBox[{"asgVector", "[", 
+                  RowBox[{"sgVector", "[", 
                    RowBox[{
                     RowBox[{"Normalize", "[", 
                     RowBox[{
                     RowBox[{"{", 
                     RowBox[{"x", ",", "y", ",", "z"}], "}"}], "-", 
-                    "asgDisplayPt"}], "]"}], ",", "reflDisplayAsg"}], 
-                   "]"}]}]}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", "]"}],
-            "&"}], "[", 
-          RowBox[{"<|", "|>"}], "]"}], ",", "\[IndentingNewLine]", "   ", 
+                    "sgDisplayPt"}], "]"}], ",", "#sg"}], "]"}]}]}], 
+                "]"}]}]}], "|>"}], "\[IndentingNewLine]", "]"}], "&"}], "[", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<sg\>\"", "\[Rule]", 
+            RowBox[{"getDisplaySgFunc", "[", "reflSgLight", "]"}]}], "|>"}], 
+          "]"}], ",", "\[IndentingNewLine]", "   ", 
          RowBox[{"(*", 
           RowBox[{"light", " ", "direction"}], "*)"}], "\[IndentingNewLine]", 
          "   ", 
@@ -357,11 +372,13 @@ Cell[BoxData[{
           RowBox[{"<|", "|>"}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
        "\[IndentingNewLine]", "\[IndentingNewLine]", "    ", 
        RowBox[{"showProps3D", "[", 
-        RowBox[{"1", ",", "Large"}], "]"}], ",", "\[IndentingNewLine]", "   ", 
-       RowBox[{"ViewPoint", "\[Rule]", 
-        RowBox[{"Dynamic", "[", "dynViewPt", "]"}]}]}], "\[IndentingNewLine]",
-       " ", "]"}]}], ",", "\[IndentingNewLine]", "   ", "\[IndentingNewLine]",
-     "   ", 
+        RowBox[{"1", ",", "Medium"}], "]"}]}], "\[IndentingNewLine]", "    ", 
+      RowBox[{"(*", 
+       RowBox[{",", 
+        RowBox[{"ViewPoint", "\[Rule]", 
+         RowBox[{"Dynamic", "[", "dynViewPt", "]"}]}]}], "*)"}], 
+      "\[IndentingNewLine]", " ", "]"}]}], ",", "\[IndentingNewLine]", "   ", 
+    "\[IndentingNewLine]", " ", 
     RowBox[{"{", 
      RowBox[{
       RowBox[{"{", 
@@ -376,14 +393,14 @@ Cell[BoxData[{
      RowBox[{
       RowBox[{"{", 
        RowBox[{"lightDirX", ",", 
-        RowBox[{"-", "0.5"}]}], "}"}], ",", 
+        RowBox[{"-", "1"}]}], "}"}], ",", 
       RowBox[{"-", "1"}], ",", "0"}], "}"}], ",", "\[IndentingNewLine]", 
     "   ", 
     RowBox[{"{", 
      RowBox[{
       RowBox[{"{", 
-       RowBox[{"lightDirZ", ",", "1"}], "}"}], ",", "0.5", ",", "1"}], "}"}], 
-    ",", "\[IndentingNewLine]", "   ", 
+       RowBox[{"lightDirZ", ",", "0.5"}], "}"}], ",", "0.5", ",", "1"}], 
+     "}"}], ",", "\[IndentingNewLine]", "   ", 
     RowBox[{"{", 
      RowBox[{
       RowBox[{"{", 
@@ -410,22 +427,6 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{"samplingRadius", ",", "0.3"}], "}"}], ",", "0.1", ",", "1"}], 
      "}"}], ",", "\[IndentingNewLine]", "   ", 
-    RowBox[{"{", 
-     RowBox[{"{", 
-      RowBox[{"sgndf1", ",", "sgndf"}], "}"}], "}"}], ",", 
-    "\[IndentingNewLine]", "   ", 
-    RowBox[{"{", 
-     RowBox[{"{", 
-      RowBox[{"sgndfEnergy1", ",", "sgndfEnergy"}], "}"}], "}"}], ",", 
-    "\[IndentingNewLine]", "   ", 
-    RowBox[{"{", 
-     RowBox[{"{", 
-      RowBox[{"reflAsgLight1", ",", "reflAsgLight"}], "}"}], "}"}], ",", 
-    "\[IndentingNewLine]", "   ", 
-    RowBox[{"{", 
-     RowBox[{"{", 
-      RowBox[{"reflAsgEnergy1", ",", "reflAsgEnergy"}], "}"}], "}"}], ",", 
-    "\[IndentingNewLine]", "   ", 
     RowBox[{"{", 
      RowBox[{"{", 
       RowBox[{"reflShading1", ",", "reflShading"}], "}"}], "}"}], ",", 
@@ -532,446 +533,159 @@ Cell[BoxData[{
    3.8358410096261644`*^9}, {3.835841472198824*^9, 3.8358415092879033`*^9}, {
    3.8358441181696315`*^9, 3.83584418010133*^9}, {3.835844263397464*^9, 
    3.8358443426491055`*^9}, {3.835844488025111*^9, 3.8358444929183245`*^9}, {
-   3.835844568991685*^9, 3.835844611044815*^9}},
- CellLabel->
-  "In[112]:=",ExpressionUUID->"cadb2597-bca6-4ce0-9212-64077c71bd89"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"sg01", "=", 
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"Normalize", "@", 
-      RowBox[{"{", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"-", "0.08"}], "+", "0.1"}], ",", 
-        RowBox[{"0.7783", "+", "0.1"}], ",", 
-        RowBox[{"0.6226", "+", "0.1"}]}], "}"}]}], ",", "80", ",", "1"}], 
-    "}"}]}], ";"}], "\[IndentingNewLine]", 
- RowBox[{"sgE01", "=", 
-  RowBox[{
-   RowBox[{"sgEnergy", "[", "sg01", "]"}], "//", 
-   "N"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"asg01", "=", 
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"{", 
-      RowBox[{
-       RowBox[{"-", "0.08"}], ",", "0.7783", ",", "0.6226"}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"0.9916556173432377`", ",", "0.`", ",", "0.1289152302546209`"}],
-       "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"0.10033556345783397`", ",", "0.6278845198785931`", ",", 
-       RowBox[{"-", "0.7718120265987228`"}]}], "}"}], ",", 
-     "14.062291109618892`", ",", "21.651231911491642`", ",", "1"}], "}"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"asgE01", "=", 
-   RowBox[{"asgEnergyEx", "[", "asg01", "]"}]}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"sg02", "=", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"0", ",", "0", ",", "1"}], "}"}], ",", "80", ",", "1"}], 
-     "}"}]}], ";"}], "\[IndentingNewLine]", 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"asgDotSg", "[", 
-   RowBox[{"asg01", ",", "sg01"}], "]"}], "\[IndentingNewLine]", 
-  RowBox[{"(*", 
-   RowBox[{
-    RowBox[{
-     RowBox[{"sgDot", "[", 
-      RowBox[{"sg01", ",", "sg02"}], "]"}], "//", 
-     RowBox[{"N", "\[IndentingNewLine]", 
-      RowBox[{"sgProductIntegral", "[", 
-       RowBox[{"sg01", ",", "sg02"}], "]"}]}]}], "//", "N"}], 
-   "*)"}]}], "\[IndentingNewLine]"}], "Input",
- CellChangeTimes->{{3.8358436406670246`*^9, 3.835843677958351*^9}, {
-  3.8358448283843307`*^9, 3.8358448952237716`*^9}, {3.835845048621834*^9, 
-  3.835845116652738*^9}, {3.8358451600604343`*^9, 3.8358451870607324`*^9}, {
-  3.835845335661515*^9, 3.835845559980213*^9}, {3.835845648174348*^9, 
-  3.8358457004300995`*^9}, {3.8358459050882654`*^9, 3.83584591291004*^9}, {
-  3.8358459474216146`*^9, 3.8358459608708687`*^9}, {3.835846394896817*^9, 
-  3.8358466214932175`*^9}},ExpressionUUID->"c0acf3ef-2c6b-4e14-8695-\
-ab41373b2024"],
-
-Cell[BoxData["0.07853981633974483`"], "Output",
- CellChangeTimes->{{3.8358436734917583`*^9, 3.835843678439552*^9}, {
-   3.8358448327334027`*^9, 3.8358448965226083`*^9}, {3.835845084716425*^9, 
-   3.8358450976826363`*^9}, {3.8358451658117924`*^9, 3.835845187528714*^9}, 
-   3.8358453125818357`*^9, 3.8358453633601832`*^9, {3.8358454035550213`*^9, 
-   3.8358455605117674`*^9}, {3.835845621628376*^9, 3.8358457008242955`*^9}, {
-   3.835845806068036*^9, 3.8358458287252903`*^9}, {3.835845906110671*^9, 
-   3.8358459133472977`*^9}, {3.8358459487678685`*^9, 3.835845961288059*^9}, {
-   3.8358463963206654`*^9, 3.835846418899205*^9}, {3.83584645360321*^9, 
-   3.835846523187747*^9}, {3.8358465706099777`*^9, 3.835846593963249*^9}},
- CellLabel->
-  "Out[553]=",ExpressionUUID->"918aa22a-2a3d-4e1e-838f-9985411bce70"],
-
-Cell[BoxData["0.18004477592438847`"], "Output",
- CellChangeTimes->{{3.8358436734917583`*^9, 3.835843678439552*^9}, {
-   3.8358448327334027`*^9, 3.8358448965226083`*^9}, {3.835845084716425*^9, 
-   3.8358450976826363`*^9}, {3.8358451658117924`*^9, 3.835845187528714*^9}, 
-   3.8358453125818357`*^9, 3.8358453633601832`*^9, {3.8358454035550213`*^9, 
-   3.8358455605117674`*^9}, {3.835845621628376*^9, 3.8358457008242955`*^9}, {
-   3.835845806068036*^9, 3.8358458287252903`*^9}, {3.835845906110671*^9, 
-   3.8358459133472977`*^9}, {3.8358459487678685`*^9, 3.835845961288059*^9}, {
-   3.8358463963206654`*^9, 3.835846418899205*^9}, {3.83584645360321*^9, 
-   3.835846523187747*^9}, {3.8358465706099777`*^9, 3.835846593975232*^9}},
- CellLabel->
-  "Out[555]=",ExpressionUUID->"5e1cbbf1-755a-4103-b7b3-db71ae628136"],
-
-Cell[BoxData["0.8978815356736225`"], "Output",
- CellChangeTimes->{{3.8358436734917583`*^9, 3.835843678439552*^9}, {
-   3.8358448327334027`*^9, 3.8358448965226083`*^9}, {3.835845084716425*^9, 
-   3.8358450976826363`*^9}, {3.8358451658117924`*^9, 3.835845187528714*^9}, 
-   3.8358453125818357`*^9, 3.8358453633601832`*^9, {3.8358454035550213`*^9, 
-   3.8358455605117674`*^9}, {3.835845621628376*^9, 3.8358457008242955`*^9}, {
-   3.835845806068036*^9, 3.8358458287252903`*^9}, {3.835845906110671*^9, 
-   3.8358459133472977`*^9}, {3.8358459487678685`*^9, 3.835845961288059*^9}, {
-   3.8358463963206654`*^9, 3.835846418899205*^9}, {3.83584645360321*^9, 
-   3.835846523187747*^9}, {3.8358465706099777`*^9, 3.8358465939772263`*^9}},
- CellLabel->
-  "Out[557]=",ExpressionUUID->"08c8e525-80b4-4368-b81b-d81967c7b014"],
-
-Cell[BoxData["9.605715253330055`*^-9"], "Output",
- CellChangeTimes->{{3.8358436734917583`*^9, 3.835843678439552*^9}, {
-   3.8358448327334027`*^9, 3.8358448965226083`*^9}, {3.835845084716425*^9, 
-   3.8358450976826363`*^9}, {3.8358451658117924`*^9, 3.835845187528714*^9}, 
-   3.8358453125818357`*^9, 3.8358453633601832`*^9, {3.8358454035550213`*^9, 
-   3.8358455605117674`*^9}, {3.835845621628376*^9, 3.8358457008242955`*^9}, {
-   3.835845806068036*^9, 3.8358458287252903`*^9}, {3.835845906110671*^9, 
-   3.8358459133472977`*^9}, {3.8358459487678685`*^9, 3.835845961288059*^9}, {
-   3.8358463963206654`*^9, 3.835846418899205*^9}, {3.83584645360321*^9, 
-   3.835846523187747*^9}, {3.8358465706099777`*^9, 3.8358465939792213`*^9}},
- CellLabel->
-  "Out[558]=",ExpressionUUID->"32ce145c-134a-4f99-b63f-6c1053a43399"],
-
-Cell[BoxData["1.9908653309069255`*^-8"], "Output",
- CellChangeTimes->{{3.8358436734917583`*^9, 3.835843678439552*^9}, {
-   3.8358448327334027`*^9, 3.8358448965226083`*^9}, {3.835845084716425*^9, 
-   3.8358450976826363`*^9}, {3.8358451658117924`*^9, 3.835845187528714*^9}, 
-   3.8358453125818357`*^9, 3.8358453633601832`*^9, {3.8358454035550213`*^9, 
-   3.8358455605117674`*^9}, {3.835845621628376*^9, 3.8358457008242955`*^9}, {
-   3.835845806068036*^9, 3.8358458287252903`*^9}, {3.835845906110671*^9, 
-   3.8358459133472977`*^9}, {3.8358459487678685`*^9, 3.835845961288059*^9}, {
-   3.8358463963206654`*^9, 3.835846418899205*^9}, {3.83584645360321*^9, 
-   3.835846523187747*^9}, {3.8358465706099777`*^9, 3.835846593981248*^9}},
- CellLabel->
-  "Out[559]=",ExpressionUUID->"d740b6fc-89e7-4fde-b412-053ca8b26887"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"gDGGX", "[", 
-  RowBox[{"0.1", ",", "1"}], "]"}]], "Input",
- CellChangeTimes->{{3.8358438161627398`*^9, 3.8358438343466487`*^9}},
- CellLabel->"In[32]:=",ExpressionUUID->"92f3338c-4e16-44e2-9bc2-823c13455a12"],
-
-Cell[BoxData["31.830988618379017`"], "Output",
- CellChangeTimes->{{3.8358438245753703`*^9, 3.835843834680196*^9}},
- CellLabel->"Out[32]=",ExpressionUUID->"3cd2d1dc-b139-426d-ab0e-22747ded3866"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"ClearAll", "[", 
-   RowBox[{"a", ",", "b", ",", "c", ",", "p1", ",", "p2"}], "]"}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"Manipulate", "[", "\[IndentingNewLine]", "\t", 
-   RowBox[{
-    RowBox[{"Plot", "[", "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"{", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"sgPolar", "[", 
-         RowBox[{"\[Theta]", ",", 
-          RowBox[{"2", "\[Lambda]"}], ",", "1"}], "]"}], ",", 
-        "\[IndentingNewLine]", 
-        RowBox[{"asgPolar", "[", 
-         RowBox[{"\[Theta]", ",", 
-          RowBox[{
-           RowBox[{"\[Pi]", "/", "2"}], "-", "\[Theta]"}], ",", 
-          RowBox[{"\[Pi]", "/", "2"}], ",", "\[Lambda]", ",", "\[Lambda]", 
-          ",", "1"}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
-      RowBox[{"{", 
-       RowBox[{"\[Theta]", ",", "0", ",", 
-        RowBox[{"\[Pi]", "/", "2"}]}], "}"}]}], "]"}], ",", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{"{", 
-     RowBox[{"\[Lambda]", ",", "2", ",", "20"}], "}"}]}], 
-   "\[IndentingNewLine]", "]"}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
- CellChangeTimes->{{3.8358461974607735`*^9, 3.83584620555521*^9}, {
-   3.8358462414765797`*^9, 3.835846256339672*^9}, {3.8358466259712534`*^9, 
-   3.83584674307537*^9}, 3.835846847999342*^9, {3.8358469153659744`*^9, 
-   3.8358469540059767`*^9}, {3.8358469958118453`*^9, 3.835847119995497*^9}, 
-   3.8358471638529015`*^9},
- CellLabel->
-  "In[611]:=",ExpressionUUID->"7222e3b1-7582-4fe2-9db5-2873997643fb"],
+   3.835844568991685*^9, 3.835844611044815*^9}, {3.8358642867358274`*^9, 
+   3.8358643098018546`*^9}, {3.8358643970064335`*^9, 
+   3.835864426920785*^9}},ExpressionUUID->"cadb2597-bca6-4ce0-9212-\
+64077c71bd89"],
 
 Cell[BoxData[
  TagBox[
   StyleBox[
-   DynamicModuleBox[{$CellContext`\[Lambda]$$ = 3.98, Typeset`show$$ = True, 
+   DynamicModuleBox[{$CellContext`horzRoughness$$ = 
+    0.1, $CellContext`lightDirX$$ = -1, $CellContext`lightDirZ$$ = 
+    0.5, $CellContext`lightIntensity$$ = 1, $CellContext`reflShading1$$ = 
+    0.09480279485212359, $CellContext`samplingRadius$$ = 
+    0.3, $CellContext`shadingPt$$ = {0.5, 
+    0.35, -0.5}, $CellContext`vertRoughness$$ = 0.1, Typeset`show$$ = True, 
     Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
     Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
-    "\"untitled\"", Typeset`specs$$ = {{
-      Hold[$CellContext`\[Lambda]$$], 2, 20}}, Typeset`size$$ = {
-    396., {119., 125.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`\[Lambda]$12955769$$ = 0}, 
-    DynamicBox[Manipulate`ManipulateBoxes[
-     1, StandardForm, "Variables" :> {$CellContext`\[Lambda]$$ = 2}, 
-      "ControllerVariables" :> {
-        Hold[$CellContext`\[Lambda]$$, $CellContext`\[Lambda]$12955769$$, 0]},
-       "OtherVariables" :> {
-       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
-        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
-        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
-         Typeset`skipInitDone$$}, "Body" :> Plot[{
-         sgCommon`sgPolar[$CellContext`\[Theta], 2 $CellContext`\[Lambda]$$, 
-          1], 
-         sgCommon`asgPolar[$CellContext`\[Theta], 
-          Pi/2 - $CellContext`\[Theta], Pi/
-          2, $CellContext`\[Lambda]$$, $CellContext`\[Lambda]$$, 
-          1]}, {$CellContext`\[Theta], 0, Pi/2}], 
-      "Specifications" :> {{$CellContext`\[Lambda]$$, 2, 20}}, 
-      "Options" :> {}, "DefaultOptions" :> {}],
-     ImageSizeCache->{451., {169., 176.}},
-     SingleEvaluation->True],
-    Deinitialization:>None,
-    DynamicModuleValues:>{},
-    SynchronousInitialization->True,
-    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
-    UnsavedVariables:>{Typeset`initDone$$},
-    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
-   Deployed->True,
-   StripOnInput->False],
-  Manipulate`InterpretManipulate[1]]], "Output",
- CellChangeTimes->{
-  3.835846743581278*^9, 3.8358469544747734`*^9, 3.8358469973216743`*^9, {
-   3.8358470825073586`*^9, 3.8358471205818415`*^9}, {3.835847160777935*^9, 
-   3.835847164473545*^9}},
- CellLabel->
-  "Out[612]=",ExpressionUUID->"4ab5b21f-bb63-445f-8075-e376e6635e53"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[{
- RowBox[{"sgPolar", "[", 
-  RowBox[{"0.1", ",", "a", ",", "1"}], "]"}], "\[IndentingNewLine]", 
- RowBox[{"asgVector", "[", 
-  RowBox[{"0.1", ",", 
-   RowBox[{
-    RowBox[{"\[Pi]", "/", "2"}], "-", "0.1"}], ",", 
-   RowBox[{"\[Pi]", "/", "2"}], ",", "\[Lambda]2", ",", "b", ",", "1"}], 
-  "]"}]}], "Input",
- CellChangeTimes->{{3.835846779283205*^9, 3.8358468117870927`*^9}, {
-  3.8358469235840416`*^9, 3.835846924565014*^9}, {3.835846973386942*^9, 
-  3.8358469803230515`*^9}},
- CellLabel->
-  "In[637]:=",ExpressionUUID->"d47cd4cd-3d02-4b86-a9a2-5ab1c1fdc17b"],
-
-Cell[BoxData[
- SuperscriptBox["\[ExponentialE]", 
-  RowBox[{
-   RowBox[{"-", "0.0049958347219741794`"}], " ", "a"}]]], "Output",
- CellChangeTimes->{{3.8358467752256355`*^9, 3.8358467797847753`*^9}, 
-   3.8358468123817196`*^9, 3.8358469250329733`*^9, {3.8358469816042495`*^9, 
-   3.8358469890668697`*^9}, 3.835848724299121*^9},
- CellLabel->
-  "Out[637]=",ExpressionUUID->"864635b3-6b58-4882-8683-f45f9197ddbb"],
-
-Cell[BoxData[
- RowBox[{"asgVector", "[", 
-  RowBox[{"0.1`", ",", "1.4707963267948965`", ",", 
-   FractionBox["\[Pi]", "2"], ",", "5", ",", "b", ",", "1"}], "]"}]], "Output",
- CellChangeTimes->{{3.8358467752256355`*^9, 3.8358467797847753`*^9}, 
-   3.8358468123817196`*^9, 3.8358469250329733`*^9, {3.8358469816042495`*^9, 
-   3.8358469890668697`*^9}, 3.8358487243076124`*^9},
- CellLabel->
-  "Out[638]=",ExpressionUUID->"7fc6ba4a-2d65-44e5-ab81-93a8dd51c7ba"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-  "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-  "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-  "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-  RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"Plot", "[", "\[IndentingNewLine]", "\t", 
-     RowBox[{
-      RowBox[{"{", "\[IndentingNewLine]", "\t\t", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"NIntegrate", "[", 
-          RowBox[{
-           FractionBox[
-            RowBox[{"4", " ", 
-             SuperscriptBox["m", "4"]}], 
-            SuperscriptBox[
-             RowBox[{"(", 
-              RowBox[{"1", "+", 
-               SuperscriptBox["m", "2"], "+", 
-               RowBox[{
-                RowBox[{"(", 
-                 RowBox[{
-                  RowBox[{"-", "1"}], "+", 
-                  SuperscriptBox["m", "2"]}], ")"}], " ", 
-                RowBox[{"Cos", "[", 
-                 RowBox[{"\[Theta]L", "-", 
-                  RowBox[{"ArcTan", "[", 
-                   RowBox[{
-                    RowBox[{
-                    SuperscriptBox[
-                    RowBox[{"Sec", "[", "\[Theta]L", "]"}], "2"], " ", 
-                    RowBox[{"Tan", "[", "\[Theta]", "]"}]}], "+", 
-                    RowBox[{"Tan", "[", "\[Theta]L", "]"}]}], "]"}]}], 
-                 "]"}]}]}], ")"}], "2"]], ",", 
-           RowBox[{"{", 
-            RowBox[{"\[Theta]", ",", "0", ",", "\[Theta]a"}], "}"}]}], "]"}], 
-         "*", 
-         RowBox[{"gDGGX", "[", 
-          RowBox[{"m", ",", "1"}], "]"}]}], ",", "\[IndentingNewLine]", 
-        "\t\t", 
-        RowBox[{"(*", 
-         RowBox[{
-          RowBox[{
-           RowBox[{"(", 
-            RowBox[{
-             FractionBox[
-              RowBox[{
-               SqrtBox["\[Pi]"], " ", 
-               RowBox[{"Erf", "[", 
-                RowBox[{
-                 SqrtBox["k"], " ", 
-                 RowBox[{"Sin", "[", "\[Theta]a", "]"}]}], "]"}]}], 
-              RowBox[{"2", " ", 
-               SqrtBox["k"]}]], "*", 
-             RowBox[{"gDGGX", "[", 
-              RowBox[{"m", ",", "1"}], "]"}]}], ")"}], "/.", 
-           RowBox[{"k", "->", 
-            FractionBox[
-             RowBox[{"0.233", " ", 
-              RowBox[{"Cos", "[", "\[Theta]L", "]"}]}], 
-             RowBox[{"m", "^", "2"}]]}]}], ","}], "*)"}], 
-        "\[IndentingNewLine]", "\t\t", 
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{
-           FractionBox[
-            SqrtBox["\[Pi]"], 
-            RowBox[{"2", " ", 
-             SqrtBox["k"]}]], 
-           RowBox[{"Min", "[", 
-            RowBox[{
-             FractionBox[
-              RowBox[{"2", " ", 
-               SqrtBox["k"], 
-               RowBox[{"Sin", "[", " ", "\[Theta]a", "]"}]}], 
-              SqrtBox["\[Pi]"]], ",", "1"}], "]"}], "*", 
-           RowBox[{"gDGGX", "[", 
-            RowBox[{"m", ",", "1"}], "]"}]}], ")"}], "/.", 
-         RowBox[{"k", "->", 
-          FractionBox[
-           RowBox[{"0.233", " ", 
-            RowBox[{"Cos", "[", "\[Theta]L", "]"}]}], 
-           RowBox[{"m", "^", "2"}]]}]}]}], "\[IndentingNewLine]", "        ", 
-       "}"}], ",", "\[IndentingNewLine]", 
-      RowBox[{"{", 
-       RowBox[{"\[Theta]a", ",", "0", ",", 
-        RowBox[{"\[Pi]", "/", "2"}]}], "}"}]}], 
-     RowBox[{"(*", 
-      RowBox[{",", 
-       RowBox[{"PlotRange", "\[Rule]", 
-        RowBox[{"{", 
-         RowBox[{
-          RowBox[{"{", 
-           RowBox[{"0", ",", 
-            RowBox[{"\[Pi]", "/", "2"}]}], "}"}], ",", 
-          RowBox[{"{", 
-           RowBox[{"0", ",", "1"}], "}"}]}], "}"}]}]}], "*)"}], "]"}], ",", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"m", ",", "0.1"}], "}"}], ",", "0.01", ",", "0.9"}], "}"}], 
-    ",", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"\[Theta]L", ",", 
-        RowBox[{"\[Pi]", "/", "4"}]}], "}"}], ",", "0", ",", 
-      RowBox[{"\[Pi]", "/", "2"}]}], "}"}]}], "\[IndentingNewLine]", 
-   "]"}]}]], "Input",
- CellChangeTimes->{{3.835845819512385*^9, 3.8358458203406878`*^9}, {
-  3.835846165418825*^9, 3.835846190252902*^9}, {3.835846767239151*^9, 
-  3.8358467726877174`*^9}},ExpressionUUID->"f883c28c-a2d2-4b8e-952c-\
-e7d05fd33890"],
-
-Cell[BoxData["1"], "Output",
- CellChangeTimes->{{3.8358439315884013`*^9, 3.8358439396986356`*^9}, 
-   3.8358461815028205`*^9, 3.8358467694635396`*^9},
- CellLabel->
-  "Out[575]=",ExpressionUUID->"df5805eb-8fc6-4a38-9a56-5f2eadfdaaa5"],
-
-Cell[BoxData[
- TagBox[
-  StyleBox[
-   DynamicModuleBox[{$CellContext`m$$ = 0.1, $CellContext`\[Theta]L$$ = 
-    Rational[1, 4] Pi, Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
-    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
-    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
-       Hold[$CellContext`m$$], 0.1}, 0.01, 0.9}, {{
-       Hold[$CellContext`\[Theta]L$$], Rational[1, 4] Pi}, 0, Rational[1, 2] 
-      Pi}}, Typeset`size$$ = {396., {119., 125.}}, Typeset`update$$ = 0, 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`horzRoughness$$], 0.1}, 0.01, 0.99}, {{
+       Hold[$CellContext`vertRoughness$$], 0.1}, 0.01, 0.99}, {{
+       Hold[$CellContext`lightDirX$$], -1}, -1, 0}, {{
+       Hold[$CellContext`lightDirZ$$], 0.5}, 0.5, 1}, {{
+       Hold[$CellContext`lightIntensity$$], 1}, 0, 1}, {{
+       Hold[$CellContext`shadingPt$$], {0.5, 0.35, -0.5}}, {-0.5, -1, -0.5}, {
+      0.5, 1, -0.5}}, {{
+       Hold[$CellContext`samplingRadius$$], 0.3}, 0.1, 1}, {{
+       Hold[$CellContext`reflShading1$$], 0.09480279485212359}}}, 
+    Typeset`size$$ = {360., {196., 202.}}, Typeset`update$$ = 0, 
     Typeset`initDone$$, Typeset`skipInitDone$$ = 
-    True, $CellContext`m$12803310$$ = 0, $CellContext`\[Theta]L$12803311$$ = 
-    0}, 
+    True, $CellContext`horzRoughness$1744643$$ = 
+    0, $CellContext`vertRoughness$1744644$$ = 
+    0, $CellContext`lightDirX$1744645$$ = 
+    0, $CellContext`lightDirZ$1744646$$ = 
+    0, $CellContext`lightIntensity$1744647$$ = 
+    0, $CellContext`shadingPt$1744648$$ = {0, 0, 
+    0}, $CellContext`samplingRadius$1744649$$ = 0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
-      "Variables" :> {$CellContext`m$$ = 0.1, $CellContext`\[Theta]L$$ = 
-        Rational[1, 4] Pi}, "ControllerVariables" :> {
-        Hold[$CellContext`m$$, $CellContext`m$12803310$$, 0], 
-        Hold[$CellContext`\[Theta]L$$, $CellContext`\[Theta]L$12803311$$, 0]},
-       "OtherVariables" :> {
+      "Variables" :> {$CellContext`horzRoughness$$ = 
+        0.1, $CellContext`lightDirX$$ = -1, $CellContext`lightDirZ$$ = 
+        0.5, $CellContext`lightIntensity$$ = 
+        1, $CellContext`reflShading1$$ = $CellContext`reflShading, \
+$CellContext`samplingRadius$$ = 
+        0.3, $CellContext`shadingPt$$ = {0.5, 
+         0.35, -0.5}, $CellContext`vertRoughness$$ = 0.1}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`horzRoughness$$, \
+$CellContext`horzRoughness$1744643$$, 0], 
+        Hold[$CellContext`vertRoughness$$, \
+$CellContext`vertRoughness$1744644$$, 0], 
+        Hold[$CellContext`lightDirX$$, $CellContext`lightDirX$1744645$$, 0], 
+        Hold[$CellContext`lightDirZ$$, $CellContext`lightDirZ$1744646$$, 0], 
+        Hold[$CellContext`lightIntensity$$, \
+$CellContext`lightIntensity$1744647$$, 0], 
+        Hold[$CellContext`shadingPt$$, $CellContext`shadingPt$1744648$$, {0, 
+         0, 0}], 
+        Hold[$CellContext`samplingRadius$$, \
+$CellContext`samplingRadius$1744649$$, 0]}, 
+      "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
         Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
-         Typeset`skipInitDone$$}, "Body" :> 
-      Plot[{NIntegrate[
-          4 $CellContext`m$$^4/(
-            1 + $CellContext`m$$^2 + (-1 + $CellContext`m$$^2) 
-             Cos[$CellContext`\[Theta]L$$ - ArcTan[
-               Sec[$CellContext`\[Theta]L$$]^2 Tan[$CellContext`\[Theta]] + 
-                Tan[$CellContext`\[Theta]L$$]]])^2, {$CellContext`\[Theta], 
-            0, $CellContext`\[Theta]a}] gBRDF`gDGGX[$CellContext`m$$, 1], 
-         ReplaceAll[(Sqrt[Pi]/(2 Sqrt[$CellContext`k])) 
-          Min[2 Sqrt[$CellContext`k] Sin[$CellContext`\[Theta]a]/Sqrt[Pi], 1] 
-          gBRDF`gDGGX[$CellContext`m$$, 1], $CellContext`k -> 
-          0.233 Cos[$CellContext`\[Theta]L$$]/$CellContext`m$$^2]}, \
-{$CellContext`\[Theta]a, 0, Pi/2}], 
-      "Specifications" :> {{{$CellContext`m$$, 0.1}, 0.01, 
-         0.9}, {{$CellContext`\[Theta]L$$, Rational[1, 4] Pi}, 0, 
-         Rational[1, 2] Pi}}, "Options" :> {}, "DefaultOptions" :> {}],
-     ImageSizeCache->{451., {184., 191.}},
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`lightDir = 
+        Normalize[{$CellContext`lightDirX$$, -1, $CellContext`lightDirZ$$}]; \
+$CellContext`viewPoint = {1.3, -2.4, 2}; $CellContext`realViewDir = 
+        Normalize[$CellContext`viewPoint - $CellContext`shadingPt$$]; \
+$CellContext`horzNormal = Normalize[{0, 0, 1}]; $CellContext`vertNormal = 
+        Normalize[{0, -1, 0}]; $CellContext`horzCenter = {
+         0, 0, -0.5}; $CellContext`vertCenter = {0, 1, 
+         0}; $CellContext`reflPeakPt := 
+        gBRDF`gCalcPeakPoint[$CellContext`vertNormal, \
+$CellContext`vertCenter, $CellContext`lightDir, $CellContext`shadingPt$$]; \
+$CellContext`reflSgLight = 
+        sgCommon`sgReflectLight[$CellContext`shadingPt$$, \
+$CellContext`lightDir, $CellContext`lightIntensity$$, \
+$CellContext`vertRoughness$$, {$CellContext`reflPeakPt, \
+$CellContext`vertNormal, $CellContext`samplingRadius$$}]; \
+$CellContext`sgDisplayPt = {-0.5, -0.5, 0.5}; $CellContext`sgndf = 
+        sgCommon`sgNDF[$CellContext`horzRoughness$$, 
+          
+          Part[$CellContext`reflSgLight, 
+           1], $CellContext`realViewDir, $CellContext`horzNormal]; \
+$CellContext`reflShading := 
+        sgCommon`sgDot[$CellContext`reflSgLight, $CellContext`sgndf]; Show[{
+          (gPlots3DEx`pltRect3D[
+           Association[
+           "center" -> $CellContext`horzCenter, 
+            "normal" -> $CellContext`horzNormal, "majorAxis" -> {0, 1, 0}, 
+            "majorRadius" -> 1, "minorRadius" -> 0.5, "opacity" -> 1, 
+            "colorFunc" -> 
+            Function[{$CellContext`x, $CellContext`y, $CellContext`z}, 
+              LightBlue]]]& )[
+           Association["roughness" -> $CellContext`horzRoughness$$]], 
+          (gPlots3DEx`pltRect3D[
+           Association[
+           "center" -> $CellContext`vertCenter, 
+            "normal" -> $CellContext`vertNormal, "plotPts" -> 50, 
+            "majorAxis" -> {1, 0, 0}, "majorRadius" -> 0.5, "minorRadius" -> 
+            0.5, "colorFunc" -> 
+            Function[{$CellContext`x$, $CellContext`y$, $CellContext`z$}, 
+              Hue[
+               $CellContext`reflLightingFunc[{$CellContext`x$, \
+$CellContext`y$, $CellContext`z$}, $CellContext`shadingPt$$, \
+$CellContext`vertRoughness$$, $CellContext`lightIntensity$$]]]]]& )[
+           Association["roughness" -> $CellContext`vertRoughness$$]], 
+          (gPlots3DEx`pltPoint3D[
+           Association[
+           "pos" -> Slot["shadingPt"], "size" -> 0.01, "color" -> Blue]]& )[
+           Association["shadingPt" -> $CellContext`shadingPt$$]], 
+          (gPlots3DEx`pltPoint3D[
+           Association[
+           "pos" -> $CellContext`reflPeakPt, "size" -> 0.02, "color" -> 
+            Red]]& )[
+           Association[]], 
+          (gPlots3DEx`pltCircle3D[
+           Association[
+           "center" -> $CellContext`reflPeakPt, 
+            "normal" -> $CellContext`vertNormal, "radius" -> Slot["radius"], 
+            "colorFunc" -> 
+            Function[{$CellContext`x, $CellContext`y, $CellContext`z}, 
+              LightGreen]]]& )[
+           Association["radius" -> $CellContext`samplingRadius$$]], 
+          (gPlots3DEx`pltSphere3D[
+           Association[
+           "center" -> $CellContext`sgDisplayPt, "radius" -> 0.5, "plotPts" -> 
+            50, "mesh" -> None, "colorFunc" -> 
+            Function[{$CellContext`x, $CellContext`y, $CellContext`z}, 
+              Hue[
+               sgCommon`sgVector[
+                
+                Normalize[{$CellContext`x, $CellContext`y, $CellContext`z} - \
+$CellContext`sgDisplayPt], 
+                Slot["sg"]]]]]]& )[
+           Association[
+           "sg" -> $CellContext`getDisplaySgFunc[$CellContext`reflSgLight]]], 
+          (gPlots3DEx`pltArrow3D[
+           Association[
+           "origin" -> {0, -1, 1}, "dir" -> -$CellContext`lightDir, "length" -> 
+            0.5]]& )[
+           Association[]]}, 
+         gPlots3DEx`showProps3D[1, Medium]]), 
+      "Specifications" :> {{{$CellContext`horzRoughness$$, 0.1}, 0.01, 
+         0.99}, {{$CellContext`vertRoughness$$, 0.1}, 0.01, 
+         0.99}, {{$CellContext`lightDirX$$, -1}, -1, 
+         0}, {{$CellContext`lightDirZ$$, 0.5}, 0.5, 
+         1}, {{$CellContext`lightIntensity$$, 1}, 0, 
+         1}, {{$CellContext`shadingPt$$, {0.5, 
+          0.35, -0.5}}, {-0.5, -1, -0.5}, {
+         0.5, 1, -0.5}}, {{$CellContext`samplingRadius$$, 0.3}, 0.1, 
+         1}, {{$CellContext`reflShading1$$, $CellContext`reflShading}}}, 
+      "Options" :> {Method -> {"ShowControls" -> True}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{729., {228., 234.}},
      SingleEvaluation->True],
     Deinitialization:>None,
     DynamicModuleValues:>{},
@@ -982,86 +696,20 @@ Cell[BoxData[
    Deployed->True,
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
- CellChangeTimes->{{3.8358439315884013`*^9, 3.8358439396986356`*^9}, 
-   3.8358461815028205`*^9, 3.8358467694995604`*^9},
- CellLabel->
-  "Out[576]=",ExpressionUUID->"96cc98d0-a6a3-4e65-812e-0e87ca234ab8"]
+ CellChangeTimes->{
+  3.835849203880041*^9, 3.835853136130523*^9, {3.8358642886711273`*^9, 
+   3.8358643131042557`*^9}, 3.835864390931299*^9},
+ CellLabel->"Out[45]=",ExpressionUUID->"d051fe65-d308-476c-a405-2351536ada71"]
 }, Open  ]],
 
-Cell[CellGroupData[{
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{
-   RowBox[{
-    RowBox[{"myAssert", "[", 
-     RowBox[{"test_", ",", "msg_"}], "]"}], ":=", 
-    RowBox[{"Module", "[", 
-     RowBox[{
-      RowBox[{"{", "}"}], ",", 
-      RowBox[{"Assert", "[", 
-       RowBox[{"test", ",", "msg"}], "]"}]}], "]"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{
-    RowBox[{"func", "[", 
-     RowBox[{"i_", ",", "callFrom_"}], "]"}], ":=", 
-    RowBox[{"Module", "[", 
-     RowBox[{
-      RowBox[{"{", "k", "}"}], ",", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"k", "=", "i"}], ";", "\[IndentingNewLine]", 
-       RowBox[{"msg1", "=", 
-        RowBox[{"Append", "[", 
-         RowBox[{"callFrom", ",", "\"\<func\>\""}], "]"}]}], ";", 
-       "\[IndentingNewLine]", 
-       RowBox[{"myAssert", "[", 
-        RowBox[{
-         RowBox[{"k", ">", "0"}], ",", "msg1"}], "]"}]}]}], "]"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"func1", "[", "i_", "]"}], ":=", 
-   RowBox[{"Module", "[", 
-    RowBox[{
-     RowBox[{"{", "}"}], ",", 
-     RowBox[{"func", "[", 
-      RowBox[{"i", ",", 
-       RowBox[{"{", "\"\<func1\>\"", "}"}]}], "]"}]}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{"func1", "[", 
-  RowBox[{"-", "1"}], "]"}]}], "Input",
- CellChangeTimes->{{3.835847968164816*^9, 3.8358479681652627`*^9}, {
-  3.8358480475269585`*^9, 3.835848063079176*^9}, {3.8358481095488205`*^9, 
-  3.8358481131691694`*^9}, {3.8358482704934664`*^9, 3.835848401502473*^9}, {
-  3.8358484420760727`*^9, 3.835848477448693*^9}, {3.8358486787535796`*^9, 
-  3.8358486789853487`*^9}},
- CellLabel->
-  "In[633]:=",ExpressionUUID->"af61c70c-05c5-4bbe-8709-20bc4490ec73"],
-
-Cell[BoxData[
- TemplateBox[{
-  "Assert","asrtfe",
-   "\"Assertion \\!\\(\\*RowBox[{\\\"False\\\"}]\\) in \
-\\!\\(\\*RowBox[{\\\"Assert\\\", \\\"[\\\", RowBox[{\\\"False\\\", \\\",\\\", \
-RowBox[{\\\"{\\\", RowBox[{\\\"\\\\\\\"func1\\\\\\\"\\\", \\\",\\\", \\\"\\\\\
-\\\"func\\\\\\\"\\\"}], \\\"}\\\"}]}], \\\"]\\\"}]\\) failed.\"",2,636,138,
-   30185220469566489625,"Local"},
-  "MessageTemplate"]], "Message", "MSG",
+Cell[BoxData["\[IndentingNewLine]"], "Input",
  CellChangeTimes->{
-  3.835847968896978*^9, {3.8358482792193165`*^9, 3.835848292042758*^9}, 
-   3.835848332655695*^9, {3.8358483817294855`*^9, 3.835848402338954*^9}, {
-   3.8358484682163057`*^9, 3.835848484459717*^9}},
- CellLabel->
-  "During evaluation of \
-In[633]:=",ExpressionUUID->"4c4f9b29-1bea-4e19-93a7-02209f9c666c"]
-}, Open  ]]
+  3.835864391341773*^9},ExpressionUUID->"72dca5ac-6099-400d-9b5c-\
+eb4b20d89e09"]
 },
-WindowSize->{1081, 804},
-WindowMargins->{{458, Automatic}, {-344, Automatic}},
+WindowSize->{1081, 832},
+WindowMargins->{{93, Automatic}, {-19, Automatic}},
 CellContext->Notebook,
-Magnification:>1.1 Inherited,
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
 ]
@@ -1076,37 +724,11 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 24429, 516, 2343, "Input",ExpressionUUID->"cadb2597-bca6-4ce0-9212-64077c71bd89"],
 Cell[CellGroupData[{
-Cell[25012, 540, 2405, 64, 297, "Input",ExpressionUUID->"c0acf3ef-2c6b-4e14-8695-ab41373b2024"],
-Cell[27420, 606, 807, 11, 36, "Output",ExpressionUUID->"918aa22a-2a3d-4e1e-838f-9985411bce70"],
-Cell[28230, 619, 807, 11, 36, "Output",ExpressionUUID->"5e1cbbf1-755a-4103-b7b3-db71ae628136"],
-Cell[29040, 632, 808, 11, 36, "Output",ExpressionUUID->"08c8e525-80b4-4368-b81b-d81967c7b014"],
-Cell[29851, 645, 811, 11, 38, "Output",ExpressionUUID->"32ce145c-134a-4f99-b63f-6c1053a43399"],
-Cell[30665, 658, 810, 11, 38, "Output",ExpressionUUID->"d740b6fc-89e7-4fde-b412-053ca8b26887"]
+Cell[580, 22, 24212, 516, 1891, "Input",ExpressionUUID->"cadb2597-bca6-4ce0-9212-64077c71bd89"],
+Cell[24795, 540, 8123, 161, 481, "Output",ExpressionUUID->"d051fe65-d308-476c-a405-2351536ada71"]
 }, Open  ]],
-Cell[CellGroupData[{
-Cell[31512, 674, 232, 4, 32, "Input",ExpressionUUID->"92f3338c-4e16-44e2-9bc2-823c13455a12"],
-Cell[31747, 680, 193, 2, 36, "Output",ExpressionUUID->"3cd2d1dc-b139-426d-ab0e-22747ded3866"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[31977, 687, 1567, 36, 275, "Input",ExpressionUUID->"7222e3b1-7582-4fe2-9db5-2873997643fb"],
-Cell[33547, 725, 2141, 43, 366, "Output",ExpressionUUID->"4ab5b21f-bb63-445f-8075-e376e6635e53"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[35725, 773, 573, 13, 55, "Input",ExpressionUUID->"d47cd4cd-3d02-4b86-a9a2-5ab1c1fdc17b"],
-Cell[36301, 788, 409, 8, 38, "Output",ExpressionUUID->"864635b3-6b58-4882-8683-f45f9197ddbb"],
-Cell[36713, 798, 456, 8, 51, "Output",ExpressionUUID->"7fc6ba4a-2d65-44e5-ab81-93a8dd51c7ba"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[37206, 811, 4385, 115, 691, "Input",ExpressionUUID->"f883c28c-a2d2-4b8e-952c-e7d05fd33890"],
-Cell[41594, 928, 233, 4, 36, "Output",ExpressionUUID->"df5805eb-8fc6-4a38-9a56-5f2eadfdaaa5"],
-Cell[41830, 934, 2831, 53, 396, "Output",ExpressionUUID->"96cc98d0-a6a3-4e65-812e-0e87ca234ab8"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[44698, 992, 1731, 48, 209, "Input",ExpressionUUID->"af61c70c-05c5-4bbe-8709-20bc4490ec73"],
-Cell[46432, 1042, 741, 15, 23, "Message",ExpressionUUID->"4c4f9b29-1bea-4e19-93a7-02209f9c666c"]
-}, Open  ]]
+Cell[32933, 704, 147, 3, 48, "Input",ExpressionUUID->"72dca5ac-6099-400d-9b5c-eb4b20d89e09"]
 }
 ]
 *)
