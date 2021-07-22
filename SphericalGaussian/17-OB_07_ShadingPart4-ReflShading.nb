@@ -1,0 +1,764 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     32986,        756]
+NotebookOptionsPosition[     32134,        734]
+NotebookOutlinePosition[     32479,        749]
+CellTagsIndexPosition[     32436,        746]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gUtils`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gBRDF`\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<sgCommon`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlots`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlots3D`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlots3DEx`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gSphericalCap`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Needs", "[", "\"\<gBlochSphere`\>\"", "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"gPrint", "[", "\"\<Shading on a Point\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "lightDir", ",", "viewPoint", ",", "horzCenter", ",", "horzNormal", ",", 
+    "vertCenter", ",", "vertNormal", ",", "\[IndentingNewLine]", "\t", 
+    "vertAssistMajorAxis", ",", "vertMajorRadius", ",", "vertMinorRadius", 
+    ",", "reflShading"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"lightDir", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"{", 
+       RowBox[{"lightDirX", ",", 
+        RowBox[{"-", "1"}], ",", "lightDirZ"}], "}"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Print", "[", "debugViewPoint", "]"}], ";"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"viewPoint", "=", 
+     RowBox[{"{", 
+      RowBox[{"1.3", ",", 
+       RowBox[{"-", "2.4"}], ",", "2"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"normals", " ", "for", " ", "rectangle"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"horzNormal", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0", ",", "1"}], "}"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"vertNormal", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", 
+        RowBox[{"-", "1"}], ",", "0"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"horzCenter", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0", ",", 
+       RowBox[{"-", "0.5"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"vertCenter", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"vertAssistMajorAxis", "=", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"vertMajorRadius", "=", "0.5"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"vertMinorRadius", "=", "0.5"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"reflShading", "=", 
+     RowBox[{"sgReflectShading", "[", "\[IndentingNewLine]", "\t", 
+      RowBox[{"(*", 
+       RowBox[{"shading", " ", "point"}], "*)"}], "\n", "\t\t", 
+      RowBox[{
+      "shadingPt", ",", "horzNormal", ",", "horzRoughness", ",", 
+       "samplingRadius", ",", "\n", "\t\t", 
+       RowBox[{"(*", 
+        RowBox[{"reflection", " ", "rectangle"}], "*)"}], "\n", "\t\t", 
+       "vertCenter", ",", "vertNormal", ",", "vertAssistMajorAxis", ",", 
+       "vertMajorRadius", ",", "vertMinorRadius", ",", "vertRoughness", ",", 
+       "\n", "\t\t", 
+       RowBox[{"(*", "light", "*)"}], "\n", "\t\t", "lightDir", ",", 
+       "lightIntensity", ",", "viewPoint"}], "\[IndentingNewLine]", "\t", 
+      "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"Show", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", "  ", 
+       RowBox[{"(*", 
+        RowBox[{"horizontal", " ", "rect"}], "*)"}], "\[IndentingNewLine]", 
+       "  ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"pltRect3D", "[", " ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", "horzCenter"}], ",", 
+             RowBox[{"\"\<normal\>\"", "\[Rule]", "horzNormal"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<majorAxis\>\"", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ",", 
+             RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "1"}], ",", 
+             RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "0.5"}], ",", 
+             RowBox[{"\"\<opacity\>\"", "\[Rule]", "1"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", "LightRed"}], 
+               "]"}]}]}], "|>"}], "\[IndentingNewLine]", "  ", "]"}], "&"}], 
+         "[", 
+         RowBox[{"<|", 
+          RowBox[{"\"\<roughness\>\"", "\[Rule]", "horzRoughness"}], "|>"}], 
+         "]"}], ",", "\[IndentingNewLine]", "  ", 
+        RowBox[{"(*", 
+         RowBox[{"vertical", " ", "rect"}], "*)"}], "\[IndentingNewLine]", 
+        "  ", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"pltRect3D", "[", " ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", "vertCenter"}], ",", 
+             RowBox[{"\"\<normal\>\"", "\[Rule]", "vertNormal"}], ",", 
+             RowBox[{"\"\<plotPts\>\"", "\[Rule]", "50"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<majorAxis\>\"", "\[Rule]", "vertAssistMajorAxis"}], 
+             ",", 
+             RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "vertMajorRadius"}], 
+             ",", 
+             RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "vertMinorRadius"}], 
+             ",", "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", "Cyan"}], 
+               RowBox[{"(*", 
+                RowBox[{"Hue", "@", 
+                 RowBox[{"reflLightingFunc", "[", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
+                   "shadingPt", ",", "vertRoughness", ",", "lightIntensity"}],
+                   "]"}]}], "*)"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", 
+           "  ", "]"}], "&"}], "[", 
+         RowBox[{"<|", 
+          RowBox[{"\"\<roughness\>\"", "\[Rule]", "vertRoughness"}], "|>"}], 
+         "]"}], ",", "\[IndentingNewLine]", "   ", 
+        RowBox[{"(*", 
+         RowBox[{"light", " ", "direction"}], "*)"}], "\[IndentingNewLine]", 
+        "   ", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"pltArrow3D", "[", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<origin\>\"", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"0", ",", 
+                RowBox[{"-", "1"}], ",", "1"}], "}"}]}], ",", 
+             RowBox[{"\"\<dir\>\"", "\[Rule]", 
+              RowBox[{"-", "lightDir"}]}], ",", 
+             RowBox[{"\"\<length\>\"", "\[Rule]", "0.5"}]}], "|>"}], 
+           "\[IndentingNewLine]", "  ", "]"}], "&"}], "[", 
+         RowBox[{"<|", "|>"}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", "    ", 
+      RowBox[{"showProps3D", "[", "1", 
+       RowBox[{"(*", 
+        RowBox[{",", "Medium"}], "*)"}], "]"}]}], "\[IndentingNewLine]", " ", 
+     "]"}]}], ",", "\[IndentingNewLine]", "   ", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"horzRoughness", ",", "0.1"}], "}"}], ",", "0.01", ",", 
+     "0.99"}], "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"vertRoughness", ",", "0.1"}], "}"}], ",", "0.01", ",", 
+     "0.99"}], "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"lightDirX", ",", 
+       RowBox[{"-", "0"}]}], "}"}], ",", 
+     RowBox[{"-", "1"}], ",", "0"}], "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"lightDirZ", ",", "0.5"}], "}"}], ",", "0.1", ",", "1"}], "}"}],
+    ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"lightIntensity", ",", "1"}], "}"}], ",", "0", ",", "1"}], 
+    "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"shadingPt", ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0.3"}], ",", "0.8", ",", 
+         RowBox[{"-", "0.5"}]}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "0.5"}], ",", 
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "0.5"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.5", ",", "1", ",", 
+       RowBox[{"-", "0.5"}]}], "}"}]}], "}"}], ",", "\[IndentingNewLine]", 
+   "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"samplingRadius", ",", "0.3"}], "}"}], ",", "0.1", ",", "1"}], 
+    "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"reflShading1", ",", "reflShading"}], "}"}], "}"}], ",", 
+   "\[IndentingNewLine]", "    ", 
+   RowBox[{"Method", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "False"}], "}"}]}]}], 
+  "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.8359311344212036`*^9, 3.8359311439332085`*^9}, {
+  3.8359312062210035`*^9, 3.835931230284361*^9}, {3.835931356658733*^9, 
+  3.8359313642068343`*^9}},
+ CellLabel->
+  "In[832]:=",ExpressionUUID->"47b3e77c-b55d-4222-89b3-60f5e0793984"],
+
+Cell[BoxData[
+ StyleBox["\<\" Shading on a Point\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.835931207011112*^9, 3.8359312308717804`*^9}, {
+   3.8359313575817547`*^9, 3.83593136520148*^9}, 3.8359358281870484`*^9},
+ CellLabel->
+  "During evaluation of \
+In[832]:=",ExpressionUUID->"d75df10e-15cc-4d63-b40d-b832d9bf921b"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`horzRoughness$$ = 
+    0.1, $CellContext`lightDirX$$ = 0, $CellContext`lightDirZ$$ = 
+    0.5, $CellContext`lightIntensity$$ = 1, $CellContext`reflShading1$$ = 
+    6.030858262200953, $CellContext`samplingRadius$$ = 
+    0.3, $CellContext`shadingPt$$ = {-0.3, 
+    0.8, -0.5}, $CellContext`vertRoughness$$ = 0.1, Typeset`show$$ = False, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`horzRoughness$$], 0.1}, 0.01, 0.99}, {{
+       Hold[$CellContext`vertRoughness$$], 0.1}, 0.01, 0.99}, {{
+       Hold[$CellContext`lightDirX$$], 0}, -1, 0}, {{
+       Hold[$CellContext`lightDirZ$$], 0.5}, 0.1, 1}, {{
+       Hold[$CellContext`lightIntensity$$], 1}, 0, 1}, {{
+       Hold[$CellContext`shadingPt$$], {-0.3, 0.8, -0.5}}, {-0.5, -1, -0.5}, {
+      0.5, 1, -0.5}}, {{
+       Hold[$CellContext`samplingRadius$$], 0.3}, 0.1, 1}, {{
+       Hold[$CellContext`reflShading1$$], 6.030858262200953}}}, 
+    Typeset`size$$ = {72., {47., 53.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`horzRoughness$5715343$$ = 
+    0, $CellContext`vertRoughness$5715344$$ = 
+    0, $CellContext`lightDirX$5715345$$ = 
+    0, $CellContext`lightDirZ$5715346$$ = 
+    0, $CellContext`lightIntensity$5715347$$ = 
+    0, $CellContext`shadingPt$5715348$$ = {0, 0, 
+    0}, $CellContext`samplingRadius$5715349$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`horzRoughness$$ = 
+        0.1, $CellContext`lightDirX$$ = 0, $CellContext`lightDirZ$$ = 
+        0.5, $CellContext`lightIntensity$$ = 
+        1, $CellContext`reflShading1$$ = $CellContext`reflShading, \
+$CellContext`samplingRadius$$ = 
+        0.3, $CellContext`shadingPt$$ = {-0.3, 
+         0.8, -0.5}, $CellContext`vertRoughness$$ = 0.1}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`horzRoughness$$, \
+$CellContext`horzRoughness$5715343$$, 0], 
+        Hold[$CellContext`vertRoughness$$, \
+$CellContext`vertRoughness$5715344$$, 0], 
+        Hold[$CellContext`lightDirX$$, $CellContext`lightDirX$5715345$$, 0], 
+        Hold[$CellContext`lightDirZ$$, $CellContext`lightDirZ$5715346$$, 0], 
+        Hold[$CellContext`lightIntensity$$, \
+$CellContext`lightIntensity$5715347$$, 0], 
+        Hold[$CellContext`shadingPt$$, $CellContext`shadingPt$5715348$$, {0, 
+         0, 0}], 
+        Hold[$CellContext`samplingRadius$$, \
+$CellContext`samplingRadius$5715349$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`lightDir = 
+        Normalize[{$CellContext`lightDirX$$, -1, $CellContext`lightDirZ$$}]; \
+$CellContext`viewPoint = {1.3, -2.4, 2}; $CellContext`horzNormal = 
+        Normalize[{0, 0, 1}]; $CellContext`vertNormal = 
+        Normalize[{0, -1, 0}]; $CellContext`horzCenter = {
+         0, 0, -0.5}; $CellContext`vertCenter = {0, 1, 
+         0}; $CellContext`vertAssistMajorAxis = {1, 0, 
+         0}; $CellContext`vertMajorRadius = 0.5; $CellContext`vertMinorRadius = 
+        0.5; $CellContext`reflShading = 
+        sgCommon`sgReflectShading[$CellContext`shadingPt$$, \
+$CellContext`horzNormal, $CellContext`horzRoughness$$, \
+$CellContext`samplingRadius$$, $CellContext`vertCenter, \
+$CellContext`vertNormal, $CellContext`vertAssistMajorAxis, \
+$CellContext`vertMajorRadius, $CellContext`vertMinorRadius, \
+$CellContext`vertRoughness$$, $CellContext`lightDir, \
+$CellContext`lightIntensity$$, $CellContext`viewPoint]; Show[{
+          (gPlots3DEx`pltRect3D[
+           Association[
+           "center" -> $CellContext`horzCenter, 
+            "normal" -> $CellContext`horzNormal, "majorAxis" -> {0, 1, 0}, 
+            "majorRadius" -> 1, "minorRadius" -> 0.5, "opacity" -> 1, 
+            "colorFunc" -> 
+            Function[{$CellContext`x, $CellContext`y, $CellContext`z}, 
+              LightRed]]]& )[
+           Association["roughness" -> $CellContext`horzRoughness$$]], 
+          (gPlots3DEx`pltRect3D[
+           Association[
+           "center" -> $CellContext`vertCenter, 
+            "normal" -> $CellContext`vertNormal, "plotPts" -> 50, 
+            "majorAxis" -> $CellContext`vertAssistMajorAxis, 
+            "majorRadius" -> $CellContext`vertMajorRadius, 
+            "minorRadius" -> $CellContext`vertMinorRadius, "colorFunc" -> 
+            Function[{$CellContext`x, $CellContext`y, $CellContext`z}, 
+              Cyan]]]& )[
+           Association["roughness" -> $CellContext`vertRoughness$$]], 
+          (gPlots3DEx`pltArrow3D[
+           Association[
+           "origin" -> {0, -1, 1}, "dir" -> -$CellContext`lightDir, "length" -> 
+            0.5]]& )[
+           Association[]]}, 
+         gPlots3DEx`showProps3D[1]]), 
+      "Specifications" :> {{{$CellContext`horzRoughness$$, 0.1}, 0.01, 
+         0.99}, {{$CellContext`vertRoughness$$, 0.1}, 0.01, 
+         0.99}, {{$CellContext`lightDirX$$, 0}, -1, 
+         0}, {{$CellContext`lightDirZ$$, 0.5}, 0.1, 
+         1}, {{$CellContext`lightIntensity$$, 1}, 0, 
+         1}, {{$CellContext`shadingPt$$, {-0.3, 
+          0.8, -0.5}}, {-0.5, -1, -0.5}, {
+         0.5, 1, -0.5}}, {{$CellContext`samplingRadius$$, 0.3}, 0.1, 
+         1}, {{$CellContext`reflShading1$$, $CellContext`reflShading}}}, 
+      "Options" :> {Method -> {"ShowControls" -> False}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{123., {71., 77.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.835931207052909*^9, 3.8359312309076996`*^9}, {
+   3.835931357617115*^9, 3.835931365247978*^9}, 3.835935828241886*^9},
+ CellLabel->
+  "Out[843]=",ExpressionUUID->"d112069f-a769-44af-8964-3e88084efed0"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"gPrint", "[", "\"\<Shading on Floor\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "lightDir", ",", "viewPoint", ",", "horzCenter", ",", "horzNormal", ",", 
+    "vertCenter", ",", "vertNormal", ",", "\[IndentingNewLine]", "\t", 
+    "vertAssistMajorAxis", ",", "vertMajorRadius", ",", "vertMinorRadius"}], 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"lightDir", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"{", 
+       RowBox[{"lightDirX", ",", 
+        RowBox[{"-", "1"}], ",", "lightDirZ"}], "}"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Print", "[", "debugViewPoint", "]"}], ";"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"viewPoint", "=", 
+     RowBox[{"{", 
+      RowBox[{"1.3", ",", 
+       RowBox[{"-", "2.4"}], ",", "2"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"normals", " ", "for", " ", "rectangle"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"horzNormal", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0", ",", "1"}], "}"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"vertNormal", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", 
+        RowBox[{"-", "1"}], ",", "0"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"horzCenter", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0", ",", 
+       RowBox[{"-", "0.5"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"vertCenter", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"vertAssistMajorAxis", "=", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"vertMajorRadius", "=", "0.5"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"vertMinorRadius", "=", "0.5"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Show", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", "  ", 
+       RowBox[{"(*", 
+        RowBox[{"horizontal", " ", "rect"}], "*)"}], "\[IndentingNewLine]", 
+       "  ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"pltRect3D", "[", " ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", "horzCenter"}], ",", 
+             RowBox[{"\"\<normal\>\"", "\[Rule]", "horzNormal"}], ",", 
+             RowBox[{"\"\<plotPts\>\"", "\[Rule]", "50"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<majorAxis\>\"", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ",", 
+             RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "1"}], ",", 
+             RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "0.5"}], ",", 
+             RowBox[{"\"\<opacity\>\"", "\[Rule]", "1"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
+                "\[IndentingNewLine]", "\t", 
+                RowBox[{"(*", 
+                 RowBox[{"Hue", "@"}], "*)"}], 
+                RowBox[{
+                "sgReflectShading", "[", "\[IndentingNewLine]", "\t\t   ", 
+                 RowBox[{"(*", 
+                  RowBox[{"shading", " ", "point"}], "*)"}], "\n", 
+                 "\t\t\t\t\t", 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
+                  "horzNormal", ",", "horzRoughness", ",", "samplingRadius", 
+                  ",", "\n", "\t\t\t\t\t", 
+                  RowBox[{"(*", 
+                   RowBox[{"reflection", " ", "rectangle"}], "*)"}], "\n", 
+                  "\t\t\t\t\t", "vertCenter", ",", "vertNormal", ",", 
+                  "vertAssistMajorAxis", ",", "vertMajorRadius", ",", 
+                  "vertMinorRadius", ",", "vertRoughness", ",", "\n", 
+                  "\t\t\t\t\t", 
+                  RowBox[{"(*", "light", "*)"}], "\n", "\t\t\t\t\t", 
+                  "lightDir", ",", "lightIntensity", ",", "viewPoint"}], 
+                 "\[IndentingNewLine]", "\t\t", "]"}]}], "]"}]}]}], "|>"}], 
+           "\[IndentingNewLine]", "  ", "]"}], "&"}], "[", 
+         RowBox[{"<|", 
+          RowBox[{"\"\<roughness\>\"", "\[Rule]", "horzRoughness"}], "|>"}], 
+         "]"}], ",", "\[IndentingNewLine]", "  ", 
+        RowBox[{"(*", 
+         RowBox[{"vertical", " ", "rect"}], "*)"}], "\[IndentingNewLine]", 
+        "  ", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"pltRect3D", "[", " ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", "vertCenter"}], ",", 
+             RowBox[{"\"\<normal\>\"", "\[Rule]", "vertNormal"}], ",", 
+             RowBox[{"\"\<plotPts\>\"", "\[Rule]", "10"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<majorAxis\>\"", "\[Rule]", "vertAssistMajorAxis"}], 
+             ",", 
+             RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "vertMajorRadius"}], 
+             ",", 
+             RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "vertMinorRadius"}], 
+             ",", "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", "Cyan"}], 
+               RowBox[{"(*", 
+                RowBox[{"Hue", "@", 
+                 RowBox[{"reflLightingFunc", "[", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
+                   "shadingPt", ",", "vertRoughness", ",", "lightIntensity"}],
+                   "]"}]}], "*)"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", 
+           "  ", "]"}], "&"}], "[", 
+         RowBox[{"<|", 
+          RowBox[{"\"\<roughness\>\"", "\[Rule]", "vertRoughness"}], "|>"}], 
+         "]"}], ",", "\[IndentingNewLine]", "   ", 
+        RowBox[{"(*", 
+         RowBox[{"light", " ", "direction"}], "*)"}], "\[IndentingNewLine]", 
+        "   ", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"pltArrow3D", "[", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<origin\>\"", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"0", ",", 
+                RowBox[{"-", "1"}], ",", "1"}], "}"}]}], ",", 
+             RowBox[{"\"\<dir\>\"", "\[Rule]", 
+              RowBox[{"-", "lightDir"}]}], ",", 
+             RowBox[{"\"\<length\>\"", "\[Rule]", "0.5"}]}], "|>"}], 
+           "\[IndentingNewLine]", "  ", "]"}], "&"}], "[", 
+         RowBox[{"<|", "|>"}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", "    ", 
+      RowBox[{"showProps3D", "[", "1", 
+       RowBox[{"(*", 
+        RowBox[{",", "Medium"}], "*)"}], "]"}]}], "\[IndentingNewLine]", " ", 
+     "]"}]}], ",", "\[IndentingNewLine]", "   ", "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"horzRoughness", ",", "0.1"}], "}"}], ",", "0.01", ",", 
+     "0.99"}], "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"vertRoughness", ",", "0.1"}], "}"}], ",", "0.01", ",", 
+     "0.99"}], "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"lightDirX", ",", 
+       RowBox[{"-", "0"}]}], "}"}], ",", 
+     RowBox[{"-", "1"}], ",", "0"}], "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"lightDirZ", ",", "1"}], "}"}], ",", "0.1", ",", "1"}], "}"}], 
+   ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"lightIntensity", ",", "0.1"}], "}"}], ",", "0", ",", "1"}], 
+    "}"}], ",", "\[IndentingNewLine]", "   ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"samplingRadius", ",", "0.3"}], "}"}], ",", "0.1", ",", "1"}], 
+    "}"}], ",", "\[IndentingNewLine]", "    ", 
+   RowBox[{"Method", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "False"}], "}"}]}]}], 
+  "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.8359358020016904`*^9, 3.8359358407375345`*^9}},
+ CellLabel->
+  "In[847]:=",ExpressionUUID->"622da3c7-e70a-4348-90cd-c6c51725dd96"],
+
+Cell[BoxData[
+ StyleBox["\<\" Shading on Floor\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.835935830427616*^9, 3.8359358428445463`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[847]:=",ExpressionUUID->"1f915dd8-fb4b-4f93-a204-96d058dcbfa1"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`horzRoughness$$ = 
+    0.1, $CellContext`lightDirX$$ = 0, $CellContext`lightDirZ$$ = 
+    1, $CellContext`lightIntensity$$ = 0.1, $CellContext`samplingRadius$$ = 
+    0.3, $CellContext`vertRoughness$$ = 0.1, Typeset`show$$ = False, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`horzRoughness$$], 0.1}, 0.01, 0.99}, {{
+       Hold[$CellContext`vertRoughness$$], 0.1}, 0.01, 0.99}, {{
+       Hold[$CellContext`lightDirX$$], 0}, -1, 0}, {{
+       Hold[$CellContext`lightDirZ$$], 1}, 0.1, 1}, {{
+       Hold[$CellContext`lightIntensity$$], 0.1}, 0, 1}, {{
+       Hold[$CellContext`samplingRadius$$], 0.3}, 0.1, 1}}, Typeset`size$$ = {
+    72., {47., 53.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`horzRoughness$5919653$$ = 
+    0, $CellContext`vertRoughness$5919654$$ = 
+    0, $CellContext`lightDirX$5919655$$ = 
+    0, $CellContext`lightDirZ$5919656$$ = 
+    0, $CellContext`lightIntensity$5919657$$ = 
+    0, $CellContext`samplingRadius$5919658$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`horzRoughness$$ = 
+        0.1, $CellContext`lightDirX$$ = 0, $CellContext`lightDirZ$$ = 
+        1, $CellContext`lightIntensity$$ = 0.1, $CellContext`samplingRadius$$ = 
+        0.3, $CellContext`vertRoughness$$ = 0.1}, "ControllerVariables" :> {
+        Hold[$CellContext`horzRoughness$$, \
+$CellContext`horzRoughness$5919653$$, 0], 
+        Hold[$CellContext`vertRoughness$$, \
+$CellContext`vertRoughness$5919654$$, 0], 
+        Hold[$CellContext`lightDirX$$, $CellContext`lightDirX$5919655$$, 0], 
+        Hold[$CellContext`lightDirZ$$, $CellContext`lightDirZ$5919656$$, 0], 
+        Hold[$CellContext`lightIntensity$$, \
+$CellContext`lightIntensity$5919657$$, 0], 
+        Hold[$CellContext`samplingRadius$$, \
+$CellContext`samplingRadius$5919658$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`lightDir = 
+        Normalize[{$CellContext`lightDirX$$, -1, $CellContext`lightDirZ$$}]; \
+$CellContext`viewPoint = {1.3, -2.4, 2}; $CellContext`horzNormal = 
+        Normalize[{0, 0, 1}]; $CellContext`vertNormal = 
+        Normalize[{0, -1, 0}]; $CellContext`horzCenter = {
+         0, 0, -0.5}; $CellContext`vertCenter = {0, 1, 
+         0}; $CellContext`vertAssistMajorAxis = {1, 0, 
+         0}; $CellContext`vertMajorRadius = 0.5; $CellContext`vertMinorRadius = 
+        0.5; Show[{
+          (gPlots3DEx`pltRect3D[
+           Association[
+           "center" -> $CellContext`horzCenter, 
+            "normal" -> $CellContext`horzNormal, "plotPts" -> 50, 
+            "majorAxis" -> {0, 1, 0}, "majorRadius" -> 1, "minorRadius" -> 
+            0.5, "opacity" -> 1, "colorFunc" -> 
+            Function[{$CellContext`x$, $CellContext`y$, $CellContext`z$}, 
+              
+              sgCommon`sgReflectShading[{$CellContext`x$, $CellContext`y$, \
+$CellContext`z$}, $CellContext`horzNormal, $CellContext`horzRoughness$$, \
+$CellContext`samplingRadius$$, $CellContext`vertCenter, \
+$CellContext`vertNormal, $CellContext`vertAssistMajorAxis, \
+$CellContext`vertMajorRadius, $CellContext`vertMinorRadius, \
+$CellContext`vertRoughness$$, $CellContext`lightDir, \
+$CellContext`lightIntensity$$, $CellContext`viewPoint]]]]& )[
+           Association["roughness" -> $CellContext`horzRoughness$$]], 
+          (gPlots3DEx`pltRect3D[
+           Association[
+           "center" -> $CellContext`vertCenter, 
+            "normal" -> $CellContext`vertNormal, "plotPts" -> 10, 
+            "majorAxis" -> $CellContext`vertAssistMajorAxis, 
+            "majorRadius" -> $CellContext`vertMajorRadius, 
+            "minorRadius" -> $CellContext`vertMinorRadius, "colorFunc" -> 
+            Function[{$CellContext`x, $CellContext`y, $CellContext`z}, 
+              Cyan]]]& )[
+           Association["roughness" -> $CellContext`vertRoughness$$]], 
+          (gPlots3DEx`pltArrow3D[
+           Association[
+           "origin" -> {0, -1, 1}, "dir" -> -$CellContext`lightDir, "length" -> 
+            0.5]]& )[
+           Association[]]}, 
+         gPlots3DEx`showProps3D[1]]), 
+      "Specifications" :> {{{$CellContext`horzRoughness$$, 0.1}, 0.01, 
+         0.99}, {{$CellContext`vertRoughness$$, 0.1}, 0.01, 
+         0.99}, {{$CellContext`lightDirX$$, 0}, -1, 
+         0}, {{$CellContext`lightDirZ$$, 1}, 0.1, 
+         1}, {{$CellContext`lightIntensity$$, 0.1}, 0, 
+         1}, {{$CellContext`samplingRadius$$, 0.3}, 0.1, 1}}, 
+      "Options" :> {Method -> {"ShowControls" -> False}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{123., {71., 77.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.835935824669078*^9, 3.8359358428764443`*^9}},
+ CellLabel->
+  "Out[849]=",ExpressionUUID->"140710e3-0037-4f80-a67b-ffaf92cb66d6"]
+}, Open  ]]
+},
+WindowSize->{1191, 804},
+WindowMargins->{{71, Automatic}, {-144, Automatic}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 10066, 247, 1283, "Input",ExpressionUUID->"47b3e77c-b55d-4222-89b3-60f5e0793984"],
+Cell[10649, 271, 392, 9, 30, "Print",ExpressionUUID->"d75df10e-15cc-4d63-b40d-b832d9bf921b"],
+Cell[11044, 282, 6371, 123, 167, "Output",ExpressionUUID->"d112069f-a769-44af-8964-3e88084efed0"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[17452, 410, 8760, 203, 1036, "Input",ExpressionUUID->"622da3c7-e70a-4348-90cd-c6c51725dd96"],
+Cell[26215, 615, 315, 8, 30, "Print",ExpressionUUID->"1f915dd8-fb4b-4f93-a204-96d058dcbfa1"],
+Cell[26533, 625, 5585, 106, 167, "Output",ExpressionUUID->"140710e3-0037-4f80-a67b-ffaf92cb66d6"]
+}, Open  ]]
+}
+]
+*)
+

@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     28536,        464]
-NotebookOptionsPosition[     27913,        445]
-NotebookOutlinePosition[     28412,        463]
-CellTagsIndexPosition[     28369,        460]
+NotebookDataLength[     37306,        668]
+NotebookOptionsPosition[     36722,        649]
+NotebookOutlinePosition[     37218,        667]
+CellTagsIndexPosition[     37175,        664]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -50,29 +50,212 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{"Needs", "[", "\"\<gSphericalCap`\>\"", "]"}], ";"}], 
-  "\[IndentingNewLine]", " "}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", " ", "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"Show", "[", "\[IndentingNewLine]", 
+  RowBox[{"ClearAll", "[", 
    RowBox[{
-    RowBox[{"{", "\[IndentingNewLine]", 
-     RowBox[{"pltLine3D", "[", 
-      RowBox[{"<|", 
-       RowBox[{
-        RowBox[{"\"\<points\>\"", "\[Rule]", 
-         RowBox[{"{", 
+   "lightDir", ",", "viewPoint", ",", "horzCenter", ",", "horzNormal", ",", 
+    "vertCenter", ",", "vertNormal", ",", "\[IndentingNewLine]", "\t", 
+    "vertAssistMajorAxis", ",", "vertMajorRadius", ",", "vertMinorRadius"}], 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"lightDir", "=", 
+      RowBox[{"Normalize", "@", 
+       RowBox[{"{", 
+        RowBox[{"lightDirX", ",", 
+         RowBox[{"-", "1"}], ",", "lightDirZ"}], "}"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{
+       RowBox[{"Print", "[", "debugViewPoint", "]"}], ";"}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"viewPoint", "=", 
+      RowBox[{"{", 
+       RowBox[{"1.3", ",", 
+        RowBox[{"-", "2.4"}], ",", "2"}], "}"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{"normals", " ", "for", " ", "rectangle"}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"horzNormal", "=", 
+      RowBox[{"Normalize", "@", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "1"}], "}"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"vertNormal", "=", 
+      RowBox[{"Normalize", "@", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", 
+         RowBox[{"-", "1"}], ",", "0"}], "}"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"horzCenter", "=", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0", ",", 
+        RowBox[{"-", "0.5"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"vertCenter", "=", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]",
+      "\[IndentingNewLine]", 
+     RowBox[{"vertAssistMajorAxis", "=", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"vertMajorRadius", "=", "0.5"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"vertMinorRadius", "=", "0.5"}], ";", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Show", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", "\[IndentingNewLine]", "  ", 
+        RowBox[{"(*", 
+         RowBox[{"horizontal", " ", "rect"}], "*)"}], "\[IndentingNewLine]", 
+        "  ", 
+        RowBox[{
+         RowBox[{
           RowBox[{
-           RowBox[{"{", 
-            RowBox[{"0", ",", "0", ",", "0.5"}], "}"}], ",", 
-           RowBox[{"{", 
-            RowBox[{"0", ",", "0.5", ",", "0"}], "}"}], ",", 
-           RowBox[{"{", 
-            RowBox[{"0.5", ",", "0", ",", "0"}], "}"}]}], "}"}]}], ",", 
-        RowBox[{"\"\<color\>\"", "\[Rule]", "Blue"}], ",", 
-        RowBox[{"\"\<style\>\"", "\[Rule]", "Dashed"}]}], "|>"}], "]"}], 
-     "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", " ", 
-    RowBox[{"showProps3D", "[", 
-     RowBox[{"1", ",", "Medium"}], "]"}]}], "\[IndentingNewLine]", " ", "]"}],
-   "\[IndentingNewLine]", 
+           RowBox[{"pltRect3D", "[", " ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "horzCenter"}], ",", 
+              RowBox[{"\"\<normal\>\"", "\[Rule]", "horzNormal"}], ",", 
+              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "30"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<majorAxis\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ",", 
+              RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "1"}], ",", 
+              RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "0.5"}], ",", 
+              RowBox[{"\"\<opacity\>\"", "\[Rule]", "1"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
+                 "\[IndentingNewLine]", "\t", 
+                 RowBox[{"(*", 
+                  RowBox[{"Hue", "@"}], "*)"}], 
+                 RowBox[{
+                 "sgReflectShading", "[", "\[IndentingNewLine]", "\t\t   ", 
+                  RowBox[{"(*", 
+                   RowBox[{"shading", " ", "point"}], "*)"}], "\n", 
+                  "\t\t\t\t\t", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
+                   "horzNormal", ",", "horzRoughness", ",", "samplingRadius", 
+                   ",", "\n", "\t\t\t\t\t", 
+                   RowBox[{"(*", 
+                    RowBox[{"reflection", " ", "rectangle"}], "*)"}], "\n", 
+                   "\t\t\t\t\t", "vertCenter", ",", "vertNormal", ",", 
+                   "vertAssistMajorAxis", ",", "vertMajorRadius", ",", 
+                   "vertMinorRadius", ",", "vertRoughness", ",", "\n", 
+                   "\t\t\t\t\t", 
+                   RowBox[{"(*", "light", "*)"}], "\n", "\t\t\t\t\t", 
+                   "lightDir", ",", "lightIntensity", ",", "viewPoint"}], 
+                  "\[IndentingNewLine]", "\t\t", "]"}]}], "]"}]}]}], "|>"}], 
+            "\[IndentingNewLine]", "  ", "]"}], "&"}], "[", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<roughness\>\"", "\[Rule]", "horzRoughness"}], "|>"}], 
+          "]"}], ",", "\[IndentingNewLine]", "  ", 
+         RowBox[{"(*", 
+          RowBox[{"vertical", " ", "rect"}], "*)"}], "\[IndentingNewLine]", 
+         "  ", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"pltRect3D", "[", " ", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<center\>\"", "\[Rule]", "vertCenter"}], ",", 
+              RowBox[{"\"\<normal\>\"", "\[Rule]", "vertNormal"}], ",", 
+              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "10"}], ",", 
+              "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<majorAxis\>\"", "\[Rule]", "vertAssistMajorAxis"}],
+               ",", 
+              RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "vertMajorRadius"}], 
+              ",", 
+              RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "vertMinorRadius"}], 
+              ",", "\[IndentingNewLine]", "\t", 
+              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+               RowBox[{"Function", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", "Cyan"}], 
+                RowBox[{"(*", 
+                 RowBox[{"Hue", "@", 
+                  RowBox[{"reflLightingFunc", "[", 
+                   RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
+                    "shadingPt", ",", "vertRoughness", ",", 
+                    "lightIntensity"}], "]"}]}], "*)"}], "]"}]}]}], "|>"}], 
+            "\[IndentingNewLine]", "  ", "]"}], "&"}], "[", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<roughness\>\"", "\[Rule]", "vertRoughness"}], "|>"}], 
+          "]"}], ",", "\[IndentingNewLine]", "   ", 
+         RowBox[{"(*", 
+          RowBox[{"light", " ", "direction"}], "*)"}], "\[IndentingNewLine]", 
+         "   ", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"pltArrow3D", "[", 
+            RowBox[{"<|", 
+             RowBox[{
+              RowBox[{"\"\<origin\>\"", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", 
+                 RowBox[{"-", "1"}], ",", "1"}], "}"}]}], ",", 
+              RowBox[{"\"\<dir\>\"", "\[Rule]", 
+               RowBox[{"-", "lightDir"}]}], ",", 
+              RowBox[{"\"\<length\>\"", "\[Rule]", "0.5"}]}], "|>"}], 
+            "\[IndentingNewLine]", "  ", "]"}], "&"}], "[", 
+          RowBox[{"<|", "|>"}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", "    ", 
+       RowBox[{"showProps3D", "[", 
+        RowBox[{"1", ",", "Large"}], "]"}]}], "\[IndentingNewLine]", " ", 
+      "]"}]}], ",", "\[IndentingNewLine]", "   ", "\[IndentingNewLine]", " ", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"horzRoughness", ",", "0.1"}], "}"}], ",", "0.01", ",", 
+      "0.99"}], "}"}], ",", "\[IndentingNewLine]", "   ", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"vertRoughness", ",", "0.1"}], "}"}], ",", "0.01", ",", 
+      "0.99"}], "}"}], ",", "\[IndentingNewLine]", "   ", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"lightDirX", ",", 
+        RowBox[{"-", "0.06"}]}], "}"}], ",", 
+      RowBox[{"-", "1"}], ",", "0"}], "}"}], ",", "\[IndentingNewLine]", 
+    "   ", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"lightDirZ", ",", "0.733"}], "}"}], ",", "0.1", ",", "1"}], 
+     "}"}], ",", "\[IndentingNewLine]", "   ", 
+    RowBox[{"(*", 
+     RowBox[{"1", "/", 
+      RowBox[{"gDGGX", "[", 
+       RowBox[{"0.1", ",", "1"}], "]"}]}], "*)"}], "\[IndentingNewLine]", 
+    "   ", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"lightIntensity", ",", 
+        RowBox[{"1", "/", "31.831"}]}], "}"}], ",", "0", ",", "1"}], "}"}], 
+    ",", "\[IndentingNewLine]", "   ", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"samplingRadius", ",", "0.3"}], "}"}], ",", "0.1", ",", "1"}], 
+     "}"}], ",", "\[IndentingNewLine]", "    ", 
+    RowBox[{"Method", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "True"}], "}"}]}]}], 
+   "\[IndentingNewLine]", "]"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
  CellChangeTimes->{{3.8328889412895775`*^9, 3.832888943829444*^9}, 
    3.8329105814363804`*^9, 3.832911658214327*^9, {3.832915422319006*^9, 
@@ -336,115 +519,136 @@ Cell[BoxData[{
    3.8351393217981663`*^9, 3.8351393685555005`*^9}, {3.835139415086132*^9, 
    3.8351394999564734`*^9}, {3.8351396549305315`*^9, 3.835139660957322*^9}, {
    3.8356550097492523`*^9, 3.835655038852309*^9}, {3.835912252902746*^9, 
-   3.835912314100587*^9}, {3.835912377239669*^9, 3.8359124552464237`*^9}},
+   3.835912314100587*^9}, {3.835912377239669*^9, 3.8359124552464237`*^9}, 
+   3.8359124988064747`*^9, {3.8359325231918135`*^9, 3.8359325871565557`*^9}, {
+   3.835936812240466*^9, 3.83593682965726*^9}, {3.835936971765811*^9, 
+   3.835936976456336*^9}, {3.8359389203805647`*^9, 3.835938935368151*^9}, {
+   3.8359390572449055`*^9, 3.8359390727319937`*^9}, {3.835939216959008*^9, 
+   3.8359392692653985`*^9}, 3.8359393631296425`*^9, {3.835939602810601*^9, 
+   3.835939605663271*^9}},
  CellLabel->
-  "In[111]:=",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
+  "In[343]:=",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
 
 Cell[BoxData[
- Graphics3DBox[
-  {RGBColor[0, 0, 1], AbsoluteThickness[1.5], Dashing[{Small, Small}], 
-   Line3DBox[{{0, 0, 0.5}, {0, 0.5, 0}, {0.5, 0, 0}}]},
-  Axes->True,
-  AxesLabel->{
-    FormBox["\"X\"", TraditionalForm], 
-    FormBox["\"Y\"", TraditionalForm], 
-    FormBox["\"Z\"", TraditionalForm]},
-  Boxed->False,
-  ImageSize->Medium,
-  PlotRange->{{-1, 1}, {-1, 1}, {-1, 1}},
-  ViewPoint->{-0.6531020577624754, -3.29232530669048, 0.42901256050593106`},
-  ViewVertical->{-0.3573865812221974, -0.4284380079158512, 
-   0.8298889714506433}]], "Output",
- CellChangeTimes->{{3.835912269571188*^9, 3.835912455620757*^9}},
- CellLabel->"Out[120]=",ImageCache->GraphicsData["CompressedBitmap", "\<\
-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
-k8niTbLWHcoBqqWdRvbkMKEpFvwPfpGMcA==\
-\>"],ExpressionUUID->"3530b2ed-2789-40fa-83f7-2f6862c08566"]
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`horzRoughness$$ = 
+    0.1, $CellContext`lightDirX$$ = -0.134, $CellContext`lightDirZ$$ = 
+    0.847, $CellContext`lightIntensity$$ = 
+    0.031415915302692346`, $CellContext`samplingRadius$$ = 
+    0.3, $CellContext`vertRoughness$$ = 0.1, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`horzRoughness$$], 0.1}, 0.01, 0.99}, {{
+       Hold[$CellContext`vertRoughness$$], 0.1}, 0.01, 0.99}, {{
+       Hold[$CellContext`lightDirX$$], -0.06}, -1, 0}, {{
+       Hold[$CellContext`lightDirZ$$], 0.733}, 0.1, 1}, {{
+       Hold[$CellContext`lightIntensity$$], 0.031415915302692346`}, 0, 1}, {{
+       Hold[$CellContext`samplingRadius$$], 0.3}, 0.1, 1}}, Typeset`size$$ = {
+    576., {295., 301.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`horzRoughness$16031015$$ = 
+    0, $CellContext`vertRoughness$16031016$$ = 
+    0, $CellContext`lightDirX$16031017$$ = 
+    0, $CellContext`lightDirZ$16031018$$ = 
+    0, $CellContext`lightIntensity$16031019$$ = 
+    0, $CellContext`samplingRadius$16031020$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`horzRoughness$$ = 
+        0.1, $CellContext`lightDirX$$ = -0.06, $CellContext`lightDirZ$$ = 
+        0.733, $CellContext`lightIntensity$$ = 
+        0.031415915302692346`, $CellContext`samplingRadius$$ = 
+        0.3, $CellContext`vertRoughness$$ = 0.1}, "ControllerVariables" :> {
+        Hold[$CellContext`horzRoughness$$, \
+$CellContext`horzRoughness$16031015$$, 0], 
+        Hold[$CellContext`vertRoughness$$, \
+$CellContext`vertRoughness$16031016$$, 0], 
+        Hold[$CellContext`lightDirX$$, $CellContext`lightDirX$16031017$$, 0], 
+        Hold[$CellContext`lightDirZ$$, $CellContext`lightDirZ$16031018$$, 0], 
+        Hold[$CellContext`lightIntensity$$, \
+$CellContext`lightIntensity$16031019$$, 0], 
+        Hold[$CellContext`samplingRadius$$, \
+$CellContext`samplingRadius$16031020$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`lightDir = 
+        Normalize[{$CellContext`lightDirX$$, -1, $CellContext`lightDirZ$$}]; \
+$CellContext`viewPoint = {1.3, -2.4, 2}; $CellContext`horzNormal = 
+        Normalize[{0, 0, 1}]; $CellContext`vertNormal = 
+        Normalize[{0, -1, 0}]; $CellContext`horzCenter = {
+         0, 0, -0.5}; $CellContext`vertCenter = {0, 1, 
+         0}; $CellContext`vertAssistMajorAxis = {1, 0, 
+         0}; $CellContext`vertMajorRadius = 0.5; $CellContext`vertMinorRadius = 
+        0.5; Show[{
+          (gPlots3DEx`pltRect3D[
+           Association[
+           "center" -> $CellContext`horzCenter, 
+            "normal" -> $CellContext`horzNormal, "plotPts" -> 30, 
+            "majorAxis" -> {0, 1, 0}, "majorRadius" -> 1, "minorRadius" -> 
+            0.5, "opacity" -> 1, "colorFunc" -> 
+            Function[{$CellContext`x$, $CellContext`y$, $CellContext`z$}, 
+              
+              sgCommon`sgReflectShading[{$CellContext`x$, $CellContext`y$, \
+$CellContext`z$}, $CellContext`horzNormal, $CellContext`horzRoughness$$, \
+$CellContext`samplingRadius$$, $CellContext`vertCenter, \
+$CellContext`vertNormal, $CellContext`vertAssistMajorAxis, \
+$CellContext`vertMajorRadius, $CellContext`vertMinorRadius, \
+$CellContext`vertRoughness$$, $CellContext`lightDir, \
+$CellContext`lightIntensity$$, $CellContext`viewPoint]]]]& )[
+           Association["roughness" -> $CellContext`horzRoughness$$]], 
+          (gPlots3DEx`pltRect3D[
+           Association[
+           "center" -> $CellContext`vertCenter, 
+            "normal" -> $CellContext`vertNormal, "plotPts" -> 10, 
+            "majorAxis" -> $CellContext`vertAssistMajorAxis, 
+            "majorRadius" -> $CellContext`vertMajorRadius, 
+            "minorRadius" -> $CellContext`vertMinorRadius, "colorFunc" -> 
+            Function[{$CellContext`x, $CellContext`y, $CellContext`z}, 
+              Cyan]]]& )[
+           Association["roughness" -> $CellContext`vertRoughness$$]], 
+          (gPlots3DEx`pltArrow3D[
+           Association[
+           "origin" -> {0, -1, 1}, "dir" -> -$CellContext`lightDir, "length" -> 
+            0.5]]& )[
+           Association[]]}, 
+         gPlots3DEx`showProps3D[1, Large]]), 
+      "Specifications" :> {{{$CellContext`horzRoughness$$, 0.1}, 0.01, 
+         0.99}, {{$CellContext`vertRoughness$$, 0.1}, 0.01, 
+         0.99}, {{$CellContext`lightDirX$$, -0.06}, -1, 
+         0}, {{$CellContext`lightDirZ$$, 0.733}, 0.1, 
+         1}, {{$CellContext`lightIntensity$$, 0.031415915302692346`}, 0, 
+         1}, {{$CellContext`samplingRadius$$, 0.3}, 0.1, 1}}, 
+      "Options" :> {Method -> {"ShowControls" -> True}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{627., {412., 418.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.8359389212275157`*^9, 3.835938948552021*^9}, 
+   3.835939073862314*^9, {3.8359391569033585`*^9, 3.8359391680977926`*^9}, {
+   3.8359392022451973`*^9, 3.8359392702352657`*^9}, {3.8359393401391287`*^9, 
+   3.8359394392372727`*^9}, 3.835939475142463*^9, 3.835939505339718*^9, {
+   3.835939595149089*^9, 3.8359396651221247`*^9}, 3.835939706082901*^9, 
+   3.8359397810517225`*^9, 3.835939860679405*^9, 3.8359398985210323`*^9, {
+   3.8359399742037477`*^9, 3.835939981810729*^9}, 3.8359400225714755`*^9, 
+   3.8359400701453466`*^9, 3.8359401163267937`*^9},
+ CellLabel->
+  "Out[353]=",ExpressionUUID->"ba128b5b-03d5-4800-8ea2-8446409dc255"]
 }, Open  ]]
 },
 WindowSize->{1082, 771},
-WindowMargins->{{Automatic, 397}, {-221, Automatic}},
+WindowMargins->{{Automatic, 397}, {0, Automatic}},
 TaggingRules->{"PresenterSettings" -> {"Dialogs" -> {}}},
 CellContext->Notebook,
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
@@ -463,8 +667,8 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 21515, 318, 371, "Input",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
-Cell[22098, 342, 5799, 100, 352, 558, 14, "CachedBoxData", "BoxData", "Output",ExpressionUUID->"3530b2ed-2789-40fa-83f7-2f6862c08566"]
+Cell[580, 22, 29893, 507, 1264, "Input",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
+Cell[30476, 531, 6230, 115, 849, "Output",ExpressionUUID->"ba128b5b-03d5-4800-8ea2-8446409dc255"]
 }, Open  ]]
 }
 ]

@@ -18,7 +18,7 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 sgCapIntsAreaPercent,sgProduct,sgShading,sgSolveOneBounce1,sgSolveOneBounce2,
 		 sgCalcEnergyPercent,sgReflectLight2D,sgRepresentLambda,sgDirLight,
 		 asgEnergy,asgEnergyEx,asgCalcBandwidth,asgCalcAmplitude,asgDotSg,asgReflectLight,
-		 sgCalcBandwidth,sgCalcAmplitude,sgReflectLight];
+		 sgCalcBandwidth,sgCalcAmplitude,sgReflectLight,sgReflectShading];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -83,6 +83,7 @@ sgSolveOneBounce1::usage="sgSolveOneBounce1";
 sgSolveOneBounce2::usage="sgSolveOneBounce2";
 sgRepresentLambda::usage="sgRepresentLambda";
 sgDirLight::usage="sgDirLight";
+sgReflectShading::usage="sgReflectShading";
 
 
 Begin["`Private`"];
@@ -90,7 +91,7 @@ On[Assert];
 
 
 sgVector[v_,{p_,\[Lambda]_,\[Mu]_}]:=Module[
-{CosTheta},
+{CosTheta,factor},
 CosTheta=Dot[Normalize[v],Normalize[p]];
 (*
 Assert[CosTheta>=0];
@@ -98,8 +99,10 @@ Assert[\[Lambda]>=sgMinLambda];
 *)
 (*If[CosTheta<0(*||\[Lambda]<sgMinLambda*),0,\[Mu]*Exp[\[Lambda]*(CosTheta-1)]]*)
 
-If[\[Lambda]<0,Return[0]];
-\[Mu]*Exp[\[Lambda]*(CosTheta-1)]
+factor=\[Lambda]*(CosTheta-1);
+If[factor<-10,Return[0]];
+
+\[Mu]*Exp[factor]
 ];
 
 
@@ -190,16 +193,17 @@ asgDotSg[{inAsgZ_,inAsgX_,inAsgY_,asgL_,asgM_,asgC_},{inSgP_,inSgLambda_,sgC_}]:
 
 
 (*dr \[Equal] diskRadius/reflectPtDist*)
-sgCalcBandwidth[dr_,\[Theta]L_]:=Module[
+sgCalcBandwidth[dr_,nol_]:=Module[
 	{\[Epsilon],\[Lambda]},
 	
 	(*Quiet@Solve[(sgPolar[ArcTan[dr*Cos[\[Theta]L]],\[Lambda],1]/sgPolar[0,\[Lambda],1])\[Equal]\[Epsilon],\[Lambda]]*)
-	(*-Log[\[Epsilon]]/(1-1/Sqrt[1+dr^2 Cos[\[Theta]L]^2])*)
+	(*Log[\[Epsilon]]/(1-Sqrt[1\[VeryThinSpace]+x^2])-Log[\[Epsilon]]*)
 	
-	Assert[0<=\[Theta]L<\[Pi]/2];
+	Assert[0<nol<=1,"sgCalcBandwidth"];
 	\[Epsilon]=0.01;
-	\[Lambda]=Log[\[Epsilon]]+Log[\[Epsilon]]/( Sqrt[1 +dr^2 Cos[\[Theta]L]^2]-1);
-	\[Lambda]=Max[\[Lambda],-100];
+	
+	\[Lambda]=Log[\[Epsilon]]/(1-Sqrt[1 +(dr*nol)^2])-Log[\[Epsilon]];
+	(*\[Lambda]=Max[\[Lambda],-100];*)
 	
 	\[Lambda]
 ];
@@ -208,6 +212,7 @@ sgCalcBandwidth[dr_,\[Theta]L_]:=Module[
 sgCalcAmplitude[\[Lambda]_,totalEnergy_]:=Module[
 	{},
 	
+	Assert[\[Lambda]>0,"sgCalcAmplitude"];
 	totalEnergy/sgIntegral[\[Lambda],1]
 ];
 
@@ -222,10 +227,24 @@ Assert[\[Lambda]>=sgMinLambda];*)
 sgPolar2[\[Theta]_,{p_,\[Lambda]_,\[Mu]_}]:=sgPolar[\[Theta],\[Lambda],\[Mu]];
 
 
-sgIntegral[\[Lambda]_,\[Mu]_:1]:=\[Mu]*2\[Pi]*(1-Exp[-2\[Lambda]])/\[Lambda];
+sgIntegral[\[Lambda]_,\[Mu]_:1]:=Module[
+	{},
+
+	If[\[Lambda]>=sgMinLambda,\[Mu]*2\[Pi]/\[Lambda],\[Mu]*2\[Pi]*(1-Exp[-2\[Lambda]])/\[Lambda]]
+];
 
 
 sgIntegral2[{p_,\[Lambda]_,\[Mu]_}]:=sgIntegral[\[Lambda],\[Mu]];
+
+
+sgEnergy[sg_]:=Module[
+	{p,\[Lambda],\[Mu]},
+	p=sg[[1]];
+	\[Lambda]=sg[[2]];
+	\[Mu]=sg[[3]];
+	
+	sgIntegral[\[Lambda],\[Mu]]
+];
 
 
 sgFindMinLambda[\[Epsilon]_]:=Module[
@@ -241,8 +260,12 @@ sgFindMinLambda[\[Epsilon]_]:=Module[
 ];
 
 
-sgDot[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_}]:=
-	4\[Pi]*\[Mu]1*\[Mu]2*Sinh[Norm[p1*\[Lambda]1+p2*\[Lambda]2]]/(Exp[\[Lambda]1+\[Lambda]2]*Norm[p1*\[Lambda]1+p2*\[Lambda]2]);
+sgDot[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_}]:= Module[
+	{},
+	
+	(*4\[Pi]*\[Mu]1*\[Mu]2*Sinh[Norm[p1*\[Lambda]1+p2*\[Lambda]2]]/(Exp[\[Lambda]1+\[Lambda]2]*Norm[p1*\[Lambda]1+p2*\[Lambda]2])*)
+	sgProductIntegral[{p1,\[Lambda]1,\[Mu]1},{p2,\[Lambda]2,\[Mu]2}]
+];
 
 
 sgProduct[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_}]:=Module[
@@ -257,17 +280,18 @@ sgProduct[{p1_,\[Lambda]1_,\[Mu]1_},{p2_,\[Lambda]2_,\[Mu]2_}]:=Module[
 
 
 sgProductIntegral[{inP1_,\[Lambda]1_,\[Mu]1_},{inP2_,\[Lambda]2_,\[Mu]2_}]:=Module[
-	{p1,p2,\[Lambda]3,c1,c2},
-	p1=Normalize[inP1];
-	p2=Normalize[inP2];
-	p1=inP1;
-	p2=inP2;
+	{p1,p2,\[Lambda]3,c1,c2,factor},
+	p1=Normalize@inP1;
+	p2=Normalize@inP2;
 	
 	c1=\[Lambda]1*\[Lambda]2/(\[Lambda]1+\[Lambda]2);
 	c2=Dot[p1,p2];	
 	\[Lambda]3=\[Lambda]1+\[Lambda]2-c1*(1-c2);
 	
-	\[Mu]1*\[Mu]2*(2\[Pi])/\[Lambda]3 Exp[c1*(c2-1)]
+	factor=c1*(c2-1);
+	If[factor<-10,Return[0]];
+	
+	(\[Mu]1*\[Mu]2*(2\[Pi]))/\[Lambda]3 Exp[factor]
 ];
 
 
@@ -415,22 +439,27 @@ asgReflectLight[shadingPt_,lightDir_,lightIntensity_,roughness_,
 ];
 
 
-sgReflectLight[shadingPt_,lightDir_,lightIntensity_,roughness_,
-	{diskCenter_,diskNormal_,diskRadius_}]:=Module[
-	{shadingDist,dr,refViewDir,
+sgReflectLight[shadingPt_,inLightDir_,lightIntensity_,roughness_,
+	{diskCenter_,inDiskNormal_,diskRadius_}]:=Module[
+	{shadingDist,dr,refViewDir,lightDir,diskNormal,nol,
 		minorSize,sgAxis,sgLambda,sgMu,sgEnergy,sgLight},
 	
+	lightDir=Normalize@inLightDir;
+	diskNormal=Normalize@inDiskNormal;
+	nol=Dot[diskNormal,lightDir];
+	
 	shadingDist=Norm[shadingPt-diskCenter];
-	Assert[shadingDist>0.001];
+	Assert[shadingDist>0.001,"sg_Reflect_Light"];
 	dr=diskRadius/shadingDist;
 	refViewDir=Normalize[shadingPt-diskCenter];
 	
-	Assert[diskRadius>0];
+	Assert[diskRadius>0,"sg_Reflect_Light"];
 	minorSize=Dot[diskNormal,refViewDir]*diskRadius/shadingDist;
-	Assert[minorSize>0];
+	Assert[minorSize>0,"sg_Reflect_Light"];
 	
 	sgAxis=-refViewDir;
-	sgLambda=asgCalcBandwidth[minorSize];
+	sgLambda=2*asgCalcBandwidth[minorSize/shadingDist];
+	(*sgLambda=sgCalcBandwidth[diskRadius/shadingDist,nol];*)
 	sgEnergy=gIntegrateDiskLighting[shadingPt,diskCenter,diskNormal,diskRadius,
 		lightDir,lightIntensity,roughness];
 	sgMu=sgCalcAmplitude[sgLambda,sgEnergy];
@@ -606,16 +635,6 @@ sgSolveEnergy[sg_,\[Epsilon]_:0.01]:=Module[
 	sol
 ];
 
-
-
-sgEnergy[sg_]:=Module[
-	{p,\[Lambda],\[Mu]},
-	p=sg[[1]];
-	\[Lambda]=sg[[2]];
-	\[Mu]=sg[[3]];
-	
-	(2 (1-E^(-2 \[Lambda])) \[Pi] \[Mu])/\[Lambda]
-];
 
 
 sgSolveEnergyInRange[sg_]:=Module[
@@ -952,6 +971,47 @@ sgRepresentLambda[tangentLight_,tangentView_]:=Module[
 	{},
 	
 	Max[-2.102+3.116/(0.01+tangentLight*tangentView),sgMinLambda]
+];
+
+
+sgReflectShading[
+	(*shading point*)
+	shadingPt_,inShadingNormal_,shadingRoughness_,samplingRadius_,
+	(*reflection rectangle*)
+	planeCenter_,inPlaneNormal_,inPlaneAssistMajorAxis_,
+		planeMajorRadius_,planeMinorRadius_,planeRoughness_,
+	(*light*)
+	inLightDir_,lightIntensity_,viewPoint_
+	]:=Module[
+	{shadingNormal,planeNormal,planeAssistMajorAxis,lightDir,viewDir,
+		planeMajorAxis,planeMinorAxis,reflPeakPt,reflSgLight,shadingNDF,
+		reflDist,
+		reflShading,intsArea,intsPercent},
+	
+	shadingNormal=Normalize@inShadingNormal;
+	planeNormal=Normalize@inPlaneNormal;
+	planeAssistMajorAxis=Normalize@inPlaneAssistMajorAxis;
+	lightDir=Normalize@inLightDir;
+	viewDir=Normalize[viewPoint-shadingPt];
+	
+	{planeMajorAxis,planeMinorAxis}=gCalcPlaneTangents[planeNormal,planeAssistMajorAxis];
+	
+	reflPeakPt=gCalcPeakPoint[planeNormal,planeCenter,lightDir,shadingPt];
+	
+	reflDist=Norm[shadingPt-reflPeakPt];
+	If[reflDist<0.001,Return[0]];
+	
+	reflSgLight=sgReflectLight[shadingPt,lightDir,lightIntensity,
+		planeRoughness,{reflPeakPt,planeNormal,samplingRadius}];
+	
+	shadingNDF=sgNDF[shadingRoughness,reflSgLight[[1]],viewDir,shadingNormal];
+	reflShading=sgDot[reflSgLight,shadingNDF];
+	
+	intsArea=gCircIntsRectArea[reflPeakPt,samplingRadius,planeCenter,
+		planeMajorAxis,planeMinorAxis,planeMajorRadius,planeMinorRadius];
+	intsPercent=Min[1,intsArea/(4*samplingRadius*samplingRadius)];
+	
+	reflShading*intsPercent
 ];
 
 
