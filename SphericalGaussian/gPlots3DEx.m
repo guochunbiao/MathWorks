@@ -10,7 +10,8 @@ Needs["gBlochSphere`"];
 Needs["gTexStyles`"];
 
 
-ClearAll[showProps3D,pltRect3D,pltArrow3D,pltPoint3D,pltDisk3D,pltCircle3D,pltSphere3D];
+ClearAll[showProps3D,pltRect3D,pltArrow3D,pltPoint3D,pltDisk3D,pltCircle3D,pltSphere3D,
+	pltLine3D];
 showProps3D::usage="showProps3D";
 pltRect3D::usage="pltRect3D";
 pltArrow3D::usage="pltArrow3D";
@@ -18,6 +19,7 @@ pltPoint3D::usage="pltPoint3D";
 pltDisk3D::usage="pltDisk3D";
 pltCircle3D::usage="pltCircle3D";
 pltSphere3D::usage="pltSphere3D";
+pltLine3D::usage="pltLine3D";
 
 
 Begin["`Private`"];
@@ -36,14 +38,30 @@ showProps3D[range_,imageSize_:Tiny]:=Module[
 ];
 
 
+pltLine3D[input_]:=Module[
+	{points,thickness,style,color},
+	
+	points=gAssocData[input,"points"];
+	
+	thickness=gAssocDataOpt[input,"thickness",1.5];
+	style=gAssocDataOpt[input,"style",Nothing];
+	color=gAssocDataOpt[input,"color",Black];
+	
+	Graphics3D[{AbsoluteThickness[thickness],style,color,Line[points]}]
+];
+
+
 pltRect3D[input_]:=Module[
-	{center,normal,majorAxis,majorRadius,minorRadius,
+	{center,normal,majorAxisAssit,majorAxis,minorAxis,majorRadius,minorRadius,
 		colorFunc,meshType,plotPts,opacity,thickness,
 		rMat},
 	
 	center=gAssocData[input,"center"];
 	normal=Normalize@gAssocData[input,"normal"];
-	majorAxis=Normalize@gAssocData[input,"majorAxis"];
+	majorAxisAssit=Normalize@gAssocData[input,"majorAxis"];
+	Assert[Abs@Dot[majorAxisAssit,normal]<0.999,"pltRect3D"];
+	minorAxis=Normalize@Cross[normal,majorAxisAssit];
+	majorAxis=Normalize@Cross[minorAxis,normal];
 	majorRadius=gAssocData[input,"majorRadius"];
 	minorRadius=gAssocData[input,"minorRadius"];
 	

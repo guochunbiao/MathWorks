@@ -97,6 +97,8 @@ Assert[CosTheta>=0];
 Assert[\[Lambda]>=sgMinLambda];
 *)
 (*If[CosTheta<0(*||\[Lambda]<sgMinLambda*),0,\[Mu]*Exp[\[Lambda]*(CosTheta-1)]]*)
+
+If[\[Lambda]<0,Return[0]];
 \[Mu]*Exp[\[Lambda]*(CosTheta-1)]
 ];
 
@@ -131,6 +133,7 @@ asgPolar[\[Theta]_,\[Theta]1_,\[Theta]2_,xBandwidth_,yBandwidth_,amplitude_]:=Mo
 	\[Mu]=yBandwidth;
 	c=amplitude;
 	
+	If[\[Lambda]<0,Return[0]];
 	c*Cos[\[Theta]]*Exp[-\[Lambda]*Cos[\[Theta]1]^2-\[Mu]*Cos[\[Theta]2]^2]
 ];
 
@@ -188,14 +191,17 @@ asgDotSg[{inAsgZ_,inAsgX_,inAsgY_,asgL_,asgM_,asgC_},{inSgP_,inSgLambda_,sgC_}]:
 
 (*dr \[Equal] diskRadius/reflectPtDist*)
 sgCalcBandwidth[dr_,\[Theta]L_]:=Module[
-	{\[Epsilon]},
+	{\[Epsilon],\[Lambda]},
 	
 	(*Quiet@Solve[(sgPolar[ArcTan[dr*Cos[\[Theta]L]],\[Lambda],1]/sgPolar[0,\[Lambda],1])\[Equal]\[Epsilon],\[Lambda]]*)
 	(*-Log[\[Epsilon]]/(1-1/Sqrt[1+dr^2 Cos[\[Theta]L]^2])*)
 	
 	Assert[0<=\[Theta]L<\[Pi]/2];
 	\[Epsilon]=0.01;
-	Log[\[Epsilon]]+Log[\[Epsilon]]/( Sqrt[1 +dr^2 Cos[\[Theta]L]^2]-1)
+	\[Lambda]=Log[\[Epsilon]]+Log[\[Epsilon]]/( Sqrt[1 +dr^2 Cos[\[Theta]L]^2]-1);
+	\[Lambda]=Max[\[Lambda],-100];
+	
+	\[Lambda]
 ];
 
 

@@ -22,8 +22,8 @@ gSamplingLightDir::usage="gSamplingLightDir";
 gSamplingLightDir2D::usage="gSamplingLightDir2D";
 gPlotGgxPdf3D::usage="gPlotGgxPdf3D";
 gPlotGgxPdf2D::usage="gPlotGgxPdf2D";
-gCalcGgxPeakOnPlane::usage="gCalcGgxPeakOnPlane";
-gCalcGgxPeakForLight::usage="gCalcGgxPeakForLight";
+gCalcGgxPeakOnPlane::usage="Deprecated, use gCalcPeakPoint";
+gCalcGgxPeakForLight::usage="Deprecated, use gCalcPeakPoint";
 gIntegrateDiskLighting::usage="gIntegrateDiskLighting";
 gCalcPeakPoint::usage="gCalcPeakPoint";
 
@@ -214,6 +214,7 @@ gPlotGgxPdf2D[roughness_,inViewDir_,\[Theta]_]:=Module[
 ];
 
 
+(*Deprecated, use gCalcPeakPoint*)
 gCalcGgxPeakOnPlane[planePt_,planeNormal_,lightPt_,viewPt_]:=Module[
 	{normalDir,tmpLightDir,tmpViewDir,lightCosine,viewCosine,
 		lightVerticalDist,viewVerticalDist,lightProjPt,viewProjPt,lerpFactor,peakPt},
@@ -239,6 +240,7 @@ gCalcGgxPeakOnPlane[planePt_,planeNormal_,lightPt_,viewPt_]:=Module[
 ];
 
 
+(*Deprecated, use gCalcPeakPoint*)
 gCalcGgxPeakForLight[peakPt_,planeNormal_,viewPt_]:=Module[
 	{halfDir,viewDir,lightDir},
 	

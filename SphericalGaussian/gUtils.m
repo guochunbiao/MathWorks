@@ -4,7 +4,8 @@ BeginPackage["gUtils`"];
 
 
 ClearAll[gStructRules,gPrint,gPrintFunc,gEvalFunc,gCreateCone,gLerp,gRemap,gClampPhi,
-	gCalcRectCorners,gReflectVector,gAssocData,gAssocDataOpt];
+	gCalcRectCorners,gReflectVector,gAssocData,gAssocDataOpt,gCircIntsRectPts,
+	gCircIntsRectArea,gCalcPlaneTangents];
 gPrint::usage="Print messages";
 gPrintFunc::usage="Print a function";
 gEvalFunc::usage="Evaluate a funciton";
@@ -17,6 +18,9 @@ gCalcRectCorners::usage="gCalcRectCorners";
 gReflectVector::usage="gReflectVector";
 gAssocData::usage="gAssocData";
 gAssocDataOpt::usage="gAssocDataOpt";
+gCircIntsRectPts::usage="gCircIntsRectPts";
+gCircIntsRectArea::usage="gCircIntsRectArea";
+gCalcPlaneTangents::usage="gCalcPlaneTangents";
 
 
 SetAttributes[gStructRules,HoldAll]
@@ -141,6 +145,82 @@ gAssocDataOpt[assoc_,key_,default_]:=Module[
 	{},
 	
 	If[MemberQ[Keys[assoc],key],assoc[key],default]
+];
+
+
+gCalcPlaneTangents[normal_,inMajorAxisAssit_]:=Module[
+	{majorAxisAssit,majorAxis,minorAxis},
+
+	majorAxisAssit=Normalize@inMajorAxisAssit;
+	minorAxis=Normalize@Cross[normal,majorAxisAssit];
+	majorAxis=Normalize@Cross[minorAxis,normal];
+	
+	{majorAxis,minorAxis}
+];
+
+
+gCircIntsRectArea[circCenter_,circRadius_,
+	rectCenter_,inRectMajorAxis_,inRectMinorAxis_,rectMajorRadius_,rectMinorRadius_]:=Module[
+	{rCenter,rLeft,rRight,rTop,rBottom,rMajorAxis,rMinorAxis,
+	 cDistX,cDistY,cCenter,cLeft,cRight,cTop,cBottom,
+	 xOverlap,yOverlap,area},
+	 
+	 rMajorAxis=Normalize@inRectMajorAxis;
+	 rMinorAxis=Normalize@inRectMinorAxis;
+	
+	(*assuming major axis of rectangle is left-right*)
+	rCenter={0,0};
+	rLeft=-rectMajorRadius;
+	rRight=rectMajorRadius;
+	rTop=rectMinorRadius;
+	rBottom=-rectMinorRadius;
+	
+	cDistX=Dot[circCenter-rectCenter,rMajorAxis];
+	cDistY=Dot[circCenter-rectCenter,rMinorAxis];
+	cLeft=cDistX-circRadius;
+	cRight=cDistX+circRadius;
+	cTop=cDistY+circRadius;
+	cBottom=cDistY-circRadius;
+	
+	(*https://math.stackexchange.com/questions/99565/simplest-way-to-calculate-the-intersect-area-of-two-rectangles*)
+	xOverlap=Max[0,Min[rRight,cRight]-Max[rLeft,cLeft]];
+	yOverlap=Max[0,Min[rTop,cTop]-Max[rBottom,cBottom]];
+	area=xOverlap*yOverlap;
+	
+	area
+];
+
+
+gCircIntsRectPts[circCenter_,circRadius_,
+	rectCenter_,inRectMajorAxis_,inRectMinorAxis_,rectMajorRadius_,rectMinorRadius_]:=Module[
+	{rCenter,rLeft,rRight,rTop,rBottom,rMajorAxis,rMinorAxis,
+	 cDistX,cDistY,cCenter,cLeft,cRight,cTop,cBottom,
+	 iLeftTop,iRightTop,iRightBtm,iLeftBtm},
+	 
+	 rMajorAxis=Normalize@inRectMajorAxis;
+	 rMinorAxis=Normalize@inRectMinorAxis;
+	
+	(*assuming major axis of rectangle is left-right*)
+	rCenter={0,0};
+	rLeft=-rectMajorRadius;
+	rRight=rectMajorRadius;
+	rTop=rectMinorRadius;
+	rBottom=-rectMinorRadius;
+	
+	cDistX=Dot[circCenter-rectCenter,rMajorAxis];
+	cDistY=Dot[circCenter-rectCenter,rMinorAxis];
+	cLeft=cDistX-circRadius;
+	cRight=cDistX+circRadius;
+	cTop=cDistY+circRadius;
+	cBottom=cDistY-circRadius;
+	
+	(*https://math.stackexchange.com/questions/99565/simplest-way-to-calculate-the-intersect-area-of-two-rectangles*)
+	iLeftTop=rectCenter+rMajorAxis*Max[rLeft,cLeft]+rMinorAxis*Min[rTop,cTop];
+	iRightTop=rectCenter+rMajorAxis*Min[rRight,cRight]+rMinorAxis*Min[rTop,cTop];
+	iRightBtm=rectCenter+rMajorAxis*Min[rRight,cRight]+rMinorAxis*Max[rBottom,cBottom];
+	iLeftBtm=rectCenter+rMajorAxis*Max[rLeft,cLeft]+rMinorAxis*Max[rBottom,cBottom];
+	
+	{iLeftTop,iRightTop,iRightBtm,iLeftBtm,iLeftTop}
 ];
 
 
