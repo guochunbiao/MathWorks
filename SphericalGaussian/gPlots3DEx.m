@@ -170,9 +170,27 @@ pltCircle3D[input_]:=Module[
 ];
 
 
+ClearAll[calcPhiOnCircle3D];
+calcPhiOnCircle3D[circCenter_,inCircNormal_,circRadius_,testPt_]:=Module[
+	{circNormal,rotTo2D,rotPt,projPt,\[Phi]},
+	
+	circNormal=Normalize@inCircNormal;
+	Assert[Norm[testPt-circCenter]==circRadius,"calcPhiOnCircle3D"];
+	
+	rotTo2D=RotationMatrix[{circNormal,{0,0,1}}];
+	rotPt=rotTo2D.(testPt-circCenter);
+	Assert[Abs[rotPt[[3]]]<0.0001,"calcPhiOnCircle3D"];
+	
+	projPt={rotPt[[1]],rotPt[[2]]};
+	\[Phi]=ToPolarCoordinates[projPt][[2]];
+	
+	\[Phi]
+];
+
+
 pltArc3D[input_]:=Module[
 	{center,normal,radius,startPt,endPt,
-		rotTo2D,rotTo3D,rotPt1,rotPt2,projPt1,projPt2,\[Phi]1,\[Phi]2,
+		rotTo3D,\[Phi]1,\[Phi]2,
 		thickness,style,color,pltRanges},
 	
 	center=gAssocData[input,"center"];
@@ -185,31 +203,18 @@ pltArc3D[input_]:=Module[
 	style=gAssocDataOpt[input,"style",Nothing];
 	color=gAssocDataOpt[input,"color",Black];
 	
-(*	Assert[Norm[startPt-center]==radius,"pltArc3D"];
-	Assert[Norm[endPt-center]==radius,"pltArc3D"];*)
-		
-	rotTo2D=RotationMatrix[{normal,{0,0,1}}];
-	rotPt1=rotTo2D.(startPt-center);
-	rotPt2=rotTo2D.(endPt-center);
-	
-(*	Assert[Abs[rotPt1[[3]]]<0.0001,"pltArc3D"];
-	Assert[Abs[rotPt2[[3]]]<0.0001,"pltArc3D"];*)
-	
-	projPt1={rotPt1[[1]],rotPt1[[2]]};
-	projPt2={rotPt2[[1]],rotPt2[[2]]};
-	
-	\[Phi]1=ToPolarCoordinates[projPt1][[2]];
-	\[Phi]2=ToPolarCoordinates[projPt2][[2]];
+	\[Phi]1=calcPhiOnCircle3D[center,normal,radius,startPt];
+	\[Phi]2=calcPhiOnCircle3D[center,normal,radius,endPt];
 	
 	rotTo3D=RotationMatrix[{{0,0,1},normal}];
-	
-	pltRanges=If[\[Phi]1<\[Phi]2,{\[Phi]1,\[Phi]2},{\[Phi]2,\[Phi]1}];
-	
+	pltRanges=If[\[Phi]1<=\[Phi]2,{{\[Phi]1,\[Phi]2}},{{-\[Pi],\[Phi]2},{\[Phi]1,\[Pi]+0.001}}];
+	{
 	Graphics3D[{AbsoluteThickness[thickness],style,color,
 		Line[Table[
 			rotTo3D.(radius*({Sin[\[Pi]/2]*Cos[\[Phi]],Sin[\[Pi]/2]Sin[\[Phi]],Cos[\[Pi]/2]}))+center,
-			{\[Phi],pltRanges[[1]],pltRanges[[2]],blCirclePrec}]]
+			{\[Phi],#[[1]],#[[2]],blCirclePrec}]]
 		}]
+	}&/@pltRanges
 ];
 
 

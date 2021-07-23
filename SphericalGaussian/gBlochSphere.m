@@ -7,7 +7,7 @@ Needs["gTexStyles`"];
 Needs["gPlots3DEx`"];
 
 
-ClearAll[blInitOffset,blDefaultThickness,blCirclePrec,blTransFuncXZ,blTransFuncXY,(*blTransFuncYZ,*)
+ClearAll[blInitOffset,blDefaultThickness,blCirclePrec,blTransFuncXY,(*blTransFuncYZ,*)
 	blCalcPoint,blCalcPointEx,blCalcAngle,blCalcAngleEx,blCalcTheta,blCalcPhi,
 	blBasicXYCircle,blBasicXZCircle,blBasicYZCircle,blSphereArrow,blSphereAxes,
 	blWholeSphere,blHemiSphere,
@@ -18,8 +18,6 @@ ClearAll[blInitOffset,blDefaultThickness,blCirclePrec,blTransFuncXZ,blTransFuncX
 blInitOffset=0.1\[Pi];
 blDefaultThickness=1.5;
 blCirclePrec=\[Pi]/120;
-blTransFuncXZ=Composition@@{RotationTransform[-blInitOffset,{0,0,1}],
-						RotationTransform[{{0,0,1},{0,1,0}}]};
 blTransFuncXY=Composition@@{RotationTransform[blInitOffset,{0,1,0}],
 						RotationTransform[{{0,0,1},{0,0,1}}]};
 (*blTransFuncYZ=RotationTransform[{{0,0,1},{1,0,0}}];*)
@@ -131,40 +129,51 @@ blBasicXYCircle[\[Theta]_]:=Module[
 	
 	{
 		(*0--\[Pi]/2*)
-		{AbsoluteThickness[blDefaultThickness],Line[Table[blTransFuncXY@{r*Cos[\[Phi]],r*Sin[\[Phi]],z},{\[Phi],\[Phi]0,2\[Pi],blCirclePrec}]]},
-		{AbsoluteThickness[blDefaultThickness],Line[Table[blTransFuncXY@{r*Cos[\[Phi]],r*Sin[\[Phi]],z},{\[Phi],0,\[Phi]1,blCirclePrec}]]},
+		{AbsoluteThickness[blDefaultThickness],
+			Line[Table[blTransFuncXY@{r*Cos[\[Phi]],r*Sin[\[Phi]],z},{\[Phi],\[Phi]0,2\[Pi],blCirclePrec}]]},
+		{AbsoluteThickness[blDefaultThickness],
+			Line[Table[blTransFuncXY@{r*Cos[\[Phi]],r*Sin[\[Phi]],z},{\[Phi],0,\[Phi]1,blCirclePrec}]]},
 		(*\[Pi]/2--\[Pi]*)
-		{AbsoluteThickness[blDefaultThickness],Dashed,Line[Table[blTransFuncXY@{r*Cos[\[Phi]],r*Sin[\[Phi]],z},{\[Phi],\[Phi]1,\[Phi]2,blCirclePrec}]]},
+		{AbsoluteThickness[blDefaultThickness],Dashed,
+			Line[Table[blTransFuncXY@{r*Cos[\[Phi]],r*Sin[\[Phi]],z},{\[Phi],\[Phi]1,\[Phi]2,blCirclePrec}]]},
 		(*\[Pi]--3\[Pi]/2*)
-		{AbsoluteThickness[blDefaultThickness],Dashed,Line[Table[blTransFuncXY@{r*Cos[\[Phi]],r*Sin[\[Phi]],z},{\[Phi],\[Phi]2,\[Phi]3,blCirclePrec}]]},
+		{AbsoluteThickness[blDefaultThickness],Dashed,
+			Line[Table[blTransFuncXY@{r*Cos[\[Phi]],r*Sin[\[Phi]],z},{\[Phi],\[Phi]2,\[Phi]3,blCirclePrec}]]},
 		(*3\[Pi]/2--2\[Pi]*)
-		{AbsoluteThickness[blDefaultThickness],Line[Table[blTransFuncXY@{r*Cos[\[Phi]],r*Sin[\[Phi]],z},{\[Phi],\[Phi]3,2\[Pi],blCirclePrec}]]}
+		{AbsoluteThickness[blDefaultThickness],
+			Line[Table[blTransFuncXY@{r*Cos[\[Phi]],r*Sin[\[Phi]],z},{\[Phi],\[Phi]3,2\[Pi],blCirclePrec}]]}
 	}
 ];
 
 
-blBasicXZCircle[y_,bHemi_:False]:=Module[
+blBasicXZCircle[y_,turning_:-0.1\[Pi],bHemi_:False]:=Module[
 	{\[Phi],r,\[Theta]0,\[Theta]1,\[Theta]2,\[Theta]3,\[Theta]4},
 	
-	\[Phi]=0;
 	(*radius*)
 	r=Sqrt[1-y^2];
 	
+	\[Phi]=0;
 	\[Theta]0=blCalcTheta[0,\[Phi]];(**)
 	\[Theta]1=blCalcTheta[\[Pi]/2,\[Phi]];(**)
 	\[Theta]2=blCalcTheta[\[Pi],\[Phi]];(**)
 	\[Theta]3=blCalcTheta[3\[Pi]/2,\[Phi]];(**)
 	\[Theta]4=blCalcTheta[2\[Pi],\[Phi]];(**)
 
+	blTransFuncXZ=Composition@@{RotationTransform[turning,{0,0,1}],
+						RotationTransform[{{0,0,1},{0,1,0}}]};
 	{
 		(*0--\[Pi]/2*)
-		{AbsoluteThickness[blDefaultThickness],Line[Table[blTransFuncXZ@{r*Sin[\[Theta]],-r*Cos[\[Theta]],y},{\[Theta],0,\[Theta]1,blCirclePrec}]]},
+		{AbsoluteThickness[blDefaultThickness],
+			Line[Table[blTransFuncXZ@{r*Sin[\[Theta]],-r*Cos[\[Theta]],y},{\[Theta],0,\[Theta]1,blCirclePrec}]]},
 		(*\[Pi]/2--\[Pi]*)
-		If[bHemi,Nothing,{AbsoluteThickness[blDefaultThickness],Line[Table[blTransFuncXZ@{r*Sin[\[Theta]],-r*Cos[\[Theta]],y},{\[Theta],\[Theta]1,\[Theta]2,blCirclePrec}]]}],
+		If[bHemi,Nothing,{AbsoluteThickness[blDefaultThickness],
+			Line[Table[blTransFuncXZ@{r*Sin[\[Theta]],-r*Cos[\[Theta]],y},{\[Theta],\[Theta]1,\[Theta]2,blCirclePrec}]]}],
 		(*\[Pi]--3\[Pi]/2*)
-		If[bHemi,Nothing,{AbsoluteThickness[blDefaultThickness],Dashed,Line[Table[blTransFuncXZ@{r*Sin[\[Theta]],-r*Cos[\[Theta]],y},{\[Theta],\[Theta]2,\[Theta]3,blCirclePrec}]]}],
+		If[bHemi,Nothing,{AbsoluteThickness[blDefaultThickness],Dashed,
+			Line[Table[blTransFuncXZ@{r*Sin[\[Theta]],-r*Cos[\[Theta]],y},{\[Theta],\[Theta]2,\[Theta]3,blCirclePrec}]]}],
 		(*3\[Pi]/2--2\[Pi]*)
-		{AbsoluteThickness[blDefaultThickness],Dashed,Line[Table[blTransFuncXZ@{r*Sin[\[Theta]],-r*Cos[\[Theta]],y},{\[Theta],\[Theta]3,2\[Pi],blCirclePrec}]]}
+		{AbsoluteThickness[blDefaultThickness],Dashed,
+			Line[Table[blTransFuncXZ@{r*Sin[\[Theta]],-r*Cos[\[Theta]],y},{\[Theta],\[Theta]3,2\[Pi],blCirclePrec}]]}
 	}
 ];
 
@@ -174,13 +183,17 @@ blBasicYZCircle[bHemi_:False]:=Module[
 	
 	{
 		(*0--\[Pi]/2*)
-		{AbsoluteThickness[blDefaultThickness],Line[Table[{0,Cos[\[Theta]],Sin[\[Theta]]},{\[Theta],0,\[Pi]/2,blCirclePrec}]]},
+		{AbsoluteThickness[blDefaultThickness],
+			Line[Table[{0,Cos[\[Theta]],Sin[\[Theta]]},{\[Theta],0,\[Pi]/2,blCirclePrec}]]},
 		(*\[Pi]/2--\[Pi]*)
-		{AbsoluteThickness[blDefaultThickness],Line[Table[{0,Cos[\[Theta]],Sin[\[Theta]]},{\[Theta],\[Pi]/2,\[Pi],blCirclePrec}]]},
+		{AbsoluteThickness[blDefaultThickness],
+			Line[Table[{0,Cos[\[Theta]],Sin[\[Theta]]},{\[Theta],\[Pi]/2,\[Pi],blCirclePrec}]]},
 		(*\[Pi]--3\[Pi]/2*)
-		If[bHemi,Nothing,{AbsoluteThickness[blDefaultThickness],Line[Table[{0,Cos[\[Theta]],Sin[\[Theta]]},{\[Theta],\[Pi],3\[Pi]/2,blCirclePrec}]]}],
+		If[bHemi,Nothing,{AbsoluteThickness[blDefaultThickness],
+			Line[Table[{0,Cos[\[Theta]],Sin[\[Theta]]},{\[Theta],\[Pi],3\[Pi]/2,blCirclePrec}]]}],
 		(*3\[Pi]/2--2\[Pi]*)
-		If[bHemi,Nothing,{AbsoluteThickness[blDefaultThickness],Line[Table[{0,Cos[\[Theta]],Sin[\[Theta]]},{\[Theta],3\[Pi]/2,2\[Pi],blCirclePrec}]]}]
+		If[bHemi,Nothing,{AbsoluteThickness[blDefaultThickness],
+			Line[Table[{0,Cos[\[Theta]],Sin[\[Theta]]},{\[Theta],3\[Pi]/2,2\[Pi],blCirclePrec}]]}]
 	}
 ];
 
@@ -234,7 +247,7 @@ blHemiSphere[axisSize_:1.3]:=Module[
 	(*x-y circle*)
 	blBasicXYCircle[\[Pi]/2],
 	(*x-z circle*)
-	blBasicXZCircle[0,True],
+	blBasicXZCircle[0,0,True],
 	(*y-z circle*)
 	blBasicYZCircle[True],
 
@@ -254,7 +267,7 @@ blPaperSphere01[]:=Module[
 		(*x-y circle*)
 		blBasicXYCircle[\[Pi]/2],
 		(*x-z circle*)
-		blBasicXZCircle[0,True],
+		blBasicXZCircle[0,0,True],
 		(*y-z circle*)
 		blBasicYZCircle[True],
 		
@@ -346,6 +359,9 @@ blPaperIntsDisk03[inCenter_,inNormal_,radius_]:=Module[
 		Graphics3D[{{Blue,PointSize[Large],Point[c]}}],
 		(*outside the sphere*)
 		pltArc3D[<|"center"->c,"normal"->n,"radius"->r,
+			"edgePt0"->intsPt2,"edgePt1"->intsPt1|>],
+		(*inside the sphere*)
+		pltArc3D[<|"center"->c,"normal"->n,"radius"->r,"style"->Dashed,
 			"edgePt0"->intsPt1,"edgePt1"->intsPt2|>]
 	}
 ];
