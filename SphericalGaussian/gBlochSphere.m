@@ -4,6 +4,7 @@ SetDirectory[NotebookDirectory[]];
 BeginPackage["gBlochSphere`"];
 Needs["gUtils`"];
 Needs["gTexStyles`"];
+Needs["gPlots3DEx`"];
 
 
 ClearAll[blInitOffset,blDefaultThickness,blCirclePrec,blTransFuncXZ,blTransFuncXY,(*blTransFuncYZ,*)
@@ -267,7 +268,7 @@ blPaperSphere01[]:=Module[
 
 
 blPaperIntsDisk01[inCenter_,inNormal_,radius_]:=Module[
-	{c,n,r,outReg,inReg},
+	{c,n,r,outReg,inReg,x,y,z},
 	
 	c=blCalcPoint@Normalize[inCenter-{0,0,0}];
 	n=Normalize@inNormal;
@@ -320,7 +321,8 @@ blPaperIntsDisk02[inCenter_,inNormalEuler_,radius_]:=Module[
 
 
 blPaperIntsDisk03[inCenter_,inNormal_,radius_]:=Module[
-	{c,n,r,sol1,sol2,intsPt1,intsPt2},
+	{c,n,r,sol1,sol2,intsPt1,intsPt2,x,y,z,
+		majorAxis,minorAxis},
 	
 	c=blCalcPoint@Normalize[inCenter-{0,0,0}];
 	n=Normalize@inNormal;
@@ -341,7 +343,10 @@ blPaperIntsDisk03[inCenter_,inNormal_,radius_]:=Module[
 		(*intersection points*)
 		Graphics3D[{{Black,PointSize[Large],Point[{intsPt1,intsPt2}]}}],
 		(*disk center point*)
-		Graphics3D[{{Blue,PointSize[Large],Point[c]}}]
+		Graphics3D[{{Blue,PointSize[Large],Point[c]}}],
+		(*outside the sphere*)
+		pltArc3D[<|"center"->c,"normal"->n,"radius"->r,
+			"edgePt0"->intsPt1,"edgePt1"->intsPt2|>]
 	}
 ];
 

@@ -263,6 +263,8 @@ gIntegrateDiskLighting[shadingPt_,diskPt_,diskNormal_,diskRadius_,
 	nol=Dot[n,l];
 	dr=diskRadius/Norm[diskPt-shadingPt];
 	
+	(*17-OB_02_LeftMinorAxis-GGX.nb*)
+	(*percentSum=(1.836*m)/Sqrt[nol]Erf[(0.4827*dr*Sqrt[nol])/(m*Sqrt[1+dr^2])];*)
 	percentSum=Min[dr/Sqrt[1+dr^2],(3.672 m)/(1+nol)];
 	lighting=percentSum*gDGGX[m,1]*nol*lightIntensity;
 	

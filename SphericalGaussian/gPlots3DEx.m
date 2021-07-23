@@ -11,7 +11,7 @@ Needs["gTexStyles`"];
 
 
 ClearAll[showProps3D,pltRect3D,pltArrow3D,pltPoint3D,pltDisk3D,pltCircle3D,pltSphere3D,
-	pltLine3D];
+	pltLine3D,pltArc3D];
 showProps3D::usage="showProps3D";
 pltRect3D::usage="pltRect3D";
 pltArrow3D::usage="pltArrow3D";
@@ -20,6 +20,7 @@ pltDisk3D::usage="pltDisk3D";
 pltCircle3D::usage="pltCircle3D";
 pltSphere3D::usage="pltSphere3D";
 pltLine3D::usage="pltLine3D";
+pltArc3D::usage="pltArc3D";
 
 
 Begin["`Private`"];
@@ -140,20 +141,24 @@ pltDisk3D[input_]:=Module[
 
 pltCircle3D[input_]:=Module[
 	{center,normal,radius,rotMat,
-		colorFunc,meshType,plotPts,opacity},
+		thickness,style,color},
 	
 	center=gAssocData[input,"center"];
 	normal=Normalize@gAssocData[input,"normal"];
 	radius=gAssocData[input,"radius"];
 	
-	colorFunc=gAssocDataOpt[input,"colorFunc",Function[{x,y,z},Cyan]];
-	meshType=gAssocDataOpt[input,"mesh",None];
-	plotPts=gAssocDataOpt[input,"plotPts",20];
-	opacity=gAssocDataOpt[input,"opacity",1];
+	thickness=gAssocDataOpt[input,"thickness",1.5];
+	style=gAssocDataOpt[input,"style",Nothing];
+	color=gAssocDataOpt[input,"color",Black];
 	
 	rotMat=RotationMatrix[{{0,0,1},normal}];
-	
-	ParametricPlot3D[rotMat.(radius*({Sin[\[Pi]/2]*Cos[\[Phi]],Sin[\[Pi]/2]Sin[\[Phi]],Cos[\[Pi]/2]}))+center,
+
+	Graphics3D[{AbsoluteThickness[thickness],style,color,
+		Line[Table[
+			rotMat.(radius*({Sin[\[Pi]/2]*Cos[\[Phi]],Sin[\[Pi]/2]Sin[\[Phi]],Cos[\[Pi]/2]}))+center,
+			{\[Phi],0,2\[Pi],blCirclePrec}]]
+		}]
+(*	ParametricPlot3D[rotMat.(radius*({Sin[\[Pi]/2]*Cos[\[Phi]],Sin[\[Pi]/2]Sin[\[Phi]],Cos[\[Pi]/2]}))+center,
 		{\[Phi],0,2\[Pi]},
 		BoundaryStyle->None,
 		Mesh->meshType,
@@ -161,7 +166,50 @@ pltCircle3D[input_]:=Module[
 		Lighting->{"Ambient",White},
 		PlotStyle->{Opacity[opacity]},
 		ColorFunction->colorFunc,
-		ColorFunctionScaling->False]
+		ColorFunctionScaling->False]*)
+];
+
+
+pltArc3D[input_]:=Module[
+	{center,normal,radius,startPt,endPt,
+		rotTo2D,rotTo3D,rotPt1,rotPt2,projPt1,projPt2,\[Phi]1,\[Phi]2,
+		thickness,style,color,pltRanges},
+	
+	center=gAssocData[input,"center"];
+	normal=Normalize@gAssocData[input,"normal"];
+	radius=gAssocData[input,"radius"];
+	startPt=gAssocData[input,"edgePt0"];
+	endPt=gAssocData[input,"edgePt1"];
+	
+	thickness=gAssocDataOpt[input,"thickness",1.5];
+	style=gAssocDataOpt[input,"style",Nothing];
+	color=gAssocDataOpt[input,"color",Black];
+	
+(*	Assert[Norm[startPt-center]==radius,"pltArc3D"];
+	Assert[Norm[endPt-center]==radius,"pltArc3D"];*)
+		
+	rotTo2D=RotationMatrix[{normal,{0,0,1}}];
+	rotPt1=rotTo2D.(startPt-center);
+	rotPt2=rotTo2D.(endPt-center);
+	
+(*	Assert[Abs[rotPt1[[3]]]<0.0001,"pltArc3D"];
+	Assert[Abs[rotPt2[[3]]]<0.0001,"pltArc3D"];*)
+	
+	projPt1={rotPt1[[1]],rotPt1[[2]]};
+	projPt2={rotPt2[[1]],rotPt2[[2]]};
+	
+	\[Phi]1=ToPolarCoordinates[projPt1][[2]];
+	\[Phi]2=ToPolarCoordinates[projPt2][[2]];
+	
+	rotTo3D=RotationMatrix[{{0,0,1},normal}];
+	
+	pltRanges=If[\[Phi]1<\[Phi]2,{\[Phi]1,\[Phi]2},{\[Phi]2,\[Phi]1}];
+	
+	Graphics3D[{AbsoluteThickness[thickness],style,color,
+		Line[Table[
+			rotTo3D.(radius*({Sin[\[Pi]/2]*Cos[\[Phi]],Sin[\[Pi]/2]Sin[\[Phi]],Cos[\[Pi]/2]}))+center,
+			{\[Phi],pltRanges[[1]],pltRanges[[2]],blCirclePrec}]]
+		}]
 ];
 
 
