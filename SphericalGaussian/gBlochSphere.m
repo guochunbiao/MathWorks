@@ -12,8 +12,8 @@ ClearAll[blInitOffset,blDefaultThickness,blCirclePrec,blTransFuncXY,(*blTransFun
 	blBasicXYCircle,blBasicXZCircle,blBasicYZCircle,blSphereArrow,blSphereAxes,
 	blWholeSphere,blHemiSphere,
 	(*paper related*)
-	blPaperSphere01,
-	blPaperIntsDisk01,blPaperIntsDisk02,blPaperIntsDisk03
+	blPaperSphere01,blPaperSphere02,
+	blPaperIntsDisk01,blPaperIntsDisk02,blPaperIntsDisk03,blPaperIntsDisk04,blPaperIntsDisk05
 	];
 blInitOffset=0.1\[Pi];
 blDefaultThickness=1.5;
@@ -35,9 +35,12 @@ blSphereAxes::usage="blSphereAxes";
 blWholeSphere::usage="blWholeSphere";
 blHemiSphere::usage="blHemiSphere";
 blPaperSphere01::usage="blPaperSphere01";
+blPaperSphere02::usage="blPaperSphere02";
 blPaperIntsDisk01::usage="blPaperIntsDisk01";
 blPaperIntsDisk02::usage="blPaperIntsDisk02";
 blPaperIntsDisk03::usage="blPaperIntsDisk03";
+blPaperIntsDisk04::usage="blPaperIntsDisk04";
+blPaperIntsDisk05::usage="blPaperIntsDisk05";
 
 
 Begin["`Private`"];
@@ -280,10 +283,36 @@ blPaperSphere01[]:=Module[
 ];
 
 
+blPaperSphere02[color_,opacity_]:=Module[
+	{},
+	
+	{
+	Graphics3D[{
+		(*x-y circle*)
+		blBasicXYCircle[\[Pi]/2],
+		(*x-z circle*)
+		blBasicXZCircle[0,0,True],
+		(*y-z circle*)
+		blBasicYZCircle[True],
+		
+		(*axes*)
+		blSphereAxes[1.3],
+
+		(*sphere center at origin point*)
+		{{Black,PointSize[Large],Point[{0,0,0}]}}
+		}],
+	
+	(*colored sphere*)
+	pltSphere3D[ <|"center"->{0,0,0},"radius"->1,"plotPts"->20,
+		"mesh"->None,"opacity"->opacity,"colorFunc"->Function[{x,y,z},color]|>]
+	}
+];
+
+
 blPaperIntsDisk01[inCenter_,inNormal_,radius_]:=Module[
 	{c,n,r,outReg,inReg,x,y,z},
 	
-	c=blCalcPoint@Normalize[inCenter-{0,0,0}];
+	c=(*blCalcPoint@*)Normalize[inCenter-{0,0,0}];
 	n=Normalize@inNormal;
 	r=radius;
 	
@@ -317,7 +346,7 @@ blPaperIntsDisk01[inCenter_,inNormal_,radius_]:=Module[
 blPaperIntsDisk02[inCenter_,inNormalEuler_,radius_]:=Module[
 	{c,nlTheta,nlPhi,nlFunc},
 	
-	c=blCalcPoint@Normalize[inCenter-{0,0,0}];
+	c=(*blCalcPoint@*)Normalize[inCenter-{0,0,0}];
 	nlTheta=inNormalEuler[[1]];
 	nlPhi=inNormalEuler[[2]];
 	
@@ -334,10 +363,9 @@ blPaperIntsDisk02[inCenter_,inNormalEuler_,radius_]:=Module[
 
 
 blPaperIntsDisk03[inCenter_,inNormal_,radius_]:=Module[
-	{c,n,r,sol1,sol2,intsPt1,intsPt2,x,y,z,
-		majorAxis,minorAxis},
+	{c,n,r,sol1,sol2,intsPt1,intsPt2,x,y,z},
 	
-	c=blCalcPoint@Normalize[inCenter-{0,0,0}];
+	c=(*blCalcPoint@*)Normalize[inCenter-{0,0,0}];
 	n=Normalize@inNormal;
 	r=radius;
 	
@@ -355,6 +383,61 @@ blPaperIntsDisk03[inCenter_,inNormal_,radius_]:=Module[
 	{
 		(*intersection points*)
 		Graphics3D[{{Black,PointSize[Large],Point[{intsPt1,intsPt2}]}}],
+		(*disk center point*)
+		Graphics3D[{{Blue,PointSize[Large],Point[c]}}],
+		(*outside the sphere*)
+		pltArc3D[<|"center"->c,"normal"->n,"radius"->r,
+			"edgePt0"->intsPt2,"edgePt1"->intsPt1|>],
+		(*inside the sphere*)
+		pltArc3D[<|"center"->c,"normal"->n,"radius"->r,"style"->Dashed,
+			"edgePt0"->intsPt1,"edgePt1"->intsPt2|>]
+	}
+];
+
+
+blPaperIntsDisk04[inCenter_,inNormal_,radius_]:=Module[
+	{c,n,r,sol1,sol2,intsPt1,intsPt2,x,y,z},
+	
+	c=(*blCalcPoint@*)Normalize[inCenter-{0,0,0}];
+	n=Normalize@inNormal;
+	r=radius;
+	
+	sol1=FindInstance[
+		(*on sphere*)
+		x^2+y^2+z^2==1&&
+		(*on disk*)
+		Norm[{x,y,z}-c]==r&&
+		Dot[{x,y,z}-c,n]==0,
+		{x,y,z},Reals,2];
+	sol2=Transpose@sol1;
+	intsPt1=sol2[[All,1,2]];
+	intsPt2=sol2[[All,2,2]];
+		
+	{
+		(*intersection points*)
+		(*Graphics3D[{{Black,PointSize[Large],Point[{intsPt1,intsPt2}]}}],*)
+		(*disk center point*)
+		Graphics3D[{{Blue,PointSize[Large],Point[c]}}],
+		(*outside the sphere*)
+		pltArc3D[<|"center"->c,"normal"->n,"radius"->r,
+			"edgePt0"->intsPt2,"edgePt1"->intsPt1|>],
+		(*inside the sphere*)
+		pltArc3D[<|"center"->c,"normal"->n,"radius"->r,"style"->Dashed,
+			"edgePt0"->intsPt1,"edgePt1"->intsPt2|>]
+	}
+];
+
+
+blPaperIntsDisk05[inCenter_,inNormal_,radius_,intsPt1_,intsPt2_]:=Module[
+	{c,n,r},
+	
+	c=(*blCalcPoint@*)Normalize[inCenter-{0,0,0}];
+	n=Normalize@inNormal;
+	r=radius;
+		
+	{
+		(*intersection points*)
+		(*Graphics3D[{{Black,PointSize[Large],Point[{intsPt1,intsPt2}]}}],*)
 		(*disk center point*)
 		Graphics3D[{{Blue,PointSize[Large],Point[c]}}],
 		(*outside the sphere*)

@@ -11,7 +11,7 @@ Needs["gTexStyles`"];
 
 
 ClearAll[showProps3D,pltRect3D,pltArrow3D,pltPoint3D,pltDisk3D,pltCircle3D,pltSphere3D,
-	pltLine3D,pltArc3D];
+	pltLine3D,pltArc3D,pltCircleProj3D,pltDiskProj3D];
 showProps3D::usage="showProps3D";
 pltRect3D::usage="pltRect3D";
 pltArrow3D::usage="pltArrow3D";
@@ -21,6 +21,8 @@ pltCircle3D::usage="pltCircle3D";
 pltSphere3D::usage="pltSphere3D";
 pltLine3D::usage="pltLine3D";
 pltArc3D::usage="pltArc3D";
+pltCircleProj3D::usage="pltCircleProj3D";
+pltDiskProj3D::usage="pltDiskProj3D";
 
 
 Begin["`Private`"];
@@ -175,11 +177,11 @@ calcPhiOnCircle3D[circCenter_,inCircNormal_,circRadius_,testPt_]:=Module[
 	{circNormal,rotTo2D,rotPt,projPt,\[Phi]},
 	
 	circNormal=Normalize@inCircNormal;
-	Assert[Norm[testPt-circCenter]==circRadius,"calcPhiOnCircle3D"];
+	Assert[Abs@(Norm[testPt-circCenter]-circRadius)<0.001,"calcPhiOnCircle3D"];
 	
 	rotTo2D=RotationMatrix[{circNormal,{0,0,1}}];
 	rotPt=rotTo2D.(testPt-circCenter);
-	Assert[Abs[rotPt[[3]]]<0.0001,"calcPhiOnCircle3D"];
+	Assert[Abs[rotPt[[3]]]<0.001,"calcPhiOnCircle3D"];
 	
 	projPt={rotPt[[1]],rotPt[[2]]};
 	\[Phi]=ToPolarCoordinates[projPt][[2]];
@@ -242,6 +244,16 @@ pltSphere3D[input_]:=Module[
 		ColorFunction->colorFunc,
 		ColorFunctionScaling->False]
 ];
+
+
+pltCircleProj3D[input_]:=Module[
+	{circlePts,projPts,},
+	
+	
+];
+
+
+pltDiskProj3D
 
 
 End[];
