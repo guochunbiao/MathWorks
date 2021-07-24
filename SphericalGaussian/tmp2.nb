@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     24783,        568]
-NotebookOptionsPosition[     24101,        547]
-NotebookOutlinePosition[     24468,        563]
-CellTagsIndexPosition[     24425,        560]
+NotebookDataLength[     38784,        912]
+NotebookOptionsPosition[     37202,        875]
+NotebookOutlinePosition[     37567,        891]
+CellTagsIndexPosition[     37524,        888]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -271,7 +271,7 @@ Cell[BoxData[{
    3.8360839267780085`*^9, 3.8360839441644907`*^9}, 3.8360842086503997`*^9, 
    3.836084502847042*^9, {3.836089925257497*^9, 3.8360899265853024`*^9}, {
    3.8360899900507727`*^9, 3.8360900157723074`*^9}},
- CellLabel->"In[23]:=",ExpressionUUID->"500131d6-521d-491d-ba4d-6fe44d2b7ab0"],
+ CellLabel->"In[1]:=",ExpressionUUID->"500131d6-521d-491d-ba4d-6fe44d2b7ab0"],
 
 Cell[BoxData[
  TagBox[
@@ -287,19 +287,19 @@ Cell[BoxData[
        Hold[$CellContext`diskNormalY$$], 0.5}, 0.1, 3}, {{
        Hold[$CellContext`diskRadius$$], 0.5}, 0.2, 1}}, Typeset`size$$ = {
     369., {189., 194.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`diskCenterZ$61462$$ = 
-    0, $CellContext`diskNormalX$61463$$ = 
-    0, $CellContext`diskNormalY$61464$$ = 0, $CellContext`diskRadius$61465$$ =
+    Typeset`skipInitDone$$ = True, $CellContext`diskCenterZ$13922$$ = 
+    0, $CellContext`diskNormalX$13923$$ = 
+    0, $CellContext`diskNormalY$13924$$ = 0, $CellContext`diskRadius$13925$$ =
      0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
       "Variables" :> {$CellContext`diskCenterZ$$ = 
         1.3, $CellContext`diskNormalX$$ = -0.5, $CellContext`diskNormalY$$ = 
         0.5, $CellContext`diskRadius$$ = 0.5}, "ControllerVariables" :> {
-        Hold[$CellContext`diskCenterZ$$, $CellContext`diskCenterZ$61462$$, 0], 
-        Hold[$CellContext`diskNormalX$$, $CellContext`diskNormalX$61463$$, 0], 
-        Hold[$CellContext`diskNormalY$$, $CellContext`diskNormalY$61464$$, 0], 
-        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$61465$$, 0]}, 
+        Hold[$CellContext`diskCenterZ$$, $CellContext`diskCenterZ$13922$$, 0], 
+        Hold[$CellContext`diskNormalX$$, $CellContext`diskNormalX$13923$$, 0], 
+        Hold[$CellContext`diskNormalY$$, $CellContext`diskNormalY$13924$$, 0], 
+        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$13925$$, 0]}, 
       "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
@@ -370,15 +370,24 @@ $CellContext`p}, Blue]]}& )[
    Deployed->True,
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
- CellChangeTimes->{{3.8360899958357515`*^9, 3.836090016652201*^9}},
- CellLabel->"Out[34]=",ExpressionUUID->"3b854f9f-9e65-48b3-95ea-86c5fdf07076"]
+ CellChangeTimes->{{3.8360899958357515`*^9, 3.836090016652201*^9}, 
+   3.8361191986489553`*^9, 3.836121210004758*^9},
+ CellLabel->"Out[12]=",ExpressionUUID->"15672075-18a1-406d-bd28-f5d61ebc7e94"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"ClearAll", "[", "diskNormal", "]"}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"diskCenter", ",", "diskNormal"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"diskCenter", "=", 
+   RowBox[{"Normalize", "@", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", 
+      RowBox[{"-", "1"}], ",", "1"}], "}"}]}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
   RowBox[{
    RowBox[{"Show", "[", "\[IndentingNewLine]", 
@@ -401,7 +410,7 @@ Cell[BoxData[{
                RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ",", 
              RowBox[{"\"\<radius\>\"", "\[Rule]", "1"}], ",", 
              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "100"}], ",", 
-             RowBox[{"\"\<mesh\>\"", "\[Rule]", "None"}], ",", 
+             RowBox[{"\"\<mesh\>\"", "\[Rule]", "15"}], ",", 
              RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.3"}], ",", 
              "\[IndentingNewLine]", "\t", 
              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
@@ -418,15 +427,11 @@ Cell[BoxData[{
           RowBox[{"pltDisk3D", "[", 
            RowBox[{"<|", 
             RowBox[{
-             RowBox[{"\"\<center\>\"", "\[Rule]", 
-              RowBox[{"Normalize", "@", 
-               RowBox[{"{", 
-                RowBox[{"1", ",", 
-                 RowBox[{"-", "1"}], ",", "1"}], "}"}]}]}], ",", 
+             RowBox[{"\"\<center\>\"", "\[Rule]", "diskCenter"}], ",", 
              RowBox[{"\"\<normal\>\"", "\[Rule]", "diskNormal"}], ",", 
              RowBox[{"\"\<radius\>\"", "\[Rule]", "#radius"}], ",", 
              RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.3"}], ",", 
-             "\[IndentingNewLine]", 
+             "\[IndentingNewLine]", "\t", 
              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
               RowBox[{"Function", "[", 
                RowBox[{
@@ -435,69 +440,95 @@ Cell[BoxData[{
                "]"}]}]}], "|>"}], "\[IndentingNewLine]", "\t", "]"}], "&"}], 
          "[", 
          RowBox[{"<|", 
-          RowBox[{"\"\<radius\>\"", "\[Rule]", "diskRadius"}], "|>"}], 
+          RowBox[{"\"\<radius\>\"", "\[Rule]", "diskRadius"}], "|>"}], "]"}], 
+        ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"pltDiskProjArea3D", "[", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<diskCenter\>\"", "\[Rule]", "diskCenter"}], ",", 
+             RowBox[{"\"\<diskNormal\>\"", "\[Rule]", "diskNormal"}], ",", 
+             RowBox[{"\"\<diskRadius\>\"", "\[Rule]", "#diskRadius"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<opacity\>\"", "\[Rule]", "0.3"}], ",", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", "Red"}], 
+               "]"}]}], ",", 
+             RowBox[{"\"\<zbias\>\"", "\[Rule]", "1"}]}], "|>"}], 
+           "\[IndentingNewLine]", "\t", "]"}], "&"}], "[", 
+         RowBox[{"<|", 
+          RowBox[{"\"\<diskRadius\>\"", "\[Rule]", "diskRadius"}], "|>"}], 
          "]"}]}], "\[IndentingNewLine]", " ", "}"}]}], ",", 
      "\[IndentingNewLine]", 
      RowBox[{"showProps3D", "[", 
-      RowBox[{"1.3", ",", "Medium"}], "]"}]}], "\[IndentingNewLine]", "]"}], 
+      RowBox[{"1.3", ",", "Large"}], "]"}]}], "\[IndentingNewLine]", "]"}], 
    ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
       RowBox[{"diskNormalX", ",", 
-       RowBox[{"-", "2.7"}]}], "}"}], ",", 
+       RowBox[{"-", "5.35"}]}], "}"}], ",", 
      RowBox[{"-", "10"}], ",", "10"}], "}"}], ",", 
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"diskNormalY", ",", "9"}], "}"}], ",", 
+      RowBox[{"diskNormalY", ",", 
+       RowBox[{"-", "6.1"}]}], "}"}], ",", 
      RowBox[{"-", "10"}], ",", "10"}], "}"}], ",", 
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"diskNormalZ", ",", 
-       RowBox[{"-", "2"}]}], "}"}], ",", 
+      RowBox[{"diskNormalZ", ",", "7.95"}], "}"}], ",", 
      RowBox[{"-", "10"}], ",", "10"}], "}"}], ",", "\[IndentingNewLine]", 
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"diskRadius", ",", "0.39"}], "}"}], ",", "0.1", ",", "0.6"}], 
+      RowBox[{"diskRadius", ",", "0.473"}], "}"}], ",", "0.1", ",", "0.6"}], 
     "}"}]}], "\[IndentingNewLine]", "]"}]}], "Input",
  CellChangeTimes->{{3.836090109605463*^9, 3.836090187025859*^9}, {
-   3.8360902288479214`*^9, 3.836090471615222*^9}, 3.8360905118710003`*^9},
- CellLabel->"In[62]:=",ExpressionUUID->"2b31eb4a-27e5-4529-ba1e-d76f8e367e56"],
+   3.8360902288479214`*^9, 3.836090471615222*^9}, 3.8360905118710003`*^9, {
+   3.836119643918357*^9, 3.8361196819962463`*^9}, {3.8361197242597523`*^9, 
+   3.836119770753171*^9}, {3.836120732491618*^9, 3.8361207344683647`*^9}, {
+   3.836120828385227*^9, 3.8361208555011625`*^9}, 3.836122605493309*^9, {
+   3.836123067678009*^9, 3.836123071084137*^9}, {3.8361235555981536`*^9, 
+   3.8361236613349404`*^9}, {3.8361237038155293`*^9, 3.836123708805646*^9}, {
+   3.8361237900064354`*^9, 3.8361237975399895`*^9}},
+ CellLabel->"In[52]:=",ExpressionUUID->"2b31eb4a-27e5-4529-ba1e-d76f8e367e56"],
 
 Cell[BoxData[
  TagBox[
   StyleBox[
-   DynamicModuleBox[{$CellContext`diskNormalX$$ = -2.7, \
-$CellContext`diskNormalY$$ = 
-    9, $CellContext`diskNormalZ$$ = -2, $CellContext`diskRadius$$ = 0.39, 
-    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
-    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
-    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
-       Hold[$CellContext`diskNormalX$$], -2.7}, -10, 10}, {{
-       Hold[$CellContext`diskNormalY$$], 9}, -10, 10}, {{
-       Hold[$CellContext`diskNormalZ$$], -2}, -10, 10}, {{
-       Hold[$CellContext`diskRadius$$], 0.39}, 0.1, 0.6}}, Typeset`size$$ = {
-    360., {191., 195.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`diskNormalX$377157$$ = 
-    0, $CellContext`diskNormalY$377158$$ = 
-    0, $CellContext`diskNormalZ$377159$$ = 
-    0, $CellContext`diskRadius$377160$$ = 0}, 
+   DynamicModuleBox[{$CellContext`diskNormalX$$ = -5.35, \
+$CellContext`diskNormalY$$ = -6.1, $CellContext`diskNormalZ$$ = 
+    7.95, $CellContext`diskRadius$$ = 0.473, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`diskNormalX$$], -5.35}, -10, 10}, {{
+       Hold[$CellContext`diskNormalY$$], -6.1}, -10, 10}, {{
+       Hold[$CellContext`diskNormalZ$$], 7.95}, -10, 10}, {{
+       Hold[$CellContext`diskRadius$$], 0.473}, 0.1, 0.6}}, Typeset`size$$ = {
+    576., {295., 301.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`diskNormalX$376814$$ = 
+    0, $CellContext`diskNormalY$376815$$ = 
+    0, $CellContext`diskNormalZ$376816$$ = 
+    0, $CellContext`diskRadius$376817$$ = 0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
-      "Variables" :> {$CellContext`diskNormalX$$ = -2.7, \
-$CellContext`diskNormalY$$ = 
-        9, $CellContext`diskNormalZ$$ = -2, $CellContext`diskRadius$$ = 0.39},
-       "ControllerVariables" :> {
-        Hold[$CellContext`diskNormalX$$, $CellContext`diskNormalX$377157$$, 
+      "Variables" :> {$CellContext`diskNormalX$$ = -5.35, \
+$CellContext`diskNormalY$$ = -6.1, $CellContext`diskNormalZ$$ = 
+        7.95, $CellContext`diskRadius$$ = 0.473}, "ControllerVariables" :> {
+        Hold[$CellContext`diskNormalX$$, $CellContext`diskNormalX$376814$$, 
          0], 
-        Hold[$CellContext`diskNormalY$$, $CellContext`diskNormalY$377158$$, 
+        Hold[$CellContext`diskNormalY$$, $CellContext`diskNormalY$376815$$, 
          0], 
-        Hold[$CellContext`diskNormalZ$$, $CellContext`diskNormalZ$377159$$, 
+        Hold[$CellContext`diskNormalZ$$, $CellContext`diskNormalZ$376816$$, 
          0], 
-        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$377160$$, 0]},
+        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$376817$$, 0]},
        "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
@@ -509,25 +540,33 @@ $CellContext`diskNormalZ$$}]; {
           (gPlots3DEx`pltSphere3D[
            Association[
            "center" -> {0, 0, 0}, "radius" -> 1, "plotPts" -> 100, "mesh" -> 
-            None, "opacity" -> 0.3, "colorFunc" -> 
+            15, "opacity" -> 0.3, "colorFunc" -> 
             Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
 $CellContext`\[Theta], $CellContext`\[Phi]}, LightBlue]]]& )[
            Association[]], 
           (gPlots3DEx`pltDisk3D[
            Association[
-           "center" -> Normalize[{1, -1, 1}], 
+           "center" -> $CellContext`diskCenter, 
             "normal" -> $CellContext`diskNormal, "radius" -> Slot["radius"], 
             "opacity" -> 0.3, "colorFunc" -> 
             Function[{$CellContext`x, $CellContext`y, $CellContext`z}, 
               Green]]]& )[
-           Association["radius" -> $CellContext`diskRadius$$]]}, 
-        gPlots3DEx`showProps3D[1.3, Medium]], 
-      "Specifications" :> {{{$CellContext`diskNormalX$$, -2.7}, -10, 
-         10}, {{$CellContext`diskNormalY$$, 9}, -10, 
-         10}, {{$CellContext`diskNormalZ$$, -2}, -10, 
-         10}, {{$CellContext`diskRadius$$, 0.39}, 0.1, 0.6}}, "Options" :> {},
-       "DefaultOptions" :> {}],
-     ImageSizeCache->{411., {279., 285.}},
+           Association["radius" -> $CellContext`diskRadius$$]], 
+          (gPlots3DEx`pltDiskProjArea3D[
+           Association[
+           "diskCenter" -> $CellContext`diskCenter, 
+            "diskNormal" -> $CellContext`diskNormal, "diskRadius" -> 
+            Slot["diskRadius"], "opacity" -> 0.3, "colorFunc" -> 
+            Function[{$CellContext`x, $CellContext`y, $CellContext`z}, Red], 
+            "zbias" -> 1]]& )[
+           Association["diskRadius" -> $CellContext`diskRadius$$]]}, 
+        gPlots3DEx`showProps3D[1.3, Large]], 
+      "Specifications" :> {{{$CellContext`diskNormalX$$, -5.35}, -10, 
+         10}, {{$CellContext`diskNormalY$$, -6.1}, -10, 
+         10}, {{$CellContext`diskNormalZ$$, 7.95}, -10, 
+         10}, {{$CellContext`diskRadius$$, 0.473}, 0.1, 0.6}}, 
+      "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{627., {384., 390.}},
      SingleEvaluation->True],
     Deinitialization:>None,
     DynamicModuleValues:>{},
@@ -541,12 +580,301 @@ $CellContext`\[Theta], $CellContext`\[Phi]}, LightBlue]]]& )[
  CellChangeTimes->{{3.8360900971035304`*^9, 3.836090128663145*^9}, {
    3.8360901812425747`*^9, 3.8360901886104155`*^9}, 3.836090266009967*^9, {
    3.8360903093905163`*^9, 3.836090328089511*^9}, {3.8360903978665524`*^9, 
-   3.836090523065974*^9}},
- CellLabel->"Out[63]=",ExpressionUUID->"bcc7eb21-5381-4489-857e-30e4a06348a1"]
+   3.836090523065974*^9}, 3.8361192044817967`*^9, 3.836119781076973*^9, {
+   3.8361198184659753`*^9, 3.8361198436374407`*^9}, 3.836120309357001*^9, 
+   3.8361203637750025`*^9, 3.836120544060125*^9, 3.8361206128808045`*^9, 
+   3.8361207013333435`*^9, 3.8361207357758217`*^9, {3.836120824007349*^9, 
+   3.8361208495442066`*^9}, 3.836121220365348*^9, 3.8361214314076815`*^9, 
+   3.8361226066871815`*^9, 3.8361226682029004`*^9, 3.836123463839821*^9, {
+   3.8361235901095448`*^9, 3.836123625633437*^9}, {3.8361237622630444`*^9, 
+   3.8361237828163767`*^9}, 3.8361238654988503`*^9},
+ CellLabel->"Out[54]=",ExpressionUUID->"3ad4d345-d224-45b2-934a-1a3bfe92bd5c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Integrate", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"r", "^", "2"}], "*", 
+    RowBox[{"Sin", "[", "\[Theta]", "]"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\[Theta]", ",", "0", ",", "\[Theta]1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\[Phi]", ",", "0", ",", 
+     RowBox[{"2", "\[Pi]"}]}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.836107085813414*^9, 3.8361071504619036`*^9}, {
+  3.836107184548118*^9, 3.8361072422911158`*^9}, {3.83610729503504*^9, 
+  3.83610734529058*^9}},
+ CellLabel->"In[15]:=",ExpressionUUID->"843fa1c7-7578-4fe5-9199-eb03a6e42212"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"-", "2"}], " ", "\[Pi]", " ", 
+  SuperscriptBox["r", "2"], " ", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"-", "1"}], "+", 
+    RowBox[{"Cos", "[", "\[Theta]1", "]"}]}], ")"}]}]], "Output",
+ CellChangeTimes->{{3.8361071154461455`*^9, 3.836107150971469*^9}, 
+   3.8361071999361544`*^9, {3.8361072997110744`*^9, 3.836107345878911*^9}, 
+   3.8361192048152423`*^9},
+ CellLabel->"Out[15]=",ExpressionUUID->"50404270-456b-4184-a735-ac117252d58d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Integrate", "[", 
+  RowBox[{
+   RowBox[{
+    SuperscriptBox["\[ExponentialE]", 
+     RowBox[{
+      RowBox[{"-", "k"}], " ", 
+      SuperscriptBox[
+       RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}]], " ", 
+    RowBox[{"Cos", "[", "\[Theta]", "]"}], 
+    RowBox[{"Sin", "[", "\[Theta]", "]"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\[Theta]", ",", "0", ",", "\[Theta]a"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.836107389296364*^9, 3.8361073916215873`*^9}},
+ CellLabel->"In[16]:=",ExpressionUUID->"52dc1ee3-06a0-4b9a-973d-51b4ed532d80"],
+
+Cell[BoxData[
+ RowBox[{"-", 
+  FractionBox[
+   RowBox[{
+    RowBox[{"-", "1"}], "+", 
+    SuperscriptBox["\[ExponentialE]", 
+     RowBox[{
+      RowBox[{"-", "k"}], " ", 
+      SuperscriptBox[
+       RowBox[{"Sin", "[", "\[Theta]a", "]"}], "2"]}]]}], 
+   RowBox[{"2", " ", "k"}]]}]], "Output",
+ CellChangeTimes->{{3.836107386316671*^9, 3.836107392519183*^9}, 
+   3.8361192051304903`*^9},
+ CellLabel->"Out[16]=",ExpressionUUID->"c8938d5b-7fa4-42aa-8419-ebb3efca5f7b"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"-", 
+    FractionBox[
+     RowBox[{
+      RowBox[{"-", "1"}], "+", 
+      SuperscriptBox["\[ExponentialE]", 
+       RowBox[{
+        RowBox[{"-", "k"}], " ", 
+        SuperscriptBox[
+         RowBox[{"Sin", "[", "\[Theta]a", "]"}], "2"]}]]}], 
+     RowBox[{"2", " ", "k"}]]}], "/.", 
+   RowBox[{"k", "->", 
+    FractionBox[
+     RowBox[{"0.233", " ", 
+      RowBox[{"Cos", "[", "\[Theta]L", "]"}]}], 
+     RowBox[{"m", "^", "2"}]]}]}], "//", "FullSimplify"}]], "Input",
+ CellChangeTimes->{{3.836107417163156*^9, 3.836107428777775*^9}},
+ CellLabel->"In[17]:=",ExpressionUUID->"80719a71-a56f-42ec-9b01-8851180ed214"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"-", "2.1459227467811157`"}], " ", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"-", "1"}], "+", 
+    SuperscriptBox["\[ExponentialE]", 
+     RowBox[{"-", 
+      FractionBox[
+       RowBox[{"0.233`", " ", 
+        RowBox[{"Cos", "[", "\[Theta]L", "]"}], " ", 
+        SuperscriptBox[
+         RowBox[{"Sin", "[", "\[Theta]a", "]"}], "2"]}], 
+       SuperscriptBox["m", "2"]]}]]}], ")"}], " ", 
+  SuperscriptBox["m", "2"], " ", 
+  RowBox[{"Sec", "[", "\[Theta]L", "]"}]}]], "Output",
+ CellChangeTimes->{3.836107429674284*^9, 3.8361192057771454`*^9},
+ CellLabel->"Out[17]=",ExpressionUUID->"ef3e95f9-5c19-4a4b-805c-1ab525b978d6"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Plot", "[", "\[IndentingNewLine]", "\t", 
+    RowBox[{
+     RowBox[{"{", "\[IndentingNewLine]", "\t\t", 
+      RowBox[{
+       RowBox[{"NIntegrate", "[", 
+        RowBox[{
+         RowBox[{
+          FractionBox[
+           RowBox[{"4", " ", 
+            SuperscriptBox["m", "4"]}], 
+           SuperscriptBox[
+            RowBox[{"(", 
+             RowBox[{"1", "+", 
+              SuperscriptBox["m", "2"], "+", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"-", "1"}], "+", 
+                 SuperscriptBox["m", "2"]}], ")"}], " ", 
+               RowBox[{"Cos", "[", 
+                RowBox[{"\[Theta]L", "-", 
+                 RowBox[{"ArcTan", "[", 
+                  RowBox[{
+                   RowBox[{
+                    SuperscriptBox[
+                    RowBox[{"Sec", "[", "\[Theta]L", "]"}], "2"], " ", 
+                    RowBox[{"Tan", "[", "\[Theta]", "]"}]}], "+", 
+                   RowBox[{"Tan", "[", "\[Theta]L", "]"}]}], "]"}]}], 
+                "]"}]}]}], ")"}], "2"]], 
+          RowBox[{"Sin", "[", "\[Theta]", "]"}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"\[Theta]", ",", "0", ",", "\[Theta]a"}], "}"}]}], "]"}], 
+       ","}], "\[IndentingNewLine]", "\t\t", 
+      RowBox[{"(*", 
+       RowBox[{
+        RowBox[{
+         FractionBox[
+          RowBox[{
+           SqrtBox["\[Pi]"], " ", 
+           RowBox[{"Erf", "[", 
+            RowBox[{
+             SqrtBox["k"], " ", 
+             RowBox[{"Sin", "[", "\[Theta]a", "]"}]}], "]"}]}], 
+          RowBox[{"2", " ", 
+           SqrtBox["k"]}]], "/.", 
+         RowBox[{"k", "->", 
+          FractionBox[
+           RowBox[{"0.233", " ", 
+            RowBox[{"Cos", "[", "\[Theta]L", "]"}]}], 
+           RowBox[{"m", "^", "2"}]]}]}], ","}], "*)"}], "\[IndentingNewLine]",
+       "\t\t", 
+      RowBox[{"(*", 
+       RowBox[{
+        RowBox[{
+         FractionBox[
+          SqrtBox["\[Pi]"], 
+          RowBox[{"2", " ", 
+           SqrtBox["k"]}]], 
+         RowBox[{"Min", "[", 
+          RowBox[{
+           FractionBox[
+            RowBox[{"2", " ", 
+             SqrtBox["k"], 
+             RowBox[{"Sin", "[", " ", "\[Theta]a", "]"}]}], 
+            SqrtBox["\[Pi]"]], ",", "1"}], "]"}]}], "/.", 
+        RowBox[{"k", "->", 
+         FractionBox[
+          RowBox[{"0.233", " ", 
+           RowBox[{"Cos", "[", "\[Theta]L", "]"}]}], 
+          RowBox[{"m", "^", "2"}]]}]}], "*)"}], "\[IndentingNewLine]", 
+      RowBox[{"(*", 
+       RowBox[{
+        RowBox[{"-", "2.1459227467811157`"}], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"-", "1"}], "+", 
+          SuperscriptBox["\[ExponentialE]", 
+           RowBox[{"-", 
+            FractionBox[
+             RowBox[{"0.233`", " ", 
+              RowBox[{"Cos", "[", "\[Theta]L", "]"}], " ", 
+              SuperscriptBox[
+               RowBox[{"Sin", "[", "\[Theta]a", "]"}], "2"]}], 
+             SuperscriptBox["m", "2"]]}]]}], ")"}], " ", 
+        SuperscriptBox["m", "2"], " ", 
+        RowBox[{"Sec", "[", "\[Theta]L", "]"}]}], "*)"}], 
+      "\[IndentingNewLine]", "        ", "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\[Theta]a", ",", "0", ",", 
+       RowBox[{"\[Pi]", "/", "2"}]}], "}"}]}], 
+    RowBox[{"(*", 
+     RowBox[{",", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"0", ",", 
+           RowBox[{"\[Pi]", "/", "2"}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", "1"}], "}"}]}], "}"}]}]}], "*)"}], "]"}], ",", 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"m", ",", "0.1"}], "}"}], ",", "0.01", ",", "0.9"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Theta]L", ",", 
+       RowBox[{"\[Pi]", "/", "4"}]}], "}"}], ",", "0", ",", 
+     RowBox[{"\[Pi]", "/", "2"}]}], "}"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.8361075049615808`*^9, 3.8361075751868315`*^9}, {
+   3.836108144990689*^9, 3.836108173788818*^9}, 3.836119287228715*^9},
+ CellLabel->"In[22]:=",ExpressionUUID->"4f6bb034-ac64-41d7-899b-f7613eafc766"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`m$$ = 0.1, $CellContext`\[Theta]L$$ = 
+    Rational[1, 4] Pi, Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`m$$], 0.1}, 0.01, 0.9}, {{
+       Hold[$CellContext`\[Theta]L$$], Rational[1, 4] Pi}, 0, Rational[1, 2] 
+      Pi}}, Typeset`size$$ = {360., {106., 112.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`m$58611$$ = 0, $CellContext`\[Theta]L$58612$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`m$$ = 0.1, $CellContext`\[Theta]L$$ = 
+        Rational[1, 4] Pi}, "ControllerVariables" :> {
+        Hold[$CellContext`m$$, $CellContext`m$58611$$, 0], 
+        Hold[$CellContext`\[Theta]L$$, $CellContext`\[Theta]L$58612$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Plot[{
+         NIntegrate[(
+           4 ($CellContext`m$$^4/(
+             1 + $CellContext`m$$^2 + (-1 + $CellContext`m$$^2) 
+              Cos[$CellContext`\[Theta]L$$ - ArcTan[
+                Sec[$CellContext`\[Theta]L$$]^2 Tan[$CellContext`\[Theta]] + 
+                 Tan[$CellContext`\[Theta]L$$]]])^2)) 
+          Sin[$CellContext`\[Theta]], {$CellContext`\[Theta], 
+           0, $CellContext`\[Theta]a}], Null}, {$CellContext`\[Theta]a, 0, Pi/
+         2}], "Specifications" :> {{{$CellContext`m$$, 0.1}, 0.01, 
+         0.9}, {{$CellContext`\[Theta]L$$, Rational[1, 4] Pi}, 0, 
+         Rational[1, 2] Pi}}, "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{411., {167., 173.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{
+  3.836107469462381*^9, {3.8361075145529985`*^9, 3.8361075762773886`*^9}, 
+   3.8361080022032537`*^9, {3.836108147629758*^9, 3.8361081742792196`*^9}, 
+   3.836119205893502*^9, 3.836119288065095*^9},
+ CellLabel->"Out[22]=",ExpressionUUID->"9f02e487-f542-482b-80dc-601e1dbb86b5"]
 }, Open  ]]
 },
 WindowSize->{1082, 800},
-WindowMargins->{{Automatic, 50}, {-89, Automatic}},
+WindowMargins->{{Automatic, 1}, {-1, Automatic}},
 CellContext->Notebook,
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
@@ -563,12 +891,28 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 10789, 251, 1169, "Input",ExpressionUUID->"500131d6-521d-491d-ba4d-6fe44d2b7ab0"],
-Cell[11372, 275, 5140, 98, 581, "Output",ExpressionUUID->"3b854f9f-9e65-48b3-95ea-86c5fdf07076"]
+Cell[580, 22, 10788, 251, 1169, "Input",ExpressionUUID->"500131d6-521d-491d-ba4d-6fe44d2b7ab0"],
+Cell[11371, 275, 5190, 99, 581, "Output",ExpressionUUID->"15672075-18a1-406d-bd28-f5d61ebc7e94"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[16549, 378, 3714, 89, 352, "Input",ExpressionUUID->"2b31eb4a-27e5-4529-ba1e-d76f8e367e56"],
-Cell[20266, 469, 3819, 75, 583, "Output",ExpressionUUID->"bcc7eb21-5381-4489-857e-30e4a06348a1"]
+Cell[16598, 379, 5222, 120, 428, "Input",ExpressionUUID->"2b31eb4a-27e5-4529-ba1e-d76f8e367e56"],
+Cell[21823, 501, 4821, 89, 793, "Output",ExpressionUUID->"3ad4d345-d224-45b2-934a-1a3bfe92bd5c"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[26681, 595, 591, 14, 28, "Input",ExpressionUUID->"843fa1c7-7578-4fe5-9199-eb03a6e42212"],
+Cell[27275, 611, 474, 11, 32, "Output",ExpressionUUID->"50404270-456b-4184-a735-ac117252d58d"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[27786, 627, 571, 14, 40, "Input",ExpressionUUID->"52dc1ee3-06a0-4b9a-973d-51b4ed532d80"],
+Cell[28360, 643, 466, 13, 57, "Output",ExpressionUUID->"c8938d5b-7fa4-42aa-8419-ebb3efca5f7b"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[28863, 661, 661, 19, 53, "Input",ExpressionUUID->"80719a71-a56f-42ec-9b01-8851180ed214"],
+Cell[29527, 682, 657, 17, 65, "Output",ExpressionUUID->"ef3e95f9-5c19-4a4b-805c-1ab525b978d6"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[30221, 704, 4299, 117, 400, "Input",ExpressionUUID->"4f6bb034-ac64-41d7-899b-f7613eafc766"],
+Cell[34523, 823, 2663, 49, 359, "Output",ExpressionUUID->"9f02e487-f542-482b-80dc-601e1dbb86b5"]
 }, Open  ]]
 }
 ]

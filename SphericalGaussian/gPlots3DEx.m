@@ -11,7 +11,7 @@ Needs["gTexStyles`"];
 
 
 ClearAll[showProps3D,pltRect3D,pltArrow3D,pltPoint3D,pltDisk3D,pltCircle3D,pltSphere3D,
-	pltLine3D,pltArc3D,pltDiskProjLine3D,pltDiskProjArea3D];
+	pltLine3D,pltArc3D,pltDiskProjBoundary3D,pltDiskProjArea3D];
 showProps3D::usage="showProps3D";
 pltRect3D::usage="pltRect3D";
 pltArrow3D::usage="pltArrow3D";
@@ -21,7 +21,7 @@ pltCircle3D::usage="pltCircle3D";
 pltSphere3D::usage="pltSphere3D";
 pltLine3D::usage="pltLine3D";
 pltArc3D::usage="pltArc3D";
-pltDiskProjLine3D::usage="pltDiskProjLine3D";
+pltDiskProjBoundary3D::usage="pltDiskProjBoundary3D";
 pltDiskProjArea3D::usage="pltDiskProjArea3D";
 
 
@@ -246,17 +246,105 @@ pltSphere3D[input_]:=Module[
 ];
 
 
-pltDiskProjLine3D[input_]:=Module[
-	{circlePts,projPts,},
+pltDiskProjBoundary3D[input_]:=Module[
+	{sphereCenter,sphereRadius,diskCenter,diskNormal,diskRadius,
+		thickness,style,color,
+		diskRotMat,calcProjPt,projPts},
+	sphereCenter={0,0,0};
+	sphereRadius=1;
 	
-	{}
+	diskCenter=gAssocData[input,"diskCenter"];
+	diskNormal=Normalize@gAssocData[input,"diskNormal"];
+	diskRadius=gAssocData[input,"diskRadius"];
+	
+	thickness=gAssocDataOpt[input,"thickness",1.5];
+	style=gAssocDataOpt[input,"style",Nothing];
+	color=gAssocDataOpt[input,"color",Black];
+	
+	diskRotMat=RotationMatrix[{{0,0,1},diskNormal}];
+	
+	calcProjPt[\[Phi]_]:=Module[
+		{circlePt,lineDir,lineStartPt,lineEndPt,,projPt,lineSegRegion,sphereRegion,x,y,z,t,sol},
+		circlePt=diskRotMat.(diskRadius*({Sin[\[Pi]/2]*Cos[\[Phi]],Sin[\[Pi]/2]Sin[\[Phi]],Cos[\[Pi]/2]}))+diskCenter;
+		lineDir=Normalize[circlePt-sphereCenter];
+		lineStartPt=sphereCenter;
+		lineEndPt=circlePt+lineDir*sphereRadius*2;
+		
+		sphereRegion=ImplicitRegion[{x^2+y^2+z^2==sphereRadius^2},{x,y,z}];
+		lineSegRegion=ParametricRegion[(t*lineStartPt+(1-t)*lineEndPt),{{t,0,1}}];
+		
+		sol=Quiet@Solve[{t\[Element]sphereRegion,t\[Element]lineSegRegion},{t}];
+		projPt=sol[[All,1,2]][[1]];
+		
+		projPt
+	];
+	
+	projPts=Table[calcProjPt[\[Phi]],{\[Phi],0,2\[Pi],blCirclePrec}];
+	
+	Graphics3D[{AbsoluteThickness[thickness],style,color,Line[projPts]}]
 ];
 
 
-pltDiskProjArea3D:=Module[
-	{circlePts,projPts,},
+pltDiskProjArea3D[input_]:=Module[
+	{sphereCenter,sphereRadius,diskCenter,diskNormal,diskRadius,zbias,colorFunc,opacity,
+		reflViewDir,reflNormal,
+		majorAxis,minorAxis,majorSize,minorSize,
+		region,x,y,z},
+	sphereCenter={0,0,0};
+	sphereRadius=1;
 	
-	{}
+	diskCenter=gAssocData[input,"diskCenter"];
+	diskNormal=Normalize@gAssocData[input,"diskNormal"];
+	diskRadius=gAssocData[input,"diskRadius"];
+	
+	zbias=gAssocDataOpt[input,"zbias",0];
+	colorFunc=gAssocDataOpt[input,"colorFunc",Function[{x,y,z},Black]];
+	opacity=gAssocDataOpt[input,"opacity",1];
+	
+	reflViewDir=Normalize[sphereCenter-diskCenter];
+	If[Dot[diskNormal,reflViewDir]<0,reflNormal=-diskNormal,True,reflNormal=diskNormal];
+	majorAxis=Cross[reflViewDir,reflNormal];
+	minorAxis=Cross[reflViewDir,majorAxis];
+	majorSize=diskRadius;
+	minorSize=Dot[reflNormal,reflViewDir]*diskRadius;
+	(*Assert[minorSize\[GreaterEqual]0,With[{a=minorSize},a]];*)
+	
+	region=DiscretizeRegion@ImplicitRegion[
+	   Module[{flag1,flag2,flag3,transPt,diff,prod1,prod2,prod3,rayDir,intsPt},
+	   (*zbias*)
+		flag1=(x-sphereCenter[[1]])^2+(y-sphereCenter[[2]])^2+(z-sphereCenter[[3]])^2==
+				(sphereRadius*(1+zbias*2^-6))^2;	
+		(*point on hemi-sphere*)
+		flag2=(z-sphereCenter[[3]]>=0);
+		
+		(*https://www.rosettacode.org/wiki/Find_the_intersection_of_a_line_with_a_plane#C.2B.2B*)
+		(*c++ code example*)
+		rayDir={x,y,z};
+		diff={x,y,z}-diskCenter;
+		prod1=Dot[diff,diskNormal];
+		prod2=Dot[rayDir,diskNormal];
+		If[
+			prod2==0,
+			flag3=False,
+			True, (*<---------------------------------*)
+			prod3=prod1/prod2;
+			intsPt={x,y,z}-rayDir*prod3;
+			flag3=Norm[intsPt-diskCenter]<=diskRadius
+		];
+		
+	    flag1&&flag2&&flag3
+	   ],
+	 {x,y,z}];
+	
+	{
+		Graphics3D[{
+			AbsoluteThickness[1],Black,Arrowheads[{{.02,1,texArrowHead}}],
+				Arrow[{diskCenter,diskCenter+majorAxis*majorSize}],
+			AbsoluteThickness[1],Black,Arrowheads[{{.02,1,texArrowHead}}],
+				Arrow[{diskCenter,diskCenter+minorAxis*minorSize}]
+		}],
+		RegionPlot3D[region,ColorFunction->colorFunc,PlotStyle->{Opacity[opacity]}]
+	}
 ];
 
 
