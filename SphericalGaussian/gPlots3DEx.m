@@ -249,11 +249,15 @@ pltSphere3D[input_]:=Module[
 pltDiskProjLine3D[input_]:=Module[
 	{circlePts,projPts,},
 	
-	
+	{}
 ];
 
 
-pltDiskProjArea3D
+pltDiskProjArea3D:=Module[
+	{circlePts,projPts,},
+	
+	{}
+];
 
 
 End[];
