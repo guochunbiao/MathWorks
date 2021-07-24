@@ -11,7 +11,7 @@ Needs["gTexStyles`"];
 
 
 ClearAll[showProps3D,pltRect3D,pltArrow3D,pltPoint3D,pltDisk3D,pltCircle3D,pltSphere3D,
-	pltLine3D,pltArc3D,pltCircleProj3D,pltDiskProj3D];
+	pltLine3D,pltArc3D,pltDiskProjLine3D,pltDiskProjArea3D];
 showProps3D::usage="showProps3D";
 pltRect3D::usage="pltRect3D";
 pltArrow3D::usage="pltArrow3D";
@@ -21,8 +21,8 @@ pltCircle3D::usage="pltCircle3D";
 pltSphere3D::usage="pltSphere3D";
 pltLine3D::usage="pltLine3D";
 pltArc3D::usage="pltArc3D";
-pltCircleProj3D::usage="pltCircleProj3D";
-pltDiskProj3D::usage="pltDiskProj3D";
+pltDiskProjLine3D::usage="pltDiskProjLine3D";
+pltDiskProjArea3D::usage="pltDiskProjArea3D";
 
 
 Begin["`Private`"];
@@ -246,14 +246,14 @@ pltSphere3D[input_]:=Module[
 ];
 
 
-pltCircleProj3D[input_]:=Module[
+pltDiskProjLine3D[input_]:=Module[
 	{circlePts,projPts,},
 	
 	
 ];
 
 
-pltDiskProj3D
+pltDiskProjArea3D
 
 
 End[];
