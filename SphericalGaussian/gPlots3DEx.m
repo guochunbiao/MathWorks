@@ -222,7 +222,7 @@ pltArc3D[input_]:=Module[
 
 pltSphere3D[input_]:=Module[
 	{c,r,zbias,
-		colorFunc,meshType,plotPts,opacity},
+		colorFunc,meshType,plotPts,opacity,lighting},
 	
 	c=gAssocData[input,"center"];
 	r=gAssocData[input,"radius"];
@@ -232,6 +232,7 @@ pltSphere3D[input_]:=Module[
 	meshType=gAssocDataOpt[input,"mesh",None];
 	plotPts=gAssocDataOpt[input,"plotPts",20];
 	opacity=gAssocDataOpt[input,"opacity",1];
+	lighting=gAssocDataOpt[input,"lighting",{"Ambient",White}];
 	
 	ParametricPlot3D[
 		c+r*{Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]}*(1+zbias*2^-6),
@@ -239,7 +240,7 @@ pltSphere3D[input_]:=Module[
 		BoundaryStyle->None,
 		Mesh->meshType,
 		PlotPoints->plotPts,
-		Lighting->{"Ambient",White},
+		Lighting->lighting,
 		PlotStyle->{Opacity[opacity]},
 		ColorFunction->colorFunc,
 		ColorFunctionScaling->False]
@@ -302,7 +303,8 @@ pltDiskProjArea3D[input_]:=Module[
 	opacity=gAssocDataOpt[input,"opacity",1];
 	
 	reflViewDir=Normalize[sphereCenter-diskCenter];
-	If[Dot[diskNormal,reflViewDir]<0,reflNormal=-diskNormal,True,reflNormal=diskNormal];
+	If[Dot[diskNormal,reflViewDir]<0,reflNormal=-diskNormal,
+		reflNormal=diskNormal,reflNormal=diskNormal];
 	majorAxis=Cross[reflViewDir,reflNormal];
 	minorAxis=Cross[reflViewDir,majorAxis];
 	majorSize=diskRadius;
@@ -323,12 +325,12 @@ pltDiskProjArea3D[input_]:=Module[
 		diff={x,y,z}-diskCenter;
 		prod1=Dot[diff,diskNormal];
 		prod2=Dot[rayDir,diskNormal];
+		prod3=prod1/prod2;
+		intsPt={x,y,z}-rayDir*prod3;
 		If[
 			prod2==0,
 			flag3=False,
-			True, (*<---------------------------------*)
-			prod3=prod1/prod2;
-			intsPt={x,y,z}-rayDir*prod3;
+			flag3=Norm[intsPt-diskCenter]<=diskRadius,
 			flag3=Norm[intsPt-diskCenter]<=diskRadius
 		];
 		
