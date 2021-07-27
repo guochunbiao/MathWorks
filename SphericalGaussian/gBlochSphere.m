@@ -14,7 +14,7 @@ ClearAll[blInitOffset,blDefaultThickness,blCirclePrec,blTransFuncXY,(*blTransFun
 	(*paper related*)
 	blPaperSphere01,blPaperSphere02,
 	blPaperIntsDisk01,blPaperIntsDisk02,blPaperIntsDisk03,blPaperIntsDisk04,blPaperIntsDisk05,
-	blPaperIntsDisk06
+	blPaperIntsDisk06,blPaperIntsDisk07
 	];
 blInitOffset=0.1\[Pi];
 blDefaultThickness=1.5;
@@ -43,6 +43,7 @@ blPaperIntsDisk03::usage="blPaperIntsDisk03";
 blPaperIntsDisk04::usage="blPaperIntsDisk04";
 blPaperIntsDisk05::usage="blPaperIntsDisk05";
 blPaperIntsDisk06::usage="blPaperIntsDisk06";
+blPaperIntsDisk07::usage="blPaperIntsDisk07";
 
 
 Begin["`Private`"];
@@ -453,7 +454,9 @@ blPaperIntsDisk05[inCenter_,inNormal_,radius_,intsPt1_,intsPt2_]:=Module[
 
 
 blPaperIntsDisk06[inCenter_,inNormal_,radius_]:=Module[
-	{c,n,r,sol1,sol2,intsPt1,intsPt2,x,y,z},
+	{c,n,r,sol1,sol2,intsPt1,intsPt2,x,y,z,
+		diskMajorAxis,diskMinorAxis,
+		diskMajorEdge0,diskMajorEdge1,diskMinorEdge0,diskMinorEdge1},
 	
 	c=(*blCalcPoint@*)Normalize[inCenter-{0,0,0}];
 	n=Normalize@inNormal;
@@ -469,15 +472,32 @@ blPaperIntsDisk06[inCenter_,inNormal_,radius_]:=Module[
 	sol2=Transpose@sol1;
 	intsPt1=sol2[[All,1,2]];
 	intsPt2=sol2[[All,2,2]];
+	
+	diskMajorAxis=Normalize@Cross[c,n];
+	diskMajorEdge0=c+diskMajorAxis*r;
+	diskMajorEdge1=c-diskMajorAxis*r;
+	diskMinorAxis=Normalize@Cross[diskMajorAxis,n];
+	diskMinorEdge0=c+diskMinorAxis*r;
+	diskMinorEdge1=c-diskMinorAxis*r;
 		
 	{
 		(*sphere center*)
 		pltPoint3D[<|"pos"->{0,0,0},"size"->0.01,"color"->Black|>],
+		(*disk edge points*)
+		pltPoint3D[<|"pos"->diskMajorEdge0,"size"->0.01,"color"->Black|>],
+		pltPoint3D[<|"pos"->diskMajorEdge1,"size"->0.01,"color"->Black|>],
+		pltPoint3D[<|"pos"->diskMinorEdge0,"size"->0.01,"color"->Black|>],
+		pltPoint3D[<|"pos"->diskMinorEdge1,"size"->0.01,"color"->Black|>],
+		(*edge projection lines*)
+		pltLine3D[<|"points"->{{0,0,0},diskMajorEdge0},"color"->Black,"style"->Dashed|>],
+		pltLine3D[<|"points"->{{0,0,0},diskMajorEdge1},"color"->Black,"style"->Dashed|>],
+		pltLine3D[<|"points"->{{0,0,0},diskMinorEdge0},"color"->Black,"style"->Dashed|>],
+		pltLine3D[<|"points"->{{0,0,0},diskMinorEdge1},"color"->Black,"style"->Dashed|>],
 		(*sphere*)
 		pltSphere3D[ <|"center"->{0,0,0},"radius"->1,"plotPts"->100,"opacity"->0.3,
 		"lighting"->Automatic,"colorFunc"->Function[{x,y,z,\[Theta],\[Phi]},LightBlue]|>],
 		(*disk center*)
-		pltPoint3D[<|"pos"->c,"size"->0.01,"color"->Black|>],
+		(*pltPoint3D[<|"pos"->c,"size"->0.01,"color"->Black|>],*)
 		(*disk*)
 		pltDisk3D[<|"center"->c,"normal"->n,"radius"->r,"opacity"->0.3,
 			"colorFunc"->Function[{x,y,z},Green]|>],
@@ -493,6 +513,97 @@ blPaperIntsDisk06[inCenter_,inNormal_,radius_]:=Module[
 		(*ints boundary*)
 		pltDiskProjBoundary3D[<|"diskCenter"->c,"diskNormal"->n,"diskRadius"->r,
 			"color"->Red|>]
+		(*ints area*)
+		(*,pltDiskProjArea3D[<|"diskCenter"\[Rule]c,"diskNormal"\[Rule]n,"diskRadius"\[Rule]r,
+			"opacity"\[Rule]0.3,"colorFunc"\[Rule]Function[{x,y,z},Red],"zbias"\[Rule]1|>]*)
+	}
+];
+
+
+blPaperIntsDisk07[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
+	{c,n,r,sol1,sol2,intsPt1,intsPt2,x,y,z,
+		diskMajorAxis,diskMinorAxis,calcPoint,
+		diskMajorEdge0,diskMajorEdge1,diskMinorEdge0,diskMinorEdge1,
+		viewDir0,viewDir1},
+	
+	c=(*blCalcPoint@*)Normalize[inCenter-{0,0,0}];
+	n=Normalize@inNormal;
+	r=radius;
+	
+(*	sol1=FindInstance[
+		(*on sphere*)
+		x^2+y^2+z^2==1&&
+		(*on disk*)
+		Norm[{x,y,z}-c]==r&&
+		Dot[{x,y,z}-c,n]==0,
+		{x,y,z},Reals,2];
+	sol2=Transpose@sol1;
+	intsPt1=sol2[[All,1,2]];
+	intsPt2=sol2[[All,2,2]];*)
+	
+	diskMajorAxis=Normalize@Cross[c,n];
+	diskMajorEdge0=c+diskMajorAxis*r;
+	diskMajorEdge1=c-diskMajorAxis*r;
+	diskMinorAxis=Normalize@Cross[diskMajorAxis,n];
+	diskMinorEdge0=c+diskMinorAxis*r;
+	diskMinorEdge1=c-diskMinorAxis*r;
+	
+	calcPoint=c-diskMinorAxis*r*calcPointPercent;
+	
+	viewDir0=Normalize[{0,0,0}-c];
+	viewDir1=Normalize[{0,0,0}-calcPoint];
+
+	{
+		(*sphere center*)
+		pltPoint3D[<|"pos"->{0,0,0},"size"->0.01,"color"->Black|>],
+		(*disk edge points*)
+(*		pltPoint3D[<|"pos"->diskMajorEdge0,"size"->0.01,"color"->Black|>],
+		pltPoint3D[<|"pos"->diskMajorEdge1,"size"->0.01,"color"->Black|>],*)
+		pltPoint3D[<|"pos"->diskMinorEdge0,"size"->0.01,"color"->Black|>],
+		pltPoint3D[<|"pos"->diskMinorEdge1,"size"->0.01,"color"->Black|>],
+		(*disk major axes*)
+		pltLine3D[<|"points"->{c,diskMinorEdge0},"color"->Black,"style"->Dashed|>],
+		pltLine3D[<|"points"->{c,diskMinorEdge1},"color"->Black|>],
+		(*disk calc point*)
+		pltPoint3D[<|"pos"->calcPoint,"size"->0.01,"color"->Black|>],
+		
+		(*edge projection lines*)
+(*		pltLine3D[<|"points"\[Rule]{{0,0,0},diskMajorEdge0},"color"\[Rule]Black,"style"\[Rule]Dashed|>],
+		pltLine3D[<|"points"\[Rule]{{0,0,0},diskMajorEdge1},"color"\[Rule]Black,"style"\[Rule]Dashed|>],
+		pltLine3D[<|"points"\[Rule]{{0,0,0},diskMinorEdge0},"color"\[Rule]Black,"style"\[Rule]Dashed|>],
+		pltLine3D[<|"points"\[Rule]{{0,0,0},diskMinorEdge1},"color"\[Rule]Black,"style"\[Rule]Dashed|>],*)
+		(*sphere*)
+		pltSphere3D[ <|"center"->{0,0,0},"radius"->1,"plotPts"->100,"opacity"->0.3,
+		"lighting"->Automatic,"colorFunc"->Function[{x,y,z,\[Theta],\[Phi]},LightBlue]|>],
+		(*disk center*)
+		pltPoint3D[<|"pos"->c,"size"->0.01,"color"->Black|>],
+		(*disk*)
+		pltDisk3D[<|"center"->c,"normal"->n,"radius"->r,"opacity"->0.3,
+			"colorFunc"->Function[{x,y,z},Green]|>],
+		(*intersection points*)
+		(*Graphics3D[{{Black,PointSize[Large],Point[{intsPt1,intsPt2}]}}],*)
+		(*outside the sphere*)
+(*		pltArc3D[<|"center"->c,"normal"->n,"radius"->r,"color"->Green,
+			"edgePt0"->intsPt1,"edgePt1"->intsPt2|>],
+		(*inside the sphere*)
+		pltArc3D[<|"center"->c,"normal"->n,"radius"->r,"style"->Dashed,"color"->Green,
+			"edgePt0"->intsPt2,"edgePt1"->intsPt1|>],*)
+			
+		(*view dir 0*)
+		pltArrow3D[<|"origin"->c,"dir"->viewDir0,"length"->1|>],
+		(*view dir 1*)
+		pltArrow3D[<|"origin"->calcPoint,"dir"->viewDir1,"length"->1|>],
+		pltLine3D[<|"points"->{{0,0,0},-viewDir1*(Norm[calcPoint]-1)},
+			"color"->Black,"style"->Dashed|>],
+		(*delta theta*)
+		pltArc3DEx[<|"center"->{0,0,0},"normal"->{0,1,0},"radius"->0.2,
+			"dir0"->-viewDir0,"dir1"->-viewDir1,
+			"thickness"->2,"style"->Dashed,"color"->Blue|>],
+		Graphics3D[{Text[Style["d\[Theta]",Medium],{0,0,0}+Normalize[-viewDir0-viewDir1]*0.25]}]
+			
+		(*ints boundary*)
+(*		pltDiskProjBoundary3D[<|"diskCenter"->c,"diskNormal"->n,"diskRadius"->r,
+			"color"->Red|>]*)
 		(*ints area*)
 		(*,pltDiskProjArea3D[<|"diskCenter"\[Rule]c,"diskNormal"\[Rule]n,"diskRadius"\[Rule]r,
 			"opacity"\[Rule]0.3,"colorFunc"\[Rule]Function[{x,y,z},Red],"zbias"\[Rule]1|>]*)
