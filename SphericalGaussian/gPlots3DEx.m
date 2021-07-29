@@ -11,7 +11,7 @@ Needs["gTexStyles`"];
 
 
 ClearAll[showProps3D,pltRect3D,pltArrow3D,pltPoint3D,pltDisk3D,pltCircle3D,pltSphere3D,
-	pltLine3D,pltArc3D,pltArc3DEx,pltDiskProjBoundary3D,pltDiskProjArea3D];
+	pltLine3D,pltArc3D,pltArc3DEx,pltDiskProjBoundary3D,pltDiskProjArea3D,pltLengthMarker3D];
 showProps3D::usage="showProps3D";
 pltRect3D::usage="pltRect3D";
 pltArrow3D::usage="pltArrow3D";
@@ -24,6 +24,7 @@ pltArc3D::usage="pltArc3D";
 pltArc3DEx::usage="pltArc3DEx";
 pltDiskProjBoundary3D::usage="pltDiskProjBoundary3D";
 pltDiskProjArea3D::usage="pltDiskProjArea3D";
+pltLengthMarker3D::usage="pltLengthMarker3D";
 
 
 Begin["`Private`"];
@@ -380,6 +381,46 @@ pltDiskProjArea3D[input_]:=Module[
 				Arrow[{diskCenter,diskCenter+minorAxis*minorSize}]
 		}],
 		RegionPlot3D[region,ColorFunction->colorFunc,PlotStyle->{Opacity[opacity]}]
+	}
+];
+
+
+pltLengthMarker3D[input_]:=Module[
+	{startPt,endPt,text,offset,refEdgeDir,
+		edgeHeight,textHeight,thickness,color,
+		lineDir,lineSize,tmpDir,edgeDir,
+		leftPt,rightPt,midPt},
+	startPt=gAssocData[input,"startPt"];
+	endPt=gAssocData[input,"endPt"];
+	text=gAssocData[input,"text"];
+	
+	refEdgeDir=Normalize@gAssocDataOpt[input,"refEdgeDir",{0,0,1}];
+	edgeHeight=gAssocDataOpt[input,"edgeHeight",0.1];
+	textHeight=gAssocDataOpt[input,"textHeight",0.12];
+	offset=gAssocDataOpt[input,"offset",0.01];
+	thickness=gAssocDataOpt[input,"thickness",1];
+	color=gAssocDataOpt[input,"color",Black];
+	
+	lineDir=Normalize[endPt-startPt];
+	lineSize=Norm[startPt-endPt];
+	
+	tmpDir=Cross[refEdgeDir,lineDir];
+	edgeDir=Normalize@Cross[lineDir,tmpDir];
+	
+	leftPt=startPt+edgeDir*edgeHeight;
+	rightPt=endPt+edgeDir*edgeHeight;
+	midPt=(leftPt+rightPt)/2;
+	
+	{
+		(*Graphics3D[{AbsoluteThickness[thickness],color,
+			Line[{startPt+edgeDir*offset,startPt+edgeDir*(offset+edgeHeight)}]}],
+		Graphics3D[{AbsoluteThickness[thickness],color,
+			Line[{endPt+edgeDir*offset,endPt+edgeDir*(offset+edgeHeight)}]}],*)
+		Graphics3D[{AbsoluteThickness[thickness],
+			Arrowheads[{{.02,1,texArrowHead}}],Arrow[{midPt,leftPt}]}],
+		Graphics3D[{AbsoluteThickness[thickness],
+			Arrowheads[{{.02,1,texArrowHead}}],Arrow[{midPt,rightPt}]}],
+		Graphics3D[{Text[Style[text,Medium],midPt+edgeDir*textHeight]}]
 	}
 ];
 

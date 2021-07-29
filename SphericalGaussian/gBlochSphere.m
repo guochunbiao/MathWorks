@@ -14,7 +14,7 @@ ClearAll[blInitOffset,blDefaultThickness,blCirclePrec,blTransFuncXY,(*blTransFun
 	(*paper related*)
 	blPaperSphere01,blPaperSphere02,
 	blPaperIntsDisk01,blPaperIntsDisk02,blPaperIntsDisk03,blPaperIntsDisk04,blPaperIntsDisk05,
-	blPaperIntsDisk06,blPaperIntsDisk07
+	blPaperIntsDisk06,blPaperIntsDisk07,blPaperIntsDisk08
 	];
 blInitOffset=0.1\[Pi];
 blDefaultThickness=1.5;
@@ -44,6 +44,7 @@ blPaperIntsDisk04::usage="blPaperIntsDisk04";
 blPaperIntsDisk05::usage="blPaperIntsDisk05";
 blPaperIntsDisk06::usage="blPaperIntsDisk06";
 blPaperIntsDisk07::usage="blPaperIntsDisk07";
+blPaperIntsDisk08::usage="blPaperIntsDisk08";
 
 
 Begin["`Private`"];
@@ -599,7 +600,11 @@ blPaperIntsDisk07[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 		pltArc3DEx[<|"center"->{0,0,0},"normal"->{0,1,0},"radius"->0.2,
 			"dir0"->-viewDir0,"dir1"->-viewDir1,
 			"thickness"->2,"style"->Dashed,"color"->Blue|>],
-		Graphics3D[{Text[Style["d\[Theta]",Medium],{0,0,0}+Normalize[-viewDir0-viewDir1]*0.25]}]
+		Graphics3D[{Text[Style["d\[Theta]",Medium],{0,0,0}+Normalize[-viewDir0-viewDir1]*0.25]}],
+		
+		(*length marker*)
+		pltLengthMarker3D[<|"startPt"->c,"endPt"->calcPoint,"text"->"dX",
+			"edgeHeight"->0.05, "textHeight"->0.06|>]
 			
 		(*ints boundary*)
 (*		pltDiskProjBoundary3D[<|"diskCenter"->c,"diskNormal"->n,"diskRadius"->r,
