@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     28249,        473]
-NotebookOptionsPosition[     27664,        454]
-NotebookOutlinePosition[     28163,        472]
-CellTagsIndexPosition[     28120,        469]
+NotebookDataLength[     28262,        493]
+NotebookOptionsPosition[     27364,        469]
+NotebookOutlinePosition[     27862,        487]
+CellTagsIndexPosition[     27819,        484]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -53,70 +53,88 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{"Needs", "[", "\"\<gBlochSphere`\>\"", "]"}], ";"}], 
-  "\[IndentingNewLine]", " ", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", " ", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"ClearAll", "[", 
+     RowBox[{"diskCenter", ",", "diskNormal"}], "]"}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"diskCenter", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0", ",", "1"}], "}"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"diskNormal", "=", 
+     RowBox[{"Normalize", "@", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0", ",", 
+        RowBox[{"-", "1.5"}]}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Show", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{"blPaperIntsDisk07", "[", 
+          RowBox[{
+          "diskCenter", ",", "diskNormal", ",", "diskRadius", ",", 
+           "calcPointPercent"}], "]"}], "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", " ", "}"}], ",", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{"PlotRange", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"0", ",", "2"}], "}"}]}], "}"}]}], ",", "\n", "\t\t", 
+        RowBox[{"Axes", "\[Rule]", "True"}], ",", 
+        RowBox[{"Boxed", "\[Rule]", "False"}], ",", 
+        RowBox[{"AspectRatio", "->", "1"}], ",", 
+        RowBox[{"ViewPoint", "\[Rule]", "Front"}], ",", "\[IndentingNewLine]",
+         "\t    ", 
+        RowBox[{"ViewProjection", "\[Rule]", "\"\<Orthographic\>\""}], ",", 
+        RowBox[{"AxesLabel", "->", 
+         RowBox[{"{", 
+          RowBox[{"\"\<X\>\"", ",", "\"\<Y\>\"", ",", "\"\<Z\>\""}], "}"}]}], 
+        ",", "\[IndentingNewLine]", "\t    ", 
+        RowBox[{"ImageSize", "\[Rule]", "Large"}]}], "\[IndentingNewLine]", 
+       "]"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"calcPointPercent", ",", "0.8"}], "}"}], ",", "0.1", ",", 
+        "0.99"}], "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"diskRadius", ",", "0.6"}], "}"}], ",", "0.1", ",", "0.6"}], 
+       "}"}]}], "\[IndentingNewLine]", "]"}]}], "*)"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"ClearAll", "[", 
-   RowBox[{"diskCenter", ",", "diskNormal"}], "]"}], 
+   RowBox[{"lightDir", ",", " ", "refViewDir"}], "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"diskCenter", "=", 
+  RowBox[{"lightDir", "=", 
    RowBox[{"Normalize", "@", 
     RowBox[{"{", 
-     RowBox[{"0", ",", "0", ",", "1"}], "}"}]}]}], 
+     RowBox[{"1", ",", "1", ",", "1"}], "}"}]}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"diskNormal", "=", 
+  RowBox[{"refViewDir", "=", 
    RowBox[{"Normalize", "@", 
     RowBox[{"{", 
-     RowBox[{"1", ",", "0", ",", 
-      RowBox[{"-", "1.5"}]}], "}"}]}]}], ";"}], "\[IndentingNewLine]", 
+     RowBox[{"1", ",", 
+      RowBox[{"-", "1"}], ",", "1"}], "}"}]}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"Show", "[", "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"{", "\[IndentingNewLine]", 
-       RowBox[{"blPaperIntsDisk07", "[", 
-        RowBox[{
-        "diskCenter", ",", "diskNormal", ",", "diskRadius", ",", 
-         "calcPointPercent"}], "]"}], "\[IndentingNewLine]", 
-       "\[IndentingNewLine]", " ", "}"}], ",", "\[IndentingNewLine]", 
-      "\[IndentingNewLine]", 
-      RowBox[{"PlotRange", "\[Rule]", 
-       RowBox[{"{", 
-        RowBox[{
-         RowBox[{"{", 
-          RowBox[{
-           RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
-         RowBox[{"{", 
-          RowBox[{
-           RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
-         RowBox[{"{", 
-          RowBox[{"0", ",", "2"}], "}"}]}], "}"}]}], ",", "\n", "\t\t", 
-      RowBox[{"Axes", "\[Rule]", "True"}], ",", 
-      RowBox[{"Boxed", "\[Rule]", "False"}], ",", 
-      RowBox[{"AspectRatio", "->", "1"}], ",", 
-      RowBox[{"ViewPoint", "\[Rule]", "Front"}], ",", "\[IndentingNewLine]", 
-      "\t    ", 
-      RowBox[{"ViewProjection", "\[Rule]", "\"\<Orthographic\>\""}], ",", 
-      RowBox[{"AxesLabel", "->", 
-       RowBox[{"{", 
-        RowBox[{"\"\<X\>\"", ",", "\"\<Y\>\"", ",", "\"\<Z\>\""}], "}"}]}], 
-      ",", "\[IndentingNewLine]", "\t    ", 
-      RowBox[{"ImageSize", "\[Rule]", "Large"}]}], "\[IndentingNewLine]", 
-     "]"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"calcPointPercent", ",", "0.8"}], "}"}], ",", "0.1", ",", 
-      "0.99"}], "}"}], ",", "\[IndentingNewLine]", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"diskRadius", ",", "0.6"}], "}"}], ",", "0.1", ",", "0.6"}], 
-     "}"}]}], "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
-  "\[IndentingNewLine]", 
+  RowBox[{"Dot", "[", 
+   RowBox[{"lightDir", ",", " ", "refViewDir"}], "]"}], "\[IndentingNewLine]",
+   "\[IndentingNewLine]", 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
  CellChangeTimes->{{3.8328889412895775`*^9, 3.832888943829444*^9}, 
    3.8329105814363804`*^9, 3.832911658214327*^9, {3.832915422319006*^9, 
@@ -396,64 +414,61 @@ Cell[BoxData[{
    3.836380991089716*^9}, {3.836381075983094*^9, 3.836381105639371*^9}, 
    3.836381171264158*^9, {3.836381557188186*^9, 3.8363815776236954`*^9}, {
    3.8363816080674367`*^9, 3.8363816354338894`*^9}, 3.836381733525834*^9, 
-   3.8364680525531845`*^9, 3.8364681041621714`*^9},
- CellLabel->"In[29]:=",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
+   3.8364680525531845`*^9, 3.8364681041621714`*^9, {3.836625411426378*^9, 
+   3.836625414534364*^9}, 3.83662604452759*^9, {3.836627459721087*^9, 
+   3.8366275266785913`*^9}},
+ CellLabel->"In[25]:=",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
 
 Cell[BoxData[
- TagBox[
-  StyleBox[
-   DynamicModuleBox[{$CellContext`calcPointPercent$$ = 
-    0.8, $CellContext`diskRadius$$ = 0.6, Typeset`show$$ = True, 
-    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
-    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
-    "\"untitled\"", Typeset`specs$$ = {{{
-       Hold[$CellContext`calcPointPercent$$], 0.8}, 0.1, 0.99}, {{
-       Hold[$CellContext`diskRadius$$], 0.6}, 0.1, 0.6}}, Typeset`size$$ = {
-    576., {288., 293.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`calcPointPercent$70224$$ = 
-    0, $CellContext`diskRadius$70225$$ = 0}, 
-    DynamicBox[Manipulate`ManipulateBoxes[
-     1, StandardForm, 
-      "Variables" :> {$CellContext`calcPointPercent$$ = 
-        0.8, $CellContext`diskRadius$$ = 0.6}, "ControllerVariables" :> {
-        Hold[$CellContext`calcPointPercent$$, \
-$CellContext`calcPointPercent$70224$$, 0], 
-        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$70225$$, 0]}, 
-      "OtherVariables" :> {
-       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
-        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
-        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
-         Typeset`skipInitDone$$}, "Body" :> Show[{
-         gBlochSphere`blPaperIntsDisk07[$CellContext`diskCenter, \
-$CellContext`diskNormal, $CellContext`diskRadius$$, \
-$CellContext`calcPointPercent$$]}, PlotRange -> {{-1, 1}, {-1, 1}, {0, 2}}, 
-        Axes -> True, Boxed -> False, AspectRatio -> 1, ViewPoint -> Front, 
-        ViewProjection -> "Orthographic", AxesLabel -> {"X", "Y", "Z"}, 
-        ImageSize -> Large], 
-      "Specifications" :> {{{$CellContext`calcPointPercent$$, 0.8}, 0.1, 
-         0.99}, {{$CellContext`diskRadius$$, 0.6}, 0.1, 0.6}}, 
-      "Options" :> {}, "DefaultOptions" :> {}],
-     ImageSizeCache->{627., {349., 355.}},
-     SingleEvaluation->True],
-    Deinitialization:>None,
-    DynamicModuleValues:>{},
-    SynchronousInitialization->True,
-    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
-    UnsavedVariables:>{Typeset`initDone$$},
-    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
-   Deployed->True,
-   StripOnInput->False],
-  Manipulate`InterpretManipulate[1]]], "Output",
- CellChangeTimes->{{3.8363815666401477`*^9, 3.8363815781824827`*^9}, {
-   3.836381609231904*^9, 3.836381626167866*^9}, 3.8363817348551226`*^9, {
-   3.8364676921623735`*^9, 3.836467712765554*^9}, {3.8364680545543375`*^9, 
-   3.836468059836232*^9}, 3.8364681090512085`*^9, 3.836551799526376*^9, 
-   3.8365519202359257`*^9, 3.836552094551096*^9},
- CellLabel->"Out[42]=",ExpressionUUID->"f06adc3c-3b95-47dc-bda7-d83c8bce60f8"]
+ FractionBox["1", "3"]], "Output",
+ CellChangeTimes->{3.836625414915251*^9, 3.8366260450875463`*^9, 
+  3.8366275271533976`*^9},
+ CellLabel->"Out[38]=",ExpressionUUID->"ca7ba0ce-73d6-48ee-a83c-1a39556b3fc0"]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8366252132721777`*^9, 3.836625215883261*^9}, {
+  3.8366253924922223`*^9, 
+  3.8366253977941046`*^9}},ExpressionUUID->"79ddb7df-7a82-457d-ade1-\
+c2d1df483e54"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"sgndf", ",", "sglight"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sgndf", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0.19902", ",", "0.86933", ",", 
+       RowBox[{"-", "0.45238"}]}], "}"}], ",", "75.63824", ",", "31.83099"}], 
+    "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sglight", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "0.57713"}], ",", "0.578", ",", 
+       RowBox[{"-", "0.57691"}]}], "}"}], ",", "23.45906", ",", "20.00"}], 
+    "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"sgDot", "[", 
+  RowBox[{"sgndf", ",", "sglight"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.836628286937483*^9, 3.8366283931938887`*^9}, {
+  3.8366288089782476`*^9, 
+  3.8366288255698323`*^9}},ExpressionUUID->"e0b3b84b-d48b-4bb4-b55a-\
+ba547724f39d"],
+
+Cell[BoxData["0.07978072471969944`"], "Output",
+ CellChangeTimes->{{3.8366283879740787`*^9, 3.8366283934910946`*^9}},
+ CellLabel->"Out[46]=",ExpressionUUID->"950034b6-07ba-4f45-ba74-20b30e3c072e"]
 }, Open  ]]
 },
 WindowSize->{1082, 841},
-WindowMargins->{{Automatic, -18}, {-175, Automatic}},
+WindowMargins->{{16, Automatic}, {-203, Automatic}},
 TaggingRules->{"PresenterSettings" -> {"Dialogs" -> {}}},
 CellContext->Notebook,
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
@@ -472,8 +487,13 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 24323, 377, 694, "Input",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
-Cell[24906, 401, 2742, 50, 723, "Output",ExpressionUUID->"f06adc3c-3b95-47dc-bda7-d83c8bce60f8"]
+Cell[580, 22, 25183, 397, 789, "Input",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
+Cell[25766, 421, 220, 4, 49, "Output",ExpressionUUID->"ca7ba0ce-73d6-48ee-a83c-1a39556b3fc0"]
+}, Open  ]],
+Cell[26001, 428, 207, 4, 28, "Input",ExpressionUUID->"79ddb7df-7a82-457d-ade1-c2d1df483e54"],
+Cell[CellGroupData[{
+Cell[26233, 436, 916, 26, 86, "Input",ExpressionUUID->"e0b3b84b-d48b-4bb4-b55a-ba547724f39d"],
+Cell[27152, 464, 196, 2, 32, "Output",ExpressionUUID->"950034b6-07ba-4f45-ba74-20b30e3c072e"]
 }, Open  ]]
 }
 ]

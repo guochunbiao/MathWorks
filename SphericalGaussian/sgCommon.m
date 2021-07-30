@@ -428,6 +428,7 @@ asgReflectLight[shadingPt_,lightDir_,lightIntensity_,roughness_,
 	asgAxis=-refViewDir;
 	asgAxisL=majorAxis;
 	asgAxisM=minorAxis;
+	
 	asgL=asgCalcBandwidth[majorSize];
 	asgM=asgCalcBandwidth[minorSize];
 	asgEnergy=gIntegrateDiskLighting[shadingPt,diskCenter,diskNormal,diskRadius,
@@ -458,7 +459,7 @@ sgReflectLight[shadingPt_,inLightDir_,lightIntensity_,roughness_,
 	Assert[minorSize>0,"sg_Reflect_Light"];
 	
 	sgAxis=-refViewDir;
-	sgLambda=2*asgCalcBandwidth[minorSize/shadingDist];
+	sgLambda=2*asgCalcBandwidth[minorSize];
 	(*sgLambda=sgCalcBandwidth[diskRadius/shadingDist,nol];*)
 	sgEnergy=gIntegrateDiskLighting[shadingPt,diskCenter,diskNormal,diskRadius,
 		lightDir,lightIntensity,roughness];
