@@ -6,12 +6,14 @@ Needs["gUtils`"];
 Needs["gBRDF`"];
 Needs["gPlots`"];
 Needs["gSphericalCap`"];
-Needs["gBlochSphere`"];
 Needs["gTexStyles`"];
 
 
-ClearAll[showProps3D,pltRect3D,pltArrow3D,pltPoint3D,pltDisk3D,pltCircle3D,pltSphere3D,
+ClearAll[blCirclePrec,blDefaultThickness,
+	showProps3D,pltRect3D,pltArrow3D,pltPoint3D,pltDisk3D,pltCircle3D,pltSphere3D,
 	pltLine3D,pltArc3D,pltArc3DEx,pltDiskProjBoundary3D,pltDiskProjArea3D,pltLengthMarker3D];
+blDefaultThickness=1.5;
+blCirclePrec=\[Pi]/120;
 showProps3D::usage="showProps3D";
 pltRect3D::usage="pltRect3D";
 pltArrow3D::usage="pltArrow3D";

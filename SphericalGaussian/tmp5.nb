@@ -10,14 +10,16 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     11235,        198]
-NotebookOptionsPosition[     10913,        184]
-NotebookOutlinePosition[     11280,        200]
-CellTagsIndexPosition[     11237,        197]
+NotebookDataLength[     16368,        314]
+NotebookOptionsPosition[     15917,        297]
+NotebookOutlinePosition[     16282,        313]
+CellTagsIndexPosition[     16239,        310]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
+
+Cell[CellGroupData[{
 Cell[BoxData[{
  RowBox[{"SetOptions", "[", 
   RowBox[{
@@ -40,6 +42,9 @@ Cell[BoxData[{
   RowBox[{"Needs", "[", "\"\<gPlots`\>\"", "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
+  RowBox[{"Needs", "[", "\"\<gBlochSphere`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{"Needs", "[", "\"\<gPlots3D`\>\"", "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -49,13 +54,69 @@ Cell[BoxData[{
   RowBox[{"Needs", "[", "\"\<gSphericalCap`\>\"", "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"Needs", "[", "\"\<gBlochSphere`\>\"", "]"}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
   RowBox[{
    RowBox[{"Needs", "[", "\"\<gTexStyles`\>\"", "]"}], ";"}], 
-  "\[IndentingNewLine]", 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"diskCenter", ",", "diskNormal"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"diskCenter", "=", 
+   RowBox[{"Normalize", "@", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "0", ",", "1"}], "}"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"diskNormal", "=", 
+   RowBox[{"Normalize", "@", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "0", ",", 
+      RowBox[{"-", "1.5"}]}], "}"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Show", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{"blPaperIntsDisk07", "[", 
+       RowBox[{
+       "diskCenter", ",", "diskNormal", ",", "diskRadius", ",", 
+        "calcPointPercent"}], "]"}], "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", " ", "}"}], ",", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{"PlotRange", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "2"}], "}"}]}], "}"}]}], ",", "\n", "\t\t", 
+     RowBox[{"Axes", "\[Rule]", "True"}], ",", 
+     RowBox[{"Boxed", "\[Rule]", "False"}], ",", 
+     RowBox[{"AspectRatio", "->", "1"}], ",", 
+     RowBox[{"ViewPoint", "\[Rule]", "Front"}], ",", "\[IndentingNewLine]", 
+     "\t    ", 
+     RowBox[{"ViewProjection", "\[Rule]", "\"\<Orthographic\>\""}], ",", 
+     RowBox[{"AxesLabel", "->", 
+      RowBox[{"{", 
+       RowBox[{"\"\<X\>\"", ",", "\"\<Y\>\"", ",", "\"\<Z\>\""}], "}"}]}], 
+     ",", "\[IndentingNewLine]", "\t    ", 
+     RowBox[{"ImageSize", "\[Rule]", "Large"}]}], "\[IndentingNewLine]", 
+    "]"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"calcPointPercent", ",", "0.8"}], "}"}], ",", "0.1", ",", 
+     "0.99"}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"diskRadius", ",", "0.6"}], "}"}], ",", "0.1", ",", "0.6"}], 
+    "}"}]}], "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]"}], "Input",
  CellChangeTimes->{{3.835670701288266*^9, 3.835670712370261*^9}, {
    3.835671054711174*^9, 3.835671077088069*^9}, {3.8356711285676064`*^9, 
    3.835671184412266*^9}, {3.8356712950557876`*^9, 3.8356713715236235`*^9}, {
@@ -178,12 +239,64 @@ Cell[BoxData[{
    3.835936645482889*^9, 3.8359366470608053`*^9}, {3.835940328830475*^9, 
    3.835940415208993*^9}, 3.8366817747041335`*^9, {3.8366819509410024`*^9, 
    3.836681981097308*^9}, {3.836682450662201*^9, 3.8366824540653925`*^9}, {
-   3.836682693508583*^9, 3.8366827448840656`*^9}, 
-   3.8366913115204086`*^9},ExpressionUUID->"cadb2597-bca6-4ce0-9212-\
-64077c71bd89"]
+   3.836682693508583*^9, 3.8366827448840656`*^9}, 3.8366913115204086`*^9, {
+   3.836705291710974*^9, 3.836705314833794*^9}, 3.8367106711957703`*^9, {
+   3.8367170418981433`*^9, 3.836717043917652*^9}},
+ CellLabel->"In[31]:=",ExpressionUUID->"cadb2597-bca6-4ce0-9212-64077c71bd89"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`calcPointPercent$$ = 
+    0.8, $CellContext`diskRadius$$ = 0.6, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`calcPointPercent$$], 0.8}, 0.1, 0.99}, {{
+       Hold[$CellContext`diskRadius$$], 0.6}, 0.1, 0.6}}, Typeset`size$$ = {
+    576., {288., 293.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`calcPointPercent$3405$$ = 
+    0, $CellContext`diskRadius$3406$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`calcPointPercent$$ = 
+        0.8, $CellContext`diskRadius$$ = 0.6}, "ControllerVariables" :> {
+        Hold[$CellContext`calcPointPercent$$, \
+$CellContext`calcPointPercent$3405$$, 0], 
+        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$3406$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Show[{
+         gBlochSphere`blPaperIntsDisk07[$CellContext`diskCenter, \
+$CellContext`diskNormal, $CellContext`diskRadius$$, \
+$CellContext`calcPointPercent$$]}, PlotRange -> {{-1, 1}, {-1, 1}, {0, 2}}, 
+        Axes -> True, Boxed -> False, AspectRatio -> 1, ViewPoint -> Front, 
+        ViewProjection -> "Orthographic", AxesLabel -> {"X", "Y", "Z"}, 
+        ImageSize -> Large], 
+      "Specifications" :> {{{$CellContext`calcPointPercent$$, 0.8}, 0.1, 
+         0.99}, {{$CellContext`diskRadius$$, 0.6}, 0.1, 0.6}}, 
+      "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{627., {349., 355.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.8367169742709026`*^9, 3.836717047672059*^9}, 
+   3.8367174904094553`*^9, 3.836717531328057*^9, {3.836717794304106*^9, 
+   3.8367178035588827`*^9}},
+ CellLabel->"Out[45]=",ExpressionUUID->"bb83dec0-6eda-4cb0-8028-3c46a8212743"]
+}, Open  ]]
 },
-WindowSize->{1081, 832},
-WindowMargins->{{Automatic, 165}, {-9, Automatic}},
+WindowSize->{1081, 911},
+WindowMargins->{{Automatic, 19}, {Automatic, 0}},
 CellContext->Notebook,
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
@@ -199,7 +312,10 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 10351, 162, 276, "Input",ExpressionUUID->"cadb2597-bca6-4ce0-9212-64077c71bd89"]
+Cell[CellGroupData[{
+Cell[580, 22, 12754, 222, 618, "Input",ExpressionUUID->"cadb2597-bca6-4ce0-9212-64077c71bd89"],
+Cell[13337, 246, 2564, 48, 723, "Output",ExpressionUUID->"bb83dec0-6eda-4cb0-8028-3c46a8212743"]
+}, Open  ]]
 }
 ]
 *)

@@ -7,7 +7,7 @@ Needs["gTexStyles`"];
 Needs["gPlots3DEx`"];
 
 
-ClearAll[blInitOffset,blDefaultThickness,blCirclePrec,blTransFuncXY,(*blTransFuncYZ,*)
+ClearAll[blInitOffset,blTransFuncXY,(*blTransFuncYZ,*)
 	blCalcPoint,blCalcPointEx,blCalcAngle,blCalcAngleEx,blCalcTheta,blCalcPhi,
 	blBasicXYCircle,blBasicXZCircle,blBasicYZCircle,blSphereArrow,blSphereAxes,
 	blWholeSphere,blHemiSphere,
@@ -17,8 +17,6 @@ ClearAll[blInitOffset,blDefaultThickness,blCirclePrec,blTransFuncXY,(*blTransFun
 	blPaperIntsDisk06,blPaperIntsDisk07,blPaperIntsDisk08
 	];
 blInitOffset=0.1\[Pi];
-blDefaultThickness=1.5;
-blCirclePrec=\[Pi]/120;
 blTransFuncXY=Composition@@{RotationTransform[blInitOffset,{0,1,0}],
 						RotationTransform[{{0,0,1},{0,0,1}}]};
 (*blTransFuncYZ=RotationTransform[{{0,0,1},{1,0,0}}];*)
@@ -525,7 +523,7 @@ blPaperIntsDisk07[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 	{c,n,r,sol1,sol2,intsPt1,intsPt2,x,y,z,
 		diskMajorAxis,diskMinorAxis,calcPoint,
 		diskMajorEdge0,diskMajorEdge1,diskMinorEdge0,diskMinorEdge1,
-		viewDir0,viewDir1},
+		viewDir0,viewDir1,lightDir},
 	
 	c=(*blCalcPoint@*)Normalize[inCenter-{0,0,0}];
 	n=Normalize@inNormal;
@@ -553,6 +551,8 @@ blPaperIntsDisk07[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 	
 	viewDir0=Normalize[{0,0,0}-c];
 	viewDir1=Normalize[{0,0,0}-calcPoint];
+	
+	lightDir=gReflectVector[viewDir0,n];
 
 	{
 		(*sphere center*)
@@ -589,6 +589,10 @@ blPaperIntsDisk07[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 		(*inside the sphere*)
 		pltArc3D[<|"center"->c,"normal"->n,"radius"->r,"style"->Dashed,"color"->Green,
 			"edgePt0"->intsPt2,"edgePt1"->intsPt1|>],*)
+		
+		(*light dir 1*)	
+		pltArrow3D[<|"origin"->calcPoint,"dir"->lightDir,"length"->0.6|>],
+		Graphics3D[{Text[Style["Li",Medium],calcPoint+lightDir*0.6 + {0,0,0.1}]}],
 			
 		(*view dir 0*)
 		pltArrow3D[<|"origin"->c,"dir"->viewDir0,"length"->1|>],
