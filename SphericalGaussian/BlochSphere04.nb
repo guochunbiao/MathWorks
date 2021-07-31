@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     15214,        368]
-NotebookOptionsPosition[     14155,        343]
-NotebookOutlinePosition[     14524,        359]
-CellTagsIndexPosition[     14481,        356]
+NotebookDataLength[     14881,        377]
+NotebookOptionsPosition[     14015,        354]
+NotebookOutlinePosition[     14382,        370]
+CellTagsIndexPosition[     14339,        367]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -116,10 +116,10 @@ Cell[BoxData[
   FontSize->18,
   Background->RGBColor[0.87, 0.94, 1]]], "Print",
  CellChangeTimes->{3.836208304440298*^9, 3.8363768017611723`*^9, 
-  3.8365522611637*^9},
+  3.8365522611637*^9, 3.8367269404372053`*^9},
  CellLabel->
   "During evaluation of \
-In[1]:=",ExpressionUUID->"e24a83e1-5e94-4346-9270-4d109b7ad6b2"],
+In[1]:=",ExpressionUUID->"1a6be700-0110-4ad3-806c-f1fb91f98226"],
 
 Cell[BoxData[
  TagBox[
@@ -135,19 +135,19 @@ $CellContext`diskNormalY$$ = -6.1, $CellContext`diskNormalZ$$ =
        Hold[$CellContext`diskNormalZ$$], 7.95}, -10, 10}, {{
        Hold[$CellContext`diskRadius$$], 0.473}, 0.1, 0.6}}, Typeset`size$$ = {
     576., {306., 311.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`diskNormalX$73429$$ = 
-    0, $CellContext`diskNormalY$73430$$ = 
-    0, $CellContext`diskNormalZ$73431$$ = 0, $CellContext`diskRadius$73432$$ =
+    Typeset`skipInitDone$$ = True, $CellContext`diskNormalX$37394$$ = 
+    0, $CellContext`diskNormalY$37395$$ = 
+    0, $CellContext`diskNormalZ$37396$$ = 0, $CellContext`diskRadius$37397$$ =
      0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
       "Variables" :> {$CellContext`diskNormalX$$ = -5.35, \
 $CellContext`diskNormalY$$ = -6.1, $CellContext`diskNormalZ$$ = 
         7.95, $CellContext`diskRadius$$ = 0.473}, "ControllerVariables" :> {
-        Hold[$CellContext`diskNormalX$$, $CellContext`diskNormalX$73429$$, 0], 
-        Hold[$CellContext`diskNormalY$$, $CellContext`diskNormalY$73430$$, 0], 
-        Hold[$CellContext`diskNormalZ$$, $CellContext`diskNormalZ$73431$$, 0], 
-        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$73432$$, 0]}, 
+        Hold[$CellContext`diskNormalX$$, $CellContext`diskNormalX$37394$$, 0], 
+        Hold[$CellContext`diskNormalY$$, $CellContext`diskNormalY$37395$$, 0], 
+        Hold[$CellContext`diskNormalZ$$, $CellContext`diskNormalZ$37396$$, 0], 
+        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$37397$$, 0]}, 
       "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
@@ -177,20 +177,52 @@ $CellContext`diskNormal, $CellContext`diskRadius$$]},
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
  CellChangeTimes->{3.8362083044764795`*^9, 3.8363768017962575`*^9, 
-  3.836552261198269*^9},
- CellLabel->"Out[14]=",ExpressionUUID->"dfd5f60c-55ec-4be1-aa36-2e83a651865d"]
+  3.836552261198269*^9, 3.8367269404683905`*^9},
+ CellLabel->"Out[14]=",ExpressionUUID->"430ea477-542c-468b-96b5-fbc2e3d134b9"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"gPrint", "[", "\"\<blPaperIntsDisk07\>\"", "]"}], 
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "diskCenter", ",", "diskNormal", ",", "\[Alpha]1", ",", "\[Alpha]2", ",", 
+    "radius", ",", "dr", ",", "dx", ",", "\[Phi]", ",", "\[Phi]i", ",", 
+    "\[Phi]o", ",", "QQ1", ",", "PQ1"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"radius", "=", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Alpha]1", "=", "\[Phi]i"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"QQ1", "=", 
+   RowBox[{"radius", "*", 
+    RowBox[{"Cos", "[", "\[Alpha]1", "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"PQ1", "=", 
+   RowBox[{"radius", "*", 
+    RowBox[{"Sin", "[", "\[Alpha]1", "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Alpha]2", "=", 
+   RowBox[{"ArcTan", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"dr", "+", "PQ1"}], ")"}], "/", "QQ1"}], "]"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"ClearAll", "[", 
-   RowBox[{"diskCenter", ",", "diskNormal"}], "]"}], 
-  ";"}], "\[IndentingNewLine]", 
+  RowBox[{"\[Phi]o", "=", "\[Alpha]2"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dr", "=", 
+   RowBox[{"dx", "*", "radius"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Phi]", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"\[Phi]i", "+", "\[Phi]o"}], ")"}], "/", "2"}], "-", 
+     "\[Phi]i"}], "//", "Simplify"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"diskCenter", "=", 
    RowBox[{"Normalize", "@", 
@@ -247,18 +279,27 @@ Cell[BoxData[{
      RowBox[{"{", 
       RowBox[{"diskRadius", ",", "0.6"}], "}"}], ",", "0.1", ",", "0.6"}], 
     "}"}]}], "\[IndentingNewLine]", "]"}]}], "Input",
- CellChangeTimes->{{3.8365522684471383`*^9, 3.8365522759770994`*^9}},
- CellLabel->"In[15]:=",ExpressionUUID->"6f42077e-144f-4427-a9d6-51b6e7c4194a"],
+ CellChangeTimes->{{3.8365522684471383`*^9, 3.8365522759770994`*^9}, 
+   3.8367269565231667`*^9},
+ CellLabel->"In[32]:=",ExpressionUUID->"6f42077e-144f-4427-a9d6-51b6e7c4194a"],
 
 Cell[BoxData[
- StyleBox["\<\" blPaperIntsDisk07\"\>",
-  StripOnInput->False,
-  FontSize->18,
-  Background->RGBColor[0.87, 0.94, 1]]], "Print",
- CellChangeTimes->{3.836552276771657*^9},
- CellLabel->
-  "During evaluation of \
-In[15]:=",ExpressionUUID->"ea6fceb5-8da8-48f5-8a3f-60135c364c0c"],
+ RowBox[{
+  FractionBox["1", "2"], " ", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"-", "\[Phi]i"}], "+", 
+    RowBox[{"ArcTan", "[", 
+     RowBox[{
+      RowBox[{"Sec", "[", "\[Phi]i", "]"}], " ", 
+      RowBox[{"(", 
+       RowBox[{"dx", "+", 
+        RowBox[{"Sin", "[", "\[Phi]i", "]"}]}], ")"}]}], "]"}]}], 
+   ")"}]}]], "Output",
+ CellChangeTimes->{
+  3.836552276847455*^9, {3.836726943147204*^9, 3.8367269670529513`*^9}, 
+   3.8367270030612345`*^9},
+ CellLabel->"Out[40]=",ExpressionUUID->"95473cab-9980-4ff9-8ef4-76020750b83f"],
 
 Cell[BoxData[
  TagBox[
@@ -271,15 +312,15 @@ Cell[BoxData[
        Hold[$CellContext`calcPointPercent$$], 0.8}, 0.1, 0.99}, {{
        Hold[$CellContext`diskRadius$$], 0.6}, 0.1, 0.6}}, Typeset`size$$ = {
     576., {288., 293.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`calcPointPercent$75803$$ = 
-    0, $CellContext`diskRadius$75804$$ = 0}, 
+    Typeset`skipInitDone$$ = True, $CellContext`calcPointPercent$42119$$ = 
+    0, $CellContext`diskRadius$42120$$ = 0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
       "Variables" :> {$CellContext`calcPointPercent$$ = 
         0.8, $CellContext`diskRadius$$ = 0.6}, "ControllerVariables" :> {
         Hold[$CellContext`calcPointPercent$$, \
-$CellContext`calcPointPercent$75803$$, 0], 
-        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$75804$$, 0]}, 
+$CellContext`calcPointPercent$42119$$, 0], 
+        Hold[$CellContext`diskRadius$$, $CellContext`diskRadius$42120$$, 0]}, 
       "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
@@ -305,44 +346,14 @@ $CellContext`calcPointPercent$$]}, PlotRange -> {{-1, 1}, {-1, 1}, {0, 2}},
    Deployed->True,
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
- CellChangeTimes->{3.836552276847455*^9},
- CellLabel->"Out[19]=",ExpressionUUID->"2e442374-23ca-426d-a561-701166711e24"],
-
-Cell[BoxData[
- TemplateBox[{
-  "Assert","asrtfe",
-   "\"Assertion \\!\\(\\*RowBox[{RowBox[{\\\"Abs\\\", \\\"[\\\", \
-RowBox[{\\\"gPlots3DEx`Private`rotPt$77033\\\", \\\"\[LeftDoubleBracket]\\\", \
-\\\"3\\\", \\\"\[RightDoubleBracket]\\\"}], \\\"]\\\"}], \\\"<\\\", \
-\\\"0.001`\\\"}]\\) in \\!\\(\\*RowBox[{\\\"Assert\\\", \\\"[\\\", \
-RowBox[{RowBox[{RowBox[{\\\"Abs\\\", \\\"[\\\", \
-RowBox[{\\\"gPlots3DEx`Private`rotPt$77033\\\", \\\"\[LeftDoubleBracket]\\\", \
-\\\"3\\\", \\\"\[RightDoubleBracket]\\\"}], \\\"]\\\"}], \\\"<\\\", \
-\\\"0.001`\\\"}], \\\",\\\", \\\"\\\\\\\"calcPhiOnCircle3D\\\\\\\"\\\"}], \
-\\\"]\\\"}]\\) failed.\"",2,20,71,30189195093098854007,"Local"},
-  "MessageTemplate"]], "Message", "MSG",
- CellChangeTimes->{3.83655227966591*^9},
- CellLabel->"",ExpressionUUID->"2f9101c6-5c9e-4ba4-8670-13e1e4a26541"],
-
-Cell[BoxData[
- TemplateBox[{
-  "Assert","asrtfe",
-   "\"Assertion \\!\\(\\*RowBox[{RowBox[{\\\"Abs\\\", \\\"[\\\", \
-RowBox[{\\\"gPlots3DEx`Private`rotPt$77187\\\", \\\"\[LeftDoubleBracket]\\\", \
-\\\"3\\\", \\\"\[RightDoubleBracket]\\\"}], \\\"]\\\"}], \\\"<\\\", \
-\\\"0.001`\\\"}]\\) in \\!\\(\\*RowBox[{\\\"Assert\\\", \\\"[\\\", \
-RowBox[{RowBox[{RowBox[{\\\"Abs\\\", \\\"[\\\", \
-RowBox[{\\\"gPlots3DEx`Private`rotPt$77187\\\", \\\"\[LeftDoubleBracket]\\\", \
-\\\"3\\\", \\\"\[RightDoubleBracket]\\\"}], \\\"]\\\"}], \\\"<\\\", \
-\\\"0.001`\\\"}], \\\",\\\", \\\"\\\\\\\"calcPhiOnCircle3D\\\\\\\"\\\"}], \
-\\\"]\\\"}]\\) failed.\"",2,20,72,30189195093098854007,"Local"},
-  "MessageTemplate"]], "Message", "MSG",
- CellChangeTimes->{3.8365522802774153`*^9},
- CellLabel->"",ExpressionUUID->"ba56157b-775a-47ee-8f20-07eba7fd9d80"]
+ CellChangeTimes->{
+  3.836552276847455*^9, {3.836726943147204*^9, 3.8367269670529513`*^9}, 
+   3.836727003092497*^9},
+ CellLabel->"Out[43]=",ExpressionUUID->"ad7e10e0-ab6d-4036-bc5f-20972e4ab308"]
 }, Open  ]]
 },
 WindowSize->{1261, 782},
-WindowMargins->{{Automatic, 275}, {-106, Automatic}},
+WindowMargins->{{78, Automatic}, {-10, Automatic}},
 CellContext->Notebook,
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
@@ -360,15 +371,13 @@ CellTagsIndex->{}
 Notebook[{
 Cell[CellGroupData[{
 Cell[580, 22, 3203, 88, 523, "Input",ExpressionUUID->"1762d332-773c-4c4e-bb96-9a8b36796166"],
-Cell[3786, 112, 335, 9, 30, "Print",ExpressionUUID->"e24a83e1-5e94-4346-9270-4d109b7ad6b2"],
-Cell[4124, 123, 3036, 57, 815, "Output",ExpressionUUID->"dfd5f60c-55ec-4be1-aa36-2e83a651865d"]
+Cell[3786, 112, 359, 9, 30, "Print",ExpressionUUID->"1a6be700-0110-4ad3-806c-f1fb91f98226"],
+Cell[4148, 123, 3060, 57, 815, "Output",ExpressionUUID->"430ea477-542c-468b-96b5-fbc2e3d134b9"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[7197, 185, 2540, 65, 390, "Input",ExpressionUUID->"6f42077e-144f-4427-a9d6-51b6e7c4194a"],
-Cell[9740, 252, 289, 8, 30, "Print",ExpressionUUID->"ea6fceb5-8da8-48f5-8a3f-60135c364c0c"],
-Cell[10032, 262, 2440, 46, 723, "Output",ExpressionUUID->"2e442374-23ca-426d-a561-701166711e24"],
-Cell[12475, 310, 829, 14, 23, "Message",ExpressionUUID->"2f9101c6-5c9e-4ba4-8670-13e1e4a26541"],
-Cell[13307, 326, 832, 14, 23, "Message",ExpressionUUID->"ba56157b-775a-47ee-8f20-07eba7fd9d80"]
+Cell[7245, 185, 3684, 98, 542, "Input",ExpressionUUID->"6f42077e-144f-4427-a9d6-51b6e7c4194a"],
+Cell[10932, 285, 547, 16, 49, "Output",ExpressionUUID->"95473cab-9980-4ff9-8ef4-76020750b83f"],
+Cell[11482, 303, 2517, 48, 723, "Output",ExpressionUUID->"ad7e10e0-ab6d-4036-bc5f-20972e4ab308"]
 }, Open  ]]
 }
 ]
