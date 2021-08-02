@@ -255,7 +255,7 @@ gCalcGgxPeakForLight[peakPt_,planeNormal_,viewPt_]:=Module[
 
 gIntegrateDiskLighting[shadingPt_,diskPt_,diskNormal_,diskRadius_,
 	lightDir_,lightIntensity_,roughness_]:=Module[
-	{m,n,l,nol,dr,k,percentSum,lighting},
+	{m,n,l,nol,dr,k,percentSum,lighting,drCos,drCos2,approxSinThetaA2},
 	
 	m=roughness;
 	n=Normalize[diskNormal];
@@ -267,7 +267,10 @@ gIntegrateDiskLighting[shadingPt_,diskPt_,diskNormal_,diskRadius_,
 	(*percentSum=Min[dr/Sqrt[1+dr^2],(3.672 m)/(1+nol)];*)
 	(*17-OB_07_ShadingPart5-FitIntegral*)
 	k=(0.288*nol)/m^2-0.673;
-	percentSum=(1-Exp[-k (1-nol^2)])/(2 k);
+	drCos=dr*nol;
+	drCos2=drCos*drCos;
+	approxSinThetaA2=drCos2/(1+drCos2);
+	percentSum=(1-Exp[-k*approxSinThetaA2])/(2 k);
 	lighting=percentSum*gDGGX[m,1]*lightIntensity;
 	
 	lighting
