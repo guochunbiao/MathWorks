@@ -227,7 +227,7 @@ pltArc3D[input_]:=Module[
 pltArc3DEx[input_]:=Module[
 	{center,normal,radius,edgeDir0,edgeDir1,startPt,endPt,
 		rotTo3D,\[Phi]1,\[Phi]2,
-		thickness,style,color,pltRanges},
+		thickness,style,color,pltRanges,prefer},
 	
 	center=gAssocData[input,"center"];
 	normal=Normalize@gAssocData[input,"normal"];
@@ -238,12 +238,13 @@ pltArc3DEx[input_]:=Module[
 	thickness=gAssocDataOpt[input,"thickness",1.5];
 	style=gAssocDataOpt[input,"style",Nothing];
 	color=gAssocDataOpt[input,"color",Black];
+	prefer=gAssocDataOpt[input,"color",None];
 	
 	startPt=center+edgeDir0*radius;
 	endPt=center+edgeDir1*radius;
 	
 	\[Phi]1=calcPhiOnCircle3D[center,normal,radius,startPt];
-	\[Phi]2=calcPhiOnCircle3D[center,normal,radius,endPt];
+	\[Phi]2=calcPhiOnCircle3D[center,normal,radius,endPt];	
 	
 	rotTo3D=RotationMatrix[{{0,0,1},normal}];
 	pltRanges=If[\[Phi]1<=\[Phi]2,{{\[Phi]1,\[Phi]2}},{{-\[Pi],\[Phi]2},{\[Phi]1,\[Pi]+0.001}}];

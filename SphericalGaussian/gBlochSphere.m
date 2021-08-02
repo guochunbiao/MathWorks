@@ -524,7 +524,8 @@ blPaperIntsDisk07[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 		diskMajorAxis,diskMinorAxis,calcPoint,
 		diskMajorEdge0,diskMajorEdge1,diskMinorEdge0,diskMinorEdge1,
 		viewDir0,viewDir1,lightDir1,halfDir1,normalDir1,
-		diskEdgeDir0,projQ,projDir},
+		diskEdgeDir0,projQ,projDir,
+		arcPrefer},
 	
 	c=(*blCalcPoint@*)Normalize[inCenter-{0,0,0}];
 	n=Normalize@inNormal;
@@ -677,6 +678,80 @@ blPaperIntsDisk07[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 		(*ints area*)
 		(*,pltDiskProjArea3D[<|"diskCenter"\[Rule]c,"diskNormal"\[Rule]n,"diskRadius"\[Rule]r,
 			"opacity"\[Rule]0.3,"colorFunc"\[Rule]Function[{x,y,z},Red],"zbias"\[Rule]1|>]*)
+	}
+];
+
+
+blPaperIntsDisk08[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
+	{c,n,r,sol1,sol2,intsPt1,intsPt2,x,y,z,lightDir,calcPoint,deltaTheta,\[Theta]V,
+		diskMajorAxis,diskMinorAxis,diskMinorEdge0,diskMinorEdge1,
+		diskRightAxis,ptQ0,ptQ1,
+		arcPrefer},
+	
+	c=(*blCalcPoint@*)Normalize[inCenter-{0,0,0}];
+	n=Normalize@inNormal;
+	r=radius;
+	
+	diskMajorAxis=Normalize@Cross[c,n];
+	diskMinorAxis=Normalize@Cross[diskMajorAxis,n];
+	diskMinorEdge0=c+diskMinorAxis*r;
+	diskMinorEdge1=c-diskMinorAxis*r;
+	calcPoint=c-diskMinorAxis*r*calcPointPercent;
+
+	diskRightAxis=Normalize@{1,0,0};
+	deltaTheta=ArcCos[Dot[Normalize[calcPoint],Normalize[c]]];
+	\[Theta]V=ArcCos[Dot[Normalize[-c],n]];
+	ptQ0=c+diskRightAxis*Tan[deltaTheta];
+	ptQ1=ptQ0+{0,0,1}*1*Tan[deltaTheta]*Tan[\[Theta]V];
+
+	{
+		(*sphere center*)
+		pltPoint3D[<|"pos"->{0,0,0},"size"->0.01,"color"->Black|>],
+		Graphics3D[{Text[Style["V",Medium],{0,0,0}+{-0.03,0,0.05}]}],
+		(*disk minor axes*)
+		pltLine3D[<|"points"->{c,diskMinorEdge0},"color"->Black,"style"->Dashed|>],
+		pltLine3D[<|"points"->{c,diskMinorEdge1},"color"->Black|>],
+		(*disk calc point*)
+		pltPoint3D[<|"pos"->calcPoint,"size"->0.01,"color"->Black|>],
+		Graphics3D[{Text[Style["P'",Medium],calcPoint+{-0.01,0,0.039}]}],		
+		(*sphere*)
+		pltSphere3D[ <|"center"->{0,0,0},"radius"->1,"plotPts"->100,"opacity"->0.3,
+		"lighting"->Automatic,"colorFunc"->Function[{x,y,z,\[Theta],\[Phi]},LightBlue]|>],
+		(*disk center*)
+		pltPoint3D[<|"pos"->c,"size"->0.01,"color"->Black|>],
+		Graphics3D[{Text[Style["P",Medium],c+{0.05,0,-0.03}]}],
+		(*disk*)
+		pltDisk3D[<|"center"->c,"normal"->n,"radius"->r,"opacity"->0.3,
+			"colorFunc"->Function[{x,y,z},Green]|>],
+			
+		(*normal dir*)
+		pltLine3D[<|"points"->{c,c-n*0.35},"color"->Black,"style"->Dashed|>],
+		Graphics3D[{Text[Style["-n",Medium],c-n*0.39]}],
+		(*extend view dir0*)
+		pltLine3D[<|"points"->{c,c+{0,0,1}*0.35},"color"->Black,"style"->Dashed|>],
+		
+		(*angle alph1*)
+			
+		(*point Q and Q'*)
+		pltPoint3D[<|"pos"->ptQ0,"size"->0.01,"color"->Black|>],
+		Graphics3D[{Text[Style["Q",Medium],ptQ0+{0.039,0,-0.01}]}],
+		pltPoint3D[<|"pos"->ptQ1,"size"->0.01,"color"->Black|>],
+		Graphics3D[{Text[Style["Q'",Medium],ptQ1+{-0.01,0,0.05}]}],
+		
+		(*line VP'*)
+		pltLine3D[<|"points"->{{0,0,0},calcPoint},"color"->Black,"style"->Dashed|>],
+		(*line QQ'*)
+		pltLine3D[<|"points"->{ptQ0,ptQ1},"color"->Black,"style"->Dashed|>],
+		(*line PQ*)
+		pltLine3D[<|"points"->{c,ptQ0},"color"->Black,"style"->Dashed|>],
+		(*line VP*)
+		pltLine3D[<|"points"->{{0,0,0},c},"color"->Black,"style"->Dashed|>],
+		
+		(*delta theta*)
+		pltArc3DEx[<|"center"->{0,0,0},"normal"->{0,1,0},"radius"->0.4,
+			"dir0"->(c),"dir1"->(calcPoint),
+			"thickness"->2,"style"->Dashed,"color"->Blue|>],
+		Graphics3D[{Text[Style["\[Theta]",Medium],Normalize[Normalize@calcPoint + Normalize@c]*0.45]}]
 	}
 ];
 
