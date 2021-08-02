@@ -8,7 +8,7 @@ Needs["gUtils`"];
 ClearAll[gPointLightFallOff,gPhongNDF,gDGGX,gDGGX2,gVisSmith,gFresnelOrigin,gBrdfFunc,
 	gSolveSamplingHalfDir,gSamplingHalfDir,gSamplingLightDir,gSamplingLightDir2D,
 	gPlotGgxPdf3D,gPlotGgxPdf2D,gCalcGgxPeakOnPlane,gCalcGgxPeakForLight,
-	gIntegrateDiskLighting,gCalcPeakPoint];
+	gIntegrateDiskLighting,gCalcPeakPoint,gCalcProjPoint,gIntegrateDiskDiffuse,gReflectDiffuse];
 gPointLightFallOff::usage="function{gPointLightFallOff}";
 gPhongNDF::usage="function[gPhongNDF]";
 gDGGX::usage="function[gDGGX]";
@@ -26,6 +26,9 @@ gCalcGgxPeakOnPlane::usage="Deprecated, use gCalcPeakPoint";
 gCalcGgxPeakForLight::usage="Deprecated, use gCalcPeakPoint";
 gIntegrateDiskLighting::usage="gIntegrateDiskLighting";
 gCalcPeakPoint::usage="gCalcPeakPoint";
+gCalcProjPoint::usage="gCalcProjPoint";
+gIntegrateDiskDiffuse::usage="gIntegrateDiskDiffuse";
+gReflectDiffuse::usage="gReflectDiffuse";
 
 
 Begin["`Private`"];
@@ -298,6 +301,63 @@ gCalcPeakPoint[planeNormal_,planePt_,inLightDir_,viewPt_]:=Module[
 	Assert[tmp1<0.001,"gCalcPeakPoint"];
 	
 	peakPt
+];
+
+
+gCalcProjPoint[planeNormal_,planePt_,shadingPt_]:=Module[
+	{normalDir,dir0,projDir,projDist,projPt},
+	
+	normalDir=Normalize@planeNormal;
+	
+	dir0=planePt-shadingPt;
+	projDir=Dot[dir0,-normalDir];
+	projDist=Norm[projDir];
+	projPt=shadingPt-normalDir*projDist;
+	
+	projPt
+];
+
+
+gIntegrateDiskDiffuse[dr_]:=Module[
+	{approxD},
+	
+	(*17-OB_08_ShadingPart6-DiffuseRefl.nb*)
+	approxD=dr^2/(1+dr^2)*2/3 \[Pi]
+];
+
+
+gReflectDiffuse[
+	(*shading point*)
+	shadingPt_,samplingRadius_,
+	(*reflection rectangle*)
+	planeCenter_,inPlaneNormal_,inPlaneAssistMajorAxis_,
+		planeMajorRadius_,planeMinorRadius_,
+	(*light*)
+	inLightDir_,lightIntensity_
+	]:=Module[
+	{planeNormal,planeAssistMajorAxis,lightDir,planeMajorAxis,planeMinorAxis,
+		shadingDist,projPt,dr,integratedDiffuse,planeNoL,
+		intsArea,intsPercent},
+	
+	planeNormal=Normalize@inPlaneNormal;
+	planeAssistMajorAxis=Normalize@inPlaneAssistMajorAxis;
+	lightDir=Normalize@inLightDir;
+	
+	{planeMajorAxis,planeMinorAxis}=gCalcPlaneTangents[planeNormal,planeAssistMajorAxis];
+	
+	projPt=gCalcProjPoint[planeNormal,planeCenter,shadingPt];
+	
+	shadingDist=Norm[projPt-shadingPt];
+	dr=samplingRadius/shadingDist;
+	integratedDiffuse=gIntegrateDiskDiffuse[dr];
+	
+	planeNoL=Max[Dot[planeNormal,lightDir],0];
+	
+	intsArea=gCircIntsRectArea[projPt,samplingRadius,planeCenter,
+		planeMajorAxis,planeMinorAxis,planeMajorRadius,planeMinorRadius];
+	intsPercent=Min[1,intsArea/(4*samplingRadius*samplingRadius)];
+	
+	integratedDiffuse * planeNoL * lightIntensity * intsPercent
 ];
 
 
