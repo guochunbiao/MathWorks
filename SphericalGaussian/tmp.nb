@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     38856,        686]
-NotebookOptionsPosition[     38269,        667]
-NotebookOutlinePosition[     38768,        685]
-CellTagsIndexPosition[     38725,        682]
+NotebookDataLength[     59960,       1124]
+NotebookOptionsPosition[     58825,       1096]
+NotebookOutlinePosition[     59322,       1114]
+CellTagsIndexPosition[     59279,       1111]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -42,6 +42,9 @@ Cell[BoxData[{
   RowBox[{"Needs", "[", "\"\<gPlots`\>\"", "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlotsEx`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{"Needs", "[", "\"\<gPlots3D`\>\"", "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -53,205 +56,244 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{"Needs", "[", "\"\<gBlochSphere`\>\"", "]"}], ";"}], 
-  "\[IndentingNewLine]", " ", "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", " ", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"ClearAll", "[", 
    RowBox[{
-   "lightDir", ",", "viewPoint", ",", "horzCenter", ",", "horzNormal", ",", 
-    "vertCenter", ",", "vertNormal", ",", "\[IndentingNewLine]", "\t", 
-    "vertAssistMajorAxis", ",", "vertMajorRadius", ",", "vertMinorRadius"}], 
-   "]"}], ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+   "rectCenter", ",", "rectNormal", ",", "rectMajorAxis", ",", 
+    "rectMinorAxis", ",", "rectMajorRadius", ",", "rectMinorRadius", ",", 
+    "circleCenter", ",", "\[IndentingNewLine]", "\t", "\[Theta]r1", ",", 
+    "\[Theta]r2", ",", "\[Phi]r1", ",", "\[Phi]r2", ",", "\[Theta]Axis", ",", 
+    "\[Phi]Axis", ",", "\[Theta]Line1A", ",", "\[Theta]Line1B", ",", 
+    "\[Theta]Line2A", ",", "\[Theta]Line2B", ",", "\[Phi]Line1A", ",", 
+    "\[Phi]Line1B", ",", "\[Phi]Line2A", ",", "\[Phi]Line2B", ",", 
+    "\[IndentingNewLine]", "\t", "plotBias"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
    RowBox[{
+    RowBox[{"circleCenter", "=", 
+     RowBox[{"{", 
+      RowBox[{"circleCenterX", ",", "0", ",", "circleCenterZ"}], "}"}]}], ";",
+     "\[IndentingNewLine]", 
+    RowBox[{"rectCenter", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectNormal", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectMajorAxis", "=", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectMajorRadius", "=", "1"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectMinorRadius", "=", "0.5"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
     RowBox[{
-     RowBox[{"lightDir", "=", 
-      RowBox[{"Normalize", "@", 
-       RowBox[{"{", 
-        RowBox[{"lightDirX", ",", 
-         RowBox[{"-", "1"}], ",", "lightDirZ"}], "}"}]}]}], ";", 
-     "\[IndentingNewLine]", 
-     RowBox[{"(*", 
+     RowBox[{"{", 
+      RowBox[{"rectMajorAxis", ",", "rectMinorAxis"}], "}"}], "=", 
+     RowBox[{"gCalcPlaneTangents", "[", 
+      RowBox[{"rectNormal", ",", "rectMajorAxis"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
       RowBox[{
-       RowBox[{"Print", "[", "debugViewPoint", "]"}], ";"}], "*)"}], 
-     "\[IndentingNewLine]", 
-     RowBox[{"viewPoint", "=", 
-      RowBox[{"{", 
-       RowBox[{"1.3", ",", 
-        RowBox[{"-", "2.4"}], ",", "2"}], "}"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"(*", 
-      RowBox[{"normals", " ", "for", " ", "rectangle"}], "*)"}], 
-     "\[IndentingNewLine]", 
-     RowBox[{"horzNormal", "=", 
-      RowBox[{"Normalize", "@", 
-       RowBox[{"{", 
-        RowBox[{"0", ",", "0", ",", "1"}], "}"}]}]}], ";", 
-     "\[IndentingNewLine]", 
-     RowBox[{"vertNormal", "=", 
-      RowBox[{"Normalize", "@", 
-       RowBox[{"{", 
-        RowBox[{"0", ",", 
-         RowBox[{"-", "1"}], ",", "0"}], "}"}]}]}], ";", 
-     "\[IndentingNewLine]", 
-     RowBox[{"horzCenter", "=", 
-      RowBox[{"{", 
-       RowBox[{"0", ",", "0", ",", 
-        RowBox[{"-", "0.5"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"vertCenter", "=", 
-      RowBox[{"{", 
-       RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]",
-      "\[IndentingNewLine]", 
-     RowBox[{"vertAssistMajorAxis", "=", 
-      RowBox[{"{", 
-       RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"vertMajorRadius", "=", "0.5"}], ";", "\[IndentingNewLine]", 
-     RowBox[{"vertMinorRadius", "=", "0.5"}], ";", "\[IndentingNewLine]", 
-     "\[IndentingNewLine]", 
-     RowBox[{"Show", "[", "\[IndentingNewLine]", 
+      "\[Theta]r1", ",", "\[Theta]r2", ",", "\[Phi]r1", ",", "\[Phi]r2", ",", 
+       "\[Theta]Axis", ",", "\[Phi]Axis"}], "}"}], "=", 
+     RowBox[{"gCircIntsRectIntegralRegion", "[", 
       RowBox[{
-       RowBox[{"{", "\[IndentingNewLine]", "  ", 
-        RowBox[{"(*", 
-         RowBox[{"horizontal", " ", "rect"}], "*)"}], "\[IndentingNewLine]", 
-        "  ", 
+      "circleCenter", ",", "circleRadius", ",", "rectCenter", ",", 
+       "rectMajorAxis", ",", "\[IndentingNewLine]", "\t", "rectMinorAxis", 
+       ",", "rectMajorRadius", ",", "rectMinorRadius"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Line1A", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Theta]r1", "*", "\[Theta]Axis"}], "-", 
+      RowBox[{"circleRadius", "*", "\[Phi]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Line1B", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Theta]r1", "*", "\[Theta]Axis"}], "+", 
+      RowBox[{"circleRadius", "*", "\[Phi]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Line2A", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Theta]r2", "*", "\[Theta]Axis"}], "-", 
+      RowBox[{"circleRadius", "*", "\[Phi]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Line2B", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Theta]r2", "*", "\[Theta]Axis"}], "+", 
+      RowBox[{"circleRadius", "*", "\[Phi]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Line1A", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Phi]r1", "*", "\[Phi]Axis"}], "-", 
+      RowBox[{"circleRadius", "*", "\[Theta]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Line1B", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Phi]r1", "*", "\[Phi]Axis"}], "+", 
+      RowBox[{"circleRadius", "*", "\[Theta]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Line2A", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Phi]r2", "*", "\[Phi]Axis"}], "-", 
+      RowBox[{"circleRadius", "*", "\[Theta]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Line2B", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Phi]r2", "*", "\[Phi]Axis"}], "+", 
+      RowBox[{"circleRadius", "*", "\[Theta]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"diffuseInts", "=", 
+       RowBox[{"testFunc111", "[", 
+        RowBox[{
+        "\[Theta]r1", ",", "\[Theta]r2", ",", "\[Phi]r1", ",", "\[Phi]r2"}], 
+        "]"}]}], ";"}], "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"plotBias", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", 
+       RowBox[{"-", "0.01"}], ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"Show", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{"(*", "rect", "*)"}], "\[IndentingNewLine]", 
+       RowBox[{
         RowBox[{
          RowBox[{
-          RowBox[{
-           RowBox[{"pltRect3D", "[", " ", 
-            RowBox[{"<|", 
-             RowBox[{
-              RowBox[{"\"\<center\>\"", "\[Rule]", "horzCenter"}], ",", 
-              RowBox[{"\"\<normal\>\"", "\[Rule]", "horzNormal"}], ",", 
-              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "50"}], ",", 
-              "\[IndentingNewLine]", "\t", 
-              RowBox[{"\"\<majorAxis\>\"", "\[Rule]", 
-               RowBox[{"{", 
-                RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ",", 
-              RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "1"}], ",", 
-              RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "0.5"}], ",", 
-              RowBox[{"\"\<opacity\>\"", "\[Rule]", "1"}], ",", 
-              "\[IndentingNewLine]", "\t", 
-              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
-               RowBox[{"Function", "[", 
-                RowBox[{
-                 RowBox[{"{", 
-                  RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
-                 "\[IndentingNewLine]", "\t", 
-                 RowBox[{"(*", 
-                  RowBox[{"Hue", "@"}], "*)"}], 
-                 RowBox[{
-                 "gReflectDiffuse", "[", "\[IndentingNewLine]", "\t\t   ", 
-                  RowBox[{"(*", 
-                   RowBox[{"shading", " ", "point"}], "*)"}], "\n", 
-                  "\t\t\t\t\t", 
-                  RowBox[{
-                   RowBox[{"{", 
-                    RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
-                   "samplingRadius", ",", "\n", "\t\t\t\t\t", 
-                   RowBox[{"(*", 
-                    RowBox[{"reflection", " ", "rectangle"}], "*)"}], "\n", 
-                   "\t\t\t\t\t", "vertCenter", ",", "vertNormal", ",", 
-                   "vertAssistMajorAxis", ",", "vertMajorRadius", ",", 
-                   "vertMinorRadius", ",", "\n", "\t\t\t\t\t", 
-                   RowBox[{"(*", "light", "*)"}], "\n", "\t\t\t\t\t", 
-                   "lightDir", ",", "lightIntensity"}], "\[IndentingNewLine]",
-                   "\t\t", "]"}]}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", 
-            "  ", "]"}], "&"}], "[", 
-          RowBox[{"<|", 
-           RowBox[{"\"\<roughness\>\"", "\[Rule]", "horzRoughness"}], "|>"}], 
-          "]"}], ",", "\[IndentingNewLine]", "  ", 
-         RowBox[{"(*", 
-          RowBox[{"vertical", " ", "rect"}], "*)"}], "\[IndentingNewLine]", 
-         "  ", 
+          RowBox[{"pltRect3D", "[", " ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", "rectCenter"}], ",", 
+             RowBox[{"\"\<normal\>\"", "\[Rule]", "rectNormal"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<majorAxis\>\"", "\[Rule]", "rectMajorAxis"}], ",", 
+             RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "rectMajorRadius"}], 
+             ",", 
+             RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "rectMinorRadius"}], 
+             ",", "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                "LightBlue"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", "  ",
+            "]"}], "&"}], "[", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"(*", "circle", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{
          RowBox[{
+          RowBox[{"pltCircle3D", "[", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", "circleCenter"}], ",", 
+             RowBox[{"\"\<normal\>\"", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ",", 
+             RowBox[{"\"\<radius\>\"", "\[Rule]", "#radius"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"\"\<thickness\>\"", "\[Rule]", "2"}], ",", 
+             RowBox[{"\"\<color\>\"", "\[Rule]", "Green"}]}], "|>"}], 
+           "\[IndentingNewLine]", "\t", "]"}], "&"}], "[", 
+         RowBox[{"<|", 
+          RowBox[{"\"\<radius\>\"", "\[Rule]", "circleRadius"}], "|>"}], 
+         "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"pltPoint3D", "[", 
+         RowBox[{"<|", 
           RowBox[{
-           RowBox[{"pltRect3D", "[", " ", 
-            RowBox[{"<|", 
-             RowBox[{
-              RowBox[{"\"\<center\>\"", "\[Rule]", "vertCenter"}], ",", 
-              RowBox[{"\"\<normal\>\"", "\[Rule]", "vertNormal"}], ",", 
-              RowBox[{"\"\<plotPts\>\"", "\[Rule]", "10"}], ",", 
-              "\[IndentingNewLine]", "\t", 
-              RowBox[{"\"\<majorAxis\>\"", "\[Rule]", "vertAssistMajorAxis"}],
-               ",", 
-              RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "vertMajorRadius"}], 
-              ",", 
-              RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "vertMinorRadius"}], 
-              ",", "\[IndentingNewLine]", "\t", 
-              RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
-               RowBox[{"Function", "[", 
-                RowBox[{
-                 RowBox[{"{", 
-                  RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", "Cyan"}], 
-                RowBox[{"(*", 
-                 RowBox[{"Hue", "@", 
-                  RowBox[{"reflLightingFunc", "[", 
-                   RowBox[{
-                    RowBox[{"{", 
-                    RowBox[{"x", ",", "y", ",", "z"}], "}"}], ",", 
-                    "shadingPt", ",", "vertRoughness", ",", 
-                    "lightIntensity"}], "]"}]}], "*)"}], "]"}]}]}], "|>"}], 
-            "\[IndentingNewLine]", "  ", "]"}], "&"}], "[", 
-          RowBox[{"<|", 
-           RowBox[{"\"\<roughness\>\"", "\[Rule]", "vertRoughness"}], "|>"}], 
-          "]"}], ",", "\[IndentingNewLine]", "   ", 
-         RowBox[{"(*", 
-          RowBox[{"light", " ", "direction"}], "*)"}], "\[IndentingNewLine]", 
-         "   ", 
-         RowBox[{
+           RowBox[{"\"\<pos\>\"", "\[Rule]", 
+            RowBox[{"circleCenter", "+", "plotBias"}]}], ",", 
+           RowBox[{"\"\<size\>\"", "\[Rule]", "0.015"}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Black"}]}], "|>"}], "]"}], 
+        ",", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"\[Theta]", " ", "lines"}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"pltLine3D", "[", 
+         RowBox[{"<|", 
           RowBox[{
-           RowBox[{"pltArrow3D", "[", 
-            RowBox[{"<|", 
-             RowBox[{
-              RowBox[{"\"\<origin\>\"", "\[Rule]", 
-               RowBox[{"{", 
-                RowBox[{"0", ",", 
-                 RowBox[{"-", "1"}], ",", "1"}], "}"}]}], ",", 
-              RowBox[{"\"\<dir\>\"", "\[Rule]", 
-               RowBox[{"-", "lightDir"}]}], ",", 
-              RowBox[{"\"\<length\>\"", "\[Rule]", "0.5"}]}], "|>"}], 
-            "\[IndentingNewLine]", "  ", "]"}], "&"}], "[", 
-          RowBox[{"<|", "|>"}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
-       "\[IndentingNewLine]", "\[IndentingNewLine]", "    ", 
-       RowBox[{"showProps3D", "[", 
-        RowBox[{"1", ",", "Medium"}], "]"}]}], "\[IndentingNewLine]", " ", 
-      "]"}]}], ",", "\[IndentingNewLine]", "   ", "\[IndentingNewLine]", " ", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"horzRoughness", ",", "0.1"}], "}"}], ",", "0.01", ",", 
-      "0.99"}], "}"}], ",", "\[IndentingNewLine]", "   ", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"vertRoughness", ",", "0.1"}], "}"}], ",", "0.01", ",", 
-      "0.99"}], "}"}], ",", "\[IndentingNewLine]", "   ", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"lightDirX", ",", 
-        RowBox[{"-", "0"}]}], "}"}], ",", 
-      RowBox[{"-", "1"}], ",", "0"}], "}"}], ",", "\[IndentingNewLine]", 
-    "   ", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"lightDirZ", ",", "1"}], "}"}], ",", "0.1", ",", "1"}], "}"}], 
-    ",", "\[IndentingNewLine]", "   ", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"lightIntensity", ",", "1"}], "}"}], ",", "0", ",", "1"}], 
-     "}"}], ",", "\[IndentingNewLine]", "   ", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"samplingRadius", ",", "0.3"}], "}"}], ",", "0.1", ",", "1"}], 
-     "}"}], ",", "\[IndentingNewLine]", "    ", 
-    RowBox[{"Method", "\[Rule]", 
+           RowBox[{"\"\<points\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\[Theta]Line1A", ",", "\[Theta]Line1B"}], "}"}]}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Red"}]}], "|>"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"pltLine3D", "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<points\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\[Theta]Line2A", ",", "\[Theta]Line2B"}], "}"}]}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Red"}]}], "|>"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"\[Phi]", " ", "lines"}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"pltLine3D", "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<points\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\[Phi]Line1A", ",", "\[Phi]Line1B"}], "}"}]}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Blue"}]}], "|>"}], "]"}], ",",
+         "\[IndentingNewLine]", 
+        RowBox[{"pltLine3D", "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<points\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\[Phi]Line2A", ",", "\[Phi]Line2B"}], "}"}]}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Blue"}]}], "|>"}], "]"}]}], 
+       "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "2"}], ",", "2"}], "}"}]}], "}"}]}], ",", "\n", 
+      "\t\t", 
+      RowBox[{"Axes", "\[Rule]", "True"}], ",", 
+      RowBox[{"Boxed", "\[Rule]", "False"}], ",", 
+      RowBox[{"AspectRatio", "->", "1"}], ",", 
+      RowBox[{"ViewPoint", "\[Rule]", "Front"}], ",", "\[IndentingNewLine]", 
+      "\t    ", 
+      RowBox[{"ViewProjection", "\[Rule]", "\"\<Orthographic\>\""}], ",", 
+      RowBox[{"AxesLabel", "->", 
+       RowBox[{"{", 
+        RowBox[{"\"\<X\>\"", ",", "\"\<Y\>\"", ",", "\"\<Z\>\""}], "}"}]}], 
+      ",", "\[IndentingNewLine]", "\t    ", 
+      RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "\[IndentingNewLine]", 
+     "]"}]}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", "        ", 
+   RowBox[{"{", 
+    RowBox[{
      RowBox[{"{", 
-      RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "True"}], "}"}]}]}], 
-   "\[IndentingNewLine]", "]"}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+      RowBox[{"circleCenterX", ",", "0.9"}], "}"}], ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+   "        ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"circleCenterZ", ",", "0.3"}], "}"}], ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+   "        ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"circleRadius", ",", "0.5"}], "}"}], ",", "0.1", ",", "2"}], 
+    "}"}], ",", "\[IndentingNewLine]", "\t", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"debug1", ",", 
+      RowBox[{"{", 
+       RowBox[{
+       "\[Theta]r1", ",", "\[Theta]r2", ",", "\[Phi]r1", ",", "\[Phi]r2"}], 
+       "}"}]}], "}"}], "}"}]}], "\[IndentingNewLine]", 
+  "]"}], "\[IndentingNewLine]"}], "Input",
  CellChangeTimes->{{3.8328889412895775`*^9, 3.832888943829444*^9}, 
    3.8329105814363804`*^9, 3.832911658214327*^9, {3.832915422319006*^9, 
    3.832915429550082*^9}, {3.8329154722806787`*^9, 3.832915476772599*^9}, {
@@ -554,102 +596,172 @@ Cell[BoxData[{
    3.8368816567958717`*^9}, {3.836881742366311*^9, 3.8368817820015326`*^9}, {
    3.836885856285941*^9, 3.8368858600947437`*^9}, {3.836885897004915*^9, 
    3.8368858971744137`*^9}, {3.836889715203364*^9, 3.836889739070151*^9}, 
-   3.836889849732177*^9},
+   3.836889849732177*^9, 3.836945181542029*^9, {3.8369453219380255`*^9, 
+   3.8369453854545045`*^9}, {3.836945439270733*^9, 3.8369459644459534`*^9}, {
+   3.8369462254729443`*^9, 3.8369462315826683`*^9}, {3.8369462921029077`*^9, 
+   3.8369462933883195`*^9}, {3.8369463461117373`*^9, 
+   3.8369463726185694`*^9}, {3.8369464438176446`*^9, 
+   3.8369466719439163`*^9}, {3.8369467380039625`*^9, 
+   3.8369467463255715`*^9}, {3.836946854891364*^9, 3.8369468760607333`*^9}, {
+   3.836948785968916*^9, 3.83694896609993*^9}, {3.8369490286763735`*^9, 
+   3.8369490433630095`*^9}, 3.8369492052476225`*^9, {3.836949544360351*^9, 
+   3.8369495776113267`*^9}, 3.83694979661386*^9, {3.8369499275819616`*^9, 
+   3.8369499283320475`*^9}, {3.836949971253306*^9, 3.8369500595304284`*^9}, {
+   3.8369501005863132`*^9, 3.8369501764063044`*^9}, {3.836950424964267*^9, 
+   3.836950499076393*^9}, {3.836950564872957*^9, 3.83695065264188*^9}, {
+   3.8369507061128616`*^9, 3.836950832238614*^9}, {3.8369508662169676`*^9, 
+   3.836950872745569*^9}, {3.8369510475315285`*^9, 3.8369511180879087`*^9}, {
+   3.8369513149243193`*^9, 3.836951328714777*^9}, {3.836951839237322*^9, 
+   3.83695192661764*^9}, 3.836959485990861*^9, {3.8369599520448537`*^9, 
+   3.8369599533409405`*^9}, {3.8369604586835756`*^9, 
+   3.8369605166417418`*^9}, {3.836960695111162*^9, 3.8369607045820694`*^9}, 
+   3.836961459084535*^9, {3.8369698091870403`*^9, 3.836969812988473*^9}, {
+   3.8369700807172575`*^9, 3.836970120276704*^9}, {3.8369702610697746`*^9, 
+   3.836970429110126*^9}, {3.8369704602713547`*^9, 3.836970722200609*^9}, {
+   3.836970789509614*^9, 3.8369707922594514`*^9}, {3.836970873847596*^9, 
+   3.8369708771314764`*^9}, {3.836970912278634*^9, 3.836970953386264*^9}, {
+   3.8369710038596916`*^9, 3.836971054706852*^9}, {3.8369711195919523`*^9, 
+   3.8369711342833385`*^9}, {3.8369712007875447`*^9, 3.836971438606894*^9}, 
+   3.8369714803871536`*^9, {3.8369719671179886`*^9, 3.836971969533098*^9}, {
+   3.83697201767698*^9, 3.8369720185371456`*^9}, {3.836972098597118*^9, 
+   3.836972160947448*^9}, {3.8369722621394506`*^9, 3.836972264843303*^9}, {
+   3.8369723049903917`*^9, 3.8369723096138735`*^9}, {3.8369723573993464`*^9, 
+   3.8369723854402857`*^9}, {3.8369724365523696`*^9, 
+   3.8369724750814266`*^9}, {3.836972788561415*^9, 3.8369727907663107`*^9}, {
+   3.836972843512311*^9, 3.836972870645604*^9}, {3.836972913896276*^9, 
+   3.836972921204646*^9}, {3.8369770247622356`*^9, 3.8369770328502445`*^9}, {
+   3.836977224377016*^9, 3.8369772423673725`*^9}, {3.836981703741682*^9, 
+   3.8369817056373076`*^9}, {3.8369844343995466`*^9, 
+   3.8369845357098494`*^9}, {3.836984591498246*^9, 3.8369845949628496`*^9}, {
+   3.8369846260148335`*^9, 3.8369846289451976`*^9}, {3.8369847115040197`*^9, 
+   3.836984737326707*^9}, 3.8369848122522774`*^9, {3.836985046316472*^9, 
+   3.836985056917431*^9}, {3.836985491550785*^9, 3.8369854974349127`*^9}, {
+   3.836985590847297*^9, 3.8369855982063904`*^9}, {3.836985735703243*^9, 
+   3.8369857847707005`*^9}, {3.8369869679890585`*^9, 3.836987195111401*^9}, {
+   3.8369872723735733`*^9, 3.836987334340517*^9}, {3.836987378614846*^9, 
+   3.8369874145827494`*^9}, {3.8369881824397783`*^9, 3.8369881941488714`*^9}, 
+   3.837038461326213*^9, {3.837039721826098*^9, 3.837039731384164*^9}, 
+   3.8370405228026776`*^9, 3.8370460131135783`*^9, {3.8370463391991253`*^9, 
+   3.8370463826918864`*^9}, {3.8370464414054737`*^9, 3.837046591268188*^9}},
  CellLabel->
-  "In[369]:=",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
+  "In[977]:=",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
 
 Cell[BoxData[
  TagBox[
   StyleBox[
-   DynamicModuleBox[{$CellContext`horzRoughness$$ = 
-    0.1, $CellContext`lightDirX$$ = 0, $CellContext`lightDirZ$$ = 
-    1, $CellContext`lightIntensity$$ = 1, $CellContext`samplingRadius$$ = 
-    0.3, $CellContext`vertRoughness$$ = 0.1, Typeset`show$$ = True, 
+   DynamicModuleBox[{$CellContext`circleCenterX$$ = 
+    0.7, $CellContext`circleCenterZ$$ = -0.33499999999999996`, \
+$CellContext`circleRadius$$ = 0.5, $CellContext`debug1$$ = {-0.5, 
+    0.16500000000000004`, -0.5, 0.30000000000000004`}, Typeset`show$$ = True, 
     Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
     Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
     "\"untitled\"", Typeset`specs$$ = {{{
-       Hold[$CellContext`horzRoughness$$], 0.1}, 0.01, 0.99}, {{
-       Hold[$CellContext`vertRoughness$$], 0.1}, 0.01, 0.99}, {{
-       Hold[$CellContext`lightDirX$$], 0}, -1, 0}, {{
-       Hold[$CellContext`lightDirZ$$], 1}, 0.1, 1}, {{
-       Hold[$CellContext`lightIntensity$$], 1}, 0, 1}, {{
-       Hold[$CellContext`samplingRadius$$], 0.3}, 0.1, 1}}, Typeset`size$$ = {
-    360., {196., 202.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`horzRoughness$1539264$$ = 
-    0, $CellContext`vertRoughness$1539265$$ = 
-    0, $CellContext`lightDirX$1539266$$ = 
-    0, $CellContext`lightDirZ$1539267$$ = 
-    0, $CellContext`lightIntensity$1539268$$ = 
-    0, $CellContext`samplingRadius$1539269$$ = 0}, 
+       Hold[$CellContext`circleCenterX$$], 0.9}, -1, 1}, {{
+       Hold[$CellContext`circleCenterZ$$], 0.3}, -1, 1}, {{
+       Hold[$CellContext`circleRadius$$], 0.5}, 0.1, 2}, {{
+       Hold[$CellContext`debug1$$], {-0.5, 0.16500000000000004`, -0.5, 
+       0.30000000000000004`}}}}, Typeset`size$$ = {360., {180., 186.}}, 
+    Typeset`update$$ = 0, Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`circleCenterX$1229346$$ = 
+    0, $CellContext`circleCenterZ$1229347$$ = 
+    0, $CellContext`circleRadius$1229348$$ = 0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
-      "Variables" :> {$CellContext`horzRoughness$$ = 
-        0.1, $CellContext`lightDirX$$ = 0, $CellContext`lightDirZ$$ = 
-        1, $CellContext`lightIntensity$$ = 1, $CellContext`samplingRadius$$ = 
-        0.3, $CellContext`vertRoughness$$ = 0.1}, "ControllerVariables" :> {
-        Hold[$CellContext`horzRoughness$$, \
-$CellContext`horzRoughness$1539264$$, 0], 
-        Hold[$CellContext`vertRoughness$$, \
-$CellContext`vertRoughness$1539265$$, 0], 
-        Hold[$CellContext`lightDirX$$, $CellContext`lightDirX$1539266$$, 0], 
-        Hold[$CellContext`lightDirZ$$, $CellContext`lightDirZ$1539267$$, 0], 
-        Hold[$CellContext`lightIntensity$$, \
-$CellContext`lightIntensity$1539268$$, 0], 
-        Hold[$CellContext`samplingRadius$$, \
-$CellContext`samplingRadius$1539269$$, 0]}, 
-      "OtherVariables" :> {
+      "Variables" :> {$CellContext`circleCenterX$$ = 
+        0.9, $CellContext`circleCenterZ$$ = 0.3, $CellContext`circleRadius$$ = 
+        0.5, $CellContext`debug1$$ = {$CellContext`\[Theta]r1, $CellContext`\
+\[Theta]r2, $CellContext`\[Phi]r1, $CellContext`\[Phi]r2}}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`circleCenterX$$, \
+$CellContext`circleCenterX$1229346$$, 0], 
+        Hold[$CellContext`circleCenterZ$$, \
+$CellContext`circleCenterZ$1229347$$, 0], 
+        Hold[$CellContext`circleRadius$$, $CellContext`circleRadius$1229348$$,
+          0]}, "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
         Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
          Typeset`skipInitDone$$}, 
-      "Body" :> ($CellContext`lightDir = 
-        Normalize[{$CellContext`lightDirX$$, -1, $CellContext`lightDirZ$$}]; \
-$CellContext`viewPoint = {1.3, -2.4, 2}; $CellContext`horzNormal = 
-        Normalize[{0, 0, 1}]; $CellContext`vertNormal = 
-        Normalize[{0, -1, 0}]; $CellContext`horzCenter = {
-         0, 0, -0.5}; $CellContext`vertCenter = {0, 1, 
-         0}; $CellContext`vertAssistMajorAxis = {1, 0, 
-         0}; $CellContext`vertMajorRadius = 0.5; $CellContext`vertMinorRadius = 
-        0.5; Show[{
+      "Body" :> ($CellContext`circleCenter = {$CellContext`circleCenterX$$, 
+          0, $CellContext`circleCenterZ$$}; $CellContext`rectCenter = {0, 0, 
+         0}; $CellContext`rectNormal = {0, 1, 
+         0}; $CellContext`rectMajorAxis = {1, 0, 
+         0}; $CellContext`rectMajorRadius = 1; $CellContext`rectMinorRadius = 
+        0.5; {$CellContext`rectMajorAxis, $CellContext`rectMinorAxis} = 
+        gUtils`gCalcPlaneTangents[$CellContext`rectNormal, \
+$CellContext`rectMajorAxis]; {$CellContext`\[Theta]r1, \
+$CellContext`\[Theta]r2, $CellContext`\[Phi]r1, $CellContext`\[Phi]r2, \
+$CellContext`\[Theta]Axis, $CellContext`\[Phi]Axis} = 
+        gBRDF`gCircIntsRectIntegralRegion[$CellContext`circleCenter, \
+$CellContext`circleRadius$$, $CellContext`rectCenter, \
+$CellContext`rectMajorAxis, $CellContext`rectMinorAxis, \
+$CellContext`rectMajorRadius, $CellContext`rectMinorRadius]; $CellContext`\
+\[Theta]Line1A = $CellContext`circleCenter + $CellContext`\[Theta]r1 \
+$CellContext`\[Theta]Axis - $CellContext`circleRadius$$ \
+$CellContext`\[Phi]Axis; $CellContext`\[Theta]Line1B = \
+$CellContext`circleCenter + $CellContext`\[Theta]r1 $CellContext`\[Theta]Axis + \
+$CellContext`circleRadius$$ $CellContext`\[Phi]Axis; \
+$CellContext`\[Theta]Line2A = $CellContext`circleCenter + $CellContext`\
+\[Theta]r2 $CellContext`\[Theta]Axis - $CellContext`circleRadius$$ \
+$CellContext`\[Phi]Axis; $CellContext`\[Theta]Line2B = \
+$CellContext`circleCenter + $CellContext`\[Theta]r2 $CellContext`\[Theta]Axis + \
+$CellContext`circleRadius$$ $CellContext`\[Phi]Axis; \
+$CellContext`\[Phi]Line1A = $CellContext`circleCenter + $CellContext`\[Phi]r1 \
+$CellContext`\[Phi]Axis - $CellContext`circleRadius$$ \
+$CellContext`\[Theta]Axis; $CellContext`\[Phi]Line1B = \
+$CellContext`circleCenter + $CellContext`\[Phi]r1 $CellContext`\[Phi]Axis + \
+$CellContext`circleRadius$$ $CellContext`\[Theta]Axis; \
+$CellContext`\[Phi]Line2A = $CellContext`circleCenter + $CellContext`\[Phi]r2 \
+$CellContext`\[Phi]Axis - $CellContext`circleRadius$$ \
+$CellContext`\[Theta]Axis; $CellContext`\[Phi]Line2B = \
+$CellContext`circleCenter + $CellContext`\[Phi]r2 $CellContext`\[Phi]Axis + \
+$CellContext`circleRadius$$ $CellContext`\[Theta]Axis; $CellContext`plotBias = \
+{0, -0.01, 0}; Show[{
           (gPlots3DEx`pltRect3D[
            Association[
-           "center" -> $CellContext`horzCenter, 
-            "normal" -> $CellContext`horzNormal, "plotPts" -> 50, 
-            "majorAxis" -> {0, 1, 0}, "majorRadius" -> 1, "minorRadius" -> 
-            0.5, "opacity" -> 1, "colorFunc" -> 
-            Function[{$CellContext`x$, $CellContext`y$, $CellContext`z$}, 
-              
-              gBRDF`gReflectDiffuse[{$CellContext`x$, $CellContext`y$, \
-$CellContext`z$}, $CellContext`samplingRadius$$, $CellContext`vertCenter, \
-$CellContext`vertNormal, $CellContext`vertAssistMajorAxis, \
-$CellContext`vertMajorRadius, $CellContext`vertMinorRadius, \
-$CellContext`lightDir, $CellContext`lightIntensity$$]]]]& )[
-           Association["roughness" -> $CellContext`horzRoughness$$]], 
-          (gPlots3DEx`pltRect3D[
+           "center" -> $CellContext`rectCenter, 
+            "normal" -> $CellContext`rectNormal, 
+            "majorAxis" -> $CellContext`rectMajorAxis, 
+            "majorRadius" -> $CellContext`rectMajorRadius, 
+            "minorRadius" -> $CellContext`rectMinorRadius, "colorFunc" -> 
+            Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, LightBlue]]]& )[], 
+          (gPlots3DEx`pltCircle3D[
            Association[
-           "center" -> $CellContext`vertCenter, 
-            "normal" -> $CellContext`vertNormal, "plotPts" -> 10, 
-            "majorAxis" -> $CellContext`vertAssistMajorAxis, 
-            "majorRadius" -> $CellContext`vertMajorRadius, 
-            "minorRadius" -> $CellContext`vertMinorRadius, "colorFunc" -> 
-            Function[{$CellContext`x, $CellContext`y, $CellContext`z}, 
-              Cyan]]]& )[
-           Association["roughness" -> $CellContext`vertRoughness$$]], 
-          (gPlots3DEx`pltArrow3D[
+           "center" -> $CellContext`circleCenter, "normal" -> {0, 1, 0}, 
+            "radius" -> Slot["radius"], "thickness" -> 2, "color" -> 
+            Green]]& )[
+           Association["radius" -> $CellContext`circleRadius$$]], 
+          gPlots3DEx`pltPoint3D[
            Association[
-           "origin" -> {0, -1, 1}, "dir" -> -$CellContext`lightDir, "length" -> 
-            0.5]]& )[
-           Association[]]}, 
-         gPlots3DEx`showProps3D[1, Medium]]), 
-      "Specifications" :> {{{$CellContext`horzRoughness$$, 0.1}, 0.01, 
-         0.99}, {{$CellContext`vertRoughness$$, 0.1}, 0.01, 
-         0.99}, {{$CellContext`lightDirX$$, 0}, -1, 
-         0}, {{$CellContext`lightDirZ$$, 1}, 0.1, 
-         1}, {{$CellContext`lightIntensity$$, 1}, 0, 
-         1}, {{$CellContext`samplingRadius$$, 0.3}, 0.1, 1}}, 
-      "Options" :> {Method -> {"ShowControls" -> True}}, 
-      "DefaultOptions" :> {}],
-     ImageSizeCache->{411., {313., 319.}},
+           "pos" -> $CellContext`circleCenter + $CellContext`plotBias, "size" -> 
+            0.015, "color" -> Black]], 
+          gPlots3DEx`pltLine3D[
+           Association[
+           "points" -> {$CellContext`\[Theta]Line1A, \
+$CellContext`\[Theta]Line1B}, "color" -> Red]], 
+          gPlots3DEx`pltLine3D[
+           Association[
+           "points" -> {$CellContext`\[Theta]Line2A, \
+$CellContext`\[Theta]Line2B}, "color" -> Red]], 
+          gPlots3DEx`pltLine3D[
+           Association[
+           "points" -> {$CellContext`\[Phi]Line1A, $CellContext`\[Phi]Line1B},
+             "color" -> Blue]], 
+          gPlots3DEx`pltLine3D[
+           Association[
+           "points" -> {$CellContext`\[Phi]Line2A, $CellContext`\[Phi]Line2B},
+             "color" -> Blue]]}, PlotRange -> {{-2, 2}, {-2, 2}, {-2, 2}}, 
+         Axes -> True, Boxed -> False, AspectRatio -> 1, ViewPoint -> Front, 
+         ViewProjection -> "Orthographic", AxesLabel -> {"X", "Y", "Z"}, 
+         ImageSize -> Medium]), 
+      "Specifications" :> {{{$CellContext`circleCenterX$$, 0.9}, -1, 
+         1}, {{$CellContext`circleCenterZ$$, 0.3}, -1, 
+         1}, {{$CellContext`circleRadius$$, 0.5}, 0.1, 
+         2}, {{$CellContext`debug1$$, {$CellContext`\[Theta]r1, $CellContext`\
+\[Theta]r2, $CellContext`\[Phi]r1, $CellContext`\[Phi]r2}}}}, "Options" :> {},
+       "DefaultOptions" :> {}],
+     ImageSizeCache->{411., {266., 272.}},
      SingleEvaluation->True],
     Deinitialization:>None,
     DynamicModuleValues:>{},
@@ -660,13 +772,330 @@ $CellContext`lightDir, $CellContext`lightIntensity$$]]]]& )[
    Deployed->True,
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
- CellChangeTimes->{{3.8368898425125327`*^9, 3.836889851708949*^9}},
+ CellChangeTimes->{{3.8369844061491737`*^9, 3.8369844234124575`*^9}, {
+   3.836984459437358*^9, 3.8369845369551725`*^9}, {3.8369845959439645`*^9, 
+   3.8369846332477374`*^9}, {3.8369847382572355`*^9, 
+   3.8369847414554367`*^9}, {3.8369848077990284`*^9, 3.836984812939534*^9}, {
+   3.8369848757017527`*^9, 3.8369848966761217`*^9}, 3.8369849659668407`*^9, {
+   3.836984999417083*^9, 3.8369850577107153`*^9}, {3.8369853537325583`*^9, 
+   3.8369853655401735`*^9}, 3.836985497940769*^9, {3.8369855986477485`*^9, 
+   3.8369856018767176`*^9}, {3.8369856526218596`*^9, 3.836985659316669*^9}, 
+   3.836985701991234*^9, 3.836985797679736*^9, 3.836987051706912*^9, 
+   3.8369871958194075`*^9, 3.8369879578352184`*^9, {3.836987995807872*^9, 
+   3.836987996826433*^9}, 3.83698818327656*^9, 3.837031781791336*^9, 
+   3.8370343449522443`*^9, 3.837034374959529*^9, {3.837038455463653*^9, 
+   3.8370384755836143`*^9}, {3.837039698873747*^9, 3.837039731847712*^9}, 
+   3.837040543635188*^9, {3.837040992279389*^9, 3.8370410293119926`*^9}, 
+   3.8370410717375546`*^9, {3.837046010289874*^9, 3.837046013595855*^9}, 
+   3.8370461018878593`*^9, 3.837046143119254*^9, 3.8370462221776333`*^9, {
+   3.837046277792675*^9, 3.837046310814167*^9}, {3.8370463524622*^9, 
+   3.8370463837414646`*^9}, 3.8370464485286765`*^9, {3.8370465051720886`*^9, 
+   3.8370465519618006`*^9}, {3.8370465840873556`*^9, 3.8370465928609314`*^9}},
  CellLabel->
-  "Out[380]=",ExpressionUUID->"1e38fab5-1612-4792-bac8-fe13e4bcc691"]
-}, Open  ]]
+  "Out[989]=",ExpressionUUID->"ee9039b5-7ea1-48d1-bf99-b59967ddddd8"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{"testFunc111", ",", "testDiffIntsFunc"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"testFunc111", "[", 
+     RowBox[{
+     "\[Theta]r1_", ",", "\[Theta]r2_", ",", "\[Phi]r1_", ",", "\[Phi]r2_"}], 
+     "]"}], ":=", 
+    RowBox[{"Module", "[", "\[IndentingNewLine]", "\t", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"aNega", ",", "aPosi", ",", "sumPhi"}], "}"}], ",", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", "\t", 
+      RowBox[{
+       RowBox[{"sumPhi", "=", 
+        RowBox[{"Abs", "[", 
+         RowBox[{"\[Phi]r2", "-", "\[Phi]r1"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\t", 
+       RowBox[{"sumPhi", "=", "1"}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", "\t", 
+       RowBox[{"aNega", "=", 
+        RowBox[{
+         RowBox[{"-", 
+          FractionBox["sumPhi", "3"]}], " ", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"-", "1"}], "+", 
+           FractionBox["1", 
+            RowBox[{"(", 
+             RowBox[{"1", "+", 
+              SuperscriptBox["\[Theta]r2", "2"]}], ")"}]], "-", "1", "+", 
+           FractionBox["1", 
+            RowBox[{"1", "+", 
+             RowBox[{"\[Theta]r1", "^", "2"}]}]]}], ")"}]}]}], ";", 
+       "\[IndentingNewLine]", "\t", 
+       RowBox[{"aPosi", "=", 
+        RowBox[{"Abs", "[", 
+         RowBox[{
+          FractionBox["sumPhi", "3"], " ", 
+          RowBox[{"(", 
+           RowBox[{
+            FractionBox["1", 
+             RowBox[{"1", "+", 
+              SuperscriptBox["\[Theta]r2", "2"]}]], "-", 
+            FractionBox["1", 
+             RowBox[{"1", "+", 
+              RowBox[{"\[Theta]r1", "^", "2"}]}]]}], ")"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\t", "\[IndentingNewLine]", "\t", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"\[Theta]r1", "*", "\[Theta]r2"}], "<", "0"}], ",", "aNega",
+          ",", "aPosi"}], "]"}]}]}], "\[IndentingNewLine]", "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"testDiffIntsFunc", "[", 
+     RowBox[{
+     "circleCenter_", ",", "circleRadius_", ",", "\[IndentingNewLine]", 
+      "rectCenter_", ",", "rectNormal_", ",", "inRectMajorAxis_", ",", 
+      "rectMajorRadius_", ",", "rectMinorRadius_"}], "]"}], ":=", 
+    RowBox[{"Module", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"rectMajorAxis", ",", "rectMinorAxis", ",", "diffuseInts"}], 
+       "}"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"rectMajorAxis", ",", "rectMinorAxis"}], "}"}], "=", 
+        RowBox[{"gCalcPlaneTangents", "[", 
+         RowBox[{"rectNormal", ",", 
+          RowBox[{"Normalize", "@", "inRectMajorAxis"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+         "\[Theta]r1", ",", "\[Theta]r2", ",", "\[Phi]r1", ",", "\[Phi]r2", 
+          ",", "\[Theta]Axis", ",", "\[Phi]Axis"}], "}"}], "=", 
+        RowBox[{"gCircIntsRectAngles", "[", 
+         RowBox[{
+         "circleCenter", ",", "circleRadius", ",", "rectCenter", ",", 
+          "rectMajorAxis", ",", "\[IndentingNewLine]", "\t", "rectMinorAxis", 
+          ",", "rectMajorRadius", ",", "rectMinorRadius"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{
+         RowBox[{"diffuseInts", "=", 
+          RowBox[{"testFunc111", "[", 
+           RowBox[{
+           "\[Theta]r1", ",", "\[Theta]r2", ",", "\[Phi]r1", ",", 
+            "\[Phi]r2"}], "]"}]}], ";"}], "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"diffuseInts", "=", 
+        RowBox[{"gIntegrateIntsDiffuseEx", "[", 
+         RowBox[{
+         "\[Theta]r1", ",", "\[Theta]r2", ",", "\[Phi]r1", ",", "\[Phi]r2", 
+          ",", "circleRadius"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       "diffuseInts"}]}], "\[IndentingNewLine]", "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"circleRadius", "=", "2"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rectCenter", "=", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rectNormal", "=", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rectMajorAxis", "=", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rectMajorRadius", "=", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rectMinorRadius", "=", "0.5"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Plot3D", "[", 
+     RowBox[{
+      RowBox[{"testDiffIntsFunc", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"circleCenterX", ",", "0", ",", "circleCenterZ"}], "}"}], 
+        ",", "circleRadius", ",", "\[IndentingNewLine]", "\t", "rectCenter", 
+        ",", "rectNormal", ",", "rectMajorAxis", ",", "rectMajorRadius", ",", 
+        "rectMinorRadius"}], "]"}], ",", "\[IndentingNewLine]", "\t", 
+      RowBox[{"{", 
+       RowBox[{"circleCenterX", ",", 
+        RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", "\[IndentingNewLine]", 
+      "\t", 
+      RowBox[{"{", 
+       RowBox[{"circleCenterZ", ",", 
+        RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"circleRadius", ",", "2"}], "}"}], ",", "0.1", ",", "3"}], 
+     "}"}]}], "]"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{"testDiffIntsFunc", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0", ",", "circleCenterZ"}], "}"}], ",", 
+       "circleRadius", ",", "\[IndentingNewLine]", "\t", "rectCenter", ",", 
+       "rectNormal", ",", "rectMajorAxis", ",", "rectMajorRadius", ",", 
+       "rectMinorRadius"}], "]"}], ",", "\[IndentingNewLine]", "\t", 
+     RowBox[{"{", 
+      RowBox[{"circleCenterZ", ",", 
+       RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], "*)"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"testDiffIntsFunc", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0", ",", "0"}], "}"}], ",", "circleRadius", ",", 
+      "\[IndentingNewLine]", "\t", "rectCenter", ",", "rectNormal", ",", 
+      "rectMajorAxis", ",", "rectMajorRadius", ",", "rectMinorRadius"}], 
+     "]"}], "\[IndentingNewLine]", 
+    RowBox[{"gIntegrateIntsDiffuseEx", "[", 
+     RowBox[{
+      RowBox[{"-", "0.5`"}], ",", "0.5`", ",", 
+      RowBox[{"-", "1"}], ",", "1", ",", "circleRadius"}], "]"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"gIntegrateIntsDiffuseEx", "[", 
+     RowBox[{"0.5`", ",", "1.5`", ",", 
+      RowBox[{"-", "1"}], ",", "1", ",", "circleRadius"}], "]"}]}], 
+   "*)"}]}]}], "Input",
+ CellChangeTimes->{{3.8369874269628553`*^9, 3.8369874271382785`*^9}, {
+   3.8369874637405324`*^9, 3.8369875932296753`*^9}, {3.8369876423295565`*^9, 
+   3.836987674418045*^9}, 3.8369877258047676`*^9, {3.8369877558255005`*^9, 
+   3.8369878247541533`*^9}, {3.836987928431873*^9, 3.836987932253227*^9}, {
+   3.8369880272846174`*^9, 3.836988085403206*^9}, {3.8369881531482096`*^9, 
+   3.836988155330907*^9}, {3.8370317923090467`*^9, 3.8370319307600574`*^9}, {
+   3.837032554817548*^9, 3.83703255791304*^9}, {3.837034189668165*^9, 
+   3.83703428986323*^9}, 3.83703432104703*^9, 3.837034352101941*^9, {
+   3.8370343883597746`*^9, 3.837034391916668*^9}, {3.8370349983581533`*^9, 
+   3.83703502818023*^9}, {3.837035063323311*^9, 3.8370351034767337`*^9}},
+ CellLabel->
+  "In[577]:=",ExpressionUUID->"1c8c6a1d-db9a-47f4-b9da-45441b32302c"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`circleRadius$$ = 2, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`circleRadius$$], 2}, 0.1, 3}}, Typeset`size$$ = {
+    360., {138., 144.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`circleRadius$1172933$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {$CellContext`circleRadius$$ = 2}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`circleRadius$$, $CellContext`circleRadius$1172933$$,
+          0]}, "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Plot3D[
+        $CellContext`testDiffIntsFunc[{$CellContext`circleCenterX, 
+          0, $CellContext`circleCenterZ}, $CellContext`circleRadius$$, \
+$CellContext`rectCenter, $CellContext`rectNormal, $CellContext`rectMajorAxis, \
+$CellContext`rectMajorRadius, $CellContext`rectMinorRadius], \
+{$CellContext`circleCenterX, -2, 2}, {$CellContext`circleCenterZ, -1, 1}], 
+      "Specifications" :> {{{$CellContext`circleRadius$$, 2}, 0.1, 3}}, 
+      "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{411., {185., 191.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{
+  3.836987594732003*^9, {3.836987643279335*^9, 3.836987675092209*^9}, {
+   3.8369877269580517`*^9, 3.8369877566718054`*^9}, {3.8369877870584583`*^9, 
+   3.8369878255864897`*^9}, 3.836987932916649*^9, {3.8369880429580717`*^9, 
+   3.83698805517461*^9}, {3.836988164372351*^9, 3.8369881719746733`*^9}, {
+   3.8370318243473415`*^9, 3.837031931447157*^9}, {3.8370325509594097`*^9, 
+   3.8370325584342294`*^9}, {3.837034187697645*^9, 3.8370342223309593`*^9}, {
+   3.8370342529380198`*^9, 3.837034278058422*^9}, 3.837034321888942*^9, 
+   3.8370343525162477`*^9, {3.83703438880292*^9, 3.83703439223745*^9}, 
+   3.837034738987368*^9, {3.8370349928758717`*^9, 3.837035074341073*^9}, 
+   3.8370351043538265`*^9, 3.837035180939245*^9, {3.837036465268814*^9, 
+   3.837036561176133*^9}, {3.837036608800499*^9, 3.8370366318703823`*^9}, 
+   3.8370404454234705`*^9},
+ CellLabel->
+  "Out[586]=",ExpressionUUID->"be1fec0f-26ee-4310-8db6-7e763fecded6"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Series", "[", 
+  RowBox[{
+   RowBox[{"ArcSin", "[", "x", "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", 
+     RowBox[{"\[Pi]", "/", "4"}], ",", "1"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.8370367101341066`*^9, 3.837036719687587*^9}, {
+  3.837036775151608*^9, 3.837036786264613*^9}, {3.837036819353667*^9, 
+  3.8370368197505155`*^9}, {3.837036913098732*^9, 3.837036916270335*^9}},
+ CellLabel->
+  "In[479]:=",ExpressionUUID->"4dfd2176-c70a-44b1-b7ae-8ad88298bd0f"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   RowBox[{"ArcSin", "[", 
+    FractionBox["\[Pi]", "4"], "]"}], "+", 
+   FractionBox[
+    RowBox[{"4", " ", 
+     RowBox[{"(", 
+      RowBox[{"x", "-", 
+       FractionBox["\[Pi]", "4"]}], ")"}]}], 
+    SqrtBox[
+     RowBox[{"16", "-", 
+      SuperscriptBox["\[Pi]", "2"]}]]], "+", 
+   InterpretationBox[
+    SuperscriptBox[
+     RowBox[{"O", "[", 
+      RowBox[{"x", "-", 
+       FractionBox["\[Pi]", "4"]}], "]"}], "2"],
+    SeriesData[$CellContext`x, Rational[1, 4] Pi, {}, 0, 2, 1],
+    Editable->False]}],
+  SeriesData[$CellContext`x, Rational[1, 4] Pi, {
+    ArcSin[Rational[1, 4] Pi], 4 (16 - Pi^2)^Rational[-1, 2]}, 0, 2, 1],
+  Editable->False]], "Output",
+ CellChangeTimes->{
+  3.8370367199762897`*^9, {3.8370367765455446`*^9, 3.837036786739043*^9}, 
+   3.837036820567387*^9, {3.837036913582308*^9, 3.8370369171425548`*^9}},
+ CellLabel->
+  "Out[479]=",ExpressionUUID->"362efe2e-5b87-4584-9212-14501f57b7c7"]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8370368711624746`*^9, 
+  3.8370369019692106`*^9}},ExpressionUUID->"aecd4b82-e14b-4ecf-8e51-\
+dde0d4044443"]
 },
 WindowSize->{1082, 841},
-WindowMargins->{{Automatic, 159}, {-168, Automatic}},
+WindowMargins->{{Automatic, 125}, {-6, Automatic}},
 TaggingRules->{"PresenterSettings" -> {"Dialogs" -> {}}},
 CellContext->Notebook,
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
@@ -685,9 +1114,18 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 32199, 536, 1264, "Input",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
-Cell[32782, 560, 5471, 104, 651, "Output",ExpressionUUID->"1e38fab5-1612-4792-bac8-fe13e4bcc691"]
-}, Open  ]]
+Cell[580, 22, 37387, 624, 1378, "Input",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
+Cell[37970, 648, 8298, 146, 557, "Output",ExpressionUUID->"ee9039b5-7ea1-48d1-bf99-b59967ddddd8"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[46305, 799, 7936, 191, 968, "Input",ExpressionUUID->"1c8c6a1d-db9a-47f4-b9da-45441b32302c"],
+Cell[54244, 992, 2902, 51, 395, "Output",ExpressionUUID->"be1fec0f-26ee-4310-8db6-7e763fecded6"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[57183, 1048, 502, 11, 28, "Input",ExpressionUUID->"4dfd2176-c70a-44b1-b7ae-8ad88298bd0f"],
+Cell[57688, 1061, 962, 27, 62, "Output",ExpressionUUID->"362efe2e-5b87-4584-9212-14501f57b7c7"]
+}, Open  ]],
+Cell[58665, 1091, 156, 3, 28, "Input",ExpressionUUID->"aecd4b82-e14b-4ecf-8e51-dde0d4044443"]
 }
 ]
 *)

@@ -1,0 +1,1134 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     50884,       1126]
+NotebookOptionsPosition[     49515,       1097]
+NotebookOutlinePosition[     49859,       1112]
+CellTagsIndexPosition[     49816,       1109]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gUtils`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gBRDF`\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<sgCommon`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlotsEx`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlots3D`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlots3DEx`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gSphericalCap`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Needs", "[", "\"\<gBlochSphere`\>\"", "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"gPrint", "[", "\"\<Real Area vs Approx Area\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "regDisk", ",", "regQuad", ",", "regRect", ",", "rectCenter", ",", 
+    "rectMajorAxis", ",", "rectMajorRadius", ",", "rectMinorRadius", ",", 
+    "\[IndentingNewLine]", "\t", "pointLT", ",", "pointRT", ",", "pointRB", 
+    ",", "pointLB", ",", "realArea", ",", "approxArea"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"rectCenter", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectMajorAxis", "=", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectMajorRadius", "=", "1"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectMinorRadius", "=", "0.5"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"regDisk", "=", 
+     RowBox[{"Disk", "[", 
+      RowBox[{"circleCenter", ",", "circleRadius"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"regQuad", "=", 
+     RowBox[{"Rectangle", "[", 
+      RowBox[{
+       RowBox[{"circleCenter", "-", 
+        RowBox[{"{", 
+         RowBox[{"circleRadius", ",", "circleRadius"}], "}"}]}], ",", 
+       RowBox[{"circleCenter", "+", 
+        RowBox[{"{", 
+         RowBox[{"circleRadius", ",", "circleRadius"}], "}"}]}]}], "]"}]}], 
+    ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"pointLT", ",", "pointRT", ",", "pointRB", ",", "pointLB"}], 
+      "}"}], "=", "\n", "\t\t", 
+     RowBox[{"gCalcRect2DEdgePts", "[", 
+      RowBox[{
+      "rectCenter", ",", "rectMajorAxis", ",", "rectMajorRadius", ",", 
+       "rectMinorRadius"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"regRect", "=", 
+     RowBox[{"Rectangle", "[", 
+      RowBox[{"pointLB", ",", "pointRT"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"realArea", "=", 
+       RowBox[{"Area", "[", 
+        RowBox[{"RegionIntersection", "[", 
+         RowBox[{"regDisk", ",", "regRect"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"approxArea", "=", 
+       RowBox[{"Area", "[", 
+        RowBox[{"RegionIntersection", "[", 
+         RowBox[{"regQuad", ",", "regRect"}], "]"}], "]"}]}], ";"}], "*)"}], 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"Show", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"pltRectLine2D", "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<center\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"0", ",", "0"}], "}"}]}], ",", 
+           RowBox[{"\"\<majorAxis\>\"", "\[Rule]", "rectMajorAxis"}], ",", 
+           "\[IndentingNewLine]", "\t", 
+           RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "1"}], ",", 
+           RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "0.5"}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Green"}]}], "|>"}], "]"}], 
+        ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"pltCircle2D", "[", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", "#center"}], ",", 
+             RowBox[{"\"\<radius\>\"", "\[Rule]", "#radius"}], ",", 
+             RowBox[{"\"\<color\>\"", "\[Rule]", "Blue"}], ",", 
+             RowBox[{"\"\<style\>\"", "\[Rule]", "Dashed"}]}], "|>"}], 
+           "\[IndentingNewLine]", "\t", "]"}], "&"}], "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<center\>\"", "\[Rule]", "circleCenter"}], ",", 
+           RowBox[{"\"\<radius\>\"", "\[Rule]", "circleRadius"}]}], "|>"}], 
+         "]"}]}], "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "}"}]}], ",", 
+      RowBox[{"Axes", "\[Rule]", "False"}], ",", 
+      RowBox[{"Boxed", "\[Rule]", "False"}], ",", 
+      RowBox[{"AspectRatio", "->", "1"}], ",", "\[IndentingNewLine]", 
+      "\t    ", 
+      RowBox[{"AxesLabel", "->", 
+       RowBox[{"{", 
+        RowBox[{"\"\<X\>\"", ",", "\"\<Y\>\""}], "}"}]}], ",", 
+      "\[IndentingNewLine]", "\t    ", 
+      RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "\[IndentingNewLine]", 
+     "]"}]}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", "        ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"circleCenter", ",", 
+       RowBox[{"{", 
+        RowBox[{"0.5", ",", "0.5"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", "\[IndentingNewLine]", 
+   "        ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"circleRadius", ",", "0.5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.1", ",", "1"}], "}"}]}], "}"}], ",", "\[IndentingNewLine]", 
+   "\t", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"realArea1", ",", "realArea"}], "}"}], "}"}], ",", 
+   "\[IndentingNewLine]", "\t", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"approxArea1", ",", "approxArea"}], "}"}], "}"}]}], 
+  "\[IndentingNewLine]", "]"}]}], "Input",
+ CellChangeTimes->{{3.83695177291152*^9, 3.8369518407009287`*^9}, 
+   3.836969649186077*^9},
+ CellLabel->"In[1]:=",ExpressionUUID->"b8c24e1c-fe34-48f1-a7c7-a459e947c2e8"],
+
+Cell[BoxData[
+ StyleBox["\<\" Real Area vs Approx Area\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{3.8369518413440256`*^9, 3.83696965227777*^9, 
+  3.8369769316304903`*^9, 3.836985376021186*^9},
+ CellLabel->
+  "During evaluation of \
+In[1]:=",ExpressionUUID->"5536de60-5422-4e1c-a65d-fafbd560d65f"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`approxArea1$$ = $CellContext`approxArea, \
+$CellContext`circleCenter$$ = {0.5, 0.5}, $CellContext`circleRadius$$ = 
+    0.5, $CellContext`realArea1$$ = $CellContext`realArea, Typeset`show$$ = 
+    True, Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`circleCenter$$], {0.5, 0.5}}, {-1, -1}, {1, 1}}, {{
+       Hold[$CellContext`circleRadius$$], 0.5}, {0.1, 1}}, {{
+       Hold[$CellContext`realArea1$$], $CellContext`realArea}}, {{
+       Hold[$CellContext`approxArea1$$], $CellContext`approxArea}}}, 
+    Typeset`size$$ = {360., {177., 183.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`circleCenter$4829$$ = {0, 
+    0}, $CellContext`circleRadius$4830$$ = False}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`approxArea1$$ = $CellContext`approxArea, \
+$CellContext`circleCenter$$ = {0.5, 0.5}, $CellContext`circleRadius$$ = 
+        0.5, $CellContext`realArea1$$ = $CellContext`realArea}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`circleCenter$$, $CellContext`circleCenter$4829$$, {
+         0, 0}], 
+        Hold[$CellContext`circleRadius$$, $CellContext`circleRadius$4830$$, 
+         False]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`rectCenter = {0, 
+         0}; $CellContext`rectMajorAxis = {1, 
+         0}; $CellContext`rectMajorRadius = 1; $CellContext`rectMinorRadius = 
+        0.5; $CellContext`regDisk = 
+        Disk[$CellContext`circleCenter$$, $CellContext`circleRadius$$]; \
+$CellContext`regQuad = 
+        Rectangle[$CellContext`circleCenter$$ - {$CellContext`circleRadius$$, \
+$CellContext`circleRadius$$}, $CellContext`circleCenter$$ + \
+{$CellContext`circleRadius$$, $CellContext`circleRadius$$}]; \
+{$CellContext`pointLT, $CellContext`pointRT, $CellContext`pointRB, \
+$CellContext`pointLB} = 
+        gUtils`gCalcRect2DEdgePts[$CellContext`rectCenter, \
+$CellContext`rectMajorAxis, $CellContext`rectMajorRadius, \
+$CellContext`rectMinorRadius]; $CellContext`regRect = 
+        Rectangle[$CellContext`pointLB, $CellContext`pointRT]; Show[{
+          gPlotsEx`pltRectLine2D[
+           Association[
+           "center" -> {0, 0}, "majorAxis" -> $CellContext`rectMajorAxis, 
+            "majorRadius" -> 1, "minorRadius" -> 0.5, "color" -> Green]], 
+          (gPlotsEx`pltCircle2D[
+           Association[
+           "center" -> Slot["center"], "radius" -> Slot["radius"], "color" -> 
+            Blue, "style" -> Dashed]]& )[
+           Association[
+           "center" -> $CellContext`circleCenter$$, 
+            "radius" -> $CellContext`circleRadius$$]]}, 
+         PlotRange -> {{-1, 1}, {-1, 1}}, Axes -> False, Boxed -> False, 
+         AspectRatio -> 1, AxesLabel -> {"X", "Y"}, ImageSize -> Medium]), 
+      "Specifications" :> {{{$CellContext`circleCenter$$, {0.5, 
+          0.5}}, {-1, -1}, {1, 1}}, {{$CellContext`circleRadius$$, 0.5}, {
+         0.1, 1}}, {{$CellContext`realArea1$$, $CellContext`realArea}}, \
+{{$CellContext`approxArea1$$, $CellContext`approxArea}}}, "Options" :> {}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{411., {285., 291.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.836951841397219*^9, 3.836969652306136*^9, 
+  3.836976931657029*^9, 3.8369853760470324`*^9},
+ CellLabel->"Out[12]=",ExpressionUUID->"03877587-2001-4dc4-97ba-75f9ca8d7b60"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"gPrint", "[", "\"\<Debug intersection border lines\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "rectCenter", ",", "rectNormal", ",", "rectMajorAxis", ",", 
+    "rectMinorAxis", ",", "rectMajorRadius", ",", "rectMinorRadius", ",", 
+    "circleCenter", ",", "\[IndentingNewLine]", "\t", "newLeft", ",", 
+    "newRight", ",", "newTop", ",", "newBottom", ",", "\[Theta]Line1A", ",", 
+    "\[Theta]Line1B", ",", "\[Theta]Line2A", ",", "\[Theta]Line2B", ",", 
+    "\[Phi]Line1A", ",", "\[Phi]Line1B", ",", "\[Phi]Line2A", ",", 
+    "\[Phi]Line2B", ",", "\[IndentingNewLine]", "\t", "\[Theta]r1", ",", 
+    "\[Theta]r2", ",", "\[Phi]r1", ",", "\[Phi]r2", ",", "\[Theta]Axis", ",", 
+    "\[Phi]Axis", ",", "intsArea"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"circleCenter", "=", 
+     RowBox[{"{", 
+      RowBox[{"circleCenterX", ",", "0", ",", "circleCenterZ"}], "}"}]}], ";",
+     "\[IndentingNewLine]", 
+    RowBox[{"rectCenter", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectNormal", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectMajorAxis", "=", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectMajorRadius", "=", "1"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectMinorRadius", "=", "0.5"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"rectMajorAxis", ",", "rectMinorAxis"}], "}"}], "=", 
+     RowBox[{"gCalcPlaneTangents", "[", 
+      RowBox[{"rectNormal", ",", "rectMajorAxis"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\t", "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Axis", "=", "rectMinorAxis"}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Axis", "=", "rectMajorAxis"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"newLeft", ",", "newRight", ",", "newBottom", ",", "newTop"}], 
+      "}"}], "=", 
+     RowBox[{"gCircIntsRectAreaDebug", "[", 
+      RowBox[{
+      "circleCenter", ",", "circleRadius", ",", "rectCenter", ",", 
+       "rectMajorAxis", ",", "\[IndentingNewLine]", "\t", "rectMinorAxis", 
+       ",", "rectMajorRadius", ",", "rectMinorRadius"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Line1A", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"-", "circleCenter"}], "*", "\[Theta]Axis"}], "+", 
+      RowBox[{"newLeft", "*", "\[Phi]Axis"}], "-", 
+      RowBox[{"circleRadius", "*", "\[Theta]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Line1B", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"-", "circleCenter"}], "*", "\[Theta]Axis"}], "+", 
+      RowBox[{"newLeft", "*", "\[Phi]Axis"}], "+", 
+      RowBox[{"circleRadius", "*", "\[Theta]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Line2A", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"-", "circleCenter"}], "*", "\[Theta]Axis"}], "+", 
+      RowBox[{"newRight", "*", "\[Phi]Axis"}], "-", 
+      RowBox[{"circleRadius", "*", "\[Theta]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Line2B", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"-", "circleCenter"}], "*", "\[Theta]Axis"}], "+", 
+      RowBox[{"newRight", "*", "\[Phi]Axis"}], "+", 
+      RowBox[{"circleRadius", "*", "\[Theta]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Line1A", "=", 
+     RowBox[{
+      RowBox[{"circleCenter", "*", "\[Phi]Axis"}], "+", 
+      RowBox[{"newTop", "*", "\[Theta]Axis"}], "-", 
+      RowBox[{"circleRadius", "*", "\[Phi]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Line1B", "=", 
+     RowBox[{
+      RowBox[{"circleCenter", "*", "\[Phi]Axis"}], "+", 
+      RowBox[{"newTop", "*", "\[Theta]Axis"}], "+", 
+      RowBox[{"circleRadius", "*", "\[Phi]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Line2A", "=", 
+     RowBox[{
+      RowBox[{"circleCenter", "*", "\[Phi]Axis"}], "+", 
+      RowBox[{"newBottom", "*", "\[Theta]Axis"}], "-", 
+      RowBox[{"circleRadius", "*", "\[Phi]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Line2B", "=", 
+     RowBox[{
+      RowBox[{"circleCenter", "*", "\[Phi]Axis"}], "+", 
+      RowBox[{"newBottom", "*", "\[Theta]Axis"}], "+", 
+      RowBox[{"circleRadius", "*", "\[Phi]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"intsArea", "=", 
+     RowBox[{"gCircIntsRectArea", "[", 
+      RowBox[{
+      "circleCenter", ",", "circleRadius", ",", "rectCenter", ",", 
+       "rectMajorAxis", ",", "\[IndentingNewLine]", "\t", "rectMinorAxis", 
+       ",", "rectMajorRadius", ",", "rectMinorRadius"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"Show", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"pltRect3D", "[", " ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", "rectCenter"}], ",", 
+             RowBox[{"\"\<normal\>\"", "\[Rule]", "rectNormal"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<majorAxis\>\"", "\[Rule]", "rectMajorAxis"}], ",", 
+             RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "rectMajorRadius"}], 
+             ",", 
+             RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "rectMinorRadius"}], 
+             ",", "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                "LightBlue"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", "  ",
+            "]"}], "&"}], "[", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"pltCircle3D", "[", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", "circleCenter"}], ",", 
+             RowBox[{"\"\<normal\>\"", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ",", 
+             RowBox[{"\"\<radius\>\"", "\[Rule]", "#radius"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"\"\<thickness\>\"", "\[Rule]", "2"}], ",", 
+             RowBox[{"\"\<color\>\"", "\[Rule]", "Green"}]}], "|>"}], 
+           "\[IndentingNewLine]", "\t", "]"}], "&"}], "[", 
+         RowBox[{"<|", 
+          RowBox[{"\"\<radius\>\"", "\[Rule]", "circleRadius"}], "|>"}], 
+         "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"\[Theta]", " ", "lines"}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"pltLine3D", "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<points\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\[Theta]Line1A", ",", "\[Theta]Line1B"}], "}"}]}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Red"}]}], "|>"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"pltLine3D", "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<points\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\[Theta]Line2A", ",", "\[Theta]Line2B"}], "}"}]}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Red"}]}], "|>"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"\[Phi]", " ", "lines"}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"pltLine3D", "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<points\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\[Phi]Line1A", ",", "\[Phi]Line1B"}], "}"}]}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Blue"}]}], "|>"}], "]"}], ",",
+         "\[IndentingNewLine]", 
+        RowBox[{"pltLine3D", "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<points\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\[Phi]Line2A", ",", "\[Phi]Line2B"}], "}"}]}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Blue"}]}], "|>"}], "]"}]}], 
+       "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "2"}], ",", "2"}], "}"}]}], "}"}]}], ",", "\n", 
+      "\t\t", 
+      RowBox[{"Axes", "\[Rule]", "True"}], ",", 
+      RowBox[{"Boxed", "\[Rule]", "False"}], ",", 
+      RowBox[{"AspectRatio", "->", "1"}], ",", 
+      RowBox[{"ViewPoint", "\[Rule]", "Front"}], ",", "\[IndentingNewLine]", 
+      "\t    ", 
+      RowBox[{"ViewProjection", "\[Rule]", "\"\<Orthographic\>\""}], ",", 
+      RowBox[{"AxesLabel", "->", 
+       RowBox[{"{", 
+        RowBox[{"\"\<X\>\"", ",", "\"\<Y\>\"", ",", "\"\<Z\>\""}], "}"}]}], 
+      ",", "\[IndentingNewLine]", "\t    ", 
+      RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "\[IndentingNewLine]", 
+     "]"}]}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", "        ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"circleCenterX", ",", 
+       RowBox[{"-", "0.725"}]}], "}"}], ",", 
+     RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", "\[IndentingNewLine]", 
+   "        ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"circleCenterZ", ",", 
+       RowBox[{"-", "0.06"}]}], "}"}], ",", 
+     RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", "\[IndentingNewLine]", 
+   "        ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"circleRadius", ",", "0.5"}], "}"}], ",", "0.1", ",", "2"}], 
+    "}"}], ",", "\[IndentingNewLine]", "\t", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"debug1", ",", 
+      RowBox[{"{", 
+       RowBox[{"newLeft", ",", "newRight", ",", "newBottom", ",", "newTop"}], 
+       "}"}]}], "}"}], "}"}], ",", "\[IndentingNewLine]", "\t", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"intsArea1", ",", "intsArea"}], "}"}], "}"}]}], 
+  "\[IndentingNewLine]", "\t", 
+  RowBox[{"(*", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"debug2", ",", 
+      RowBox[{"{", 
+       RowBox[{
+       "\[Theta]Line1A", ",", "\[Theta]Line1B", ",", "\[Theta]Line2A", ",", 
+        "\[Theta]Line2B"}], "}"}]}], "}"}], "}"}], "*)"}], 
+  "\[IndentingNewLine]", "]"}]}], "Input",
+ CellChangeTimes->{{3.836976907221257*^9, 3.836976922253789*^9}, 
+   3.8369840872364626`*^9},
+ CellLabel->
+  "In[669]:=",ExpressionUUID->"39b4b151-d9a7-4aba-849b-d5b9a84d7945"],
+
+Cell[BoxData[
+ StyleBox["\<\" Debug intersection border lines\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{{3.836976925889828*^9, 3.8369769339363613`*^9}, 
+   3.8369840879626007`*^9},
+ CellLabel->
+  "During evaluation of \
+In[669]:=",ExpressionUUID->"69fe50a1-882d-4049-96f7-faf2d7225034"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`circleCenterX$$ = -0.725, \
+$CellContext`circleCenterZ$$ = -0.06, $CellContext`circleRadius$$ = 
+    0.5, $CellContext`debug1$$ = {-1, -0.22499999999999998`, -0.44, 
+     0.5}, $CellContext`intsArea1$$ = 0.7284999999999999, Typeset`show$$ = 
+    True, Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`circleCenterX$$], -0.725}, -2, 2}, {{
+       Hold[$CellContext`circleCenterZ$$], -0.06}, -2, 2}, {{
+       Hold[$CellContext`circleRadius$$], 0.5}, 0.1, 2}, {{
+       Hold[$CellContext`debug1$$], {-1, -0.22499999999999998`, -0.44, 
+        0.5}}}, {{
+       Hold[$CellContext`intsArea1$$], 0.7284999999999999}}}, 
+    Typeset`size$$ = {360., {180., 186.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`circleCenterX$297077$$ = 
+    0, $CellContext`circleCenterZ$297078$$ = 
+    0, $CellContext`circleRadius$297079$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`circleCenterX$$ = -0.725, \
+$CellContext`circleCenterZ$$ = -0.06, $CellContext`circleRadius$$ = 
+        0.5, $CellContext`debug1$$ = {$CellContext`newLeft, \
+$CellContext`newRight, $CellContext`newBottom, $CellContext`newTop}, \
+$CellContext`intsArea1$$ = $CellContext`intsArea}, "ControllerVariables" :> {
+        Hold[$CellContext`circleCenterX$$, \
+$CellContext`circleCenterX$297077$$, 0], 
+        Hold[$CellContext`circleCenterZ$$, \
+$CellContext`circleCenterZ$297078$$, 0], 
+        Hold[$CellContext`circleRadius$$, $CellContext`circleRadius$297079$$, 
+         0]}, "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`circleCenter = {$CellContext`circleCenterX$$, 
+          0, $CellContext`circleCenterZ$$}; $CellContext`rectCenter = {0, 0, 
+         0}; $CellContext`rectNormal = {0, 1, 
+         0}; $CellContext`rectMajorAxis = {1, 0, 
+         0}; $CellContext`rectMajorRadius = 1; $CellContext`rectMinorRadius = 
+        0.5; {$CellContext`rectMajorAxis, $CellContext`rectMinorAxis} = 
+        gUtils`gCalcPlaneTangents[$CellContext`rectNormal, \
+$CellContext`rectMajorAxis]; $CellContext`\[Theta]Axis = \
+$CellContext`rectMinorAxis; $CellContext`\[Phi]Axis = \
+$CellContext`rectMajorAxis; {$CellContext`newLeft, $CellContext`newRight, \
+$CellContext`newBottom, $CellContext`newTop} = 
+        gUtils`gCircIntsRectAreaDebug[$CellContext`circleCenter, \
+$CellContext`circleRadius$$, $CellContext`rectCenter, \
+$CellContext`rectMajorAxis, $CellContext`rectMinorAxis, \
+$CellContext`rectMajorRadius, $CellContext`rectMinorRadius]; $CellContext`\
+\[Theta]Line1A = (-$CellContext`circleCenter) $CellContext`\[Theta]Axis + \
+$CellContext`newLeft $CellContext`\[Phi]Axis - $CellContext`circleRadius$$ \
+$CellContext`\[Theta]Axis; $CellContext`\[Theta]Line1B = \
+(-$CellContext`circleCenter) $CellContext`\[Theta]Axis + $CellContext`newLeft \
+$CellContext`\[Phi]Axis + $CellContext`circleRadius$$ \
+$CellContext`\[Theta]Axis; $CellContext`\[Theta]Line2A = \
+(-$CellContext`circleCenter) $CellContext`\[Theta]Axis + \
+$CellContext`newRight $CellContext`\[Phi]Axis - $CellContext`circleRadius$$ \
+$CellContext`\[Theta]Axis; $CellContext`\[Theta]Line2B = \
+(-$CellContext`circleCenter) $CellContext`\[Theta]Axis + \
+$CellContext`newRight $CellContext`\[Phi]Axis + $CellContext`circleRadius$$ \
+$CellContext`\[Theta]Axis; $CellContext`\[Phi]Line1A = \
+$CellContext`circleCenter $CellContext`\[Phi]Axis + $CellContext`newTop \
+$CellContext`\[Theta]Axis - $CellContext`circleRadius$$ \
+$CellContext`\[Phi]Axis; $CellContext`\[Phi]Line1B = \
+$CellContext`circleCenter $CellContext`\[Phi]Axis + $CellContext`newTop \
+$CellContext`\[Theta]Axis + $CellContext`circleRadius$$ \
+$CellContext`\[Phi]Axis; $CellContext`\[Phi]Line2A = \
+$CellContext`circleCenter $CellContext`\[Phi]Axis + $CellContext`newBottom \
+$CellContext`\[Theta]Axis - $CellContext`circleRadius$$ \
+$CellContext`\[Phi]Axis; $CellContext`\[Phi]Line2B = \
+$CellContext`circleCenter $CellContext`\[Phi]Axis + $CellContext`newBottom \
+$CellContext`\[Theta]Axis + $CellContext`circleRadius$$ \
+$CellContext`\[Phi]Axis; $CellContext`intsArea = 
+        gUtils`gCircIntsRectArea[$CellContext`circleCenter, \
+$CellContext`circleRadius$$, $CellContext`rectCenter, \
+$CellContext`rectMajorAxis, $CellContext`rectMinorAxis, \
+$CellContext`rectMajorRadius, $CellContext`rectMinorRadius]; Show[{
+          (gPlots3DEx`pltRect3D[
+           Association[
+           "center" -> $CellContext`rectCenter, 
+            "normal" -> $CellContext`rectNormal, 
+            "majorAxis" -> $CellContext`rectMajorAxis, 
+            "majorRadius" -> $CellContext`rectMajorRadius, 
+            "minorRadius" -> $CellContext`rectMinorRadius, "colorFunc" -> 
+            Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, LightBlue]]]& )[], 
+          (gPlots3DEx`pltCircle3D[
+           Association[
+           "center" -> $CellContext`circleCenter, "normal" -> {0, 1, 0}, 
+            "radius" -> Slot["radius"], "thickness" -> 2, "color" -> 
+            Green]]& )[
+           Association["radius" -> $CellContext`circleRadius$$]], 
+          gPlots3DEx`pltLine3D[
+           Association[
+           "points" -> {$CellContext`\[Theta]Line1A, \
+$CellContext`\[Theta]Line1B}, "color" -> Red]], 
+          gPlots3DEx`pltLine3D[
+           Association[
+           "points" -> {$CellContext`\[Theta]Line2A, \
+$CellContext`\[Theta]Line2B}, "color" -> Red]], 
+          gPlots3DEx`pltLine3D[
+           Association[
+           "points" -> {$CellContext`\[Phi]Line1A, $CellContext`\[Phi]Line1B},
+             "color" -> Blue]], 
+          gPlots3DEx`pltLine3D[
+           Association[
+           "points" -> {$CellContext`\[Phi]Line2A, $CellContext`\[Phi]Line2B},
+             "color" -> Blue]]}, PlotRange -> {{-2, 2}, {-2, 2}, {-2, 2}}, 
+         Axes -> True, Boxed -> False, AspectRatio -> 1, ViewPoint -> Front, 
+         ViewProjection -> "Orthographic", AxesLabel -> {"X", "Y", "Z"}, 
+         ImageSize -> Medium]), 
+      "Specifications" :> {{{$CellContext`circleCenterX$$, -0.725}, -2, 
+         2}, {{$CellContext`circleCenterZ$$, -0.06}, -2, 
+         2}, {{$CellContext`circleRadius$$, 0.5}, 0.1, 
+         2}, {{$CellContext`debug1$$, {$CellContext`newLeft, \
+$CellContext`newRight, $CellContext`newBottom, $CellContext`newTop}}}, \
+{{$CellContext`intsArea1$$, $CellContext`intsArea}}}, "Options" :> {}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{411., {277., 283.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.8369769259222927`*^9, 3.836976933973401*^9}, 
+   3.836984087989558*^9},
+ CellLabel->
+  "Out[671]=",ExpressionUUID->"b37d7e3a-9e9c-47d8-aa31-1e89f7985a11"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"gPrint", "[", "\"\<\[Theta] lines and \[Phi] lines\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "rectCenter", ",", "rectNormal", ",", "rectMajorAxis", ",", 
+    "rectMinorAxis", ",", "rectMajorRadius", ",", "rectMinorRadius", ",", 
+    "circleCenter", ",", "\[IndentingNewLine]", "\t", "\[Theta]r1", ",", 
+    "\[Theta]r2", ",", "\[Phi]r1", ",", "\[Phi]r2", ",", "\[Theta]Axis", ",", 
+    "\[Phi]Axis", ",", "\[Theta]Line1A", ",", "\[Theta]Line1B", ",", 
+    "\[Theta]Line2A", ",", "\[Theta]Line2B", ",", "\[Phi]Line1A", ",", 
+    "\[Phi]Line1B", ",", "\[Phi]Line2A", ",", "\[Phi]Line2B", ",", 
+    "\[IndentingNewLine]", "\t", "\[Theta]Multi", ",", "\[Phi]Multi"}], "]"}],
+   ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"circleCenter", "=", 
+     RowBox[{"{", 
+      RowBox[{"circleCenterX", ",", "0", ",", "circleCenterZ"}], "}"}]}], ";",
+     "\[IndentingNewLine]", 
+    RowBox[{"rectCenter", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectNormal", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectMajorAxis", "=", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectMajorRadius", "=", "1"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rectMinorRadius", "=", "0.5"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"rectMajorAxis", ",", "rectMinorAxis"}], "}"}], "=", 
+     RowBox[{"gCalcPlaneTangents", "[", 
+      RowBox[{"rectNormal", ",", "rectMajorAxis"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "\[Theta]r1", ",", "\[Theta]r2", ",", "\[Phi]r1", ",", "\[Phi]r2", ",", 
+       "\[Theta]Axis", ",", "\[Phi]Axis"}], "}"}], "=", 
+     RowBox[{"gCircIntsRectAngles", "[", 
+      RowBox[{
+      "circleCenter", ",", "circleRadius", ",", "rectCenter", ",", 
+       "rectMajorAxis", ",", "\[IndentingNewLine]", "\t", "rectMinorAxis", 
+       ",", "rectMajorRadius", ",", "rectMinorRadius"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Line1A", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Theta]r1", "*", "\[Theta]Axis"}], "-", 
+      RowBox[{"circleRadius", "*", "\[Phi]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Line1B", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Theta]r1", "*", "\[Theta]Axis"}], "+", 
+      RowBox[{"circleRadius", "*", "\[Phi]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Line2A", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Theta]r2", "*", "\[Theta]Axis"}], "-", 
+      RowBox[{"circleRadius", "*", "\[Phi]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Theta]Line2B", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Theta]r2", "*", "\[Theta]Axis"}], "+", 
+      RowBox[{"circleRadius", "*", "\[Phi]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Line1A", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Phi]r1", "*", "\[Phi]Axis"}], "-", 
+      RowBox[{"circleRadius", "*", "\[Theta]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Line1B", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Phi]r1", "*", "\[Phi]Axis"}], "+", 
+      RowBox[{"circleRadius", "*", "\[Theta]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Line2A", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Phi]r2", "*", "\[Phi]Axis"}], "-", 
+      RowBox[{"circleRadius", "*", "\[Theta]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Phi]Line2B", "=", 
+     RowBox[{"circleCenter", "+", 
+      RowBox[{"\[Phi]r2", "*", "\[Phi]Axis"}], "+", 
+      RowBox[{"circleRadius", "*", "\[Theta]Axis"}]}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"Show", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"pltRect3D", "[", " ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", "rectCenter"}], ",", 
+             RowBox[{"\"\<normal\>\"", "\[Rule]", "rectNormal"}], ",", 
+             "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<majorAxis\>\"", "\[Rule]", "rectMajorAxis"}], ",", 
+             RowBox[{"\"\<majorRadius\>\"", "\[Rule]", "rectMajorRadius"}], 
+             ",", 
+             RowBox[{"\"\<minorRadius\>\"", "\[Rule]", "rectMinorRadius"}], 
+             ",", "\[IndentingNewLine]", "\t", 
+             RowBox[{"\"\<colorFunc\>\"", "\[Rule]", 
+              RowBox[{"Function", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"x", ",", "y", ",", "z", ",", "p"}], "}"}], ",", 
+                "LightBlue"}], "]"}]}]}], "|>"}], "\[IndentingNewLine]", "  ",
+            "]"}], "&"}], "[", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"pltCircle3D", "[", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<center\>\"", "\[Rule]", "circleCenter"}], ",", 
+             RowBox[{"\"\<normal\>\"", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], ",", 
+             RowBox[{"\"\<radius\>\"", "\[Rule]", "#radius"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"\"\<thickness\>\"", "\[Rule]", "2"}], ",", 
+             RowBox[{"\"\<color\>\"", "\[Rule]", "Green"}]}], "|>"}], 
+           "\[IndentingNewLine]", "\t", "]"}], "&"}], "[", 
+         RowBox[{"<|", 
+          RowBox[{"\"\<radius\>\"", "\[Rule]", "circleRadius"}], "|>"}], 
+         "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"\[Theta]", " ", "lines"}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"pltLine3D", "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<points\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\[Theta]Line1A", ",", "\[Theta]Line1B"}], "}"}]}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Red"}]}], "|>"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"pltLine3D", "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<points\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\[Theta]Line2A", ",", "\[Theta]Line2B"}], "}"}]}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Red"}]}], "|>"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"\[Phi]", " ", "lines"}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"pltLine3D", "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<points\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\[Phi]Line1A", ",", "\[Phi]Line1B"}], "}"}]}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Blue"}]}], "|>"}], "]"}], ",",
+         "\[IndentingNewLine]", 
+        RowBox[{"pltLine3D", "[", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<points\>\"", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\[Phi]Line2A", ",", "\[Phi]Line2B"}], "}"}]}], ",", 
+           RowBox[{"\"\<color\>\"", "\[Rule]", "Blue"}]}], "|>"}], "]"}]}], 
+       "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "2"}], ",", "2"}], "}"}]}], "}"}]}], ",", "\n", 
+      "\t\t", 
+      RowBox[{"Axes", "\[Rule]", "True"}], ",", 
+      RowBox[{"Boxed", "\[Rule]", "False"}], ",", 
+      RowBox[{"AspectRatio", "->", "1"}], ",", 
+      RowBox[{"ViewPoint", "\[Rule]", "Front"}], ",", "\[IndentingNewLine]", 
+      "\t    ", 
+      RowBox[{"ViewProjection", "\[Rule]", "\"\<Orthographic\>\""}], ",", 
+      RowBox[{"AxesLabel", "->", 
+       RowBox[{"{", 
+        RowBox[{"\"\<X\>\"", ",", "\"\<Y\>\"", ",", "\"\<Z\>\""}], "}"}]}], 
+      ",", "\[IndentingNewLine]", "\t    ", 
+      RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "\[IndentingNewLine]", 
+     "]"}]}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", "        ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"circleCenterX", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+   "        ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"circleCenterZ", ",", 
+       RowBox[{"-", "0.06"}]}], "}"}], ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+   "        ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"circleRadius", ",", "0.5"}], "}"}], ",", "0.1", ",", "2"}], 
+    "}"}], ",", "\[IndentingNewLine]", "\t", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"debug1", ",", 
+      RowBox[{"{", 
+       RowBox[{
+       "\[Theta]r1", ",", "\[Theta]r2", ",", "\[Phi]r1", ",", "\[Phi]r2"}], 
+       "}"}]}], "}"}], "}"}]}], "\[IndentingNewLine]", "]"}]}], "Input",
+ CellChangeTimes->{{3.836985381417672*^9, 3.8369853928863077`*^9}, 
+   3.8369858172397585`*^9},ExpressionUUID->"d6486029-0d66-4771-ad9c-\
+47ba5c62b84a"],
+
+Cell[BoxData[
+ StyleBox["\<\" \[Theta] lines and \[Phi] lines\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{3.8369853931613617`*^9},
+ CellLabel->
+  "During evaluation of \
+In[13]:=",ExpressionUUID->"93380c13-a0d0-46df-98c3-30b98cf75dad"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`circleCenterX$$ = 
+    0.925, $CellContext`circleCenterZ$$ = -1., $CellContext`circleRadius$$ = 
+    0.5, Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`circleCenterX$$], -1}, -1, 1}, {{
+       Hold[$CellContext`circleCenterZ$$], -0.06}, -1, 1}, {{
+       Hold[$CellContext`circleRadius$$], 0.5}, 0.1, 2}}, Typeset`size$$ = {
+    360., {180., 186.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`circleCenterX$8680$$ = 
+    0, $CellContext`circleCenterZ$8681$$ = 
+    0, $CellContext`circleRadius$8682$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`circleCenterX$$ = -1, \
+$CellContext`circleCenterZ$$ = -0.06, $CellContext`circleRadius$$ = 0.5}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`circleCenterX$$, $CellContext`circleCenterX$8680$$, 
+         0], 
+        Hold[$CellContext`circleCenterZ$$, $CellContext`circleCenterZ$8681$$, 
+         0], 
+        Hold[$CellContext`circleRadius$$, $CellContext`circleRadius$8682$$, 
+         0]}, "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`circleCenter = {$CellContext`circleCenterX$$, 
+          0, $CellContext`circleCenterZ$$}; $CellContext`rectCenter = {0, 0, 
+         0}; $CellContext`rectNormal = {0, 1, 
+         0}; $CellContext`rectMajorAxis = {1, 0, 
+         0}; $CellContext`rectMajorRadius = 1; $CellContext`rectMinorRadius = 
+        0.5; {$CellContext`rectMajorAxis, $CellContext`rectMinorAxis} = 
+        gUtils`gCalcPlaneTangents[$CellContext`rectNormal, \
+$CellContext`rectMajorAxis]; {$CellContext`\[Theta]r1, \
+$CellContext`\[Theta]r2, $CellContext`\[Phi]r1, $CellContext`\[Phi]r2, \
+$CellContext`\[Theta]Axis, $CellContext`\[Phi]Axis, \
+$CellContext`\[Theta]Multi, $CellContext`\[Phi]Multi} = 
+        gBRDF`gCircIntsRectAngles[$CellContext`circleCenter, \
+$CellContext`circleRadius$$, $CellContext`rectCenter, \
+$CellContext`rectMajorAxis, $CellContext`rectMinorAxis, \
+$CellContext`rectMajorRadius, $CellContext`rectMinorRadius]; $CellContext`\
+\[Theta]Line1A = ($CellContext`circleCenter $CellContext`\[Phi]Axis) \
+$CellContext`\[Phi]Multi + $CellContext`\[Theta]r1 $CellContext`\[Theta]Axis - \
+$CellContext`circleRadius$$ $CellContext`\[Phi]Axis; \
+$CellContext`\[Theta]Line1B = ($CellContext`circleCenter \
+$CellContext`\[Phi]Axis) $CellContext`\[Phi]Multi + $CellContext`\[Theta]r1 \
+$CellContext`\[Theta]Axis + $CellContext`circleRadius$$ \
+$CellContext`\[Phi]Axis; $CellContext`\[Theta]Line2A = \
+($CellContext`circleCenter $CellContext`\[Phi]Axis) $CellContext`\[Phi]Multi + \
+$CellContext`\[Theta]r2 $CellContext`\[Theta]Axis - \
+$CellContext`circleRadius$$ $CellContext`\[Phi]Axis; \
+$CellContext`\[Theta]Line2B = ($CellContext`circleCenter \
+$CellContext`\[Phi]Axis) $CellContext`\[Phi]Multi + $CellContext`\[Theta]r2 \
+$CellContext`\[Theta]Axis + $CellContext`circleRadius$$ \
+$CellContext`\[Phi]Axis; $CellContext`\[Phi]Line1A = \
+($CellContext`circleCenter $CellContext`\[Theta]Axis) \
+$CellContext`\[Theta]Multi + $CellContext`\[Phi]r1 $CellContext`\[Phi]Axis - \
+$CellContext`circleRadius$$ $CellContext`\[Theta]Axis; \
+$CellContext`\[Phi]Line1B = ($CellContext`circleCenter \
+$CellContext`\[Theta]Axis) $CellContext`\[Theta]Multi + $CellContext`\[Phi]r1 \
+$CellContext`\[Phi]Axis + $CellContext`circleRadius$$ \
+$CellContext`\[Theta]Axis; $CellContext`\[Phi]Line2A = \
+($CellContext`circleCenter $CellContext`\[Theta]Axis) \
+$CellContext`\[Theta]Multi + $CellContext`\[Phi]r2 $CellContext`\[Phi]Axis - \
+$CellContext`circleRadius$$ $CellContext`\[Theta]Axis; \
+$CellContext`\[Phi]Line2B = ($CellContext`circleCenter \
+$CellContext`\[Theta]Axis) $CellContext`\[Theta]Multi + $CellContext`\[Phi]r2 \
+$CellContext`\[Phi]Axis + $CellContext`circleRadius$$ \
+$CellContext`\[Theta]Axis; Show[{
+          (gPlots3DEx`pltRect3D[
+           Association[
+           "center" -> $CellContext`rectCenter, 
+            "normal" -> $CellContext`rectNormal, 
+            "majorAxis" -> $CellContext`rectMajorAxis, 
+            "majorRadius" -> $CellContext`rectMajorRadius, 
+            "minorRadius" -> $CellContext`rectMinorRadius, "colorFunc" -> 
+            Function[{$CellContext`x, $CellContext`y, $CellContext`z, \
+$CellContext`p}, LightBlue]]]& )[], 
+          (gPlots3DEx`pltCircle3D[
+           Association[
+           "center" -> $CellContext`circleCenter, "normal" -> {0, 1, 0}, 
+            "radius" -> Slot["radius"], "thickness" -> 2, "color" -> 
+            Green]]& )[
+           Association["radius" -> $CellContext`circleRadius$$]], 
+          gPlots3DEx`pltLine3D[
+           Association[
+           "points" -> {$CellContext`\[Theta]Line1A, \
+$CellContext`\[Theta]Line1B}, "color" -> Red]], 
+          gPlots3DEx`pltLine3D[
+           Association[
+           "points" -> {$CellContext`\[Theta]Line2A, \
+$CellContext`\[Theta]Line2B}, "color" -> Red]], 
+          gPlots3DEx`pltLine3D[
+           Association[
+           "points" -> {$CellContext`\[Phi]Line1A, $CellContext`\[Phi]Line1B},
+             "color" -> Blue]], 
+          gPlots3DEx`pltLine3D[
+           Association[
+           "points" -> {$CellContext`\[Phi]Line2A, $CellContext`\[Phi]Line2B},
+             "color" -> Blue]]}, PlotRange -> {{-2, 2}, {-2, 2}, {-2, 2}}, 
+         Axes -> True, Boxed -> False, AspectRatio -> 1, ViewPoint -> Front, 
+         ViewProjection -> "Orthographic", AxesLabel -> {"X", "Y", "Z"}, 
+         ImageSize -> Medium]), 
+      "Specifications" :> {{{$CellContext`circleCenterX$$, -1}, -1, 
+         1}, {{$CellContext`circleCenterZ$$, -0.06}, -1, 
+         1}, {{$CellContext`circleRadius$$, 0.5}, 0.1, 2}}, "Options" :> {}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{411., {255., 261.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.8369853931748734`*^9},
+ CellLabel->"Out[15]=",ExpressionUUID->"048a81e4-f341-48c3-bd75-2c9e5473b737"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Set","shape",
+   "\"Lists \\!\\(\\*RowBox[{\\\"{\\\", RowBox[{\\\"\[Theta]r1\\\", \
+\\\",\\\", \\\"\[Theta]r2\\\", \\\",\\\", \\\"\[Phi]r1\\\", \\\",\\\", \\\"\
+\[Phi]r2\\\", \\\",\\\", \\\"\[Theta]Axis\\\", \\\",\\\", \\\"\[Phi]Axis\\\", \
+\\\",\\\", \\\"\[Theta]Multi\\\", \\\",\\\", \\\"\[Phi]Multi\\\"}], \
+\\\"}\\\"}]\\) and \\!\\(\\*RowBox[{\\\"{\\\", RowBox[{RowBox[{\\\"-\\\", \
+\\\"0.5`\\\"}], \\\",\\\", RowBox[{\\\"-\\\", \\\"0.5`\\\"}], \\\",\\\", \
+RowBox[{\\\"-\\\", \\\"0.5`\\\"}], \\\",\\\", \\\"0.07499999999999996`\\\", \
+\\\",\\\", RowBox[{\\\"{\\\", RowBox[{\\\"0\\\", \\\",\\\", \\\"0\\\", \
+\\\",\\\", RowBox[{\\\"-\\\", \\\"1\\\"}]}], \\\"}\\\"}], \\\",\\\", RowBox[{\
+\\\"{\\\", RowBox[{\\\"1\\\", \\\",\\\", \\\"0\\\", \\\",\\\", \\\"0\\\"}], \
+\\\"}\\\"}]}], \\\"}\\\"}]\\) are not the same shape.\"",2,236,6,
+   30192717343828054656,"Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.8369858127514224`*^9},
+ CellLabel->"",ExpressionUUID->"856b7bd9-492d-4a40-8d2e-77be7caac299"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Set","shape",
+   "\"Lists \\!\\(\\*RowBox[{\\\"{\\\", RowBox[{\\\"\[Theta]r1\\\", \
+\\\",\\\", \\\"\[Theta]r2\\\", \\\",\\\", \\\"\[Phi]r1\\\", \\\",\\\", \\\"\
+\[Phi]r2\\\", \\\",\\\", \\\"\[Theta]Axis\\\", \\\",\\\", \\\"\[Phi]Axis\\\", \
+\\\",\\\", \\\"\[Theta]Multi\\\", \\\",\\\", \\\"\[Phi]Multi\\\"}], \
+\\\"}\\\"}]\\) and \\!\\(\\*RowBox[{\\\"{\\\", RowBox[{RowBox[{\\\"-\\\", \
+\\\"0.5`\\\"}], \\\",\\\", RowBox[{\\\"-\\\", \\\"0.5`\\\"}], \\\",\\\", \
+RowBox[{\\\"-\\\", \\\"0.5`\\\"}], \\\",\\\", \\\"0.07499999999999996`\\\", \
+\\\",\\\", RowBox[{\\\"{\\\", RowBox[{\\\"0\\\", \\\",\\\", \\\"0\\\", \
+\\\",\\\", RowBox[{\\\"-\\\", \\\"1\\\"}]}], \\\"}\\\"}], \\\",\\\", RowBox[{\
+\\\"{\\\", RowBox[{\\\"1\\\", \\\",\\\", \\\"0\\\", \\\",\\\", \\\"0\\\"}], \
+\\\"}\\\"}]}], \\\"}\\\"}]\\) are not the same shape.\"",2,236,7,
+   30192717343828054656,"Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.8369858172766466`*^9},
+ CellLabel->"",ExpressionUUID->"fb8e6dd0-a908-488d-9a1c-8ff8c101fb29"]
+}, Open  ]]
+},
+WindowSize->{1081, 819},
+WindowMargins->{{Automatic, 216}, {53, Automatic}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 6705, 170, 884, "Input",ExpressionUUID->"b8c24e1c-fe34-48f1-a7c7-a459e947c2e8"],
+Cell[7288, 194, 367, 9, 30, "Print",ExpressionUUID->"5536de60-5422-4e1c-a65d-fafbd560d65f"],
+Cell[7658, 205, 4186, 78, 595, "Output",ExpressionUUID->"03877587-2001-4dc4-97ba-75f9ca8d7b60"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[11881, 288, 10982, 257, 1150, "Input",ExpressionUUID->"39b4b151-d9a7-4aba-849b-d5b9a84d7945"],
+Cell[22866, 547, 358, 9, 30, "Print",ExpressionUUID->"69fe50a1-882d-4049-96f7-faf2d7225034"],
+Cell[23227, 558, 7454, 136, 579, "Output",ExpressionUUID->"b37d7e3a-9e9c-47d8-aa31-1e89f7985a11"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[30718, 699, 9631, 222, 998, "Input",ExpressionUUID->"d6486029-0d66-4771-ad9c-47ba5c62b84a"],
+Cell[40352, 923, 305, 8, 30, "Print",ExpressionUUID->"93380c13-a0d0-46df-98c3-30b98cf75dad"],
+Cell[40660, 933, 6719, 123, 535, "Output",ExpressionUUID->"048a81e4-f341-48c3-bd75-2c9e5473b737"],
+Cell[47382, 1058, 1057, 17, 23, "Message",ExpressionUUID->"856b7bd9-492d-4a40-8d2e-77be7caac299"],
+Cell[48442, 1077, 1057, 17, 23, "Message",ExpressionUUID->"fb8e6dd0-a908-488d-9a1c-8ff8c101fb29"]
+}, Open  ]]
+}
+]
+*)
+

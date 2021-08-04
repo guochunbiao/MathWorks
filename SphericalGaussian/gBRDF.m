@@ -8,7 +8,9 @@ Needs["gUtils`"];
 ClearAll[gPointLightFallOff,gPhongNDF,gDGGX,gDGGX2,gVisSmith,gFresnelOrigin,gBrdfFunc,
 	gSolveSamplingHalfDir,gSamplingHalfDir,gSamplingLightDir,gSamplingLightDir2D,
 	gPlotGgxPdf3D,gPlotGgxPdf2D,gCalcGgxPeakOnPlane,gCalcGgxPeakForLight,
-	gIntegrateDiskLighting,gCalcPeakPoint,gCalcProjPoint,gIntegrateDiskDiffuse,gReflectDiffuse];
+	gIntegrateDiskLighting,gCalcPeakPoint,gCalcProjPoint,
+	gIntegrateIntsDiffuse,gIntegrateIntsDiffuseEx,gReflectDiffuse,gCircIntsRectAngles,
+	gCircIntsRectIntegralRegion];
 gPointLightFallOff::usage="function{gPointLightFallOff}";
 gPhongNDF::usage="function[gPhongNDF]";
 gDGGX::usage="function[gDGGX]";
@@ -27,8 +29,11 @@ gCalcGgxPeakForLight::usage="Deprecated, use gCalcPeakPoint";
 gIntegrateDiskLighting::usage="gIntegrateDiskLighting";
 gCalcPeakPoint::usage="gCalcPeakPoint";
 gCalcProjPoint::usage="gCalcProjPoint";
-gIntegrateDiskDiffuse::usage="gIntegrateDiskDiffuse";
+gIntegrateIntsDiffuse::usage="gIntegrateIntsDiffuse";
+gIntegrateIntsDiffuseEx::usage="gIntegrateIntsDiffuseEx";
 gReflectDiffuse::usage="gReflectDiffuse";
+gCircIntsRectAngles::usage="gCircIntsRectAngles";
+gCircIntsRectIntegralRegion::usage="gCircIntsRectIntegralRegion";
 
 
 Begin["`Private`"];
@@ -318,12 +323,187 @@ gCalcProjPoint[planeNormal_,planePt_,shadingPt_]:=Module[
 ];
 
 
-gIntegrateDiskDiffuse[dr_]:=Module[
-	{approxD},
+gIntegrateIntsDiffuse[{drMin_,drMax_,sumPhi_}]:=Module[
+	{approxD1,approxD2,approxD},
 	
+	Assert[0<=drMin<=drMax];
+	Assert[0<=sumPhi<=2\[Pi]];
 	(*17-OB_08_ShadingPart6-DiffuseRefl.nb*)
-	approxD=dr^2/(1+dr^2)*2/3 \[Pi]
+	(*approxD=dr^2/(1+dr^2)*2/3 \[Pi];*)
+	approxD=sumPhi/3 (1/(1+drMin^2)-1/(1+drMax^2));
+	
+	approxD
 ];
+
+
+gIntegrateIntsDiffuseEx[\[Theta]r1_,\[Theta]r2_,\[Phi]r1_,\[Phi]r2_,circRadius_]:=Module[
+	{intsRangeA,intsRangeB,minThetaR,maxThetaR,sumPhi,intsA,intsB},
+	
+	Assert[\[Theta]r1<=\[Theta]r2<=circRadius];
+	Assert[\[Phi]r1<=\[Phi]r2<=circRadius];
+	sumPhi=(\[Phi]r2-\[Phi]r1)/(2*circRadius) \[Pi];
+	
+	minThetaR=Min[Abs@\[Theta]r1,Abs@\[Theta]r2];
+	maxThetaR=Max[Abs@\[Theta]r1,Abs@\[Theta]r2];
+	
+	intsRangeA={1,0,0};
+	intsRangeB={1,0,0};
+	intsRangeA=If[\[Theta]r1*\[Theta]r2<0,{0,minThetaR,2\[Pi]},{minThetaR,maxThetaR,sumPhi}];
+	intsRangeB=If[\[Theta]r1*\[Theta]r2<0,{minThetaR,maxThetaR,sumPhi},{0,0,0}];
+	
+	intsA=gIntegrateIntsDiffuse[intsRangeA];
+	intsB=gIntegrateIntsDiffuse[intsRangeB];
+	(*Print[{intsRangeA,intsRangeB,intsA,intsB}];*)
+	
+	intsA + intsB
+];
+
+
+gCircIntsRectAngles[circCenter_,circRadius_,
+	rectCenter_,inRectMajorAxis_,inRectMinorAxis_,rectMajorRadius_,rectMinorRadius_]:=Module[
+	{rLeft,rRight,rTop,rBottom,rMajorAxis,rMinorAxis,
+	 cDistX,cDistY,cCenter,cLeft,cRight,cTop,cBottom,
+	 xOverlap,yOverlap,area,
+	 newLeft,newRight,newTop,newBottom,intsWidth,intsHeight,
+	 \[Theta]r1,\[Theta]r2,\[Phi]r1,\[Phi]r2,\[Theta]Axis,\[Phi]Axis},
+	 
+	 rMajorAxis=Normalize@inRectMajorAxis;
+	 rMinorAxis=Normalize@inRectMinorAxis;
+	
+	(*assuming major axis of rectangle is left-right*)
+	(*setting to the center of rectangle*)
+	rLeft=-rectMajorRadius;
+	rRight=rectMajorRadius;
+	rTop=rectMinorRadius;
+	rBottom=-rectMinorRadius;
+	
+	cDistX=Dot[circCenter-rectCenter,rMajorAxis];
+	cDistY=Dot[circCenter-rectCenter,rMinorAxis];
+	cLeft=cDistX-circRadius;
+	cRight=cDistX+circRadius;
+	cTop=cDistY+circRadius;
+	cBottom=cDistY-circRadius;
+	
+	(*restore to the absolute position*)
+	newLeft=Max[rLeft,cLeft]-cDistX;
+	newRight=Min[rRight,cRight]-cDistX;
+	newTop=Min[rTop,cTop]-cDistY;
+	newBottom=Max[rBottom,cBottom]-cDistY;
+	
+	If[newLeft>newRight,newLeft=newRight];
+	If[newBottom>newTop,newBottom=newTop];
+	
+	intsWidth=newRight-newLeft;
+	intsHeight=newTop-newBottom;
+(*	Assert[0\[LessEqual]intsWidth\[LessEqual]2*circRadius];
+	Assert[0\[LessEqual]intsHeight\[LessEqual]2*circRadius];*)
+	
+(*	If[intsWidth\[GreaterEqual]intsHeight,
+		{\[Theta]r1=newBottom;\[Theta]r2=newTop;\[Phi]r1=newLeft;\[Phi]r2=newRight;
+			\[Theta]Axis=rMinorAxis;\[Phi]Axis=rMajorAxis;\[Theta]Multi=-1;\[Phi]Multi=1;},
+		{\[Theta]r1=newLeft;\[Theta]r2=newRight;\[Phi]r1=newBottom;\[Phi]r2=newTop;
+			\[Theta]Axis=rMajorAxis;\[Phi]Axis=rMinorAxis;\[Theta]Multi=1;\[Phi]Multi=-1;}
+		];*)
+	
+	(*{newLeft,newRight,newBottom,newTop,rMajorAxis,rMinorAxis,1,-1}*)
+	(*{newBottom,newTop,newLeft,newRight,rMinorAxis,rMajorAxis,-1,1}*)
+	If[intsWidth>=intsHeight,
+		{newBottom,newTop,newLeft,newRight,rMinorAxis,rMajorAxis},
+		{newLeft,newRight,newBottom,newTop,rMajorAxis,rMinorAxis}]
+];
+
+
+(*ClearAll[gInnerFindNearestPt];
+gInnerFindNearestPt[pt1_,pt2_,pt3_,pt4_]:=Module[
+	{tmp,dist1,dist2,dist3,dist4},
+	
+	dist1=Abs@pt1[[1]]+Abs@pt1[[2]];
+	dist2=Abs@pt2[[1]]+Abs@pt2[[2]];
+	dist3=Abs@pt3[[1]]+Abs@pt3[[2]];
+	dist4=Abs@pt4[[1]]+Abs@pt4[[2]];
+	
+	tmp=If[dist1<dist2,{pt1,dist1},{pt2,dist2}];
+	tmp=If[tmp[[2]]<dist3,tmp,{pt3,dist3}];
+	tmp=If[tmp[[2]]<dist4,tmp,{pt4,dist4}];
+	
+	tmp[[1]]
+];
+ClearAll[gInnerFindFarestPt];
+gInnerFindFarestPt[pt1_,pt2_,pt3_,pt4_]:=Module[
+	{tmp,dist1,dist2,dist3,dist4},
+	
+	dist1=Abs@pt1[[1]]+Abs@pt1[[2]];
+	dist2=Abs@pt2[[1]]+Abs@pt2[[2]];
+	dist3=Abs@pt3[[1]]+Abs@pt3[[2]];
+	dist4=Abs@pt4[[1]]+Abs@pt4[[2]];
+	
+	tmp=If[dist1>dist2,{pt1,dist1},{pt2,dist2}];
+	tmp=If[tmp[[2]]>dist3,tmp,{pt3,dist3}];
+	tmp=If[tmp[[2]]>dist4,tmp,{pt4,dist4}];
+	
+	tmp[[1]]
+];
+gCircIntsRectIntegralRegion[circCenter_,circRadius_,
+	rectCenter_,inRectMajorAxis_,inRectMinorAxis_,rectMajorRadius_,rectMinorRadius_]:=Module[
+	{circOrigin,rLeft,rRight,rTop,rBottom,rMajorAxis,rMinorAxis,
+	 cDistX,cDistZ,cCenter,cLeft,cRight,cTop,cBottom,
+	 xOverlap,yOverlap,area,
+	 newLeft,newRight,newTop,newBottom,intsWidth,intsHeight,
+	 \[Theta]r1,\[Theta]r2,\[Phi]r1,\[Phi]r2,\[Theta]Axis,\[Phi]Axis,
+	 newLT,newRT,newRB,newLB,ltDist,rtDist,rbDist,lbDist,
+	 nearEdgePt,farEdgePt},
+	 
+	 rMajorAxis=Normalize@inRectMajorAxis;
+	 rMinorAxis=Normalize@inRectMinorAxis;
+	
+	(*assuming major axis of rectangle is left-right*)
+	(*setting to the center of rectangle*)
+	circOrigin={0,0,0};
+	
+	cLeft=-circRadius;
+	cRight=circRadius;
+	cTop=circRadius;
+	cBottom=-circRadius;
+	
+	cDistX=Dot[rectCenter-circCenter,rMajorAxis];
+	cDistZ=Dot[rectCenter-circCenter,rMinorAxis];
+	(*rectOrigin={cDistX,0,cDistZ};*)
+	rLeft=cDistX-rectMajorRadius;
+	rRight=cDistX+rectMajorRadius;
+	rTop=cDistZ+rectMinorRadius;
+	rBottom=cDistZ-rectMinorRadius;
+	(*Print[{cDistX,cDistZ,rLeft,rRight,rBottom,rTop}];*)
+	
+	(*origin at circle center*)
+	newLeft=Max[rLeft,cLeft];
+	newRight=Min[rRight,cRight];
+	newTop=Min[rTop,cTop];
+	newBottom=Max[rBottom,cBottom];
+	
+	(*Print[{newLeft,newRight,newBottom,newTop}];*)
+	
+	(*calculate distances to circle center*)
+	
+	If[newLeft>newRight,newLeft=newRight];
+	If[newBottom>newTop,newBottom=newTop];
+	
+	intsWidth=newRight-newLeft;
+	intsHeight=newTop-newBottom;
+	
+	newLT={newLeft,newTop};
+	newRT={newRight,newTop};
+	newRB={newRight,newBottom};
+	newLB={newLeft,newBottom};
+	
+	
+	
+	
+	(*{newLeft,newRight,newBottom,newTop,rMajorAxis,rMinorAxis,1,-1}*)
+	(*{newBottom,newTop,newLeft,newRight,rMinorAxis,rMajorAxis,-1,1}*)
+	If[intsWidth>=intsHeight,
+		{newBottom,newTop,newLeft,newRight,rMinorAxis,rMajorAxis},
+		{newLeft,newRight,newBottom,newTop,rMajorAxis,rMinorAxis}]
+];*)
 
 
 gReflectDiffuse[

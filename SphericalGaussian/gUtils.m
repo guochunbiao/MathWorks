@@ -5,7 +5,7 @@ BeginPackage["gUtils`"];
 
 ClearAll[gStructRules,gPrint,gPrintFunc,gEvalFunc,gCreateCone,gLerp,gRemap,gClampPhi,
 	gCalcRectCorners,gReflectVector,gAssocData,gAssocDataOpt,gCircIntsRectPts,
-	gCircIntsRectArea,gCalcPlaneTangents];
+	gCircIntsRectArea,gCircIntsRectAreaDebug,gCalcPlaneTangents,gCalcRect2DEdgePts];
 gPrint::usage="Print messages";
 gPrintFunc::usage="Print a function";
 gEvalFunc::usage="Evaluate a funciton";
@@ -20,7 +20,9 @@ gAssocData::usage="gAssocData";
 gAssocDataOpt::usage="gAssocDataOpt";
 gCircIntsRectPts::usage="gCircIntsRectPts";
 gCircIntsRectArea::usage="gCircIntsRectArea";
+gCircIntsRectAreaDebug::usage="gCircIntsRectAreaDebug";
 gCalcPlaneTangents::usage="gCalcPlaneTangents";
+gCalcRect2DEdgePts::usage="gCalcRect2DEdgePts";
 
 
 SetAttributes[gStructRules,HoldAll]
@@ -159,6 +161,44 @@ gCalcPlaneTangents[normal_,inMajorAxisAssit_]:=Module[
 ];
 
 
+gCircIntsRectAreaDebug[circCenter_,circRadius_,
+	rectCenter_,inRectMajorAxis_,inRectMinorAxis_,rectMajorRadius_,rectMinorRadius_]:=Module[
+	{rCenter,rLeft,rRight,rTop,rBottom,rMajorAxis,rMinorAxis,
+	 cDistX,cDistY,cCenter,cLeft,cRight,cTop,cBottom,
+	 xOverlap,yOverlap,area,
+	 newLeft,newRight,newTop,newBottom},
+	 
+	 rMajorAxis=Normalize@inRectMajorAxis;
+	 rMinorAxis=Normalize@inRectMinorAxis;
+	
+	(*assuming major axis of rectangle is left-right*)
+	(*setting to the center of rectangle*)
+	rCenter={0,0};
+	rLeft=-rectMajorRadius;
+	rRight=rectMajorRadius;
+	rTop=rectMinorRadius;
+	rBottom=-rectMinorRadius;
+	
+	cDistX=Dot[circCenter-rectCenter,rMajorAxis];
+	cDistY=Dot[circCenter-rectCenter,rMinorAxis];
+	cLeft=cDistX-circRadius;
+	cRight=cDistX+circRadius;
+	cTop=cDistY+circRadius;
+	cBottom=cDistY-circRadius;
+	
+	(*restore to the absolute position*)
+	newLeft=Max[rLeft,cLeft];
+	newRight=Min[rRight,cRight];
+	newTop=Min[rTop,cTop];
+	newBottom=Max[rBottom,cBottom];
+	
+	If[newLeft>newRight,newLeft=newRight];
+	If[newBottom>newTop,newBottom=newTop];
+	
+	{newLeft,newRight,newBottom,newTop}
+];
+
+
 gCircIntsRectArea[circCenter_,circRadius_,
 	rectCenter_,inRectMajorAxis_,inRectMinorAxis_,rectMajorRadius_,rectMinorRadius_]:=Module[
 	{rCenter,rLeft,rRight,rTop,rBottom,rMajorAxis,rMinorAxis,
@@ -221,6 +261,23 @@ gCircIntsRectPts[circCenter_,circRadius_,
 	iLeftBtm=rectCenter+rMajorAxis*Max[rLeft,cLeft]+rMinorAxis*Max[rBottom,cBottom];
 	
 	{iLeftTop,iRightTop,iRightBtm,iLeftBtm,iLeftTop}
+];
+
+
+gCalcRect2DEdgePts[center_,inMajorAxis_,majorRadius_,minorRadius_]:=Module[
+	{majorAxis,minorAxis,pointLeft,pointRight,pointLT,pointRT,pointRB,pointLB},
+	
+	majorAxis=Normalize@inMajorAxis;
+	minorAxis={-majorAxis[[2]],majorAxis[[1]]};
+	
+	pointLeft=center-majorAxis*majorRadius;
+	pointRight=center+majorAxis*majorRadius;
+	pointLT=pointLeft+minorAxis*minorRadius;
+	pointLB=pointLeft-minorAxis*minorRadius;
+	pointRT=pointRight+minorAxis*minorRadius;
+	pointRB=pointRight-minorAxis*minorRadius;
+	
+	{pointLT,pointRT,pointRB,pointLB}
 ];
 
 
