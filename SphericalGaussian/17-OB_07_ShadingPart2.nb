@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     20930,        524]
-NotebookOptionsPosition[     19447,        492]
-NotebookOutlinePosition[     19793,        507]
-CellTagsIndexPosition[     19750,        504]
+NotebookDataLength[     21400,        536]
+NotebookOptionsPosition[     19916,        504]
+NotebookOutlinePosition[     20262,        519]
+CellTagsIndexPosition[     20219,        516]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -23,8 +23,12 @@ Cell[CellGroupData[{
 Cell[BoxData[{
  RowBox[{
   RowBox[{"SetDirectory", "[", 
-   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
-  ";"}], "\[IndentingNewLine]", 
+   RowBox[{"FileNameJoin", "@", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"ParentDirectory", "[", 
+       RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ",", 
+      "\"\<Shared\>\""}], "}"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"Needs", "[", "\"\<gUtils`\>\"", "]"}], 
   ";"}], "\[IndentingNewLine]", 
@@ -46,8 +50,11 @@ Cell[BoxData[{
   RowBox[{"Needs", "[", "\"\<gSphericalCap`\>\"", "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
+  RowBox[{"Needs", "[", "\"\<gBlochSphere`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{
-   RowBox[{"Needs", "[", "\"\<gBlochSphere`\>\"", "]"}], ";"}], 
+   RowBox[{"ResetDirectory", "[", "]"}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"gPrint", "[", "\"\<Comparing SG & ASG (Polar)\>\"", "]"}], 
@@ -76,9 +83,10 @@ Cell[BoxData[{
     RowBox[{"\[Lambda]", ",", "2", ",", "20"}], "}"}]}], 
   "\[IndentingNewLine]", "]"}]}], "Input",
  CellChangeTimes->{{3.8358471963545017`*^9, 3.835847241157629*^9}, {
-  3.8358488315012474`*^9, 3.835848834352817*^9}},
+  3.8358488315012474`*^9, 3.835848834352817*^9}, {3.837243839157725*^9, 
+  3.8372438434350123`*^9}},
  CellLabel->
-  "In[710]:=",ExpressionUUID->"a1df2c5a-78af-431c-9f79-a9b519a95b61"],
+  "In[800]:=",ExpressionUUID->"a1df2c5a-78af-431c-9f79-a9b519a95b61"],
 
 Cell[BoxData[
  StyleBox["\<\" Comparing SG & ASG (Polar)\"\>",
@@ -86,10 +94,10 @@ Cell[BoxData[
   FontSize->18,
   Background->RGBColor[0.87, 0.94, 1]]], "Print",
  CellChangeTimes->{{3.83584721680153*^9, 3.8358472417192535`*^9}, 
-   3.835848738625908*^9, 3.835848838788344*^9},
+   3.835848738625908*^9, 3.835848838788344*^9, 3.837243847109232*^9},
  CellLabel->
   "During evaluation of \
-In[710]:=",ExpressionUUID->"e4dc1a26-85fd-4e81-bf8d-f6fe8dddf93d"],
+In[800]:=",ExpressionUUID->"75e775ad-8a3c-4934-b98f-1238a5bc218b"],
 
 Cell[BoxData[
  TagBox[
@@ -100,12 +108,12 @@ Cell[BoxData[
     "\"untitled\"", Typeset`specs$$ = {{
       Hold[$CellContext`\[Lambda]$$], 2, 20}}, Typeset`size$$ = {
     360., {108., 113.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`\[Lambda]$12978994$$ = 0}, 
+    Typeset`skipInitDone$$ = True, $CellContext`\[Lambda]$783370$$ = 0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, "Variables" :> {$CellContext`\[Lambda]$$ = 2}, 
       "ControllerVariables" :> {
-        Hold[$CellContext`\[Lambda]$$, $CellContext`\[Lambda]$12978994$$, 0]},
-       "OtherVariables" :> {
+        Hold[$CellContext`\[Lambda]$$, $CellContext`\[Lambda]$783370$$, 0]}, 
+      "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
         Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
@@ -130,9 +138,9 @@ Cell[BoxData[
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
  CellChangeTimes->{{3.835847216826043*^9, 3.835847241752064*^9}, 
-   3.835848738656701*^9, 3.8358488388063655`*^9},
+   3.835848738656701*^9, 3.8358488388063655`*^9, 3.837243847139656*^9},
  CellLabel->
-  "Out[720]=",ExpressionUUID->"5530fd0a-b9aa-487b-bba2-c84db2f30186"]
+  "Out[811]=",ExpressionUUID->"997b93b2-6730-4237-a572-a981c6a72baa"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -195,17 +203,18 @@ Cell[BoxData[{
  CellChangeTimes->{{3.835849282645728*^9, 3.835849301851658*^9}, {
   3.8358501609880486`*^9, 3.835850193304097*^9}},
  CellLabel->
-  "In[863]:=",ExpressionUUID->"49ebf3cc-eea1-4bfb-badc-1c03e87dbc40"],
+  "In[812]:=",ExpressionUUID->"49ebf3cc-eea1-4bfb-badc-1c03e87dbc40"],
 
 Cell[BoxData[
  StyleBox["\<\" Comparing SG & ASG (Cartesian)\"\>",
   StripOnInput->False,
   FontSize->18,
   Background->RGBColor[0.87, 0.94, 1]]], "Print",
- CellChangeTimes->{3.8358493026040397`*^9, 3.8358501961389265`*^9},
+ CellChangeTimes->{3.8358493026040397`*^9, 3.8358501961389265`*^9, 
+  3.8372438473670177`*^9},
  CellLabel->
   "During evaluation of \
-In[863]:=",ExpressionUUID->"b2ff84ea-cdf6-4a12-8653-3d5930866923"],
+In[812]:=",ExpressionUUID->"0be20f3e-ffc0-4ae2-b94a-e612de1e99e6"],
 
 Cell[BoxData[
  TagBox[
@@ -217,14 +226,14 @@ Cell[BoxData[
       Hold[$CellContext`\[Lambda]$$], 2, 20}, {
       Hold[$CellContext`\[Mu]$$], 1, 10}}, Typeset`size$$ = {
     360., {108., 113.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`\[Lambda]$14383008$$ = 
-    0, $CellContext`\[Mu]$14383009$$ = 0}, 
+    Typeset`skipInitDone$$ = True, $CellContext`\[Lambda]$783607$$ = 
+    0, $CellContext`\[Mu]$783608$$ = 0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
       "Variables" :> {$CellContext`\[Lambda]$$ = 2, $CellContext`\[Mu]$$ = 1},
        "ControllerVariables" :> {
-        Hold[$CellContext`\[Lambda]$$, $CellContext`\[Lambda]$14383008$$, 0], 
-        Hold[$CellContext`\[Mu]$$, $CellContext`\[Mu]$14383009$$, 0]}, 
+        Hold[$CellContext`\[Lambda]$$, $CellContext`\[Lambda]$783607$$, 0], 
+        Hold[$CellContext`\[Mu]$$, $CellContext`\[Mu]$783608$$, 0]}, 
       "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
@@ -257,9 +266,10 @@ $CellContext`\[Mu]$$}; Plot[{
    Deployed->True,
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
- CellChangeTimes->{3.835849302630209*^9, 3.8358501961650314`*^9},
+ CellChangeTimes->{3.835849302630209*^9, 3.8358501961650314`*^9, 
+  3.8372438474193244`*^9},
  CellLabel->
-  "Out[865]=",ExpressionUUID->"756d3f9a-e307-458d-9ec4-982f09e99513"]
+  "Out[814]=",ExpressionUUID->"d67f6ffe-0a84-4532-8b38-21ea2f8161ee"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -308,7 +318,7 @@ Cell[BoxData[{
  CellChangeTimes->{{3.835849537136573*^9, 3.835849554352644*^9}, 
    3.835850279635893*^9},
  CellLabel->
-  "In[866]:=",ExpressionUUID->"cf20ae5c-76ef-4bc6-9348-e7b18e7cc00f"],
+  "In[815]:=",ExpressionUUID->"cf20ae5c-76ef-4bc6-9348-e7b18e7cc00f"],
 
 Cell[BoxData[
  StyleBox["\<\" Comparing Integral\"\>",
@@ -316,10 +326,10 @@ Cell[BoxData[
   FontSize->18,
   Background->RGBColor[0.87, 0.94, 1]]], "Print",
  CellChangeTimes->{{3.835849544809265*^9, 3.835849556605774*^9}, 
-   3.835850280317689*^9},
+   3.835850280317689*^9, 3.837243847578538*^9},
  CellLabel->
   "During evaluation of \
-In[866]:=",ExpressionUUID->"fe10a3e4-bf20-413f-a7e1-c4bc201b2013"],
+In[815]:=",ExpressionUUID->"75411399-f11c-488e-9d7c-1ac322a2f60e"],
 
 Cell[BoxData[
  TagBox[
@@ -329,12 +339,12 @@ Cell[BoxData[
     Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
     "\"untitled\"", Typeset`specs$$ = {{
       Hold[$CellContext`\[Mu]$$], 1, 10}}, Typeset`size$$ = {
-    360., {98., 104.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`\[Mu]$14445580$$ = 0}, 
+    360., {104., 109.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`\[Mu]$783848$$ = 0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, "Variables" :> {$CellContext`\[Mu]$$ = 1}, 
       "ControllerVariables" :> {
-        Hold[$CellContext`\[Mu]$$, $CellContext`\[Mu]$14445580$$, 0]}, 
+        Hold[$CellContext`\[Mu]$$, $CellContext`\[Mu]$783848$$, 0]}, 
       "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
@@ -349,7 +359,7 @@ Cell[BoxData[
           sgCommon`asgEnergyEx[$CellContext`asg1]}, {$CellContext`\[Lambda], 
           2, 50}]), "Specifications" :> {{$CellContext`\[Mu]$$, 1, 10}}, 
       "Options" :> {}, "DefaultOptions" :> {}],
-     ImageSizeCache->{411., {145., 151.}},
+     ImageSizeCache->{411., {151., 157.}},
      SingleEvaluation->True],
     Deinitialization:>None,
     DynamicModuleValues:>{},
@@ -361,9 +371,9 @@ Cell[BoxData[
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
  CellChangeTimes->{{3.835849544854704*^9, 3.8358495566517315`*^9}, 
-   3.8358502803566213`*^9},
+   3.8358502803566213`*^9, 3.8372438476106415`*^9},
  CellLabel->
-  "Out[868]=",ExpressionUUID->"0851eb65-5da2-42ac-a388-47c1e5f840dd"]
+  "Out[817]=",ExpressionUUID->"e3881524-ca08-4671-a751-143f4745dd9a"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -429,17 +439,18 @@ Cell[BoxData[{
   "\[IndentingNewLine]", "]"}]}], "Input",
  CellChangeTimes->{{3.835851724294525*^9, 3.83585175730656*^9}},
  CellLabel->
-  "In[872]:=",ExpressionUUID->"fc092e1c-c8ae-416e-a77c-a00ffc416274"],
+  "In[818]:=",ExpressionUUID->"fc092e1c-c8ae-416e-a77c-a00ffc416274"],
 
 Cell[BoxData[
  StyleBox["\<\" Convolution Error(Large)\"\>",
   StripOnInput->False,
   FontSize->18,
   Background->RGBColor[0.87, 0.94, 1]]], "Print",
- CellChangeTimes->{{3.8358517630614614`*^9, 3.83585176851606*^9}},
+ CellChangeTimes->{{3.8358517630614614`*^9, 3.83585176851606*^9}, 
+   3.8372438477424297`*^9},
  CellLabel->
   "During evaluation of \
-In[872]:=",ExpressionUUID->"5e9b0cab-f402-428d-b0e2-710a5cc8b392"],
+In[818]:=",ExpressionUUID->"bc7e2870-fa2a-46af-ae2e-1ce2e162ab64"],
 
 Cell[BoxData[
  TagBox[
@@ -451,11 +462,11 @@ Cell[BoxData[
        Hold[$CellContext`sg2Axis$$], {0.5, 0, 1}}, {0, 0, 0}, {1, 1, 1}}}, 
     Typeset`size$$ = {360., {104., 109.}}, Typeset`update$$ = 0, 
     Typeset`initDone$$, Typeset`skipInitDone$$ = 
-    True, $CellContext`sg2Axis$16472220$$ = {0, 0, 0}}, 
+    True, $CellContext`sg2Axis$783971$$ = {0, 0, 0}}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, "Variables" :> {$CellContext`sg2Axis$$ = {0.5, 0, 1}}, 
       "ControllerVariables" :> {
-        Hold[$CellContext`sg2Axis$$, $CellContext`sg2Axis$16472220$$, {0, 0, 
+        Hold[$CellContext`sg2Axis$$, $CellContext`sg2Axis$783971$$, {0, 0, 
          0}]}, "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
@@ -485,9 +496,10 @@ Cell[BoxData[
    Deployed->True,
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
- CellChangeTimes->{{3.8358517630925617`*^9, 3.835851768537345*^9}},
+ CellChangeTimes->{{3.8358517630925617`*^9, 3.835851768537345*^9}, 
+   3.8372438477736826`*^9},
  CellLabel->
-  "Out[874]=",ExpressionUUID->"034b843d-975b-44c6-905b-b32e1687b6bd"]
+  "Out[820]=",ExpressionUUID->"3c0129bc-fd7c-42a7-9ef3-dd7a7d202a90"]
 }, Open  ]]
 },
 WindowSize->{1081, 804},
@@ -507,24 +519,24 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 2188, 58, 390, "Input",ExpressionUUID->"a1df2c5a-78af-431c-9f79-a9b519a95b61"],
-Cell[2771, 82, 372, 9, 30, "Print",ExpressionUUID->"e4dc1a26-85fd-4e81-bf8d-f6fe8dddf93d"],
-Cell[3146, 93, 2057, 41, 335, "Output",ExpressionUUID->"5530fd0a-b9aa-487b-bba2-c84db2f30186"]
+Cell[580, 22, 2476, 66, 409, "Input",ExpressionUUID->"a1df2c5a-78af-431c-9f79-a9b519a95b61"],
+Cell[3059, 90, 394, 9, 30, "Print",ExpressionUUID->"75e775ad-8a3c-4934-b98f-1238a5bc218b"],
+Cell[3456, 101, 2075, 41, 335, "Output",ExpressionUUID->"997b93b2-6730-4237-a572-a981c6a72baa"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[5240, 139, 2194, 58, 257, "Input",ExpressionUUID->"49ebf3cc-eea1-4bfb-badc-1c03e87dbc40"],
-Cell[7437, 199, 329, 8, 30, "Print",ExpressionUUID->"b2ff84ea-cdf6-4a12-8653-3d5930866923"],
-Cell[7769, 209, 2526, 52, 363, "Output",ExpressionUUID->"756d3f9a-e307-458d-9ec4-982f09e99513"]
+Cell[5568, 147, 2194, 58, 257, "Input",ExpressionUUID->"49ebf3cc-eea1-4bfb-badc-1c03e87dbc40"],
+Cell[7765, 207, 356, 9, 30, "Print",ExpressionUUID->"0be20f3e-ffc0-4ae2-b94a-e612de1e99e6"],
+Cell[8124, 218, 2545, 53, 363, "Output",ExpressionUUID->"d67f6ffe-0a84-4532-8b38-21ea2f8161ee"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[10332, 266, 1615, 44, 219, "Input",ExpressionUUID->"cf20ae5c-76ef-4bc6-9348-e7b18e7cc00f"],
-Cell[11950, 312, 341, 9, 30, "Print",ExpressionUUID->"fe10a3e4-bf20-413f-a7e1-c4bc201b2013"],
-Cell[12294, 323, 2082, 42, 315, "Output",ExpressionUUID->"0851eb65-5da2-42ac-a388-47c1e5f840dd"]
+Cell[10706, 276, 1615, 44, 219, "Input",ExpressionUUID->"cf20ae5c-76ef-4bc6-9348-e7b18e7cc00f"],
+Cell[12324, 322, 363, 9, 30, "Print",ExpressionUUID->"75411399-f11c-488e-9d7c-1ac322a2f60e"],
+Cell[12690, 333, 2103, 42, 327, "Output",ExpressionUUID->"e3881524-ca08-4671-a751-143f4745dd9a"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[14413, 370, 2299, 61, 295, "Input",ExpressionUUID->"fc092e1c-c8ae-416e-a77c-a00ffc416274"],
-Cell[16715, 433, 322, 8, 30, "Print",ExpressionUUID->"5e9b0cab-f402-428d-b0e2-710a5cc8b392"],
-Cell[17040, 443, 2391, 46, 319, "Output",ExpressionUUID->"034b843d-975b-44c6-905b-b32e1687b6bd"]
+Cell[14830, 380, 2299, 61, 295, "Input",ExpressionUUID->"fc092e1c-c8ae-416e-a77c-a00ffc416274"],
+Cell[17132, 443, 350, 9, 30, "Print",ExpressionUUID->"bc7e2870-fa2a-46af-ae2e-1ce2e162ab64"],
+Cell[17485, 454, 2415, 47, 319, "Output",ExpressionUUID->"3c0129bc-fd7c-42a7-9ef3-dd7a7d202a90"]
 }, Open  ]]
 }
 ]
