@@ -1,8 +1,9 @@
 (* ::Package:: *)
 
-SetDirectory[NotebookDirectory[]];
 BeginPackage["gBRDF`"];
+SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["gUtils`"];
+ResetDirectory[];
 
 
 ClearAll[gPointLightFallOff,gPhongNDF,gDGGX,gDGGX2,gVisSmith,gFresnelOrigin,gBrdfFunc,

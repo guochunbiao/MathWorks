@@ -1,9 +1,11 @@
 (* ::Package:: *)
 
 BeginPackage["gSphericalCap`"];
+SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["sgCommon`"];
 Needs["gUtils`"];
 Needs["gBRDF`"];
+ResetDirectory[];
 
 
 ClearAll[gSpherCap,gSolveCapIntsPoints,gSpherCapVis,gSpherCapIntsVis,gSpherCapRegion,

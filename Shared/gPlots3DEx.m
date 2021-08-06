@@ -1,12 +1,14 @@
 (* ::Package:: *)
 
 BeginPackage["gPlots3DEx`"];
+SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["sgCommon`"];
 Needs["gUtils`"];
 Needs["gBRDF`"];
 Needs["gPlots`"];
 Needs["gSphericalCap`"];
 Needs["gTexStyles`"];
+ResetDirectory[];
 
 
 ClearAll[blCirclePrec,blDefaultThickness,

@@ -1,10 +1,11 @@
 (* ::Package:: *)
 
 BeginPackage["sgCommon`"];
-<<gSphericalCap.m;
+SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["gSphericalCap`"];
 Needs["gUtils`"];
 Needs["gBRDF`"];
+ResetDirectory[];
 
 
 ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinLambda,sgDot,

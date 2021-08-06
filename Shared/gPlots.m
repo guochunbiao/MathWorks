@@ -1,11 +1,11 @@
 (* ::Package:: *)
 
 BeginPackage["gPlots`"];
-<<sgCommon.m;
+SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["sgCommon`"];
-<<gUtils.m;
 Needs["gUtils`"];
 Needs["gBRDF`"];
+ResetDirectory[];
 
 
 ClearAll[gParamPlot];

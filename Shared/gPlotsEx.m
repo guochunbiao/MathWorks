@@ -1,9 +1,11 @@
 (* ::Package:: *)
 
 BeginPackage["gPlotsEx`"];
+SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["sgCommon`"];
 Needs["gUtils`"];
 Needs["gBRDF`"];
+ResetDirectory[];
 
 
 ClearAll[pltRectLine2D,pltCircle2D];

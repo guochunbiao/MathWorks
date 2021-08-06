@@ -1,7 +1,9 @@
 (* ::Package:: *)
 
 BeginPackage["gTexStyles`"];
+SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["gUtils`"];
+ResetDirectory[];
 
 
 ClearAll[texArrowHead];

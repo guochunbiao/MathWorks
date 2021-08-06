@@ -1,11 +1,13 @@
 (* ::Package:: *)
 
 BeginPackage["gPlots3D`"];
+SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["sgCommon`"];
 Needs["gUtils`"];
 Needs["gBRDF`"];
 Needs["gPlots`"];
 Needs["gSphericalCap`"];
+ResetDirectory[];
 
 
 ClearAll[gParamPlot3D];

@@ -1,10 +1,11 @@
 (* ::Package:: *)
 
-SetDirectory[NotebookDirectory[]];
+SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 BeginPackage["gBlochSphere`"];
 Needs["gUtils`"];
 Needs["gTexStyles`"];
 Needs["gPlots3DEx`"];
+ResetDirectory[];
 
 
 ClearAll[blInitOffset,blTransFuncXY,(*blTransFuncYZ,*)

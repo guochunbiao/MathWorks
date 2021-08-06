@@ -1,6 +1,9 @@
 (* ::Package:: *)
 
 BeginPackage["gUtils`"];
+SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
+(*Needs[]*)
+ResetDirectory[];
 
 
 ClearAll[gStructRules,gPrint,gPrintFunc,gEvalFunc,gCreateCone,gLerp,gRemap,gClampPhi,
