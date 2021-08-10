@@ -1,0 +1,170 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      5480,        162]
+NotebookOptionsPosition[      5022,        145]
+NotebookOutlinePosition[      5397,        161]
+CellTagsIndexPosition[      5354,        158]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"FileNameJoin", "@", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"ParentDirectory", "[", 
+       RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ",", 
+      "\"\<Shared\>\""}], "}"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlots3DEx`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlotsEx`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gBRDF`\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gUtils`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"SetDirectory", "[", 
+    RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"scene", "=", 
+   RowBox[{"ToExpression", "[", 
+    RowBox[{"Import", "[", "\"\<Scene.txt\>\"", "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lights", "=", 
+   RowBox[{"scene", "[", "\"\<lights\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lightTri", "=", 
+   RowBox[{
+    RowBox[{"lights", "[", 
+     RowBox[{"[", "1", "]"}], "]"}], "[", "\"\<tri\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"prims", "=", 
+   RowBox[{"scene", "[", "\"\<prims\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"primTri1", "=", 
+   RowBox[{
+    RowBox[{"prims", "[", 
+     RowBox[{"[", "1", "]"}], "]"}], "[", "\"\<tri\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"primTri2", "=", 
+    RowBox[{
+     RowBox[{"prims", "[", 
+      RowBox[{"[", "2", "]"}], "]"}], "[", "\"\<tri\>\"", "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"graph2", "=", 
+   RowBox[{"Graphics3D", "[", 
+    RowBox[{"{", 
+     RowBox[{"Blue", ",", "\[IndentingNewLine]", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Polygon", "[", "lightTri", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"Polygon", "[", "primTri1", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"Polygon", "[", "primTri2", "]"}]}], "\[IndentingNewLine]", 
+       "}"}]}], "\[IndentingNewLine]", "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Show", "[", 
+  RowBox[{"graph2", ",", 
+   RowBox[{"Lighting", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Ambient\>\"", ",", "Cyan"}], "}"}], "}"}]}], ",", 
+   RowBox[{"Axes", "\[Rule]", "True"}], ",", 
+   RowBox[{"AxesLabel", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Style", "[", 
+       RowBox[{"\"\<x\>\"", ",", "Bold", ",", "Black"}], "]"}], ",", 
+      RowBox[{"Style", "[", 
+       RowBox[{"\"\<y\>\"", ",", "Bold", ",", "Black"}], "]"}], ",", 
+      RowBox[{"Style", "[", 
+       RowBox[{"\"\<z\>\"", ",", "Bold", ",", "Black"}], "]"}]}], "}"}]}]}], 
+  "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.8375796096478853`*^9, 3.8375796098708925`*^9}, {
+  3.837579643706537*^9, 3.8375796590141945`*^9}, {3.8375797396191688`*^9, 
+  3.8375799701343956`*^9}, {3.837587139784298*^9, 3.837587174766556*^9}, {
+  3.8375879250035048`*^9, 3.8375879483163743`*^9}, {3.8375879879433584`*^9, 
+  3.837588037014532*^9}},ExpressionUUID->"c6a38e02-cc4a-43b3-88e1-\
+6ca638b100b4"],
+
+Cell[BoxData[
+ Graphics3DBox[
+  {RGBColor[0, 0, 1], 
+   Polygon3DBox[{{343., -227., 548.7}, {343., -332., 548.7}, {213., -332., 
+    548.7}}]},
+  Axes->True,
+  AxesLabel->{
+    FormBox[
+     StyleBox["\"x\"", Bold, 
+      GrayLevel[0], StripOnInput -> False], TraditionalForm], 
+    FormBox[
+     StyleBox["\"y\"", Bold, 
+      GrayLevel[0], StripOnInput -> False], TraditionalForm], 
+    FormBox[
+     StyleBox["\"z\"", Bold, 
+      GrayLevel[0], StripOnInput -> False], TraditionalForm]},
+  ImageSize->{479.9661808228279, 204.20069650539028`},
+  ImageSizeRaw->Automatic,
+  Lighting->{{"Ambient", 
+     RGBColor[0, 1, 1]}},
+  ViewPoint->{0.6446130374153798, 3.1881537463624046`, 0.9328181610311193},
+  ViewVertical->{-0.1437531145801298, 0.2049907705493602, 
+   0.968149691957856}]], "Output",
+ CellChangeTimes->{
+  3.8375876387765126`*^9, 3.8375878035491614`*^9, {3.8375879267149467`*^9, 
+   3.8375879517566442`*^9}, {3.8375879917704954`*^9, 3.8375880303122215`*^9}},
+ CellLabel->
+  "Out[689]=",ExpressionUUID->"b78576ea-56ae-4f65-83ee-cec7707afed2"]
+}, Open  ]]
+},
+WindowSize->{759, 813},
+WindowMargins->{{113, Automatic}, {-343, Automatic}},
+Magnification:>0.9 Inherited,
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 3371, 91, 441, "Input",ExpressionUUID->"c6a38e02-cc4a-43b3-88e1-6ca638b100b4"],
+Cell[3954, 115, 1052, 27, 200, "Output",ExpressionUUID->"b78576ea-56ae-4f65-83ee-cec7707afed2"]
+}, Open  ]]
+}
+]
+*)
+
