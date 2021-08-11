@@ -1,0 +1,218 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      6998,        210]
+NotebookOptionsPosition[      6477,        193]
+NotebookOutlinePosition[      6822,        208]
+CellTagsIndexPosition[      6779,        205]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"FileNameJoin", "@", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"ParentDirectory", "[", 
+       RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ",", 
+      "\"\<Shared\>\""}], "}"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlots3DEx`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlotsEx`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gBRDF`\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gUtils`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"SetDirectory", "[", 
+    RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"gPrint", "[", "\"\<Load Scene\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "scene", ",", "camera", ",", "eyePt", ",", "lookPt", ",", "upDir", ",", 
+    "fov", ",", "lights", ",", "prims", ",", "polyList", ",", "graph", ",", 
+    "i"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"scene", "=", 
+   RowBox[{"ToExpression", "[", 
+    RowBox[{"Import", "[", "\"\<cornell.txt\>\"", "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"camera", "=", 
+   RowBox[{
+    RowBox[{"scene", "[", "\"\<camera\>\"", "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"eyePt", "=", 
+   RowBox[{"camera", "[", "\"\<eyePt\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lookPt", "=", 
+   RowBox[{"camera", "[", "\"\<lookPt\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"upDir", "=", 
+   RowBox[{"camera", "[", "\"\<upDir\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fov", "=", 
+   RowBox[{"camera", "[", "\"\<fov\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fov", "=", 
+   RowBox[{
+    FractionBox["fov", "180"], "\[Pi]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lights", "=", 
+   RowBox[{"scene", "[", "\"\<lights\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"prims", "=", 
+   RowBox[{"scene", "[", "\"\<prims\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"polyList", "=", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"i", "=", "1"}], ",", 
+    RowBox[{"i", "\[LessEqual]", 
+     RowBox[{"Length", "[", "lights", "]"}]}], ",", 
+    RowBox[{"i", "++"}], ",", 
+    RowBox[{"AppendTo", "[", 
+     RowBox[{"polyList", ",", 
+      RowBox[{
+       RowBox[{"lights", "[", 
+        RowBox[{"[", "i", "]"}], "]"}], "[", "\"\<tri\>\"", "]"}]}], "]"}]}], 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"For", "[", 
+    RowBox[{
+     RowBox[{"i", "=", "1"}], ",", 
+     RowBox[{"i", "\[LessEqual]", 
+      RowBox[{"Length", "[", "prims", "]"}]}], ",", 
+     RowBox[{"i", "++"}], ",", 
+     RowBox[{"AppendTo", "[", 
+      RowBox[{"polyList", ",", 
+       RowBox[{
+        RowBox[{"prims", "[", 
+         RowBox[{"[", "i", "]"}], "]"}], "[", "\"\<tri\>\"", "]"}]}], "]"}]}],
+     "]"}], ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"graph", "=", 
+    RowBox[{"Graphics3D", "[", 
+     RowBox[{"{", 
+      RowBox[{"Blue", ",", "\[IndentingNewLine]", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{"Polygon", "[", "polyList", "]"}], "\[IndentingNewLine]", 
+        "}"}]}], "\[IndentingNewLine]", "}"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"Show", "[", 
+  RowBox[{"graph", ",", 
+   RowBox[{"Lighting", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Ambient\>\"", ",", "Cyan"}], "}"}], "}"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Boxed", "\[Rule]", "False"}], ",", " ", 
+   RowBox[{"Axes", "\[Rule]", "False"}], ",", 
+   RowBox[{"AxesLabel", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<X\>\"", ",", "\"\<Y\>\"", ",", "\"\<Z\>\""}], "}"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"ViewVector", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"eyePt", ",", "lookPt"}], "}"}]}], ",", 
+   RowBox[{"ViewVertical", "\[Rule]", "upDir"}], ",", 
+   RowBox[{"ViewAngle", "\[Rule]", "fov"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.8376399695692015`*^9, 3.8376399866629343`*^9}},
+ CellLabel->
+  "In[1729]:=",ExpressionUUID->"de711680-7327-498d-94bb-33678f134c64"],
+
+Cell[BoxData[
+ StyleBox["\<\" Load Scene\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{3.8376399872308407`*^9},
+ CellLabel->
+  "During evaluation of \
+In[1729]:=",ExpressionUUID->"46058cdb-cd86-427e-a6de-e5e7552b9175"],
+
+Cell[BoxData[
+ Graphics3DBox[
+  {RGBColor[0, 0, 1], Polygon3DBox[CompressedData["
+1:eJydkj0OgkAQhUm4CBZaeYitrI2xtCBGLQxBRCwwmsANbLXiKB5A7+BRRHZQ
+drOzM8skZMK3b9/8wGC5m619z/OC+vHhaSI5iiaHkbjf6hiWQuGPTOXVth/H
+/Dt8840JnHfi9axjXEpdrp2Hf97cH8G5hbdXW47VbcNYlxFKXQs39mmoS/WJ
+Bda/zrE9W+sa9tlyai4ux/x1bv1PGHtg9WOYy1o3SOV7sZC5WsF5DHmvchFC
+nvL0xVzmIOrn8wvEX+/fVU/5cDk2l6ue8uFybP+uesqHy6nvy9WTPhf5Huag
+zyAfYI6zypOTzO+Yp78mwFOej94P1afu46qnfPS5ME71z9VTPvo+MY59F1c9
+5YPtDdsz1j9Xb/H5AKBddH8=
+    "]]},
+  Axes->False,
+  AxesLabel->{
+    FormBox["\"X\"", TraditionalForm], 
+    FormBox["\"Y\"", TraditionalForm], 
+    FormBox["\"Z\"", TraditionalForm]},
+  Boxed->False,
+  Lighting->{{"Ambient", 
+     RGBColor[0, 1, 1]}},
+  ViewAngle->0.6544984694978736,
+  ViewVector->{{278., -800., 273.}, {278., 0., 273.}},
+  ViewVertical->{0., 0., 1.}]], "Output",
+ CellChangeTimes->{{3.837639964834807*^9, 3.8376399872537794`*^9}},
+ CellLabel->
+  "Out[1750]=",ExpressionUUID->"fe5df019-a606-4b09-8afd-e99a3f7bc42b"]
+}, Open  ]]
+},
+WindowSize->{759, 813},
+WindowMargins->{{547, Automatic}, {-559, Automatic}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 4605, 132, 618, "Input",ExpressionUUID->"de711680-7327-498d-94bb-33678f134c64"],
+Cell[5188, 156, 286, 8, 30, "Print",ExpressionUUID->"46058cdb-cd86-427e-a6de-e5e7552b9175"],
+Cell[5477, 166, 984, 24, 377, "Output",ExpressionUUID->"fe5df019-a606-4b09-8afd-e99a3f7bc42b"]
+}, Open  ]]
+}
+]
+*)
+
