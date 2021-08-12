@@ -8,12 +8,30 @@ Needs["gBRDF`"];
 ResetDirectory[];
 
 
-ClearAll[pltRectLine2D,pltCircle2D];
+ClearAll[pltRect2D,pltRectLine2D,pltCircle2D];
+pltRect2D::usage="pltRect2D";
 pltRectLine2D::usage="pltRectLine2D";
 pltCircle2D::usage="pltCircle2D";
 
 
 Begin["`Private`"];
+
+
+pltRect2D[input_]:=Module[
+	{min,max,colorFunc},
+	
+	min=gAssocData[input,"min"];
+	max=gAssocData[input,"max"];
+	
+	colorFunc=gAssocDataOpt[input,"colorFunc",Function[{x,y},Cyan]];
+	
+	{
+		ParametricPlot[
+			{x,y},
+			{x,min[[1]],max[[1]]},{y,min[[2]],max[[2]]},
+			ColorFunction->colorFunc]
+	}
+];
 
 
 pltRectLine2D[input_]:=Module[

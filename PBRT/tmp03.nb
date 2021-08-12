@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     14220,        371]
-NotebookOptionsPosition[     13694,        354]
-NotebookOutlinePosition[     14039,        369]
-CellTagsIndexPosition[     13996,        366]
+NotebookDataLength[     17785,        462]
+NotebookOptionsPosition[     17163,        444]
+NotebookOutlinePosition[     17508,        459]
+CellTagsIndexPosition[     17465,        456]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -46,18 +46,88 @@ Cell[BoxData[{
     RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"ClearAll", "[", 
+  RowBox[{
+   RowBox[{"ClearAll", "[", 
+    RowBox[{
+    "scene", ",", "camera", ",", "eyePt", ",", "lookPt", ",", "upDir", ",", 
+     "fov", ",", "lights", ",", "prims", ",", "\[IndentingNewLine]", 
+     "camBoundMin", ",", "camBoundMax", ",", "\[IndentingNewLine]", 
+     "filmSamp", ",", "sampDim", ",", "sampElemX", ",", "sampElemY", ",", 
+     "sampData", ",", "\[IndentingNewLine]", "imgSettings", ",", "resx", ",", 
+     "resy", ",", "graphList", ",", "createPolyGraphs", ",", "imgTable", ",", 
+     "\[IndentingNewLine]", "resultFlag", ",", "testRender"}], "]"}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"load", " ", "sampling", " ", "data"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"filmSamp", "=", 
+   RowBox[{"ToExpression", "[", 
+    RowBox[{"Import", "[", "\"\<cornell-tiny-camfilm.samp\>\"", "]"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sampDim", "=", 
+   RowBox[{"filmSamp", "[", "\"\<dim\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sampElemX", "=", 
+   RowBox[{"filmSamp", "[", "\"\<elemx\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sampElemY", "=", 
+   RowBox[{"filmSamp", "[", "\"\<elemy\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"sampData", "=", 
+    RowBox[{"filmSamp", "[", "\"\<data\>\"", "]"}]}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
    RowBox[{
-   "scene", ",", "camera", ",", "eyePt", ",", "lookPt", ",", "upDir", ",", 
-    "fov", ",", "lights", ",", "prims", ",", "\[IndentingNewLine]", 
-    "camBoundMin", ",", "camBoundMax", ",", "\[IndentingNewLine]", 
-    "imgSettings", ",", "resx", ",", "resy", ",", "graphList", ",", 
-    "createPolyGraphs", ",", "imgTable", ",", "\[IndentingNewLine]", 
-    "resultFlag", ",", "testRender"}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{"get", " ", "sampling", " ", "data", " ", "by", " ", "x"}], ",", 
+    RowBox[{"y", " ", "and", " ", "dimension"}]}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getSampleData", "[", 
+    RowBox[{"dataArray_", ",", "x_", ",", "y_", ",", "dim_", ",", "elemx_"}], 
+    "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"startIdx", ",", "data"}], "}"}], ",", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"startIdx", "=", 
+       RowBox[{"1", "+", 
+        RowBox[{"x", "*", "elemx", "*", "dim"}], "+", 
+        RowBox[{"y", "*", "dim"}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"data", "=", 
+       RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"i", "=", "0"}], ",", 
+        RowBox[{"i", "<", "dim"}], ",", 
+        RowBox[{"i", "++"}], ",", 
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"data", ",", 
+          RowBox[{"dataArray", "[", 
+           RowBox[{"[", 
+            RowBox[{"startIdx", "+", "i"}], "]"}], "]"}]}], "]"}]}], "]"}], 
+      ";", "\[IndentingNewLine]", "data"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"getSampleData", "[", 
+   RowBox[{
+   "sampData", ",", "77", ",", "61", ",", "sampDim", ",", "sampElemX"}], 
+   "]"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"load", " ", "scene", " ", "data"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"scene", "=", 
    RowBox[{"ToExpression", "[", 
-    RowBox[{"Import", "[", "\"\<cornell-tiny.txt\>\"", "]"}], "]"}]}], 
+    RowBox[{"Import", "[", "\"\<cornell-tiny.scene\>\"", "]"}], "]"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"camera", "=", 
@@ -118,8 +188,11 @@ Cell[BoxData[{
    RowBox[{"Assert", "[", 
     RowBox[{
      RowBox[{"resx", ">", "0"}], "&&", 
-     RowBox[{"resy", ">", "0"}]}], "]"}], ";"}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+     RowBox[{"resy", ">", "0"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"geometry", " ", "plot", " ", "graph"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"graphList", "=", 
    RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
@@ -277,17 +350,31 @@ Cell[BoxData[{
     RowBox[{"\"\<Start\>\"", ",", 
      RowBox[{"testRender", "[", "]"}]}], "]"}]}], "\[IndentingNewLine]", 
   "]"}]}], "Input",
- CellChangeTimes->{{3.837654122022234*^9, 3.8376541560065136`*^9}, {
-  3.8376541863354316`*^9, 3.83765418654235*^9}, {3.8376590183229375`*^9, 
-  3.837659109872554*^9}, {3.83765937564216*^9, 3.8376593794884515`*^9}, {
-  3.8376595373163424`*^9, 3.83765964152796*^9}, {3.83765967686572*^9, 
-  3.837659690036155*^9}, {3.837659721289977*^9, 3.837659723736927*^9}, {
-  3.8376597651952887`*^9, 3.837659844473301*^9}, {3.837659893449835*^9, 
-  3.837660027961242*^9}, {3.8376601136188393`*^9, 3.8376601809844074`*^9}, {
-  3.8376644806597033`*^9, 3.837664521170023*^9}, {3.8376801884179153`*^9, 
-  3.8376802184893236`*^9}},
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmViYGAQBmIQrbLNoXff9DeOMaYNE0H07d1eU0H0u6hAMN0Y6vXx
+AJD+9nr3HxA9ueeL7EEgnbowXw5EV8lrGYFonqcG9iD61+bZziBaX8PRFUTX
+uWt6gugXU8rB9Dn7ZX4g2kO1PwKsL3VdHIiuP1SXD6I7zhpXgWiXhvlNINpL
+RnTOYSB9pUB1IYieEN/rfhpId63w9wbR9zK/8LwE0kELhXlBtP+FpwIguvXO
+DVkQvdtpnyqI3v9NQQNEH3lYogeiO7RO24BoN780XxA9+eOVaBBdXmeZCKJr
+XNYXg+Ul6spB9BpHqRoQDQAXOKm6
+  "],ExpressionUUID->"856a8b20-6c6d-4ca2-ada8-1a4ac995cc0c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.`", ",", "0.0625`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.8376540897710996`*^9, 3.837654156589432*^9, 3.837654223627977*^9, {
+   3.837659094880903*^9, 3.8376591103824787`*^9}, 3.8376595933215322`*^9, 
+   3.8376596423877096`*^9, {3.83765967793397*^9, 3.837659724245983*^9}, {
+   3.8376598007925606`*^9, 3.8376598451276627`*^9}, {3.837659973828*^9, 
+   3.837660001591818*^9}, {3.8376601562632666`*^9, 3.837660191910637*^9}, {
+   3.837664513993451*^9, 3.837664521975257*^9}, {3.8376801029110947`*^9, 
+   3.837680111977862*^9}, {3.8376801830594196`*^9, 3.837680219477173*^9}, {
+   3.837741150997594*^9, 3.837741179864607*^9}, 3.8377413586053324`*^9, 
+   3.837741454503595*^9, {3.837741507883537*^9, 3.8377415172489724`*^9}, 
+   3.8377420315389833`*^9},
  CellLabel->
-  "In[165]:=",ExpressionUUID->"856a8b20-6c6d-4ca2-ada8-1a4ac995cc0c"],
+  "Out[563]=",ExpressionUUID->"3af01dbf-a650-4e90-b38a-6b3771fd091c"],
 
 Cell[BoxData[
  TagBox[
@@ -341,9 +428,12 @@ Cell[BoxData[
    3.8376598007925606`*^9, 3.8376598451276627`*^9}, {3.837659973828*^9, 
    3.837660001591818*^9}, {3.8376601562632666`*^9, 3.837660191910637*^9}, {
    3.837664513993451*^9, 3.837664521975257*^9}, {3.8376801029110947`*^9, 
-   3.837680111977862*^9}, {3.8376801830594196`*^9, 3.837680219477173*^9}},
+   3.837680111977862*^9}, {3.8376801830594196`*^9, 3.837680219477173*^9}, {
+   3.837741150997594*^9, 3.837741179864607*^9}, 3.8377413586053324`*^9, 
+   3.837741454503595*^9, {3.837741507883537*^9, 3.8377415172489724`*^9}, 
+   3.837742031600818*^9},
  CellLabel->
-  "Out[195]=",ExpressionUUID->"f773fc58-51db-4278-a309-5df832ea16dc"]
+  "Out[587]=",ExpressionUUID->"040b5d43-52d3-445b-badf-1093d35828ed"]
 }, Open  ]],
 
 Cell[BoxData[""], "Input",
@@ -353,7 +443,7 @@ Cell[BoxData[""], "Input",
   "In[651]:=",ExpressionUUID->"54443b81-aeaa-4c64-80a7-1db19bf3d781"]
 },
 WindowSize->{759, 809},
-WindowMargins->{{526, Automatic}, {-236, Automatic}},
+WindowMargins->{{Automatic, 541}, {-162, Automatic}},
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
 ]
@@ -369,10 +459,11 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 10172, 267, 1416, "Input",ExpressionUUID->"856a8b20-6c6d-4ca2-ada8-1a4ac995cc0c"],
-Cell[10755, 291, 2695, 54, 503, "Output",ExpressionUUID->"f773fc58-51db-4278-a309-5df832ea16dc"]
+Cell[580, 22, 12585, 337, 1834, "Input",ExpressionUUID->"856a8b20-6c6d-4ca2-ada8-1a4ac995cc0c"],
+Cell[13168, 361, 879, 15, 32, "Output",ExpressionUUID->"3af01dbf-a650-4e90-b38a-6b3771fd091c"],
+Cell[14050, 378, 2869, 57, 503, "Output",ExpressionUUID->"040b5d43-52d3-445b-badf-1093d35828ed"]
 }, Open  ]],
-Cell[13465, 348, 225, 4, 28, "Input",ExpressionUUID->"54443b81-aeaa-4c64-80a7-1db19bf3d781"]
+Cell[16934, 438, 225, 4, 28, "Input",ExpressionUUID->"54443b81-aeaa-4c64-80a7-1db19bf3d781"]
 }
 ]
 *)
