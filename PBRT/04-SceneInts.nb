@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     39995,        997]
-NotebookOptionsPosition[     39344,        977]
-NotebookOutlinePosition[     39687,        992]
-CellTagsIndexPosition[     39644,        989]
+NotebookDataLength[     33397,        881]
+NotebookOptionsPosition[     32874,        864]
+NotebookOutlinePosition[     33217,        879]
+CellTagsIndexPosition[     33174,        876]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -52,13 +52,39 @@ Cell[BoxData[{
     "scene", ",", "camera", ",", "eyePt", ",", "lookPt", ",", "upDir", ",", 
      "fov", ",", "lights", ",", "prims", ",", "\[IndentingNewLine]", 
      "camBoundMin", ",", "camBoundMax", ",", "rasterToCam", ",", 
-     "xformRasterToCamera", ",", "\[IndentingNewLine]", "gGetCameraSample", 
-     ",", "\[IndentingNewLine]", "rayMaxDist", ",", "camRayo", ",", "camRayd",
-      ",", "calcTriNormal", ",", "triIntersect", ",", "sceneIntersect", ",", 
-     "\[IndentingNewLine]", "isect", ",", "getUVs", ",", "bsdf", ",", 
-     "\[IndentingNewLine]", "imgSettings", ",", "resx", ",", "resy", ",", 
-     "graphList", ",", "createPolyGraphs", ",", "imgTable", ",", 
+     "xformRasterToCamera", ",", "\[IndentingNewLine]", "filmSamp", ",", 
+     "sampDim", ",", "sampElemX", ",", "sampElemY", ",", "sampData", ",", 
+     "gGetCameraSample", ",", "\[IndentingNewLine]", "rayMaxDist", ",", 
+     "camRayo", ",", "camRayd", ",", "calcTriNormal", ",", "triIntersect", 
+     ",", "sceneIntersect", ",", "\[IndentingNewLine]", "isect", ",", 
+     "getUVs", ",", "\[IndentingNewLine]", "imgSettings", ",", "resx", ",", 
+     "resy", ",", "graphList", ",", "createPolyGraphs", ",", "imgTable", ",", 
      "\[IndentingNewLine]", "resultFlag", ",", "testRender"}], "]"}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"load", " ", "sampling", " ", "data"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"filmSamp", "=", 
+   RowBox[{"ToExpression", "[", 
+    RowBox[{"Import", "[", "\"\<cornell-tiny-camfilm.samp\>\"", "]"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sampDim", "=", 
+   RowBox[{"filmSamp", "[", "\"\<dim\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sampElemX", "=", 
+   RowBox[{"filmSamp", "[", "\"\<elemx\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sampElemY", "=", 
+   RowBox[{"filmSamp", "[", "\"\<elemy\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"sampData", "=", 
+    RowBox[{"filmSamp", "[", "\"\<data\>\"", "]"}]}], ";"}], 
   "\[IndentingNewLine]", "\[IndentingNewLine]", 
   RowBox[{"(*", 
    RowBox[{
@@ -69,17 +95,20 @@ Cell[BoxData[{
   RowBox[{
    RowBox[{
     RowBox[{"gGetCameraSample", "[", 
-     RowBox[{"x_", ",", "y_"}], "]"}], ":=", 
+     RowBox[{"dataArray_", ",", "x_", ",", "y_", ",", "elemx_"}], "]"}], ":=", 
     RowBox[{"Module", "[", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"{", 
-       RowBox[{"dim", ",", "startIdx", ",", "sampValue", ",", "data"}], "}"}],
-       ",", "\[IndentingNewLine]", 
+       RowBox[{"dim", ",", "startIdx", ",", "data"}], "}"}], ",", 
+      "\[IndentingNewLine]", 
       RowBox[{
        RowBox[{"dim", "=", "2"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"startIdx", "=", 
+        RowBox[{"1", "+", 
+         RowBox[{"x", "*", "elemx", "*", "dim"}], "+", 
+         RowBox[{"y", "*", "dim"}]}]}], ";", "\[IndentingNewLine]", 
        RowBox[{"data", "=", 
         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
-       RowBox[{"sampValue", "=", "0.5"}], ";", "\[IndentingNewLine]", 
        RowBox[{"(*", 
         RowBox[{
          RowBox[{"For", "[", 
@@ -96,8 +125,14 @@ Cell[BoxData[{
        RowBox[{"data", "=", 
         RowBox[{"{", 
          RowBox[{
-          RowBox[{"x", "+", "sampValue"}], ",", 
-          RowBox[{"y", "+", "sampValue"}]}], "}"}]}], ";", 
+          RowBox[{"x", "+", 
+           RowBox[{"dataArray", "[", 
+            RowBox[{"[", 
+             RowBox[{"startIdx", "+", "0"}], "]"}], "]"}]}], ",", 
+          RowBox[{"y", "+", 
+           RowBox[{"dataArray", "[", 
+            RowBox[{"[", 
+             RowBox[{"startIdx", "+", "1"}], "]"}], "]"}]}]}], "}"}]}], ";", 
        "\[IndentingNewLine]", "data"}]}], "\[IndentingNewLine]", "]"}]}], 
    ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
   RowBox[{"(*", 
@@ -312,7 +347,8 @@ Cell[BoxData[{
        "\[IndentingNewLine]", 
        RowBox[{"sampRasterPt", "=", 
         RowBox[{"gGetCameraSample", "[", 
-         RowBox[{"px", ",", "py"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"sampData", ",", "px", ",", "py", ",", "sampElemX"}], 
+         "]"}]}], ";", "\[IndentingNewLine]", 
        RowBox[{"sampDir", "=", 
         RowBox[{"xformRasterToCamera", "[", "sampRasterPt", "]"}]}], ";", 
        "\[IndentingNewLine]", "\[IndentingNewLine]", 
@@ -517,10 +553,9 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
        "rayo", ",", "rayd", ",", "prim", ",", "tri", ",", "dist", ",", 
-        "triInts", ",", "minDist", ",", "minIntsPt", ",", 
-        "\[IndentingNewLine]", "minPrim", ",", "minTri", ",", 
-        "\[IndentingNewLine]", "minNormal", ",", "dpdu", ",", "dpdv", ",", 
-        "material"}], "}"}], ",", "\[IndentingNewLine]", 
+        "triInts", ",", "minDist", ",", "minIntsPt", ",", "minTri", ",", 
+        "\[IndentingNewLine]", "minNormal", ",", "dpdu", ",", "dpdv"}], "}"}],
+       ",", "\[IndentingNewLine]", 
       RowBox[{
        RowBox[{"rayo", "=", 
         RowBox[{"ray", "[", 
@@ -531,7 +566,6 @@ Cell[BoxData[{
        "\[IndentingNewLine]", 
        RowBox[{"minDist", "=", "rayMaxDist"}], " ", ";", 
        "\[IndentingNewLine]", 
-       RowBox[{"minPrim", "=", "\"\<NaN\>\""}], ";", "\[IndentingNewLine]", 
        RowBox[{"minTri", "=", "\"\<NaN\>\""}], ";", "\[IndentingNewLine]", 
        RowBox[{"minIntsPt", "=", "\"\<NaN\>\""}], ";", "\[IndentingNewLine]", 
        "\[IndentingNewLine]", 
@@ -570,7 +604,6 @@ Cell[BoxData[{
             RowBox[{"dist", "\[GreaterEqual]", "minDist"}], ",", 
             RowBox[{"Continue", "[", "]"}]}], "]"}], ";", 
           "\[IndentingNewLine]", "\[IndentingNewLine]", 
-          RowBox[{"minPrim", "=", "prim"}], ";", "\[IndentingNewLine]", 
           RowBox[{"minDist", "=", "dist"}], ";", "\[IndentingNewLine]", 
           RowBox[{"minTri", "=", "tri"}], ";", "\[IndentingNewLine]", 
           RowBox[{"minIntsPt", "=", "triInts"}], ";"}]}], 
@@ -580,58 +613,19 @@ Cell[BoxData[{
         RowBox[{"{", 
          RowBox[{"minNormal", ",", "dpdu", ",", "dpdv"}], "}"}], "=", 
         RowBox[{"calcTriNormal", "[", "minTri", "]"}]}], ";", 
-       "\[IndentingNewLine]", 
-       RowBox[{"material", "=", 
-        RowBox[{"gAssocData", "[", 
-         RowBox[{"minPrim", ",", "\"\<material\>\""}], "]"}]}], ";", 
        "\[IndentingNewLine]", "\[IndentingNewLine]", 
        RowBox[{"(*", "result", "*)"}], "\[IndentingNewLine]", 
        RowBox[{"<|", 
         RowBox[{
          RowBox[{"\"\<p\>\"", "\[Rule]", "minIntsPt"}], ",", 
          RowBox[{"\"\<n\>\"", "\[Rule]", "minNormal"}], ",", 
+         RowBox[{"\"\<tri\>\"", "\[Rule]", "minTri"}], ",", 
          RowBox[{"\"\<wo\>\"", "\[Rule]", 
           RowBox[{"-", "rayd"}]}], ",", "\[IndentingNewLine]", "\t", 
          RowBox[{"\"\<dpdu\>\"", "\[Rule]", "dpdu"}], ",", 
-         RowBox[{"\"\<dpdv\>\"", "\[Rule]", "dpdv"}], ",", 
-         "\[IndentingNewLine]", "\t", 
-         RowBox[{"\"\<tri\>\"", "\[Rule]", "minTri"}], ",", 
-         RowBox[{"\"\<material\>\"", "\[Rule]", "material"}]}], "|>"}]}]}], 
+         RowBox[{"\"\<dpdv\>\"", "\[Rule]", "dpdv"}]}], "|>"}]}]}], 
      "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
-  "\[IndentingNewLine]", 
-  RowBox[{"(*", 
-   RowBox[{"BSDF", "::", "BSDF"}], "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{
-    RowBox[{"constructBSDF", "[", 
-     RowBox[{"si_", ",", "eta_"}], "]"}], ":=", 
-    RowBox[{"Module", "[", "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"ns", ",", "ss", ",", "ts"}], "}"}], ",", 
-      "\[IndentingNewLine]", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"ns", "=", 
-        RowBox[{"si", "[", "\"\<n\>\"", "]"}]}], ";", "\[IndentingNewLine]", 
-       RowBox[{"ss", "=", 
-        RowBox[{"Normalize", "@", 
-         RowBox[{"si", "[", "\"\<dpdu\>\"", "]"}]}]}], ";", 
-       "\[IndentingNewLine]", 
-       RowBox[{"ts", "=", 
-        RowBox[{"Cross", "[", 
-         RowBox[{"ss", ",", "ns"}], "]"}]}], ";", "\[IndentingNewLine]", 
-       "\[IndentingNewLine]", 
-       RowBox[{"<|", 
-        RowBox[{
-         RowBox[{"\"\<eta\>\"", "\[Rule]", "eta"}], ",", 
-         RowBox[{"\"\<ns\>\"", "\[Rule]", "ns"}], ",", 
-         RowBox[{"\"\<ng\>\"", "\[Rule]", 
-          RowBox[{"si", "[", "\"\<n\>\"", "]"}]}], ",", 
-         RowBox[{"\"\<ss\>\"", "\[Rule]", "ss"}], ",", 
-         RowBox[{"\"\<ts\>\"", "\[Rule]", "ts"}]}], "|>"}]}]}], 
-     "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
-  "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
   RowBox[{"(*", 
    RowBox[{"geometry", " ", "plot", " ", "graph"}], 
    "*)"}]}], "\[IndentingNewLine]", 
@@ -792,65 +786,7 @@ Cell[BoxData[{
       RowBox[{"Button", "[", 
        RowBox[{"\"\<Start\>\"", ",", 
         RowBox[{"testRender", "[", "]"}]}], "]"}]}], "\[IndentingNewLine]", 
-     "]"}]}], "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
-  RowBox[{"(*", 
-   RowBox[{"MatteMaterial", "::", "ComputeScatteringFunctions"}], 
-   "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{
-    RowBox[{"computeMaterial", "[", "si_", "]"}], ":=", 
-    RowBox[{"Module", "[", "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"bsdf", ",", "material", ",", "r", ",", "sig"}], "}"}], ",", 
-      "\[IndentingNewLine]", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"bsdf", "=", 
-        RowBox[{"constructBSDF", "[", 
-         RowBox[{"si", ",", "1"}], "]"}]}], ";", "\[IndentingNewLine]", 
-       "\[IndentingNewLine]", 
-       RowBox[{"material", "=", 
-        RowBox[{"si", "[", "\"\<material\>\"", "]"}]}], ";", 
-       "\[IndentingNewLine]", 
-       RowBox[{"r", "=", 
-        RowBox[{"material", "[", "\"\<Kd\>\"", "]"}]}], ";", 
-       "\[IndentingNewLine]", 
-       RowBox[{"sig", "=", 
-        RowBox[{"material", "[", "\"\<sigma\>\"", "]"}]}], ";", 
-       "\[IndentingNewLine]", 
-       RowBox[{"sig", "=", 
-        RowBox[{"Clip", "[", 
-         RowBox[{"sig", ",", 
-          RowBox[{"{", 
-           RowBox[{"0", ",", "90"}], "}"}]}], "]"}]}], ";", 
-       "\[IndentingNewLine]", "\[IndentingNewLine]", 
-       RowBox[{"(*", 
-        RowBox[{"not", " ", "black"}], "*)"}], "\[IndentingNewLine]", 
-       RowBox[{"Assert", "[", 
-        RowBox[{
-         RowBox[{
-          RowBox[{"r", "[", 
-           RowBox[{"[", "1", "]"}], "]"}], "\[NotEqual]", "0"}], "||", 
-         RowBox[{
-          RowBox[{"r", "[", 
-           RowBox[{"[", "2", "]"}], "]"}], "\[NotEqual]", "0"}], "||", 
-         RowBox[{
-          RowBox[{"r", "[", 
-           RowBox[{"[", "3", "]"}], "]"}], "\[NotEqual]", "0"}]}], "]"}], ";",
-        "\[IndentingNewLine]", 
-       RowBox[{"Assert", "[", 
-        RowBox[{"sig", "\[Equal]", "0"}], "]"}], ";", "\[IndentingNewLine]", 
-       "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"bsdf", "[", "\"\<bxdfs0\>\"", "]"}], "=", 
-        RowBox[{"<|", 
-         RowBox[{
-          RowBox[{"\"\<type\>\"", "\[Rule]", "\"\<LambertianReflection\>\""}],
-           ",", 
-          RowBox[{"\"\<R\>\"", "\[Rule]", "r"}]}], "|>"}]}], ";", 
-       "\[IndentingNewLine]", "bsdf"}]}], "\[IndentingNewLine]", "]"}]}], 
-   ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+     "]"}]}], "*)"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"camRayo", "=", "eyePt"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -859,124 +795,75 @@ Cell[BoxData[{
     RowBox[{"{", 
      RowBox[{"80", ",", "61"}], "}"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"isect", "=", 
-   RowBox[{"sceneIntersect", "[", 
-    RowBox[{"{", 
-     RowBox[{"camRayo", ",", "camRayd"}], "}"}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{"computeMaterial", "[", "isect", "]"}]}], "Input",
- CellChangeTimes->{{3.837654122022234*^9, 3.8376541560065136`*^9}, {
-   3.8376541863354316`*^9, 3.83765418654235*^9}, {3.8376590183229375`*^9, 
-   3.837659109872554*^9}, {3.83765937564216*^9, 3.8376593794884515`*^9}, {
-   3.8376595373163424`*^9, 3.83765964152796*^9}, {3.83765967686572*^9, 
-   3.837659690036155*^9}, {3.837659721289977*^9, 3.837659723736927*^9}, {
-   3.8376597651952887`*^9, 3.837659844473301*^9}, {3.837659893449835*^9, 
-   3.837660027961242*^9}, {3.8376601136188393`*^9, 3.8376601809844074`*^9}, {
-   3.8376644806597033`*^9, 3.837664521170023*^9}, {3.8376801884179153`*^9, 
-   3.8376802184893236`*^9}, {3.8377411596379232`*^9, 
-   3.8377411606134424`*^9}, {3.8377411911816783`*^9, 3.837741294776919*^9}, {
-   3.837741357945646*^9, 3.8377413770301204`*^9}, {3.8377414276525593`*^9, 
-   3.837741542348942*^9}, {3.837741675197055*^9, 3.837741790654489*^9}, {
-   3.8377418337966876`*^9, 3.83774198147711*^9}, {3.837742011940463*^9, 
-   3.8377420488205166`*^9}, {3.837742105698755*^9, 3.8377421439968605`*^9}, {
-   3.8377428149393377`*^9, 3.837742820026168*^9}, 3.8377428551311474`*^9, {
-   3.8377431779490232`*^9, 3.8377431915878477`*^9}, {3.837743366552213*^9, 
-   3.8377434459064655`*^9}, {3.837745412773281*^9, 3.837745437225678*^9}, 
-   3.8377457441144023`*^9, {3.837746243728445*^9, 3.837746250311763*^9}, {
-   3.8377463513715196`*^9, 3.837746392231592*^9}, {3.837746429135024*^9, 
-   3.8377464660089693`*^9}, {3.837746703062667*^9, 3.8377469641453753`*^9}, {
-   3.8377470004234433`*^9, 3.837747073105345*^9}, {3.83774729804999*^9, 
-   3.837747338150365*^9}, {3.837747506385109*^9, 3.8377476477994967`*^9}, {
-   3.837747744222701*^9, 3.8377477633895445`*^9}, {3.8377478567018805`*^9, 
-   3.837747856772798*^9}, {3.8377478983527155`*^9, 3.837747935317585*^9}, {
-   3.837751929874689*^9, 3.837751937615461*^9}, {3.8377525810007973`*^9, 
-   3.8377526303751087`*^9}, {3.8377531196552615`*^9, 3.837753154416168*^9}, {
-   3.8377533787178555`*^9, 3.8377535092870703`*^9}, {3.8377535719986815`*^9, 
-   3.8377537241677876`*^9}, {3.837753778801285*^9, 3.8377538178323*^9}, {
-   3.837753859304861*^9, 3.8377540783924513`*^9}, {3.8377541150245886`*^9, 
-   3.8377541168545218`*^9}, {3.8377542952216883`*^9, 3.837754317407643*^9}, {
-   3.837754600247965*^9, 3.8377546415329914`*^9}, {3.837754746750693*^9, 
-   3.8377547791917524`*^9}, {3.837759759772126*^9, 3.837759829817941*^9}, {
-   3.8378092198177643`*^9, 3.8378092737704487`*^9}, {3.8378093277955637`*^9, 
-   3.837809403432517*^9}, {3.837809434687477*^9, 3.8378094410722427`*^9}, {
-   3.8378095107594147`*^9, 3.8378096401463985`*^9}, {3.837809728480542*^9, 
-   3.837809764233906*^9}, {3.837809811936705*^9, 3.837809825472486*^9}, {
-   3.837809953201628*^9, 3.83780999703165*^9}, {3.8378104264770436`*^9, 
-   3.837810527665268*^9}, {3.837810581193096*^9, 3.837810595984208*^9}, {
-   3.8378106809708805`*^9, 3.8378106978772535`*^9}, {3.83781075349125*^9, 
-   3.8378107822764206`*^9}, {3.8378108184218016`*^9, 
-   3.8378109730123663`*^9}, {3.8378110794444466`*^9, 3.837811112996643*^9}, {
-   3.837812607179533*^9, 3.837812750050412*^9}, {3.8378131172980022`*^9, 
-   3.837813146633501*^9}, {3.837813215945509*^9, 3.837813246291735*^9}, {
-   3.8378133867038665`*^9, 3.8378136493436966`*^9}, {3.8378140861243486`*^9, 
-   3.8378142501456337`*^9}, {3.8378142949194827`*^9, 3.837814412581587*^9}, {
-   3.837815086025359*^9, 3.8378150862752924`*^9}, {3.8378151255204754`*^9, 
-   3.837815162723563*^9}, {3.8378152526646643`*^9, 3.837815408252823*^9}, {
-   3.837815482392646*^9, 3.8378154887947454`*^9}, {3.8378245905935497`*^9, 
-   3.8378246125843673`*^9}, {3.837824687604117*^9, 3.837824699543831*^9}, {
-   3.837824778504441*^9, 3.837824828904827*^9}, {3.8378250361043954`*^9, 
-   3.8378252464312477`*^9}, {3.837826415704646*^9, 3.8378264198881407`*^9}, {
-   3.8378266001656094`*^9, 3.837826740376923*^9}, {3.8378340608089957`*^9, 
-   3.837834167950903*^9}},
- EmphasizeSyntaxErrors->True,
- CellLabel->"In[1]:=",ExpressionUUID->"856a8b20-6c6d-4ca2-ada8-1a4ac995cc0c"],
+  RowBox[{
+   RowBox[{"isect", "=", 
+    RowBox[{"sceneIntersect", "[", 
+     RowBox[{"{", 
+      RowBox[{"camRayo", ",", "camRayd"}], "}"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"gPrint", "[", "\"\<Scene Intersection\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", "isect", "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.837812525650175*^9, 3.8378125362001963`*^9}, {
+  3.8378138172908792`*^9, 3.8378138246169724`*^9}},
+ CellLabel->
+  "In[1221]:=",ExpressionUUID->"b0ce501f-04d2-45cb-8ea3-1f89dd7059e7"],
+
+Cell[BoxData[
+ StyleBox["\<\" Scene Intersection\"\>",
+  StripOnInput->False,
+  FontSize->18,
+  Background->RGBColor[0.87, 0.94, 1]]], "Print",
+ CellChangeTimes->{3.8378125366735134`*^9, 3.8378138256773405`*^9},
+ CellLabel->
+  "During evaluation of \
+In[1221]:=",ExpressionUUID->"32084dd7-1d3f-4483-9ca3-cdb42b0c6691"],
 
 Cell[BoxData[
  RowBox[{"\[LeftAssociation]", 
   RowBox[{
-   RowBox[{"\<\"eta\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"ns\"\>", "\[Rule]", 
+   RowBox[{"\<\"p\"\>", "\[Rule]", 
     RowBox[{"{", 
      RowBox[{
-      RowBox[{"-", "0.999915637885577`"}], ",", 
-      RowBox[{"-", "0.005721999233829623`"}], ",", "0.01166086774849389`"}], 
+     "551.8460315447546`", ",", "514.0841633087919`", ",", 
+      "170.45865514909147`"}], "}"}]}], ",", 
+   RowBox[{"\<\"n\"\>", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "0.9999156385204796`"}], ",", 
+      RowBox[{"-", "0.005721977902835239`"}], ",", "0.01166082377283354`"}], 
      "}"}]}], ",", 
-   RowBox[{"\<\"ng\"\>", "\[Rule]", 
+   RowBox[{"\<\"tri\"\>", "\[Rule]", 
     RowBox[{"{", 
      RowBox[{
-      RowBox[{"-", "0.999915637885577`"}], ",", 
-      RowBox[{"-", "0.005721999233829623`"}], ",", "0.01166086774849389`"}], 
+      RowBox[{"{", 
+       RowBox[{"552.8`", ",", "0.`", ",", "0.`"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"549.6`", ",", "559.2`", ",", "0.`"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"556.`", ",", "559.2`", ",", "548.8`"}], "}"}]}], "}"}]}], ",", 
+   RowBox[{"\<\"wo\"\>", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "0.20341762669147825`"}], ",", 
+      RowBox[{"-", "0.9761247233171801`"}], ",", "0.07616950623553337`"}], 
      "}"}]}], ",", 
-   RowBox[{"\<\"ss\"\>", "\[Rule]", 
+   RowBox[{"\<\"dpdu\"\>", "\[Rule]", 
     RowBox[{"{", 
      RowBox[{
-      RowBox[{"-", "0.005722388300324364`"}], ",", "0.9999836270020327`", ",",
-       "0.`"}], "}"}]}], ",", 
-   RowBox[{"\<\"ts\"\>", "\[Rule]", 
+      RowBox[{"-", "3.199999999999932`"}], ",", "559.2`", ",", "0.`"}], 
+     "}"}]}], ",", 
+   RowBox[{"\<\"dpdv\"\>", "\[Rule]", 
     RowBox[{"{", 
-     RowBox[{
-     "0.011660676825129947`", ",", "0.00006672801317561114`", ",", 
-      "0.9999320097703407`"}], "}"}]}], ",", 
-   RowBox[{"\<\"bxdfs0\"\>", "\[Rule]", 
-    RowBox[{"\[LeftAssociation]", 
-     RowBox[{
-      RowBox[{"\<\"type\"\>", "\[Rule]", "\<\"LambertianReflection\"\>"}], 
-      ",", 
-      RowBox[{"\<\"R\"\>", "\[Rule]", 
-       RowBox[{"{", 
-        RowBox[{"0.571289`", ",", "0.042393`", ",", "0.044485`"}], "}"}]}]}], 
-     "\[RightAssociation]"}]}]}], "\[RightAssociation]"}]], "Output",
- CellChangeTimes->{3.8378341714886703`*^9},
- CellLabel->"Out[44]=",ExpressionUUID->"bea4eb02-70ab-4d7e-af21-a38c2d2ae3f9"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"BitShiftRight", "[", 
-  RowBox[{"9861", ",", "7"}], "]"}]], "Input",
- CellChangeTimes->{{3.837831777206209*^9, 3.8378317829631658`*^9}},
+     RowBox[{"6.399999999999977`", ",", "0.`", ",", "548.8`"}], "}"}]}]}], 
+  "\[RightAssociation]"}]], "Output",
+ CellChangeTimes->{3.837812536676505*^9, 3.837813825680332*^9},
  CellLabel->
-  "In[1910]:=",ExpressionUUID->"83439a9b-4568-47ce-b590-85bcd4dfed73"],
-
-Cell[BoxData["77"], "Output",
- CellChangeTimes->{3.837831783310452*^9},
- CellLabel->
-  "Out[1910]=",ExpressionUUID->"2b1765e9-ae94-417e-be8e-d4cce691eabc"]
+  "Out[1268]=",ExpressionUUID->"cdd6fa97-704c-47f6-84fd-691c46300a86"]
 }, Open  ]]
 },
 WindowSize->{759, 798},
-WindowMargins->{{Automatic, 217}, {60, Automatic}},
+WindowMargins->{{352, Automatic}, {19, Automatic}},
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
 ]
@@ -992,12 +879,9 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 36896, 899, 4627, "Input",ExpressionUUID->"856a8b20-6c6d-4ca2-ada8-1a4ac995cc0c"],
-Cell[37479, 923, 1410, 36, 71, "Output",ExpressionUUID->"bea4eb02-70ab-4d7e-af21-a38c2d2ae3f9"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[38926, 964, 244, 5, 28, "Input",ExpressionUUID->"83439a9b-4568-47ce-b590-85bcd4dfed73"],
-Cell[39173, 971, 155, 3, 32, "Output",ExpressionUUID->"2b1765e9-ae94-417e-be8e-d4cce691eabc"]
+Cell[580, 22, 30468, 787, 4190, "Input",ExpressionUUID->"b0ce501f-04d2-45cb-8ea3-1f89dd7059e7"],
+Cell[31051, 811, 318, 8, 30, "Print",ExpressionUUID->"32084dd7-1d3f-4483-9ca3-cdb42b0c6691"],
+Cell[31372, 821, 1486, 40, 71, "Output",ExpressionUUID->"cdd6fa97-704c-47f6-84fd-691c46300a86"]
 }, Open  ]]
 }
 ]
