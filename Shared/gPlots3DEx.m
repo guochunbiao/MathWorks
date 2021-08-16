@@ -62,7 +62,7 @@ pltLine3D[input_]:=Module[
 
 pltRect3D[input_]:=Module[
 	{center,normal,majorAxisAssit,majorAxis,minorAxis,majorRadius,minorRadius,
-		colorFunc,meshType,plotPts,opacity,thickness,
+		colorFunc,meshType,plotPts,opacity,thickness,lighting,
 		rMat},
 	
 	center=gAssocData[input,"center"];
@@ -79,6 +79,7 @@ pltRect3D[input_]:=Module[
 	plotPts=gAssocDataOpt[input,"plotPts",20];
 	opacity=gAssocDataOpt[input,"opacity",1];
 	thickness=gAssocDataOpt[input,"thickness",0.01];
+	lighting=gAssocDataOpt[input,"lighting",{"Ambient",White}];
 	
 	rMat=RotationMatrix[{{0,0,1},normal}].RotationMatrix[{{0,1,0},majorAxis}];
 	
@@ -87,7 +88,7 @@ pltRect3D[input_]:=Module[
 		{w,-minorRadius,minorRadius},{h,-majorRadius,majorRadius},
 	    Mesh->meshType,
 		PlotPoints->plotPts,
-		Lighting->{"Ambient",White},
+		Lighting->lighting,
 		PlotStyle->{Opacity[opacity],Thickness[thickness]},
 		ColorFunction->colorFunc,
 		ColorFunctionScaling->False]
