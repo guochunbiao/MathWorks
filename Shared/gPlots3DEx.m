@@ -13,11 +13,13 @@ ResetDirectory[];
 
 ClearAll[blCirclePrec,blDefaultThickness,
 	showProps3D,pltRect3D,pltArrow3D,pltPoint3D,pltDisk3D,pltCircle3D,pltSphere3D,
-	pltLine3D,pltArc3D,pltArc3DEx,pltDiskProjBoundary3D,pltDiskProjArea3D,pltLengthMarker3D];
+	pltLine3D,pltArc3D,pltArc3DEx,pltDiskProjBoundary3D,pltDiskProjArea3D,pltLengthMarker3D,
+	pltRectLine3D];
 blDefaultThickness=1.5;
 blCirclePrec=\[Pi]/120;
 showProps3D::usage="showProps3D";
 pltRect3D::usage="pltRect3D";
+pltRectLine3D::usage="pltRectLine3D";
 pltArrow3D::usage="pltArrow3D";
 pltPoint3D::usage="pltPoint3D";
 pltDisk3D::usage="pltDisk3D";
@@ -92,6 +94,35 @@ pltRect3D[input_]:=Module[
 		PlotStyle->{Opacity[opacity],Thickness[thickness]},
 		ColorFunction->colorFunc,
 		ColorFunctionScaling->False]
+];
+
+
+pltRectLine3D[input_]:=Module[
+	{center,normal,majorAxisAssit,majorAxis,minorAxis,majorRadius,minorRadius,
+		color,style,thickness,
+		rMat,topLeftPt,topRightPt,btmRightPt,btmLeftPt},
+	
+	center=gAssocData[input,"center"];
+	normal=Normalize@gAssocData[input,"normal"];
+	majorAxisAssit=Normalize@gAssocData[input,"majorAxis"];
+	Assert[Abs@Dot[majorAxisAssit,normal]<0.999,"pltRect3D"];
+	minorAxis=Normalize@Cross[normal,majorAxisAssit];
+	majorAxis=Normalize@Cross[minorAxis,normal];
+	majorRadius=gAssocData[input,"majorRadius"];
+	minorRadius=gAssocData[input,"minorRadius"];
+	
+	color=gAssocDataOpt[input,"color",Black];
+	style=gAssocDataOpt[input,"style",Nothing];
+	thickness=gAssocDataOpt[input,"thickness",0.01];
+	
+	rMat=RotationMatrix[{{0,0,1},normal}].RotationMatrix[{{0,1,0},majorAxis}];
+	
+	topLeftPt=rMat.{-minorRadius,majorRadius,0}+center;
+	topRightPt=rMat.{minorRadius,majorRadius,0}+center;
+	btmRightPt=rMat.{minorRadius,-majorRadius,0}+center;
+	btmLeftPt=rMat.{-minorRadius,-majorRadius,0}+center;
+	Graphics3D[{AbsoluteThickness[thickness],style,color,
+		Line[{topLeftPt,topRightPt,btmRightPt,btmLeftPt,topLeftPt}]}]
 ];
 
 

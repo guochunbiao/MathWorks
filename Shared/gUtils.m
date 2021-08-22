@@ -8,7 +8,11 @@ ResetDirectory[];
 
 ClearAll[gStructRules,gPrint,gPrintFunc,gEvalFunc,gCreateCone,gLerp,gRemap,gClampPhi,
 	gCalcRectCorners,gReflectVector,gAssocData,gAssocDataOpt,gCircIntsRectPts,
-	gCircIntsRectArea,gCircIntsRectAreaDebug,gCalcPlaneTangents,gCalcRect2DEdgePts];
+	gCircIntsRectArea,gCircIntsRectAreaDebug,gCalcPlaneTangents,gCalcRect2DEdgePts,
+	gPlotColors];
+(*https://www.molecularecologist.com/2020/04/23/simple-tools-for-mastering-color-in-scientific-figures/*)
+gPlotColors={RGBColor["#FF1F5B"],RGBColor["#009ADE"],
+		RGBColor["#AF58BA"],RGBColor["#FFC61E"],RGBColor["#F28522"]};
 gPrint::usage="Print messages";
 gPrintFunc::usage="Print a function";
 gEvalFunc::usage="Evaluate a funciton";
