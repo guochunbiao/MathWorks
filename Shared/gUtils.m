@@ -9,7 +9,7 @@ ResetDirectory[];
 ClearAll[gStructRules,gPrint,gPrintFunc,gEvalFunc,gCreateCone,gLerp,gRemap,gClampPhi,
 	gCalcRectCorners,gReflectVector,gAssocData,gAssocDataOpt,gCircIntsRectPts,
 	gCircIntsRectArea,gCircIntsRectAreaDebug,gCalcPlaneTangents,gCalcRect2DEdgePts,
-	gPlotColors];
+	gPlotColors,gColorEquals];
 (*https://www.molecularecologist.com/2020/04/23/simple-tools-for-mastering-color-in-scientific-figures/*)
 gPlotColors={RGBColor["#FF1F5B"],RGBColor["#009ADE"],
 		RGBColor["#AF58BA"],RGBColor["#FFC61E"],RGBColor["#F28522"]};
@@ -30,6 +30,7 @@ gCircIntsRectArea::usage="gCircIntsRectArea";
 gCircIntsRectAreaDebug::usage="gCircIntsRectAreaDebug";
 gCalcPlaneTangents::usage="gCalcPlaneTangents";
 gCalcRect2DEdgePts::usage="gCalcRect2DEdgePts";
+gColorEquals::usage="gColorEquals";
 
 
 SetAttributes[gStructRules,HoldAll]
@@ -145,7 +146,7 @@ gReflectVector[viewOrLight_,half_]:=Module[
 gAssocData[assoc_,key_]:=Module[
 	{},
 	
-	Assert[MemberQ[Keys[assoc],key]];
+	Assert[MemberQ[Keys[assoc],key],key];
 	assoc[key]
 ];
 
@@ -285,6 +286,15 @@ gCalcRect2DEdgePts[center_,inMajorAxis_,majorRadius_,minorRadius_]:=Module[
 	pointRB=pointRight-minorAxis*minorRadius;
 	
 	{pointLT,pointRT,pointRB,pointLB}
+];
+
+
+gColorEquals[c1_,c2_,\[Epsilon]_:0.001]:=Module[
+	{},
+
+	(Abs[c1[[1]]-c2[[1]]]<\[Epsilon])&&
+	(Abs[c1[[2]]-c2[[2]]]<\[Epsilon])&&
+	(Abs[c1[[3]]-c2[[3]]]<\[Epsilon])
 ];
 
 
