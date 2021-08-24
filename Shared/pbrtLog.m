@@ -9,7 +9,7 @@ ResetDirectory[];
 ClearAll[pbrtLogInitPixel,pbrtLogPrintBounce,pbrtLogPrintElement,pbrtLogPrintPixel,
 	pbrtLogBounceLe,pbrtLogBounceLd,pbrtLogStartBounce,pbrtLogEndBounce,pbrtLogPixelLi,
 	pbrtCurrPixelLog,pbrtCurrBounceIndex,pbrtCurrBounce,pbrtLogMisLight,pbrtLogMisBsdf,
-	pbrtLogNextBounce];
+	pbrtLogNextBounce,pbrtExtractBounceArrows];
 pbrtCurrPixelLog::usage="pbrtCurrPixelLog";
 pbrtCurrBounceIndex::usage="pbrtCurrBounceIndex";
 pbrtCurrBounce::usage="pbrtCurrBounce";
@@ -25,6 +25,7 @@ pbrtLogPixelLi::usage="pbrtLogPixelLi";
 pbrtLogMisLight::usage="pbrtLogMisLight";
 pbrtLogMisBsdf::usage="pbrtLogMisBsdf";
 pbrtLogNextBounce::usage="pbrtLogNextBounce";
+pbrtExtractBounceArrows::usage="pbrtExtractBounceArrows";
 
 
 Begin["`Private`"];
@@ -65,12 +66,13 @@ pbrtLogNextBounce[rayo_,rayd_,beta_]:=Module[
 ];
 
 
-pbrtLogStartBounce[bounceIdx_]:=Module[
+pbrtLogStartBounce[bounceIdx_,rayo_,rayd_]:=Module[
 	{},
 	pbrtCurrBounceIndex=bounceIdx;
-	pbrtCurrBounce=<|"base"-><|"index"->bounceIdx|>,"misLight"->"","misBsdf"->""|>;
+	pbrtCurrBounce=<|"base"-><|"index"->bounceIdx,"rayo"->rayo,"rayd"->rayd|>,
+		"misLight"->"","misBsdf"->""|>;
 	
-	1
+	pbrtCurrBounce
 ];
 
 
@@ -145,6 +147,36 @@ pbrtLogMisBsdf[wo_,wi_,lightPdf_,scatteringPdf_,li_,f_,tr_,lo_]:=Module[
 	pbrtCurrBounce["misBsdf"]=misBsdf;
 	
 	pbrtCurrBounce
+];
+
+
+pbrtExtractBounceArrows[pixelLog_]:=Module[
+	{bounces,bounce,lastBounce,i,base,misLight,misBsdf,nextBounce,
+		pathArrows},
+	pathArrows={};
+	
+	bounces=gAssocData[pixelLog,"bounces"];
+	
+	For[i=1,i<=Length@bounces,i++,
+		bounce=bounces[[i]];
+		base=gAssocData[bounce,"base"];
+		misLight=gAssocData[bounce,"misLight"];
+		misBsdf=gAssocData[bounce,"misBsdf"];
+		nextBounce=gAssocData[bounce,"nextBounce"];
+		
+		AppendTo[pathArrows,<|"origin"->base["rayo"],"dir"->base["rayd"],
+			"length"->Norm[base["rayo"]-nextBounce["next_rayo"]]|>];
+	];
+	(*out arrow*)
+	lastBounce=bounces[[Length@bounces]];
+	base=gAssocData[lastBounce,"base"];
+	misLight=gAssocData[lastBounce,"misLight"];
+	misBsdf=gAssocData[lastBounce,"misBsdf"];
+	nextBounce=gAssocData[lastBounce,"nextBounce"];
+	AppendTo[pathArrows,<|"origin"->nextBounce["next_rayo"],"dir"->nextBounce["next_rayd"],
+			"length"->100|>];
+	
+	{pathArrows}
 ];
 
 

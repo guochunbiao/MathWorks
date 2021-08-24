@@ -4,6 +4,7 @@ BeginPackage["pbrtShared`"];
 SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["gUtils`"];
 Needs["pbrtLog`"];
+Needs["gPlots3DEx`"];
 ResetDirectory[];
 
 
@@ -16,7 +17,7 @@ ClearAll[pbrtRayMaxDist,pbrtLoadScene,pbrtRasterToCamera,pbrtGetCameraSample,
 	pbrtCosineSampleHemisphereLHS,pbrtPowerHeuristic,pbrtBsdfSampleF,pbrtSurfaceInteractionLe,
 	pbrtEstimateDirect,pbrtUniformSampleOneLight,pbrtPathIntegratorLi,pbrtSamplerIntegratorRender,
 	pbrtRenderTile,pbrtPlotOriginScene,pbrtPlot3DOptions,pbrtValidateSinglePixel,
-	pbrtValidateTilePixels,pbrtGetTestPixelColor,pbrtPathIntegratorLiBounce];
+	pbrtValidateTilePixels,pbrtGetTestPixelColor,pbrtPathIntegratorLiBounce,pbrtPlotPath];
 pbrtRayMaxDist=10000;
 pbrtLoadScene::usage="pbrtLoadScene";
 pbrtRasterToCamera::usage="pbrtRasterToCamera";
@@ -62,6 +63,7 @@ pbrtRenderTile::usage="pbrtRenderTile";
 pbrtValidateSinglePixel::usage="pbrtValidateSinglePixel";
 pbrtValidateTilePixels::usage="pbrtValidateTilePixels";
 pbrtPathIntegratorLiBounce::usage="pbrtPathIntegratorLiBounce";
+pbrtPlotPath::usage="pbrtPlotPath";
 
 
 Begin["`Private`"];
@@ -113,7 +115,7 @@ pbrtPathIntegratorLiBounce[{rayo_,rayd_,beta_},scene_,bounceIndex_]:=Module[
 		nextSamples,nextRayo,nextRayd,nextBeta,endLabel},
 	
 	l={0,0,0};
-	pbrtLogStartBounce[bounceIndex];
+	pbrtLogStartBounce[bounceIndex,rayo,rayd];
 
 	isect1=pbrtSceneIntersect[{rayo,rayd},scene];
 	le={0,0,0};
@@ -803,7 +805,7 @@ pbrtPlot3DOptions[scene_]:=Module[
 ];
 
 
-pbrtPlotOriginScene[scene_]:=Module[
+pbrtPlotOriginScene[scene_,opacity_:1]:=Module[
 	{lights,prims,graphList,createPolyGraphs},
 	lights=gAssocData[scene,"lights"];
 	prims=gAssocData[scene,"prims"];
@@ -819,6 +821,7 @@ pbrtPlotOriginScene[scene_]:=Module[
 			Kd=gAssocData[mat,"Kd"];
 			sigma=gAssocData[mat,"sigma"];
 			AppendTo[graphList,RGBColor[Kd]];
+			AppendTo[graphList,Opacity[opacity]];
 			AppendTo[graphList,Polygon[tri]]
 		];
 	];
@@ -827,6 +830,23 @@ pbrtPlotOriginScene[scene_]:=Module[
 	createPolyGraphs[prims];
 	
 	Graphics3D[graphList]
+];
+
+
+pbrtPlotPath[scene_,pathLog_]:=Module[
+	{pathArrows,pathArrowPlots,i},
+	
+	{pathArrows}=pbrtExtractBounceArrows[pathLog];
+	pathArrowPlots={};
+	For[i=1,i<=Length@pathArrows,i++,
+		AppendTo[pathArrowPlots,pltArrow3D@pathArrows[[i]]]];
+	
+	Print[pathArrows];
+	Show[{
+			pbrtPlotOriginScene[scene,0.1],
+			pathArrowPlots
+		 },
+		 pbrtPlot3DOptions[scene]]
 ];
 
 
