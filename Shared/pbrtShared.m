@@ -3,6 +3,7 @@
 BeginPackage["pbrtShared`"];
 SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["gUtils`"];
+Needs["pbrtLog`"];
 ResetDirectory[];
 
 
@@ -14,9 +15,8 @@ ClearAll[pbrtRayMaxDist,pbrtLoadScene,pbrtRasterToCamera,pbrtGetCameraSample,
 	pbrtLambertianReflectionF,pbrtBsdfF,pbrtBxdfPdf,pbrtBsdfPdf,pbrtBxdfF,pbrtBxdfSampleF,
 	pbrtCosineSampleHemisphereLHS,pbrtPowerHeuristic,pbrtBsdfSampleF,pbrtSurfaceInteractionLe,
 	pbrtEstimateDirect,pbrtUniformSampleOneLight,pbrtPathIntegratorLi,pbrtSamplerIntegratorRender,
-	pbrtPrintPixelLog,pbrtPrintBounceLog,pbrtPrintLogElement,pbrtRenderTile,
-	pbrtPlotOriginScene,pbrtPlot3DOptions,pbrtValidateSinglePixel,pbrtValidateTilePixels,
-	pbrtGetTestPixelColor];
+	pbrtRenderTile,pbrtPlotOriginScene,pbrtPlot3DOptions,pbrtValidateSinglePixel,
+	pbrtValidateTilePixels,pbrtGetTestPixelColor];
 pbrtRayMaxDist=10000;
 pbrtLoadScene::usage="pbrtLoadScene";
 pbrtRasterToCamera::usage="pbrtRasterToCamera";
@@ -68,58 +68,55 @@ Begin["`Private`"];
 
 (*SamplerIntegrator::Render*)
 pbrtSamplerIntegratorRender[pixel_,scene_,printLog_:False]:=Module[
-	{l,camRayo,camRayd,pixelLog,bounceLog},
+	{l,camRayo,camRayd,pixelLog},
 	(*logging*)
 	pixelLog=<|"pixel"->pixel|>;
 
 	camRayo=gAssocData[scene,"eyePt"];
 	camRayd=pbrtRayDifferential[{pixel[[1]],pixel[[2]]},scene];
-	pixelLog["cameraRay"]=<|"o"->camRayo,"d"->camRayd|>;
-	pixelLog["bounces"]={};
+	pbrtLogInitPixel[pixel,{camRayo,camRayd}];
 
 	(*PathIntegrator::Li*)
-	{l,bounceLog}=pbrtPathIntegratorLi[{camRayo,camRayd},scene];
+	l=pbrtPathIntegratorLi[{camRayo,camRayd},scene];
+	pbrtLogPixelLi[l];
 
-	AppendTo[pixelLog["bounces"],bounceLog];
-	pixelLog["li"]=l;
-
-	If[printLog,pbrtPrintPixelLog[pixelLog],Nothing[]];
 	l
 ];
 
 
 (*PathIntegrator::Li*)
 pbrtPathIntegratorLi[{camRayo_,camRayd_},scene_]:=Module[
-	{bounceLog,bounces,l,beta,le,ld,isect1,isectWithBsdf},
+	{bounces,l,beta,le,ld,isect1,isectWithBsdf},
 	
 	bounces=0;
 	l={0,0,0};
 	beta={1,1,1};
-	bounceLog=<||>;
+	pbrtLogStartBounce[bounces];
 
 	isect1=pbrtSceneIntersect[{camRayo,camRayd},scene];
 	le={0,0,0};
 	If[ToString@isect1!="NaN",
 		le=If[bounces>0,{0,0,0},pbrtSurfaceInteractionLe[isect1,-camRayd]]];
-
-	bounceLog["le"]=le;
-	bounceLog["leBeta"]=beta;
+	pbrtLogBounceLe[le,beta];
 	l+=beta*le;
 
 	isectWithBsdf=If[ToString@isect1=="NaN","NaN",pbrtComputeScatteringFunctions[isect1]];
-	ld=If[ToString@isectWithBsdf=="NaN",{0,0,0},pbrtUniformSampleOneLight[isectWithBsdf,scene]];
-	bounceLog["ld"]=ld;
-	bounceLog["ldBeta"]=beta;
+	ld=If[ToString@isectWithBsdf=="NaN",
+			{0,0,0},
+			pbrtUniformSampleOneLight[isectWithBsdf,scene]];
+	pbrtLogBounceLd[ld,beta];	
 	ld*=beta;
 	l+=ld;
 	
-	{l,bounceLog}
+	pbrtLogEndBounce[l];
+	
+	l
 ];
 
 
 (*UniformSampleOneLight*)
 pbrtUniformSampleOneLight[isect_,scene_]:=Module[
-	{lights,lightIndex,light,lightPdf,uLight,uScattering,li},
+	{lights,lightIndex,light,lightPdf,uLight,uScattering,li,bounceLog},
 	lights=gAssocData[scene,"lights"];
 	lightIndex=1;
 	lightPdf=1;
@@ -136,9 +133,11 @@ pbrtUniformSampleOneLight[isect_,scene_]:=Module[
 
 
 (*EstimateDirect*)
-pbrtEstimateDirect[it_,uScattering_,light_,uLight_,handleMedia_,specular_]:=Module[
-{li,wi,lightPdf,vis,lightLi,bsdf,f1,f2,scatteringPdf,weight,ld,
-	tmp,lightIsect,ray,foundSurfaceInteraction,tr},
+pbrtEstimateDirect[it_,uScattering_,light_,uLight_,
+		handleMedia_,specular_]:=Module[
+{li,wi,lightPdf,vis,lightLi,bsdf,f1,f2,scatteringPdf,weight,ld,ld2,
+	lightIsect,ray,foundSurfaceInteraction,tr,endLabel,
+	fLight,fBsdf},
 	Assert[handleMedia==False];
 	Assert[specular==False];
 	(*Print[{it,uScattering,light,uLight,handleMedia,specular}];*)
@@ -151,26 +150,28 @@ pbrtEstimateDirect[it_,uScattering_,light_,uLight_,handleMedia_,specular_]:=Modu
 	bsdf=it["bsdf"];
 
 	(* f1:sampling the light *)
-	{f1,scatteringPdf}=If[pbrtIsBlack[li]||lightPdf==0,
+	{fLight,scatteringPdf}=If[pbrtIsBlack[li]||lightPdf==0,
 	{{0,0,0},0},
 	{pbrtBsdfF[bsdf,it["wo"],wi],pbrtBsdfPdf[bsdf,it["wo"],wi]}];
 
-	f1*=Abs@Dot[wi,it["n"]];
+	f1=fLight*Abs@Dot[wi,it["n"]];
 
 	weight=pbrtPowerHeuristic[1,lightPdf,1,scatteringPdf];
 	ld={0,0,0};
 	If[!pbrtIsBlack[f1],ld+=f1*li*weight/lightPdf];
+	pbrtLogMisLight[it["wo"],wi,lightPdf,scatteringPdf,li,fLight,ld];
 
 	(* f2:sampling the bxdf *)
-	{f2,wi,scatteringPdf}=pbrtBsdfSampleF[bsdf,it["wo"],uScattering];
-	tmp=f2;
-	f2*=Abs@Dot[wi,it["n"]];
+	{fBsdf,wi,scatteringPdf}=pbrtBsdfSampleF[bsdf,it["wo"],uScattering];
+	f2=fBsdf*Abs@Dot[wi,it["n"]];
 
 	Assert[!pbrtIsBlack[f2]&&scatteringPdf>0];
 	weight=1;
  
+    ld2={0,0,0};
+	tr=1;
 	lightPdf=pbrtLightPdfLi[light,it,wi];
-	If[lightPdf==0,Return[ld]];
+	If[lightPdf==0,Goto[endLabel]];
 
 	weight=pbrtPowerHeuristic[1,scatteringPdf,1,lightPdf];
 
@@ -181,10 +182,11 @@ pbrtEstimateDirect[it_,uScattering_,light_,uLight_,handleMedia_,specular_]:=Modu
 	Assert[foundSurfaceInteraction];
 
 	li=pbrtSurfaceInteractionLe[lightIsect,-wi];
-	tr=1;
-	ld+=f2*li*tr*weight/scatteringPdf;
+	ld2=f2*li*tr*weight/scatteringPdf;
 
-	ld
+	Label[endLabel];
+	pbrtLogMisBsdf[it["wo"],wi,lightPdf,scatteringPdf,li,fBsdf,tr,ld2];
+	ld+ld2
 ];
 
 
@@ -261,7 +263,7 @@ pbrtBsdfSampleF[bsdf_,woWorld_,u_]:=Module[
 	f=0;
 	f+=pbrtBxdfF[bxdf,wo,wi];
 
-	{f,wiWorld,pdf}
+	{f,wiWorld,pdf}//N
 ];
 
 
@@ -679,7 +681,7 @@ pbrtRayDifferential[pixel_,scene_]:=Module[
 
 
 pbrtRenderTile[tileMin_,tileMax_,scene_,colorMul_:1]:=Module[
-	{resx,resy,i,j,imgTable},
+	{resx,resy,i,j,imgTable,l},
 	resx=gAssocData[scene,"resx"];
 	resy=gAssocData[scene,"resy"];
 	
@@ -693,7 +695,8 @@ pbrtRenderTile[tileMin_,tileMax_,scene_,colorMul_:1]:=Module[
 
 	For[i=tileMin[[1]]+1,i<=tileMax[[1]]+1,i++,
 		For[j=tileMin[[2]]+1,j<=tileMax[[2]]+1,j++,
-            imgTable[[j]][[i]]=RGBColor@(pbrtSamplerIntegratorRender[{i,j},scene]*colorMul);
+			l=pbrtSamplerIntegratorRender[{i,j},scene]*colorMul;
+            imgTable[[j]][[i]]=RGBColor@l;
 		];
 	];
 	
@@ -750,28 +753,7 @@ pbrtLoadScene[file_]:=Module[
 ];
 
 
-pbrtPrintBounceLog[bounces_]:=Module[
-	{i},
 
-	For[i=1,i<=Length@bounces,i++,
-		Print@Style[StringJoin["bounce_",ToString[i-1]],
-		FontSize->16,Background->LightBlue];
-		Print[bounces[[i]]];
-	];
-];
-
-pbrtPrintLogElement[key_,msg_]:=Module[
-	{},
-
-	If[key=="bounces",pbrtPrintBounceLog[msg];Return[]];
-	Print@Style[key,FontSize->16,Background->LightBlue]+Print[msg]
-];
-
-pbrtPrintPixelLog[logger_]:=Module[
-	{},
-
-	Do[pbrtPrintLogElement[key,logger[key]],{key,Keys[logger]}]
-];
 
 
 pbrtPlot3DOptions[scene_]:=Module[
