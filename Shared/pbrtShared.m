@@ -228,7 +228,7 @@ pbrtCosineSampleHemisphereLHS[u_]:=Module[
 pbrtBxdfF[bxdf_,wo_,wi_]:=Module[
 	{},
 
-	bxdf["R"]*invPi
+	bxdf["R"]/\[Pi]
 ];
 
 
