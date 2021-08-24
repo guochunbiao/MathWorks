@@ -8,8 +8,9 @@ Needs["gBRDF`"];
 ResetDirectory[];
 
 
-ClearAll[gParamPlot];
+ClearAll[gParamPlot,gParamVaryDirectionDisbs];
 gParamPlot::usage="function{gParamPlot}";
+gParamVaryDirectionDisbs::usage="gParamVaryDirectionDisbs";
 
 
 Begin["`Private`"];
@@ -96,7 +97,7 @@ gParamBasicDisb[disbInput_,\[Theta]_]:=Module[
 
 ClearAll[gParamVaryingDisbShared];
 gParamVaryingDisbShared[disbInput_,\[Theta]_,viewDir_,lightDir_,normalDir_]:=Module[
-	{disbFunc,roughness,halfDir,nol,noh,voh,nov},
+	{disbFunc,roughness,halfDir,nol,noh,voh,nov,clr},
 	disbFunc=disbInput["disbFunc"];
 	roughness=disbInput["roughness"];
 	halfDir=Normalize[viewDir+lightDir];
@@ -104,9 +105,12 @@ gParamVaryingDisbShared[disbInput_,\[Theta]_,viewDir_,lightDir_,normalDir_]:=Mod
 	noh=Clip[Dot[normalDir,halfDir],{0,1}];
 	voh=Clip[Dot[viewDir,halfDir],{0,1}];
 	nov=Clip[Dot[normalDir,viewDir],{0,1}];
-	disbFunc[<|"\[Theta]"->\[Theta],"viewDir"->viewDir,"lightDir"->lightDir,"normalDir"->normalDir,
+	
+	clr=disbFunc[<|"\[Theta]"->\[Theta],"viewDir"->viewDir,"lightDir"->lightDir,"normalDir"->normalDir,
 		"halfDir"->halfDir,"roughness"->roughness,
-		"nol"->nol,"noh"->noh,"voh"->voh,"nov"->nov|>]
+		"nol"->nol,"noh"->noh,"voh"->voh,"nov"->nov|>];
+	
+	clr
 ];
 
 
@@ -474,7 +478,7 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 				(*AppendTo[plotList,paramFunc[element,\[Theta]]];*)
 				elementKeys=Keys[element];
 				tmpColor=If[MemberQ[elementKeys,"color"],element["color"],LightBrown];
-				tmpThickness=If[MemberQ[elementKeys,"thickness"],element["thickness"],0.01];
+				tmpThickness=If[MemberQ[elementKeys,"thickness"],element["thickness"],0.005];
 				
 				AppendTo[plotList,evaluated];
 				AppendTo[plotStyles,{tmpColor,Thickness[tmpThickness]}];
