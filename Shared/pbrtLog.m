@@ -8,7 +8,8 @@ ResetDirectory[];
 
 ClearAll[pbrtLogInitPixel,pbrtLogPrintBounce,pbrtLogPrintElement,pbrtLogPrintPixel,
 	pbrtLogBounceLe,pbrtLogBounceLd,pbrtLogStartBounce,pbrtLogEndBounce,pbrtLogPixelLi,
-	pbrtCurrPixelLog,pbrtCurrBounceIndex,pbrtCurrBounce,pbrtLogMisLight,pbrtLogMisBsdf];
+	pbrtCurrPixelLog,pbrtCurrBounceIndex,pbrtCurrBounce,pbrtLogMisLight,pbrtLogMisBsdf,
+	pbrtLogNextBounce];
 pbrtCurrPixelLog::usage="pbrtCurrPixelLog";
 pbrtCurrBounceIndex::usage="pbrtCurrBounceIndex";
 pbrtCurrBounce::usage="pbrtCurrBounce";
@@ -23,6 +24,7 @@ pbrtLogEndBounce::usage="pbrtLogEndBounce";
 pbrtLogPixelLi::usage="pbrtLogPixelLi";
 pbrtLogMisLight::usage="pbrtLogMisLight";
 pbrtLogMisBsdf::usage="pbrtLogMisBsdf";
+pbrtLogNextBounce::usage="pbrtLogNextBounce";
 
 
 Begin["`Private`"];
@@ -46,6 +48,20 @@ pbrtLogPixelLi[inLi_]:=Module[
 	{},
 	
 	pbrtCurrPixelLog["li"]=inLi;
+];
+
+
+(*CBounce::logNextBounce*)
+pbrtLogNextBounce[rayo_,rayd_,beta_]:=Module[
+	{nextBounce},
+	
+	nextBounce=<||>;
+	nextBounce["next_rayo"]=rayo;
+	nextBounce["next_rayd"]=rayd;
+	nextBounce["next_beta"]=beta;
+	pbrtCurrBounce["nextBounce"]=nextBounce;
+	
+	pbrtCurrBounce
 ];
 
 
@@ -143,6 +159,8 @@ pbrtLogPrintBounce[bounces_]:=Module[
 		Print[bounces[[i]]["misLight"]];
 		Print@Style["-->misBsdf",FontSize->15,Background->Cyan];
 		Print[bounces[[i]]["misBsdf"]];
+		Print@Style["-->nextBounce",FontSize->15,Background->Cyan];
+		Print[bounces[[i]]["nextBounce"]];
 	];
 ];
 

@@ -16,7 +16,7 @@ ClearAll[pbrtRayMaxDist,pbrtLoadScene,pbrtRasterToCamera,pbrtGetCameraSample,
 	pbrtCosineSampleHemisphereLHS,pbrtPowerHeuristic,pbrtBsdfSampleF,pbrtSurfaceInteractionLe,
 	pbrtEstimateDirect,pbrtUniformSampleOneLight,pbrtPathIntegratorLi,pbrtSamplerIntegratorRender,
 	pbrtRenderTile,pbrtPlotOriginScene,pbrtPlot3DOptions,pbrtValidateSinglePixel,
-	pbrtValidateTilePixels,pbrtGetTestPixelColor];
+	pbrtValidateTilePixels,pbrtGetTestPixelColor,pbrtPathIntegratorLiBounce];
 pbrtRayMaxDist=10000;
 pbrtLoadScene::usage="pbrtLoadScene";
 pbrtRasterToCamera::usage="pbrtRasterToCamera";
@@ -61,13 +61,14 @@ pbrtPlotOriginScene::usage="pbrtPlotOriginScene";
 pbrtRenderTile::usage="pbrtRenderTile";
 pbrtValidateSinglePixel::usage="pbrtValidateSinglePixel";
 pbrtValidateTilePixels::usage="pbrtValidateTilePixels";
+pbrtPathIntegratorLiBounce::usage="pbrtPathIntegratorLiBounce";
 
 
 Begin["`Private`"];
 
 
 (*SamplerIntegrator::Render*)
-pbrtSamplerIntegratorRender[pixel_,scene_,printLog_:False]:=Module[
+pbrtSamplerIntegratorRender[pixel_,scene_,maxBounce_:1]:=Module[
 	{l,camRayo,camRayd,pixelLog},
 	(*logging*)
 	pixelLog=<|"pixel"->pixel|>;
@@ -77,7 +78,7 @@ pbrtSamplerIntegratorRender[pixel_,scene_,printLog_:False]:=Module[
 	pbrtLogInitPixel[pixel,{camRayo,camRayd}];
 
 	(*PathIntegrator::Li*)
-	l=pbrtPathIntegratorLi[{camRayo,camRayd},scene];
+	l=pbrtPathIntegratorLi[{camRayo,camRayd},scene,maxBounce];
 	pbrtLogPixelLi[l];
 
 	l
@@ -85,18 +86,39 @@ pbrtSamplerIntegratorRender[pixel_,scene_,printLog_:False]:=Module[
 
 
 (*PathIntegrator::Li*)
-pbrtPathIntegratorLi[{camRayo_,camRayd_},scene_]:=Module[
-	{bounces,l,beta,le,ld,isect1,isectWithBsdf},
+pbrtPathIntegratorLi[{camRayo_,camRayd_},scene_,maxBounce_:1]:=Module[
+	{bounces,l,nextBounce,rayo,rayd,beta,bounceL},
 	
-	bounces=0;
 	l={0,0,0};
+	rayo=camRayo;
+	rayd=camRayd;
 	beta={1,1,1};
-	pbrtLogStartBounce[bounces];
+	For[bounces=0,bounces<maxBounce,bounces++,
+			bounceL=pbrtPathIntegratorLiBounce[{rayo,rayd,beta},scene,bounces];
+			l+=bounceL;
+		
+			nextBounce=pbrtCurrBounce["nextBounce"];
+			rayo=nextBounce["next_rayo"];
+			rayd=nextBounce["next_rayd"];
+			beta=nextBounce["next_beta"];
+		];
+	
+	l
+];
 
-	isect1=pbrtSceneIntersect[{camRayo,camRayd},scene];
+
+(*PathIntegrator::Li --> for (bounces = 0;; ++bounces)*)
+pbrtPathIntegratorLiBounce[{rayo_,rayd_,beta_},scene_,bounceIndex_]:=Module[
+	{l,le,ld,isect1,isectWithBsdf,nextwo,nextwi,nextf,nextpdf,
+		nextSamples,nextRayo,nextRayd,nextBeta,endLabel},
+	
+	l={0,0,0};
+	pbrtLogStartBounce[bounceIndex];
+
+	isect1=pbrtSceneIntersect[{rayo,rayd},scene];
 	le={0,0,0};
 	If[ToString@isect1!="NaN",
-		le=If[bounces>0,{0,0,0},pbrtSurfaceInteractionLe[isect1,-camRayd]]];
+		le=If[bounceIndex>0,{0,0,0},pbrtSurfaceInteractionLe[isect1,-rayd]]];
 	pbrtLogBounceLe[le,beta];
 	l+=beta*le;
 
@@ -108,8 +130,18 @@ pbrtPathIntegratorLi[{camRayo_,camRayd_},scene_]:=Module[
 	ld*=beta;
 	l+=ld;
 	
+	If[ToString@isectWithBsdf=="NaN",Goto[endLabel]];
+	(*next bounce info*)
+	nextwo=-rayd;
+	nextSamples=pbrt2DSamples[];
+	{nextf,nextwi,nextpdf}=pbrtBsdfSampleF[isectWithBsdf["bsdf"],nextwo,nextSamples];
+	{nextRayo,nextRayd}=pbrtInteractionSpawnRay[isectWithBsdf,nextwi];
+	nextBeta=beta*nextf*Abs@Dot[nextwi,isectWithBsdf["n"]]/nextpdf;
+	pbrtLogNextBounce[nextRayo,nextRayd,nextBeta];
+	
 	pbrtLogEndBounce[l];
 	
+	Label[endLabel];
 	l
 ];
 
@@ -127,14 +159,14 @@ pbrtUniformSampleOneLight[isect_,scene_]:=Module[
 	uLight=pbrt2DSamples[];
 	uScattering=pbrt2DSamples[];
 
-	li=pbrtEstimateDirect[isect,uScattering,light,uLight,False,False];
+	li=pbrtEstimateDirect[isect,uScattering,light,uLight,False,False,scene];
 	li
 ];
 
 
 (*EstimateDirect*)
 pbrtEstimateDirect[it_,uScattering_,light_,uLight_,
-		handleMedia_,specular_]:=Module[
+		handleMedia_,specular_,scene_]:=Module[
 {li,wi,lightPdf,vis,lightLi,bsdf,f1,f2,scatteringPdf,weight,ld,ld2,
 	lightIsect,ray,foundSurfaceInteraction,tr,endLabel,
 	fLight,fBsdf},
@@ -208,7 +240,7 @@ pbrtSurfaceInteractionLe[isect_,rayd_]:=Module[
 	{},
 
 	If[!isect["isLight"],Return[{0,0,0}]];
-
+	
 	pbrtLightL[isect["n"],rayd,isect["material"]]
 ];
 
