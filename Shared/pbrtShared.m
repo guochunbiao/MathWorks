@@ -10,14 +10,15 @@ ResetDirectory[];
 
 ClearAll[pbrtRayMaxDist,pbrtLoadScene,pbrtRasterToCamera,pbrtGetCameraSample,
 	pbrtRayDifferential,pbrtTriUVs,pbrtTriNormalRHS,pbrtTriIntersect,pbrtSceneIntersect,
-	pbrtBsdf,pbrtIsBlack,pbrt2DSamples,pbrtComputeScatteringFunctions,pbrtUniformSampleTri,
+	pbrtBsdf,pbrtIsBlack,pbrtGet2D,pbrtComputeScatteringFunctions,pbrtUniformSampleTri,
 	pbrtTriArea,pbrtTriSample,pbrtShapeSample,pbrtLightL,pbrtLightSampleLi,pbrtLightPdfLi,
 	pbrtInteractionSpawnRay,pbrtShapePdf,pbrtBsdfWorldToLocalLHS,pbrtBsdfLocalToWorldRHS,
 	pbrtLambertianReflectionF,pbrtBsdfF,pbrtBxdfPdf,pbrtBsdfPdf,pbrtBxdfF,pbrtBxdfSampleF,
 	pbrtCosineSampleHemisphereLHS,pbrtPowerHeuristic,pbrtBsdfSampleF,pbrtSurfaceInteractionLe,
 	pbrtEstimateDirect,pbrtUniformSampleOneLight,pbrtPathIntegratorLi,pbrtSamplerIntegratorRender,
 	pbrtRenderTile,pbrtPlotOriginScene,pbrtPlot3DOptions,pbrtValidateSinglePixel,
-	pbrtValidateTilePixels,pbrtGetTestPixelColor,pbrtPathIntegratorLiBounce,pbrtPlotPath];
+	pbrtValidateTilePixels,pbrtGetTestPixelColor,pbrtPathIntegratorLiBounce,pbrtPlotPath,
+	pbrtConcentricSampleDisk];
 pbrtRayMaxDist=10000;
 pbrtLoadScene::usage="pbrtLoadScene";
 pbrtRasterToCamera::usage="pbrtRasterToCamera";
@@ -29,7 +30,7 @@ pbrtTriIntersect::usage="pbrtTriIntersect";
 pbrtSceneIntersect::usage="pbrtSceneIntersect";
 pbrtBsdf::usage="pbrtBsdf";
 pbrtIsBlack::usage="pbrtIsBlack";
-pbrt2DSamples::usage="pbrt2DSamples";
+pbrtGet2D::usage="pbrtGet2D";
 pbrtComputeScatteringFunctions::usage="pbrtComputeScatteringFunctions";
 pbrtUniformSampleTri::usage="pbrtUniformSampleTri";
 pbrtTriArea::usage="pbrtTriArea";
@@ -64,9 +65,14 @@ pbrtValidateSinglePixel::usage="pbrtValidateSinglePixel";
 pbrtValidateTilePixels::usage="pbrtValidateTilePixels";
 pbrtPathIntegratorLiBounce::usage="pbrtPathIntegratorLiBounce";
 pbrtPlotPath::usage="pbrtPlotPath";
+pbrtConcentricSampleDisk::usage="pbrtConcentricSampleDisk";
 
 
 Begin["`Private`"];
+
+
+(*GlobalSampler::Get2D \[Rule] FixedSampler::SampleDimension*)
+pbrtGet2D[]:={0.6,0.6};
 
 
 (*SamplerIntegrator::Render*)
@@ -135,7 +141,7 @@ pbrtPathIntegratorLiBounce[{rayo_,rayd_,beta_},scene_,bounceIndex_]:=Module[
 	If[ToString@isectWithBsdf=="NaN",Goto[endLabel]];
 	(*next bounce info*)
 	nextwo=-rayd;
-	nextSamples=pbrt2DSamples[];
+	nextSamples=pbrtGet2D[];
 	{nextf,nextwi,nextpdf}=pbrtBsdfSampleF[isectWithBsdf["bsdf"],nextwo,nextSamples];
 	{nextRayo,nextRayd}=pbrtInteractionSpawnRay[isectWithBsdf,nextwi];
 	nextBeta=beta*nextf*Abs@Dot[nextwi,isectWithBsdf["n"]]/nextpdf;
@@ -158,8 +164,8 @@ pbrtUniformSampleOneLight[isect_,scene_]:=Module[
 	Assert[1<=lightIndex<=Length[lights]];
 	light=lights[[lightIndex]];
 
-	uLight=pbrt2DSamples[];
-	uScattering=pbrt2DSamples[];
+	uLight=pbrtGet2D[];
+	uScattering=pbrtGet2D[];
 
 	li=pbrtEstimateDirect[isect,uScattering,light,uLight,False,False,scene];
 	li
@@ -251,8 +257,7 @@ pbrtSurfaceInteractionLe[isect_,rayd_]:=Module[
 pbrtCosineSampleHemisphereLHS[u_]:=Module[
 	{d,z},
 
-	Assert[u=={0.5,0.5}];
-	d={0,0};
+	d=pbrtConcentricSampleDisk[u];
 	z=Sqrt@Max[0,1-d[[1]]*d[[1]]-d[[2]]*d[[2]]];
 
 	(*local space, dont need RHS*)
@@ -271,7 +276,7 @@ pbrtBxdfF[bxdf_,wo_,wi_]:=Module[
 (*BxDF::Sample_f*)
 pbrtBxdfSampleF[bxdf_,wo_,u_]:=Module[
 	{wi,pdf,f},
-
+	
 	wi=pbrtCosineSampleHemisphereLHS[u];
 	(*RHS*)
 	If[wo[[2]]<0,wi[[2]]*=-1];
@@ -439,14 +444,18 @@ pbrtLightL[surfNormal_,w_,lightMat_]:=Module[
 
 (*DiffuseAreaLight::Sample_Li*)
 pbrtLightSampleLi[light_,ref_,u_]:=Module[
-	{pShape,wi,vis,l},
+	{pShape,wi,vis,l,endLabel},
 
+	l={0,0,0};
+	wi={0,0,0};
 	pShape=pbrtShapeSample[light,ref,u];
+	If[pShape["pdf"]==0||Norm[pShape["p"]-ref["p"]]<0.0000001,Goto[endLabel]];
 
 	wi=Normalize[pShape["p"]-ref["p"]];
 	vis={};
 	l=pbrtLightL[pShape["n"],-wi,light["material"]];
 
+	Label[endLabel];
 	<|"li"->l,"wi"->wi,"pdf"->pShape["pdf"]|>
 ];
 
@@ -488,7 +497,7 @@ pbrtShapeSample[light_,si_,u_]:=Module[
 	(*https://computergraphics.stackexchange.com/questions/8032/how-can-we-convert-a-probability-density-according-to-solid-angle-to-a-density-a*)
 	distSquared=Norm[intr["p"]-si["p"]]^2;
 	denom=Abs@Dot[intr["n"],-wi];
-	pdf=If[denom==0,0,intr["pdf"]*distSquared/denom];
+	pdf=If[denom<0.0000001,0,intr["pdf"]*distSquared/denom];
 	intr["pdf"]=pdf;
 
 	intr
@@ -528,8 +537,19 @@ pbrtComputeScatteringFunctions[si_]:=Module[
 ];
 
 
-(*GlobalSampler::Get2D \[Rule] FixedSampler::SampleDimension*)
-pbrt2DSamples[]:={0.5,0.5};
+(*ConcentricSampleDisk*)
+pbrtConcentricSampleDisk[u_]:=Module[
+	{uOffset,theta,r},
+	
+	uOffset=2*u-{1,1};
+	If[uOffset=={0,0},Return[{0,0}]];
+	
+	{r,theta}=If[Abs[uOffset[[1]]]>Abs[uOffset[[2]]],
+		{uOffset[[1]],\[Pi]/4*uOffset[[2]]/uOffset[[1]]},
+		{uOffset[[2]],\[Pi]/2-\[Pi]/4*uOffset[[1]]/uOffset[[2]]}];
+	
+	r*{Cos[theta],Sin[theta]}
+];
 
 
 (*CoefficientSpectrum::IsBlack*)
@@ -693,9 +713,9 @@ pbrtGetCameraSample[x_,y_]:=Module[
 	{dim,startIdx,sampValue,data},
 	dim=2;
 	data={};
-	sampValue=0.5;
+	sampValue=pbrtGet2D[];
 	(*For[i=0,i<dim,i++,AppendTo[data,dataArray[[startIdx+i]]]];*)
-	data={x+sampValue,y+sampValue};
+	data={x,y}+sampValue;
 	
 	data
 ];
