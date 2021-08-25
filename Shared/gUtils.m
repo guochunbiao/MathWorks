@@ -8,8 +8,9 @@ ResetDirectory[];
 
 ClearAll[gStructRules,gPrint,gPrintFunc,gEvalFunc,gCreateCone,gLerp,gRemap,gClampPhi,
 	gCalcRectCorners,gReflectVector,gAssocData,gAssocDataOpt,gCircIntsRectPts,
-	gCircIntsRectArea,gCircIntsRectAreaDebug,gCalcPlaneTangents,gCalcRect2DEdgePts,
-	gPlotColors,gColorEquals];
+	gCircIntsRectArea,gCircIntsRectAreaDebug,gCalcPlaneTangents,
+	gCalcRect2DEdgePts,gPlotColors,gColorEquals,gCalcRectShadingAreaCenterDist,
+	gCalcRectShadingArea,gCalcRectShadingCenter,gApproxCircleIntsArea,gCircleIntsArea];
 (*https://www.molecularecologist.com/2020/04/23/simple-tools-for-mastering-color-in-scientific-figures/*)
 gPlotColors={RGBColor["#FF1F5B"],RGBColor["#009ADE"],
 		RGBColor["#AF58BA"],RGBColor["#FFC61E"],RGBColor["#F28522"]};
@@ -31,6 +32,11 @@ gCircIntsRectAreaDebug::usage="gCircIntsRectAreaDebug";
 gCalcPlaneTangents::usage="gCalcPlaneTangents";
 gCalcRect2DEdgePts::usage="gCalcRect2DEdgePts";
 gColorEquals::usage="gColorEquals";
+gCalcRectShadingArea::usage="gCalcRectShadingArea";
+gCalcRectShadingCenter::usage="gCalcRectShadingCenter";
+gApproxCircleIntsArea::usage="gApproxCircleIntsArea";
+gCircleIntsArea::usage="gCircleIntsArea";
+gCalcRectShadingAreaCenterDist::usage="gCalcRectShadingAreaCenterDist";
 
 
 SetAttributes[gStructRules,HoldAll]
@@ -236,6 +242,109 @@ gCircIntsRectArea[circCenter_,circRadius_,
 	area=xOverlap*yOverlap;
 	
 	area
+];
+
+
+gCalcRectShadingCenter[rectCenter2d_,rectMajorAxis2d_,
+	rectMajorRadius2d_,rectMinorRadius2d_,diskCenter2d_]:=Module[
+	{majorOffset,closeCenter2d,d,centerDist},
+
+	majorOffset=Dot[(diskCenter2d-rectCenter2d),rectMajorAxis2d];
+	d=rectMajorRadius2d-rectMinorRadius2d;
+	If[majorOffset<-d,majorOffset=-d];
+	If[majorOffset>d,majorOffset=d];
+	
+	closeCenter2d=rectCenter2d+majorOffset*rectMajorAxis2d;
+	centerDist=Norm[closeCenter2d-diskCenter2d];
+	
+	{closeCenter2d,centerDist}
+];
+
+
+gApproxCircleIntsArea[r1_,r2_,d_]:=Module[
+	{A1,A2,dmin,dmax,t,r,R},
+	r=Min[r1,r2];
+	R=Max[r1,r2];
+	
+	A1=\[Pi]*r^2//N;
+	If[d+r<=R,Return[A1]];
+	If[r+R<=d,Return[0]];
+
+	dmin=Abs[R-r];
+	dmax=R+r;
+	t=(d-dmin)/(dmax-dmin);
+	A2=gLerp[A1,0,t];
+	A2
+];
+
+
+(*https://mathworld.wolfram.com/Circle-CircleIntersection.html*)
+gCircleIntsArea[R_,r_,d_]:=Module[
+	{a1,a2,c,A},
+
+	a1=(d^2+r^2-R^2)/(2d*r);
+	a2=(d^2+R^2-r^2)/(2d*R);
+	c=1/2 Sqrt[(-d+r+R)(d+r-R)(d-r+R)(d+r+R)];
+	A=r^2*ArcCos[a1]+R^2*ArcCos[a2]-c;
+
+	Re@A
+];
+
+
+gCalcRectShadingArea[circCenter_,circRadius_,
+	rectCenter_,inRectMajorAxis_,inRectMinorAxis_,
+	rectMajorRadius_,rectMinorRadius_]:=Module[
+	{rMajorAxis,rMinorAxis,rCenter,cDistX,cDistY,cCenter,
+		rMajorAxis2d,rMinorAxis2d,rectShadingCenter2d,centerDist2d,area},
+	 
+	rMajorAxis=Normalize@inRectMajorAxis;
+	rMinorAxis=Normalize@inRectMinorAxis;
+	
+	rCenter={0,0};
+	rMajorAxis2d={1,0};
+	rMinorAxis2d={0,1};
+	
+	cDistX=Dot[circCenter-rectCenter,rMajorAxis];
+	cDistY=Dot[circCenter-rectCenter,rMinorAxis];
+	cCenter={cDistX,cDistY};
+	
+	{rectShadingCenter2d,centerDist2d}=gCalcRectShadingCenter[rCenter,rMajorAxis2d,
+		rectMajorRadius,rectMinorRadius,cCenter];
+	area=gApproxCircleIntsArea[circRadius,rectMinorRadius,centerDist2d];
+	
+	area
+];
+
+
+gCalcRectShadingAreaCenterDist[circCenter_,circRadius_,
+	rectCenter_,inRectMajorAxis_,inRectMinorAxis_,
+	rectMajorRadius_,rectMinorRadius_]:=Module[
+	{rMajorAxis,rMinorAxis,rCenter,cDistX,cDistY,cCenter,
+		rMajorAxis2d,rMinorAxis2d,rectShadingCenter2d,centerDist2d,area,range0,range1},
+	 
+	rMajorAxis=Normalize@inRectMajorAxis;
+	rMinorAxis=Normalize@inRectMinorAxis;
+	
+	rCenter={0,0};
+	rMajorAxis2d={1,0};
+	rMinorAxis2d={0,1};
+	
+	cDistX=Dot[circCenter-rectCenter,rMajorAxis];
+	cDistY=Dot[circCenter-rectCenter,rMinorAxis];
+	cCenter={cDistX,cDistY};
+	
+	{rectShadingCenter2d,centerDist2d}=gCalcRectShadingCenter[rCenter,rMajorAxis2d,
+		rectMajorRadius,rectMinorRadius,cCenter];
+	
+	{range0,range1}=If[centerDist2d>rectMinorRadius,
+		{{0,0},{centerDist2d,centerDist2d+rectMinorRadius}},
+		{{0,rectMinorRadius-centerDist2d},{rectMinorRadius-centerDist2d,centerDist2d+rectMinorRadius}}
+		];
+	range0[[2]]=Min[range0[[2]],circRadius];
+	range1[[1]]=Min[range1[[1]],circRadius];
+	range1[[2]]=Min[range1[[2]],circRadius];
+	
+	{range0,range1}
 ];
 
 

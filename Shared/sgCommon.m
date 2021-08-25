@@ -19,7 +19,8 @@ ClearAll[sgVector,sgPolar,sgPolar2,sgIntegral,sgIntegral2,sgFindMinLambda,sgMinL
 		 sgCapIntsAreaPercent,sgProduct,sgShading,sgSolveOneBounce1,sgSolveOneBounce2,
 		 sgCalcEnergyPercent,sgReflectLight2D,sgRepresentLambda,sgDirLight,
 		 asgEnergy,asgEnergyEx,asgCalcBandwidth,asgCalcAmplitude,asgDotSg,asgReflectLight,
-		 sgCalcBandwidth,sgCalcAmplitude,sgReflectLight,sgReflectShading];
+		 sgCalcBandwidth,sgCalcAmplitude,
+		 sgReflectLight,sgReflectShading,sgReflectLightEx,sgReflectShadingEx];
 sgVector::usage="function{sgVector}";
 sgPolar::usage="function{sgPolar}";
 sgPolar2::usage="function{sgPolar2}";
@@ -85,6 +86,8 @@ sgSolveOneBounce2::usage="sgSolveOneBounce2";
 sgRepresentLambda::usage="sgRepresentLambda";
 sgDirLight::usage="sgDirLight";
 sgReflectShading::usage="sgReflectShading";
+sgReflectLightEx::usage="sgReflectLightEx";
+sgReflectShadingEx::usage="sgReflectShadingEx";
 
 
 Begin["`Private`"];
@@ -1011,9 +1014,85 @@ sgReflectShading[
 	
 	intsArea=gCircIntsRectArea[reflPeakPt,samplingRadius,planeCenter,
 		planeMajorAxis,planeMinorAxis,planeMajorRadius,planeMinorRadius];
+	(*intsArea = gCalcRectShadingArea[reflPeakPt, samplingRadius, planeCenter,
+   		planeMajorAxis, planeMinorAxis, planeMajorRadius,planeMinorRadius];*)
 	intsPercent=Min[1,intsArea/(4*samplingRadius*samplingRadius)];
 	
 	reflShading*intsPercent
+];
+
+
+(*Deprecated*)
+sgReflectLightEx[shadingPt_,inLightDir_,lightIntensity_,roughness_,
+	{diskCenter_,inDiskNormal_,diskRadius_},range0_,range1_]:=Module[
+	{shadingDist,dr,refViewDir,lightDir,diskNormal,nol,
+		minorSize,sgAxis,sgLambda,sgMu,sgEnergy,sgLight},
+	
+	lightDir=Normalize@inLightDir;
+	diskNormal=Normalize@inDiskNormal;
+	nol=Dot[diskNormal,lightDir];
+	
+	shadingDist=Norm[shadingPt-diskCenter];
+	Assert[shadingDist>0.001,"sg_Reflect_Light"];
+	dr=diskRadius/shadingDist;
+	refViewDir=Normalize[shadingPt-diskCenter];
+	
+	Assert[diskRadius>0,"sg_Reflect_Light"];
+	minorSize=Dot[diskNormal,refViewDir]*diskRadius/shadingDist;
+	Assert[minorSize>0,"sg_Reflect_Light"];
+	
+	sgAxis=-refViewDir;
+	sgLambda=2*asgCalcBandwidth[minorSize];
+	(*sgLambda=sgCalcBandwidth[diskRadius/shadingDist,nol];*)
+	(*sgEnergy=gIntegrateDiskLighting[shadingPt,diskCenter,diskNormal,diskRadius,
+		lightDir,lightIntensity,roughness];*)
+	sgEnergy=gIntegrateDiskLightingEx[shadingPt,diskCenter,diskNormal,diskRadius,
+		lightDir,lightIntensity,roughness,range0,range1];
+	sgMu=sgCalcAmplitude[sgLambda,sgEnergy];
+	sgLight={sgAxis,sgLambda,sgMu};
+	
+	sgLight
+];
+
+
+(*Deprecated*)
+sgReflectShadingEx[
+	(*shading point*)
+	shadingPt_,inShadingNormal_,shadingRoughness_,samplingRadius_,
+	(*reflection rectangle*)
+	planeCenter_,inPlaneNormal_,inPlaneAssistMajorAxis_,
+		planeMajorRadius_,planeMinorRadius_,planeRoughness_,
+	(*light*)
+	inLightDir_,lightIntensity_,viewPoint_
+	]:=Module[
+	{shadingNormal,planeNormal,planeAssistMajorAxis,lightDir,viewDir,
+		planeMajorAxis,planeMinorAxis,reflPeakPt,reflSgLight,shadingNDF,
+		reflDist,range0,range1,
+		reflShading,intsArea,intsPercent},
+	
+	shadingNormal=Normalize@inShadingNormal;
+	planeNormal=Normalize@inPlaneNormal;
+	planeAssistMajorAxis=Normalize@inPlaneAssistMajorAxis;
+	lightDir=Normalize@inLightDir;
+	viewDir=Normalize[viewPoint-shadingPt];
+	
+	{planeMajorAxis,planeMinorAxis}=gCalcPlaneTangents[planeNormal,planeAssistMajorAxis];
+	
+	reflPeakPt=gCalcPeakPoint[planeNormal,planeCenter,lightDir,shadingPt];
+	
+	reflDist=Norm[shadingPt-reflPeakPt];
+	If[reflDist<0.001,Return[0]];
+	
+	{range0,range1}=gCalcRectShadingAreaCenterDist[reflPeakPt, samplingRadius, planeCenter,
+   		planeMajorAxis, planeMinorAxis, planeMajorRadius,planeMinorRadius];
+   		
+	reflSgLight=sgReflectLightEx[shadingPt,lightDir,lightIntensity,
+		planeRoughness,{reflPeakPt,planeNormal,samplingRadius},range0,range1];
+	
+	shadingNDF=sgNDF[shadingRoughness,reflSgLight[[1]],viewDir,shadingNormal];
+	reflShading=sgDot[reflSgLight,shadingNDF];
+	
+	reflShading
 ];
 
 

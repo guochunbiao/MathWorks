@@ -9,9 +9,9 @@ ResetDirectory[];
 ClearAll[gPointLightFallOff,gPhongNDF,gDGGX,gDGGX2,gVisSmith,gFresnelOrigin,gBrdfFunc,
 	gSolveSamplingHalfDir,gSamplingHalfDir,gSamplingLightDir,gSamplingLightDir2D,
 	gPlotGgxPdf3D,gPlotGgxPdf2D,gCalcGgxPeakOnPlane,gCalcGgxPeakForLight,
-	gIntegrateDiskLighting,gCalcPeakPoint,gCalcProjPoint,
+	gIntegrateDiskLighting,gCalcPeakPoint,gCalcProjPoint,gIntegrateDiskLightingEx,
 	gIntegrateIntsDiffuse,gIntegrateIntsDiffuseEx,gReflectDiffuse,gCircIntsRectAngles,
-	gCircIntsRectIntegralRegion];
+	gCircIntsRectIntegralRegion,gBrdfIntegralOverRange];
 gPointLightFallOff::usage="function{gPointLightFallOff}";
 gPhongNDF::usage="function[gPhongNDF]";
 gDGGX::usage="function[gDGGX]";
@@ -28,6 +28,7 @@ gPlotGgxPdf2D::usage="gPlotGgxPdf2D";
 gCalcGgxPeakOnPlane::usage="Deprecated, use gCalcPeakPoint";
 gCalcGgxPeakForLight::usage="Deprecated, use gCalcPeakPoint";
 gIntegrateDiskLighting::usage="gIntegrateDiskLighting";
+gIntegrateDiskLightingEx::usage="gIntegrateDiskLightingEx";
 gCalcPeakPoint::usage="gCalcPeakPoint";
 gCalcProjPoint::usage="gCalcProjPoint";
 gIntegrateIntsDiffuse::usage="gIntegrateIntsDiffuse";
@@ -35,6 +36,7 @@ gIntegrateIntsDiffuseEx::usage="gIntegrateIntsDiffuseEx";
 gReflectDiffuse::usage="gReflectDiffuse";
 gCircIntsRectAngles::usage="gCircIntsRectAngles";
 gCircIntsRectIntegralRegion::usage="gCircIntsRectIntegralRegion";
+gBrdfIntegralOverRange::usage="gBrdfIntegralOverRange";
 
 
 Begin["`Private`"];
@@ -280,6 +282,49 @@ gIntegrateDiskLighting[shadingPt_,diskPt_,diskNormal_,diskRadius_,
 	drCos2=drCos*drCos;
 	approxSinThetaA2=drCos2/(1+drCos2);
 	percentSum=(1-Exp[-k*approxSinThetaA2])/(2 k);
+	lighting=percentSum*gDGGX[m,1]*lightIntensity;
+	
+	lighting
+];
+
+
+gBrdfIntegralOverRange[nol_,m_,range_]:=Module[
+	{k,drCos,drCos2,approxSinThetaA2,approxSinThetaB2},
+	
+	k=(0.288*nol)/m^2-0.673;
+	drCos=range[[1]]*nol;
+	drCos2=drCos*drCos;
+	approxSinThetaA2=drCos2/(1+drCos2);
+	
+	drCos=range[[2]]*nol;
+	drCos2=drCos*drCos;
+	approxSinThetaB2=drCos2/(1+drCos2);
+	
+	(Exp[-k*approxSinThetaA2]-Exp[-k*approxSinThetaB2])/(2 k)
+];
+
+
+gIntegrateDiskLightingEx[shadingPt_,diskPt_,diskNormal_,diskRadius_,
+	lightDir_,lightIntensity_,roughness_,range0_,range1_]:=Module[
+	{m,n,l,nol,dr,k,percentSum,lighting,drCos,drCos2,
+		s1,s2},
+	
+	m=roughness;
+	n=Normalize[diskNormal];
+	l=Normalize[lightDir];
+	nol=Dot[n,l];
+	dr=diskRadius/Norm[diskPt-shadingPt];
+	
+	(*17-OB_02_LeftMinorAxis-GGX.nb*)
+	(*percentSum=Min[dr/Sqrt[1+dr^2],(3.672 m)/(1+nol)];*)
+	(*17-OB_07_ShadingPart5-FitIntegral*)
+	(*k=(0.288*nol)/m^2-0.673;
+	drCos=dr*nol;
+	drCos2=drCos*drCos;
+	approxSinThetaA2=drCos2/(1+drCos2);*)
+	s1=gBrdfIntegralOverRange[nol,m,range0];
+	s2=gBrdfIntegralOverRange[nol,m,range1];
+	percentSum=s1+s2;
 	lighting=percentSum*gDGGX[m,1]*lightIntensity;
 	
 	lighting
