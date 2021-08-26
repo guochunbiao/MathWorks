@@ -11,7 +11,7 @@ ClearAll[gPointLightFallOff,gPhongNDF,gDGGX,gDGGX2,gVisSmith,gFresnelOrigin,gBrd
 	gPlotGgxPdf3D,gPlotGgxPdf2D,gCalcGgxPeakOnPlane,gCalcGgxPeakForLight,
 	gIntegrateDiskLighting,gCalcPeakPoint,gCalcProjPoint,gIntegrateDiskLightingEx,
 	gIntegrateIntsDiffuse,gIntegrateIntsDiffuseEx,gReflectDiffuse,gCircIntsRectAngles,
-	gCircIntsRectIntegralRegion,gBrdfIntegralOverRange];
+	gCircIntsRectIntegralRegion,gBrdfIntegralOverRange,gIntegrateDiskDiffuse];
 gPointLightFallOff::usage="function{gPointLightFallOff}";
 gPhongNDF::usage="function[gPhongNDF]";
 gDGGX::usage="function[gDGGX]";
@@ -37,6 +37,7 @@ gReflectDiffuse::usage="gReflectDiffuse";
 gCircIntsRectAngles::usage="gCircIntsRectAngles";
 gCircIntsRectIntegralRegion::usage="gCircIntsRectIntegralRegion";
 gBrdfIntegralOverRange::usage="gBrdfIntegralOverRange";
+gIntegrateDiskDiffuse::usage="gIntegrateDiskDiffuse";
 
 
 Begin["`Private`"];
@@ -584,6 +585,13 @@ gReflectDiffuse[
 	intsPercent=Min[1,intsArea/(4*samplingRadius*samplingRadius)];
 	
 	integratedDiffuse * planeNoL * lightIntensity * intsPercent
+];
+
+
+gIntegrateDiskDiffuse[dr_]:=Module[
+	{},
+	
+	(2\[Pi])/3 (1-1/(1+dr^2))
 ];
 
 
