@@ -341,13 +341,15 @@ gCalcPeakPoint[planeNormal_,planePt_,inLightDir_,viewPt_]:=Module[
 	halfDir=normalDir;
 	viewDir=gReflectVector[lightDir,halfDir];
 	
-	viewProjDist=Dot[Normalize[viewPt-planePt],normalDir]*Norm[viewPt-planePt];
+	(*viewProjDist=Dot[Normalize[viewPt-planePt],normalDir]*Norm[viewPt-planePt];*)
+	viewProjDist=Dot[viewPt-planePt,normalDir];
 	(*viewProjPt=viewPt-normalDir*viewProjDist;*)
 	
 	If[Dot[lightDir,halfDir]<0.001,Return[{100,100,100}]];
 	
 	viewPeakDist=viewProjDist/Dot[lightDir,halfDir];
 	peakPt=viewPt-viewDir*viewPeakDist;
+	(*Full form: peakPt=viewPt-viewDir*Dot[viewPt-planePt,normalDir]/Dot[lightDir,halfDir]*)
 	
 	tmp1=Abs@Dot[peakPt-planePt,normalDir];
 	Assert[tmp1<0.001,"gCalcPeakPoint"];

@@ -127,7 +127,7 @@ pltRectLine3D[input_]:=Module[
 
 
 pltArrow3D[input_]:=Module[
-	{origin,dir,length,thickness,arrowPos},
+	{origin,dir,length,thickness,arrowPos,color},
 	
 	origin=gAssocData[input,"origin"];
 	dir=Normalize@gAssocData[input,"dir"];
@@ -135,8 +135,9 @@ pltArrow3D[input_]:=Module[
 	
 	thickness=gAssocDataOpt[input,"thickness",1.5];
 	arrowPos=gAssocDataOpt[input,"arrowPos",1];
+	color=gAssocDataOpt[input,"color",Black];
 	
-	Graphics3D[{
+	Graphics3D[{color,
 		AbsoluteThickness[thickness],
 		Arrowheads[{{.02,arrowPos,texArrowHead}}],
 		Arrow[{origin,origin+dir*length}]}]
