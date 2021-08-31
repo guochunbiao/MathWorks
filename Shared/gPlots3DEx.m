@@ -14,7 +14,7 @@ ResetDirectory[];
 ClearAll[blCirclePrec,blDefaultThickness,
 	showProps3D,pltRect3D,pltArrow3D,pltPoint3D,pltDisk3D,pltCircle3D,pltSphere3D,
 	pltLine3D,pltArc3D,pltArc3DEx,pltDiskProjBoundary3D,pltDiskProjArea3D,pltLengthMarker3D,
-	pltRectLine3D];
+	pltRectLine3D,pltArc3DDirect];
 blDefaultThickness=1.5;
 blCirclePrec=\[Pi]/120;
 showProps3D::usage="showProps3D";
@@ -28,6 +28,7 @@ pltSphere3D::usage="pltSphere3D";
 pltLine3D::usage="pltLine3D";
 pltArc3D::usage="pltArc3D";
 pltArc3DEx::usage="pltArc3DEx";
+pltArc3DDirect::usage="pltArc3DDirect";
 pltDiskProjBoundary3D::usage="pltDiskProjBoundary3D";
 pltDiskProjArea3D::usage="pltDiskProjArea3D";
 pltLengthMarker3D::usage="pltLengthMarker3D";
@@ -282,6 +283,37 @@ pltArc3DEx[input_]:=Module[
 	
 	\[Phi]1=calcPhiOnCircle3D[center,normal,radius,startPt];
 	\[Phi]2=calcPhiOnCircle3D[center,normal,radius,endPt];	
+	
+	rotTo3D=RotationMatrix[{{0,0,1},normal}];
+	pltRanges=If[\[Phi]1<=\[Phi]2,{{\[Phi]1,\[Phi]2}},{{-\[Pi],\[Phi]2},{\[Phi]1,\[Pi]+0.001}}];
+	{
+	Graphics3D[{AbsoluteThickness[thickness],style,color,
+		Line[Table[
+			rotTo3D.(radius*({Sin[\[Pi]/2]*Cos[\[Phi]],Sin[\[Pi]/2]Sin[\[Phi]],Cos[\[Pi]/2]}))+center,
+			{\[Phi],#[[1]],#[[2]],blCirclePrec}]]
+		}]
+	}&/@pltRanges
+];
+
+
+pltArc3DDirect[input_]:=Module[
+	{center,normal,radius,edgeDir0,edgeDir1,startPt,endPt,
+		rotTo3D,\[Phi]1,\[Phi]2,
+		thickness,style,color,pltRanges,prefer},
+	
+	center=gAssocData[input,"center"];
+	normal=Normalize@gAssocData[input,"normal"];
+	radius=gAssocData[input,"radius"];
+	\[Phi]1=gAssocData[input,"\[Phi]1"];
+	\[Phi]2=gAssocData[input,"\[Phi]2"];
+	
+	thickness=gAssocDataOpt[input,"thickness",1.5];
+	style=gAssocDataOpt[input,"style",Nothing];
+	color=gAssocDataOpt[input,"color",Black];
+	prefer=gAssocDataOpt[input,"color",None];
+	
+	startPt=center+edgeDir0*radius;
+	endPt=center+edgeDir1*radius;
 	
 	rotTo3D=RotationMatrix[{{0,0,1},normal}];
 	pltRanges=If[\[Phi]1<=\[Phi]2,{{\[Phi]1,\[Phi]2}},{{-\[Pi],\[Phi]2},{\[Phi]1,\[Pi]+0.001}}];

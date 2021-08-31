@@ -13,7 +13,7 @@ ClearAll[blInitOffset,blTransFuncXY,(*blTransFuncYZ,*)
 	blBasicXYCircle,blBasicXZCircle,blBasicYZCircle,blSphereArrow,blSphereAxes,
 	blWholeSphere,blHemiSphere,
 	(*paper related*)
-	blPaperSphere01,blPaperSphere02,
+	blPaperSphere01,blPaperSphere02,blPaperSphere03,
 	blPaperIntsDisk01,blPaperIntsDisk02,blPaperIntsDisk03,blPaperIntsDisk04,blPaperIntsDisk05,
 	blPaperIntsDisk06,blPaperIntsDisk07,blPaperIntsDisk08,blPaperIntsDisk09
 	];
@@ -36,6 +36,7 @@ blWholeSphere::usage="blWholeSphere";
 blHemiSphere::usage="blHemiSphere";
 blPaperSphere01::usage="blPaperSphere01";
 blPaperSphere02::usage="blPaperSphere02";
+blPaperSphere03::usage="blPaperSphere03";
 blPaperIntsDisk01::usage="blPaperIntsDisk01";
 blPaperIntsDisk02::usage="blPaperIntsDisk02";
 blPaperIntsDisk03::usage="blPaperIntsDisk03";
@@ -310,6 +311,26 @@ blPaperSphere02[color_,opacity_]:=Module[
 	pltSphere3D[ <|"center"->{0,0,0},"radius"->1,"plotPts"->20,
 		"mesh"->None,"opacity"->opacity,"colorFunc"->Function[{x,y,z},color]|>]
 	}
+];
+
+
+blPaperSphere03[]:=Module[
+	{},
+	
+	Graphics3D[{
+		(*x-y circle*)
+		blBasicXYCircle[\[Pi]/2],
+		(*x-z circle*)
+		blBasicXZCircle[0,0,True],
+		(*y-z circle*)
+		blBasicYZCircle[True],
+		
+		(*axes*)
+		blSphereAxes[1.3],
+
+		(*sphere center at origin point*)
+		{{Black,PointSize[Large],Point[{0,0,0}]}}
+	}]
 ];
 
 
