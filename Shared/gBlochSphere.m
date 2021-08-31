@@ -597,7 +597,7 @@ blPaperIntsDisk07[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 		pltLine3D[<|"points"->{c,diskMinorEdge1},"color"->Black|>],
 		(*disk calc point*)
 		pltPoint3D[<|"pos"->calcPoint,"size"->0.01,"color"->Black|>],
-		Graphics3D[{Text[Style["P'",Medium],calcPoint+{0.03,0,0.05}]}],
+		Graphics3D[{Text[Style["y'",FontSize->16,Bold,FontFamily->"Times"],calcPoint+{0.03,0,0.06}]}],
 		
 		(*edge projection lines*)
 (*		pltLine3D[<|"points"\[Rule]{{0,0,0},diskMajorEdge0},"color"\[Rule]Black,"style"\[Rule]Dashed|>],
@@ -607,9 +607,9 @@ blPaperIntsDisk07[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 		(*sphere*)
 		pltSphere3D[ <|"center"->{0,0,0},"radius"->1,"plotPts"->100,"opacity"->0.3,
 		"lighting"->Automatic,"colorFunc"->Function[{x,y,z,\[Theta],\[Phi]},LightBlue]|>],
-		(*disk center*)
+		(*specular peak & disk center*)
 		pltPoint3D[<|"pos"->c,"size"->0.01,"color"->Black|>],
-		Graphics3D[{Text[Style["P",Medium],c+{0.03,0,-0.03}]}],
+		Graphics3D[{Text[Style["y",FontSize->16,Bold,FontFamily->"Times"],c+{0.03,0,-0.03}]}],
 		(*disk*)
 		pltDisk3D[<|"center"->c,"normal"->n,"radius"->r,"opacity"->0.3,
 			"colorFunc"->Function[{x,y,z},Green]|>],
@@ -622,50 +622,60 @@ blPaperIntsDisk07[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 		pltArc3D[<|"center"->c,"normal"->n,"radius"->r,"style"->Dashed,"color"->Green,
 			"edgePt0"->intsPt2,"edgePt1"->intsPt1|>],*)
 			
+		(*uAxis*)
+		pltArrow3D[<|"origin"->c,"dir"->-diskMinorAxis,"length"->r|>],
+		Graphics3D[{Text[Style[OverBar["u"],FontSize->18,Red,FontFamily->"Times"],
+			c-diskMinorAxis*r + {0.03,0,0.02}]}],
+			
 		(*alpha1*)
-		pltArc3DEx[<|"center"->{0,0,0},"normal"->{0,1,0},"radius"->0.3,
+(*		pltArc3DEx[<|"center"->{0,0,0},"normal"->{0,1,0},"radius"->0.3,
 			"dir0"->projQ,"dir1"->c,
 			"thickness"->2,"style"->Dashed,"color"->Black|>],
 		Graphics3D[{Text[Style["\[Alpha]1",Medium],
-			{0,0,0}+Normalize[Normalize[projQ]+Normalize[c]]*0.35]}],
+			{0,0,0}+Normalize[Normalize[projQ]+Normalize[c]]*0.35]}],*)
 		
 		(*alpha2*)
-		pltArc3DEx[<|"center"->{0,0,0},"normal"->{0,1,0},"radius"->0.2,
+(*		pltArc3DEx[<|"center"->{0,0,0},"normal"->{0,1,0},"radius"->0.2,
 			"dir0"->projQ,"dir1"->calcPoint,
 			"thickness"->2,"style"->Dashed,"color"->Blue|>],
 		Graphics3D[{Text[Style["\[Alpha]2",Medium],
-			{0,0,0}+Normalize[Normalize@(projQ)+Normalize@(calcPoint)]*0.15 + {-0.03,0,0}]}],
+			{0,0,0}+Normalize[Normalize@(projQ)+Normalize@(calcPoint)]*0.15 + {-0.03,0,0}]}],*)
 			
-		(*Q: view point*)
+		(*Q: recv point*)
 		pltPoint3D[<|"pos"->{0,0,0},"size"->0.01,"color"->Black|>],
-		Graphics3D[{Text[Style["Q",Medium],{-0.06,0,0.05}]}],
+		Graphics3D[{Text[Style["x",FontSize->16,Bold,FontFamily->"Times"],{-0.06,0,0.05}]}],
 		
 		(*Q': view projection point*)
 		pltPoint3D[<|"pos"->projQ,"size"->0.01,"color"->Black|>],
-		Graphics3D[{Text[Style["Q'",Medium],projQ+{-0.03,0,0.03}]}],
+		Graphics3D[{Text[Style["x'",FontSize->16,Bold,FontFamily->"Times"],
+			projQ+{-0.03,0,0.03}]}],
 		
 		(*virtual line between Q and Q'*)
 		pltLine3D[<|"points"->{{0,0,0},projQ},"color"->Black,"style"->Dashed|>],
 		
 		(*light dir 1*)	
 		pltArrow3D[<|"origin"->calcPoint,"dir"->lightDir1,"length"->0.6|>],
-		Graphics3D[{Text[Style["\[Omega]i",Medium],calcPoint+lightDir1*0.6 + {0,0,0.06}]}],
+		Graphics3D[{Text[Style["i",FontSize->16,Bold,FontFamily->"Times"],
+			calcPoint+lightDir1*0.6 + {0,0,0.06}]}],
 			
 		(*view dir 0*)
 		pltArrow3D[<|"origin"->c,"dir"->viewDir0,"length"->1|>],
 		(*view dir 1*)
 		pltArrow3D[<|"origin"->calcPoint,"dir"->viewDir1,"length"->0.6|>],
-		Graphics3D[{Text[Style["\[Omega]o",Medium],calcPoint+viewDir1*0.6 + {-0.05,0,0.05}]}],
+		Graphics3D[{Text[Style["r",FontSize->16,Bold,FontFamily->"Times"],
+			calcPoint+viewDir1*0.6 + {-0.05,0,0.05}]}],
 		pltLine3D[<|"points"->{{0,0,0},-viewDir1*(Norm[calcPoint]-0.6)},
 			"color"->Black,"style"->Dashed|>],
 			
 		(*half dir1*)
 		pltArrow3D[<|"origin"->calcPoint,"dir"->halfDir1,"length"->0.6|>],
-		Graphics3D[{Text[Style["h",Medium],calcPoint+halfDir1*0.6 + {-0.05,0,0}]}],
+		Graphics3D[{Text[Style["h",FontSize->16,Bold,FontFamily->"Times"],
+			calcPoint+halfDir1*0.6 + {-0.05,0,0}]}],
 		
 		(*normal dir1*)
 		pltArrow3D[<|"origin"->calcPoint,"dir"->normalDir1,"length"->0.6|>],
-		Graphics3D[{Text[Style["n",Medium],calcPoint+normalDir1*0.6 + {0.03,0,0.01}]}],
+		Graphics3D[{Text[Style["\!\(\*SubscriptBox[\(n\), \(r\)]\)",FontSize->16,Bold,FontFamily->"Times"],
+			calcPoint+normalDir1*0.61 + {0.03,0,0.01}]}],
 		
 		(*delta phi*)
 		pltArc3DEx[<|"center"->calcPoint,"normal"->{0,1,0},"radius"->0.5,
@@ -676,8 +686,9 @@ blPaperIntsDisk07[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 		(*\[Theta]a*)
 		pltArc3DEx[<|"center"->{0,0,0},"normal"->{0,1,0},"radius"->0.4,
 			"dir0"->-viewDir0,"dir1"->-viewDir1,
-			"thickness"->2,"style"->Dashed,"color"->Blue|>],
-		Graphics3D[{Text[Style["\[Theta]a",Medium],{0,0,0}+Normalize[-viewDir0-viewDir1]*0.45]}],
+			"thickness"->2,"style"->Dashed,"color"->Black|>],
+		Graphics3D[{Text[Style["\[Theta]",FontSize->16,Bold,FontFamily->"Times"],
+			{0,0,0}+Normalize[-viewDir0-viewDir1]*0.45]}],
 		
 		(*\[Phi]i: light angle*)
 		pltArc3DEx[<|"center"->calcPoint,"normal"->{0,1,0},"radius"->0.2,
