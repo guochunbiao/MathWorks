@@ -1013,7 +1013,7 @@ blPaperIntsDisk10[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 		pltArrow3D[<|"origin"->c,"dir"->viewDir0,"length"->1|>],
 		(*view dir 1*)
 		pltArrow3D[<|"origin"->calcPoint,"dir"->viewDir1,"length"->0.6|>],
-		Graphics3D[{Text[Style["r",FontSize->16,Bold,FontFamily->"Times"],
+		Graphics3D[{Text[Style["r'",FontSize->16,Bold,FontFamily->"Times"],
 			calcPoint+viewDir1*0.6 + {-0.05,0,0.05}]}],
 		pltLine3D[<|"points"->{{0,0,0},-viewDir1*(Norm[calcPoint]-0.6)},
 			"color"->Black,"style"->Dashed|>],
