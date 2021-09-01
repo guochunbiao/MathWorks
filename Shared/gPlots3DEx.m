@@ -492,7 +492,8 @@ pltLengthMarker3D[input_]:=Module[
 			Arrowheads[{{.02,1,texArrowHead}}],Arrow[{midPt,leftPt}]}],
 		Graphics3D[{AbsoluteThickness[thickness],
 			Arrowheads[{{.02,1,texArrowHead}}],Arrow[{midPt,rightPt}]}],
-		Graphics3D[{Text[Style[text,Medium],midPt+edgeDir*textHeight]}]
+		Graphics3D[{Text[Style[text,FontSize->16,Bold,FontFamily->"Times"],
+			midPt+edgeDir*textHeight]}]
 	}
 ];
 
