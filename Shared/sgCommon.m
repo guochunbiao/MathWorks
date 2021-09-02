@@ -426,7 +426,7 @@ asgReflectLight[shadingPt_,lightDir_,lightIntensity_,roughness_,
 	minorAxis=Normalize@Cross[asgAxisL,refViewDir];
 	Assert[diskRadius>0];
 	majorSize=diskRadius/shadingDist;
-	minorSize=Dot[diskNormal,refViewDir]*diskRadius/shadingDist;
+	minorSize=Abs@Dot[diskNormal,refViewDir]*diskRadius/shadingDist;
 	Assert[minorSize>0];
 	
 	asgAxis=-refViewDir;
@@ -435,8 +435,9 @@ asgReflectLight[shadingPt_,lightDir_,lightIntensity_,roughness_,
 	
 	asgL=asgCalcBandwidth[majorSize];
 	asgM=asgCalcBandwidth[minorSize];
-	asgEnergy=gIntegrateDiskLighting[shadingPt,diskCenter,diskNormal,diskRadius,
-		lightDir,lightIntensity,roughness];
+	(*asgEnergy=gIntegrateDiskLighting[shadingPt,diskCenter,diskNormal,diskRadius,
+		lightDir,lightIntensity,roughness];*)
+	asgEnergy=lightIntensity;
 	asgC=asgCalcAmplitude[asgL,asgM,asgEnergy];
 	asgLight={asgAxis,asgAxisL,asgAxisM,asgL,asgM,asgC};
 	

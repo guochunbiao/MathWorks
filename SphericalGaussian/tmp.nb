@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     31002,        490]
-NotebookOptionsPosition[     30421,        471]
-NotebookOutlinePosition[     30917,        489]
-CellTagsIndexPosition[     30874,        486]
+NotebookDataLength[     50421,        907]
+NotebookOptionsPosition[     49805,        887]
+NotebookOutlinePosition[     50333,        906]
+CellTagsIndexPosition[     50290,        903]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -57,26 +57,310 @@ Cell[BoxData[{
   ";"}], "\[IndentingNewLine]", 
  RowBox[{" ", 
   RowBox[{
-   RowBox[{"ResetDirectory", "[", "]"}], ";"}], "\n"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"ClearAll", "[", 
-   RowBox[{
-   "k", ",", "\[Theta]", ",", "\[Theta]L", ",", "m", ",", "\[Theta]a", ",", 
-    "\[Theta]b", ",", "approxThetaA", ",", "dr"}], "]"}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{"Integrate", "[", 
+   RowBox[{"ResetDirectory", "[", "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
   RowBox[{
-   RowBox[{
-    RowBox[{"Exp", "[", 
-     RowBox[{
-      RowBox[{"-", "k"}], "*", 
-      SuperscriptBox[
-       RowBox[{"Sin", "[", "\[Theta]", "]"}], "2"]}], "]"}], "*", " ", 
-    RowBox[{"Cos", "[", "\[Theta]", "]"}], 
-    RowBox[{"Sin", "[", "\[Theta]", "]"}]}], ",", 
+   RowBox[{"Show", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"gParamPlotContent", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"<|", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"\"\<lines\>\"", "\[Rule]", 
+            RowBox[{"{", "\[IndentingNewLine]", 
+             RowBox[{"(*", "ground", "*)"}], "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"<|", 
+               RowBox[{
+                RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"-", "5"}], ",", "0"}], "}"}]}], ",", 
+                RowBox[{"\"\<dirVec\>\"", "\[Rule]", 
+                 RowBox[{"{", 
+                  RowBox[{"1", ",", "0"}], "}"}]}], ",", 
+                RowBox[{"\"\<length\>\"", "\[Rule]", "10"}], ",", 
+                RowBox[{"\"\<color\>\"", "\[Rule]", "Black"}]}], "|>"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"<|", 
+               RowBox[{
+                RowBox[{"\"\<startPos\>\"", "\[Rule]", 
+                 RowBox[{"{", 
+                  RowBox[{"0", ",", "0"}], "}"}]}], ",", 
+                RowBox[{"\"\<dirVec\>\"", "\[Rule]", 
+                 RowBox[{"{", 
+                  RowBox[{"0", ",", "1"}], "}"}]}], ",", 
+                RowBox[{"\"\<length\>\"", "\[Rule]", "10"}], ",", 
+                RowBox[{"\"\<color\>\"", "\[Rule]", "Black"}]}], "|>"}]}], 
+             "\[IndentingNewLine]", "}"}]}], "&"}], "[", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<lightDir\>\"", "\[Rule]", "lightDir"}], "|>"}], "]"}],
+          ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"\"\<varyDirectionDisbs\>\"", "\[Rule]", 
+            RowBox[{"{", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"<|", 
+               RowBox[{
+                RowBox[{"\"\<lightDir\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"(", "lightDir", ")"}], "&"}], ")"}]}], ",", 
+                "\[IndentingNewLine]", "\t", 
+                RowBox[{"\"\<viewDir\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"Cos", "[", "#\[Theta]", "]"}], ",", 
+                    RowBox[{"Sin", "[", "#\[Theta]", "]"}]}], "}"}], ")"}], 
+                   "&"}], ")"}]}], ",", "\[IndentingNewLine]", "\t", 
+                RowBox[{"\"\<normalDir\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"0", ",", "1"}], "}"}], "&"}], ")"}]}], ",", 
+                "\[IndentingNewLine]", "\t", 
+                RowBox[{"\"\<roughness\>\"", "\[Rule]", "#roughness"}], ",", 
+                "\[IndentingNewLine]", "\t", 
+                RowBox[{"\"\<disbFunc\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"Cos", "[", "#\[Theta]", "]"}], ",", 
+                    RowBox[{"Sin", "[", "#\[Theta]", "]"}]}], "}"}], "*", 
+                    RowBox[{"(", 
+                    RowBox[{"gDGGX", "[", 
+                    RowBox[{"#roughness", ",", "#noh"}], "]"}], ")"}]}], 
+                    ")"}], "&"}], ")"}]}], ",", "\[IndentingNewLine]", "\t", 
+                RowBox[{"\"\<color\>\"", "\[Rule]", "Red"}], ",", 
+                RowBox[{
+                "\"\<label\>\"", "\[Rule]", "\"\<GGX Normal Lobe\>\""}]}], 
+               "|>"}], ",", "\[IndentingNewLine]", 
+              RowBox[{"<|", 
+               RowBox[{
+                RowBox[{"\"\<roughness\>\"", "\[Rule]", "roughness"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"\"\<lightDir\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"(", "lightDir", ")"}], "&"}], ")"}]}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"\"\<viewDir\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"Cos", "[", "#\[Theta]", "]"}], ",", 
+                    RowBox[{"Sin", "[", "#\[Theta]", "]"}]}], "}"}], ")"}], 
+                   "&"}], ")"}]}], ",", "\[IndentingNewLine]", 
+                RowBox[{"\"\<normalDir\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"0", ",", "1"}], "}"}], "&"}], ")"}]}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"\"\<disbFunc\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"Cos", "[", "#\[Theta]", "]"}], ",", 
+                    RowBox[{"Sin", "[", "#\[Theta]", "]"}]}], "}"}], "*", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"sgVector", "[", 
+                    RowBox[{"#halfDir", ",", " ", 
+                    RowBox[{"sgRawNDF", "[", 
+                    RowBox[{"#roughness", ",", "#normalDir"}], "]"}]}], "]"}],
+                     "*", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"#\[Theta]", ">", "\[Pi]"}], ",", "0", ",", "1"}],
+                     "]"}]}], ")"}]}], ")"}], "&"}], ")"}]}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"\"\<color\>\"", "\[Rule]", "Green"}], ",", 
+                RowBox[{
+                "\"\<label\>\"", "\[Rule]", "\"\<SG GGX Normal Lobe\>\""}]}], 
+               "|>"}], ",", "\[IndentingNewLine]", 
+              RowBox[{"<|", 
+               RowBox[{
+                RowBox[{"\"\<roughness\>\"", "\[Rule]", "roughness"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"\"\<lightDir\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"(", "lightDir", ")"}], "&"}], ")"}]}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"\"\<viewDir\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"Cos", "[", "#\[Theta]", "]"}], ",", 
+                    RowBox[{"Sin", "[", "#\[Theta]", "]"}]}], "}"}], ")"}], 
+                   "&"}], ")"}]}], ",", "\[IndentingNewLine]", 
+                RowBox[{"\"\<normalDir\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"0", ",", "1"}], "}"}], "&"}], ")"}]}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"\"\<disbFunc\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"Cos", "[", "#\[Theta]", "]"}], ",", 
+                    RowBox[{"Sin", "[", "#\[Theta]", "]"}]}], "}"}], "*", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"sgVector", "[", 
+                    RowBox[{"#lightDir", ",", 
+                    RowBox[{"sgNDF", "[", 
+                    RowBox[{
+                    "#roughness", ",", "#lightDir", ",", "#viewDir", ",", 
+                    "#normalDir"}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+                    "\t", "*", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"#lightDir", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "<", "0"}], ",", "0", ",",
+                     "1"}], "]"}]}], ")"}]}], ")"}], "&"}], ")"}]}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"\"\<color\>\"", "\[Rule]", "Blue"}], ",", 
+                RowBox[{
+                "\"\<label\>\"", "\[Rule]", "\"\<SG GGX Warped Lobe\>\""}]}], 
+               "|>"}], ",", "\[IndentingNewLine]", 
+              RowBox[{"<|", 
+               RowBox[{
+                RowBox[{"\"\<roughness\>\"", "\[Rule]", "roughness"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"\"\<lightDir\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"(", "lightDir", ")"}], "&"}], ")"}]}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"\"\<viewDir\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"Cos", "[", "#\[Theta]", "]"}], ",", 
+                    RowBox[{"Sin", "[", "#\[Theta]", "]"}]}], "}"}], ")"}], 
+                   "&"}], ")"}]}], ",", "\[IndentingNewLine]", 
+                RowBox[{"\"\<normalDir\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"0", ",", "1"}], "}"}], "&"}], ")"}]}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"\"\<disbFunc\>\"", "\[Rule]", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"Cos", "[", "#\[Theta]", "]"}], ",", 
+                    RowBox[{"Sin", "[", "#\[Theta]", "]"}]}], "}"}], "*", 
+                    RowBox[{"sgVector", "[", 
+                    RowBox[{"#viewDir", ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"1", ",", "1"}], "}"}], ",", "30", ",", "3.9"}], 
+                    "}"}]}], "]"}]}], ")"}], "&"}], ")"}]}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"\"\<color\>\"", "\[Rule]", "Orange"}], ",", 
+                RowBox[{"\"\<label\>\"", "\[Rule]", "\"\<Light Lobe\>\""}]}], 
+               "|>"}]}], "\[IndentingNewLine]", "}"}]}], "&"}], "[", 
+          RowBox[{"<|", 
+           RowBox[{
+            RowBox[{"\"\<roughness\>\"", "\[Rule]", "roughness"}], ",", 
+            "\[IndentingNewLine]", "\t\t", 
+            RowBox[{"\"\<lightDir\>\"", "\[Rule]", "lightDir"}]}], "|>"}], 
+          "]"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"\"\<axisExtent\>\"", "\[Rule]", "3.8"}]}], 
+        "\[IndentingNewLine]", "|>"}], ",", "Medium"}], "]"}], ",", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"PlotRange", "->", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "3"}], ",", "3"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "0.5"}], ",", "5.5"}], "}"}]}], "}"}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Axes", "\[Rule]", "False"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "\[IndentingNewLine]", 
+    "]"}], ",", "\[IndentingNewLine]", 
    RowBox[{"{", 
-    RowBox[{"\[Theta]", ",", "0", ",", "\[Theta]b"}], "}"}]}], 
-  "]"}], "\[IndentingNewLine]"}], "Input",
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"normalDir", ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"lightDir", ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"viewDir", ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ","}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"roughness", ",", "0.3"}], "}"}], ",", "0.05", ",", "1"}], 
+    "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"Method", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<ShowControls\>\"", "\[Rule]", "True"}], "}"}]}]}], 
+  "\[IndentingNewLine]", "]"}], "\n"}], "Input",
  CellChangeTimes->{{3.8328889412895775`*^9, 3.832888943829444*^9}, 
    3.8329105814363804`*^9, 3.832911658214327*^9, {3.832915422319006*^9, 
    3.832915429550082*^9}, {3.8329154722806787`*^9, 3.832915476772599*^9}, {
@@ -438,41 +722,174 @@ Cell[BoxData[{
    3.8394683034099417`*^9, 3.8394683997477083`*^9, {3.839468442115043*^9, 
    3.8394684512087975`*^9}, {3.839468598883443*^9, 3.839468620779004*^9}, {
    3.839468705371982*^9, 3.839468721265605*^9}, {3.839468766547331*^9, 
-   3.8394688042805257`*^9}, 3.8394696472435646`*^9, 
-   3.8394699564664392`*^9},ExpressionUUID->"de46ef57-a359-4ec4-a7d3-\
+   3.8394688042805257`*^9}, 3.8394696472435646`*^9, 3.8394699564664392`*^9, {
+   3.8394700277688694`*^9, 3.839470031177743*^9}, 3.8394743159216375`*^9, {
+   3.8394744731142783`*^9, 3.839474556299261*^9}, {3.8394746094834747`*^9, 
+   3.839474659482994*^9}, {3.8394747053700495`*^9, 3.83947486101119*^9}, {
+   3.839474987154783*^9, 3.8394750176592894`*^9}, {3.839475081136648*^9, 
+   3.839475088885638*^9}, {3.839477667852235*^9, 3.839477767756299*^9}, {
+   3.8394778268703136`*^9, 3.8394778387385025`*^9}, 3.8394793332684727`*^9, {
+   3.839489013180763*^9, 3.8394890476460266`*^9}, {3.8394890994686937`*^9, 
+   3.8394891092291203`*^9}, 3.839489141382211*^9, {3.8394897039807167`*^9, 
+   3.8394897071173534`*^9}, {3.8394897518283243`*^9, 
+   3.8394897585633497`*^9}, {3.839489889372501*^9, 3.839490154180389*^9}, {
+   3.8394901939591017`*^9, 3.839490488083988*^9}, {3.839490521338789*^9, 
+   3.839490645049177*^9}, {3.839490678175871*^9, 3.839490825979944*^9}, {
+   3.8394908706233625`*^9, 3.8394909390548377`*^9}, {3.8394910914378595`*^9, 
+   3.8394910944015703`*^9}, 3.839491180678911*^9, {3.839491253914223*^9, 
+   3.839491293403185*^9}, {3.8395361148923273`*^9, 3.839536171716674*^9}, 
+   3.839565296593835*^9, {3.8395653573323402`*^9, 3.8395654012029295`*^9}, {
+   3.8395655930037613`*^9, 3.8395656259288216`*^9}, {3.8395656670436277`*^9, 
+   3.8395656679233017`*^9}, 3.839565722163903*^9, {3.8395658770678816`*^9, 
+   3.839565893408881*^9}, {3.839565931996101*^9, 3.8395660582428856`*^9}, {
+   3.8395661327602243`*^9, 3.839566218697874*^9}, {3.839566276283537*^9, 
+   3.8395663116343184`*^9}, {3.839566348252283*^9, 
+   3.839566384521294*^9}},ExpressionUUID->"de46ef57-a359-4ec4-a7d3-\
 aea9f5198032"],
 
 Cell[BoxData[
- FractionBox[
-  RowBox[{
-   SuperscriptBox["\[ExponentialE]", 
-    RowBox[{
-     RowBox[{"-", "k"}], " ", 
-     SuperscriptBox[
-      RowBox[{"Sin", "[", "\[Theta]a", "]"}], "2"]}]], "-", 
-   SuperscriptBox["\[ExponentialE]", 
-    RowBox[{
-     RowBox[{"-", "k"}], " ", 
-     SuperscriptBox[
-      RowBox[{"Sin", "[", "\[Theta]b", "]"}], "2"]}]]}], 
-  RowBox[{"2", " ", "k"}]]], "Output",
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`lightDir$$ = {1, 
+    1}, $CellContext`normalDir$$ = {0, 1}, $CellContext`roughness$$ = 0.3, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`normalDir$$], {0, 1}}, {-1, 0}, {1, 1}}, {{
+       Hold[$CellContext`lightDir$$], {1, 1}}, {-1, 0}, {1, 1}}, {{
+       Hold[$CellContext`roughness$$], 0.3}, 0.05, 1}}, Typeset`size$$ = {
+    488., {156., 161.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`normalDir$567754$$ = {0, 
+    0}, $CellContext`lightDir$567755$$ = {0, 
+    0}, $CellContext`roughness$567756$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`lightDir$$ = {1, 
+         1}, $CellContext`normalDir$$ = {0, 1}, $CellContext`roughness$$ = 
+        0.3}, "ControllerVariables" :> {
+        Hold[$CellContext`normalDir$$, $CellContext`normalDir$567754$$, {0, 
+         0}], 
+        Hold[$CellContext`lightDir$$, $CellContext`lightDir$567755$$, {0, 0}], 
+        Hold[$CellContext`roughness$$, $CellContext`roughness$567756$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Show[
+        gPlots`gParamPlotContent[
+         Association[
+          ("varyDirectionDisbs" -> {
+            Association[
+            "lightDir" -> ($CellContext`lightDir$$& ), "viewDir" -> ({
+               Cos[
+                Slot["\[Theta]"]], 
+               Sin[
+                Slot["\[Theta]"]]}& ), "normalDir" -> ({0, 1}& ), "roughness" -> 
+             Slot["roughness"], "disbFunc" -> ({
+                Cos[
+                 Slot["\[Theta]"]], 
+                Sin[
+                 Slot["\[Theta]"]]} gBRDF`gDGGX[
+                Slot["roughness"], 
+                Slot["noh"]]& ), "color" -> Red, "label" -> 
+             "GGX Normal Lobe"], 
+            Association[
+            "roughness" -> $CellContext`roughness$$, 
+             "lightDir" -> ($CellContext`lightDir$$& ), "viewDir" -> ({
+               Cos[
+                Slot["\[Theta]"]], 
+               Sin[
+                Slot["\[Theta]"]]}& ), "normalDir" -> ({0, 1}& ), 
+             "disbFunc" -> ({
+                Cos[
+                 Slot["\[Theta]"]], 
+                Sin[
+                 Slot["\[Theta]"]]} (sgCommon`sgVector[
+                 Slot["halfDir"], 
+                 sgCommon`sgRawNDF[
+                  Slot["roughness"], 
+                  Slot["normalDir"]]] If[Slot["\[Theta]"] > Pi, 0, 1])& ), 
+             "color" -> Green, "label" -> "SG GGX Normal Lobe"], 
+            Association[
+            "roughness" -> $CellContext`roughness$$, 
+             "lightDir" -> ($CellContext`lightDir$$& ), "viewDir" -> ({
+               Cos[
+                Slot["\[Theta]"]], 
+               Sin[
+                Slot["\[Theta]"]]}& ), "normalDir" -> ({0, 1}& ), 
+             "disbFunc" -> ({
+                Cos[
+                 Slot["\[Theta]"]], 
+                Sin[
+                 Slot["\[Theta]"]]} (sgCommon`sgVector[
+                 Slot["lightDir"], 
+                 sgCommon`sgNDF[
+                  Slot["roughness"], 
+                  Slot["lightDir"], 
+                  Slot["viewDir"], 
+                  Slot["normalDir"]]] If[Part[
+                   Slot["lightDir"], 2] < 0, 0, 1])& ), "color" -> Blue, 
+             "label" -> "SG GGX Warped Lobe"], 
+            Association[
+            "roughness" -> $CellContext`roughness$$, 
+             "lightDir" -> ($CellContext`lightDir$$& ), "viewDir" -> ({
+               Cos[
+                Slot["\[Theta]"]], 
+               Sin[
+                Slot["\[Theta]"]]}& ), "normalDir" -> ({0, 1}& ), 
+             "disbFunc" -> ({
+                Cos[
+                 Slot["\[Theta]"]], 
+                Sin[
+                 Slot["\[Theta]"]]} sgCommon`sgVector[
+                Slot["viewDir"], {{1, 1}, 30, 3.9}]& ), "color" -> Orange, 
+             "label" -> "Light Lobe"]}& )[
+           Association[
+           "roughness" -> $CellContext`roughness$$, 
+            "lightDir" -> $CellContext`lightDir$$]], "axisExtent" -> 3.8], 
+         Medium], PlotRange -> {{-3, 3}, {-0.5, 5.5}}, Axes -> True, 
+        ImageSize -> Medium], 
+      "Specifications" :> {{{$CellContext`normalDir$$, {0, 1}}, {-1, 0}, {1, 
+         1}}, {{$CellContext`lightDir$$, {1, 1}}, {-1, 0}, {1, 
+         1}}, {{$CellContext`roughness$$, 0.3}, 0.05, 1}}, 
+      "Options" :> {Method -> {"ShowControls" -> True}}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{535., {274., 280.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
  CellChangeTimes->{
-  3.8394676776506643`*^9, 3.839467715586583*^9, {3.839467795792222*^9, 
-   3.839467823866041*^9}, {3.839467983180174*^9, 3.839468042181703*^9}, 
-   3.839468107588282*^9, {3.8394681747034736`*^9, 3.8394681905698924`*^9}, 
-   3.8394682401106534`*^9, {3.8394682750338707`*^9, 3.8394683052321553`*^9}, {
-   3.8394683924394817`*^9, 3.8394684002623296`*^9}, {3.8394684460626707`*^9, 
-   3.839468453188883*^9}, {3.8394685998031454`*^9, 3.8394686276689425`*^9}, {
-   3.839468708725072*^9, 3.839468721776291*^9}, {3.8394687715160007`*^9, 
-   3.839468804669046*^9}, 3.8394696485321918`*^9},
+  3.8394894448117213`*^9, 3.8394895424048977`*^9, {3.839489951973441*^9, 
+   3.83948997370009*^9}, {3.839490131764344*^9, 3.8394901550526867`*^9}, {
+   3.8394902757423997`*^9, 3.83949028874614*^9}, {3.8394904466927547`*^9, 
+   3.839490488574641*^9}, {3.839490521972068*^9, 3.839490645484396*^9}, 
+   3.8394906847817125`*^9, {3.8394907926964335`*^9, 3.8394908264191427`*^9}, {
+   3.839490874244648*^9, 3.8394909400659103`*^9}, 3.839491098367824*^9, 
+   3.839491182750006*^9, {3.8394912568803053`*^9, 3.8394913055366955`*^9}, {
+   3.8395361572969503`*^9, 3.8395361720786753`*^9}, 3.839565305468092*^9, {
+   3.839565391582812*^9, 3.8395654015639343`*^9}, {3.8395655957891016`*^9, 
+   3.8395656264703755`*^9}, 3.839565723746871*^9, {3.8395658727195144`*^9, 
+   3.839565894472*^9}, {3.839565935471388*^9, 3.8395659721670804`*^9}, {
+   3.839566008314345*^9, 3.8395660586288714`*^9}, 3.8395661345168686`*^9, 
+   3.839566166555304*^9, {3.8395662017803164`*^9, 3.8395662194826403`*^9}, {
+   3.839566285024358*^9, 3.8395663120761366`*^9}, {3.839566349223715*^9, 
+   3.8395663548741364`*^9}},
  CellLabel->
-  "Out[196]=",ExpressionUUID->"bbdffca8-58ff-49ec-89f5-edac5051dd78"]
+  "Out[396]=",ExpressionUUID->"d708ad21-4b72-4891-a02a-17d5993eec17"]
 }, Open  ]]
 },
-WindowSize->{1082, 782},
-WindowMargins->{{59, Automatic}, {11, Automatic}},
+WindowSize->{1083, 791},
+WindowMargins->{{295, Automatic}, {-34, Automatic}},
 TaggingRules->{"PresenterSettings" -> {"Dialogs" -> {}}},
 CellContext->Notebook,
+Magnification:>0.9 Inherited,
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->FrontEnd`FileName[{"PresenterTools"}, "Default.nb", 
   CharacterEncoding -> "UTF-8"]
@@ -489,8 +906,8 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 28736, 420, 300, "Input",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
-Cell[29319, 444, 1086, 24, 57, "Output",ExpressionUUID->"bbdffca8-58ff-49ec-89f5-edac5051dd78"]
+Cell[580, 22, 42712, 725, 1179, "Input",ExpressionUUID->"de46ef57-a359-4ec4-a7d3-aea9f5198032"],
+Cell[43295, 749, 6494, 135, 572, "Output",ExpressionUUID->"d708ad21-4b72-4891-a02a-17d5993eec17"]
 }, Open  ]]
 }
 ]

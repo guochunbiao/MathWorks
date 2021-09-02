@@ -10,6 +10,7 @@ ResetDirectory[];
 
 ClearAll[gParamPlot,gParamVaryDirectionDisbs];
 gParamPlot::usage="function{gParamPlot}";
+gParamPlotContent::usage="gParamPlotContent";
 gParamVaryDirectionDisbs::usage="gParamVaryDirectionDisbs";
 
 
@@ -450,12 +451,7 @@ gParamGgxPDF2[input_,\[Theta]_]:=Module[
 ]; 
 
 
-(*
-circles: {center,radius}
-dirLines: {start,direction vector}
-axisExtent: plot range
-*)
-gParamPlot[inputs_,imageSize_:Tiny]:=Module[
+gParamPlotContent[inputs_,imageSize_:Tiny]:=Module[
 	{
 		inputKeys,collectFunc,complexFunc,customPlots,
 		plotList,plotStyles,plotLabels,axisExtent,finalPlots,
@@ -558,6 +554,20 @@ gParamPlot[inputs_,imageSize_:Tiny]:=Module[
 	customPlots=If[MemberQ[inputKeys,"customPlots"],inputs["customPlots"],{}];
 	AppendTo[finalPlots,customPlots];
 	
+	(*general plot*)
+	finalPlots
+];
+
+
+(*
+circles: {center,radius}
+dirLines: {start,direction vector}
+axisExtent: plot range
+*)
+gParamPlot[inputs_,imageSize_:Tiny]:=Module[
+	{finalPlots},	
+    
+	finalPlots=gParamPlotContent[inputs,imageSize];
 	(*general plot*)
 	Show[finalPlots]
 ];
