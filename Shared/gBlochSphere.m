@@ -1046,11 +1046,11 @@ blPaperIntsDisk10[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 			{0,0,0}+Normalize[-viewDir0-viewDir1]*0.45]}],
 		
 		(*\[Phi]i: light angle*)
-		pltArc3DEx[<|"center"->calcPoint,"normal"->{0,1,0},"radius"->0.2,
+		pltArc3DEx[<|"center"->calcPoint,"normal"->{0,1,0},"radius"->0.25,
 			"dir0"->lightDir1,"dir1"->normalDir1,
 			"thickness"->2,"style"->Dashed,"color"->Black|>],
 		Graphics3D[{Text[Style["\[Sigma]",FontSize->16,Bold,FontFamily->"Times"],
-			calcPoint+Normalize[normalDir1+lightDir1]*0.25]}],
+			calcPoint+Normalize[normalDir1+lightDir1]*0.3]}],
 		
 		(*\[Phi]o: view angle*)
 (*		pltArc3DEx[<|"center"->calcPoint,"normal"->{0,1,0},"radius"->0.3,
@@ -1061,7 +1061,15 @@ blPaperIntsDisk10[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 		(*length marker*)
 		pltLengthMarker3D[<|"startPt"->c,"endPt"->calcPoint,
 			"text"->"d",
-			"edgeHeight"->0.05, "textHeight"->0.06|>]
+			"edgeHeight"->0.05, "textHeight"->0.06|>],
+		
+		(*aperture edge line*)
+		pltLine3D[<|"points"->{{0,0,0},diskMinorEdge1},"color"->Black,"style"->Dashed|>],
+		pltArc3DEx[<|"center"->{0,0,0},"normal"->{0,1,0},"radius"->0.5,
+			"dir0"->-viewDir0,"dir1"->Normalize[diskMinorEdge1],
+			"thickness"->2,"style"->Dashed,"color"->Orange|>],
+		Graphics3D[{Text[Style["\[Alpha]",FontSize->16,Bold,Orange,FontFamily->"Times"],
+			{0,0,0}+Normalize[-viewDir0+Normalize[diskMinorEdge1]]*0.55]}]
 			
 		(*ints boundary*)
 (*		pltDiskProjBoundary3D[<|"diskCenter"->c,"diskNormal"->n,"diskRadius"->r,
