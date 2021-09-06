@@ -10,7 +10,8 @@ ClearAll[gStructRules,gPrint,gPrintFunc,gEvalFunc,gCreateCone,gLerp,gRemap,gClam
 	gCalcRectCorners,gReflectVector,gAssocData,gAssocDataOpt,gCircIntsRectPts,
 	gCircIntsRectArea,gCircIntsRectAreaDebug,gCalcPlaneTangents,
 	gCalcRect2DEdgePts,gPlotColors,gColorEquals,gCalcRectShadingAreaCenterDist,
-	gCalcRectShadingArea,gCalcRectShadingCenter,gApproxCircleIntsArea,gCircleIntsArea];
+	gCalcRectShadingArea,gCalcRectShadingCenter,gApproxCircleIntsArea,gCircleIntsArea,
+	gCreateViewMatrix];
 (*https://www.molecularecologist.com/2020/04/23/simple-tools-for-mastering-color-in-scientific-figures/*)
 gPlotColors={RGBColor["#FF1F5B"],RGBColor["#009ADE"],
 		RGBColor["#AF58BA"],RGBColor["#FFC61E"],RGBColor["#F28522"]};
@@ -37,6 +38,7 @@ gCalcRectShadingCenter::usage="gCalcRectShadingCenter";
 gApproxCircleIntsArea::usage="gApproxCircleIntsArea";
 gCircleIntsArea::usage="gCircleIntsArea";
 gCalcRectShadingAreaCenterDist::usage="gCalcRectShadingAreaCenterDist";
+gCreateViewMatrix::usage="gCreateViewMatrix";
 
 
 SetAttributes[gStructRules,HoldAll]
@@ -404,6 +406,29 @@ gColorEquals[c1_,c2_,\[Epsilon]_:0.001]:=Module[
 	(Abs[c1[[1]]-c2[[1]]]<\[Epsilon])&&
 	(Abs[c1[[2]]-c2[[2]]]<\[Epsilon])&&
 	(Abs[c1[[3]]-c2[[3]]]<\[Epsilon])
+];
+
+
+gCreateViewMatrix[eyePt_,lookPt_,upDir_,fov_,plotScale3d_]:=Module[
+	{thetaFunc,phiFunc,alphaFunc,ttFunc,ppFunc,eyeDir,viewMat},
+	
+	thetaFunc[v1_]:=ArcTan[v1[[3]],Norm[v1[[;;2]]]];
+	phiFunc[v1_]:=If[Norm[v1[[;;2]]]>.0001,ArcTan[v1[[1]],v1[[2]]],0];
+	alphaFunc[vert_,v1_]:=ArcTan[{-Sin[phiFunc[v1]],Cos[phiFunc[v1]],0}.vert,
+		Cross[v1/Norm[v1],{-Sin[phiFunc[v1]],Cos[phiFunc[v1]],0}].vert];
+		
+	ttFunc[v1_,vert_,center_,r_]:=Module[
+		{},
+		TransformationMatrix[RotationTransform[-alphaFunc[vert/plotScale3d,v1],
+			{0,0,1}].RotationTransform[-thetaFunc[v1],{0,1,0}].RotationTransform[-phiFunc[v1],
+			{0,0,1}].ScalingTransform[r {1,1,1}].TranslationTransform[-center]]];
+	
+	ppFunc[ang_]:={{1,0,-Tan[ang],1},{0,1,-Tan[ang],1},{0,0,-Tan[ang],0},
+			{0,0,-2 Tan[ang],2}};
+	
+	eyeDir=eyePt-lookPt;
+	viewMat={ttFunc[eyeDir,upDir,lookPt,Cot[fov/2]/Norm[eyeDir]],ppFunc[fov/2]};
+	viewMat
 ];
 
 
