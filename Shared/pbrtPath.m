@@ -1,9 +1,9 @@
 (* ::Package:: *)
 
-BeginPackage["pbrtShared`"];
+BeginPackage["pbrtPath`"];
 SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["gUtils`"];
-Needs["pbrtLog`"];
+Needs["pbrtPathLog`"];
 Needs["gPlots3DEx`"];
 ResetDirectory[];
 

@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-BeginPackage["pbrtLog`"];
+BeginPackage["pbrtPathLog`"];
 SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["gUtils`"];
 ResetDirectory[];
