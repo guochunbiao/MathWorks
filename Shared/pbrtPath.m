@@ -467,7 +467,7 @@ pbrtLightSampleLi[light_,ref_,u_]:=Module[
 
 (*DiffuseAreaLight::Sample_Le*)
 pbrtLightSampleLe[light_,u1_,u2_]:=Module[
-	{tri,pShape,lightNormal,pdfPos,wLhs,wRhs,pdfDir,v1,v2,ray},
+	{tri,pShape,lightNormal,pdfPos,wLhs,wRhs,pdfDir,v1,v2,ray,l},
 	
 	tri=gAssocData[light,"tri"];
 	pShape=pbrtTriSample[tri,u1];
@@ -480,8 +480,11 @@ pbrtLightSampleLe[light_,u1_,u2_]:=Module[
 	{v1,v2}=pbrtCoordinateSystemRHS[lightNormal];
 	wRhs=wLhs[[1]]*v1+wLhs[[2]]*v2+wLhs[[3]]*lightNormal;
 	
-	ray=pbrtInteractionSpawnRay[light,wRhs];
-	wRhs
+	ray=pbrtInteractionSpawnRay[pShape,wRhs];
+	l=pbrtLightL[pShape["n"],wRhs,light["material"]];
+	
+	<|"l"->l,"photonRay"->ray,"lightNormal"->lightNormal,
+		"pdfPos"->pdfPos,"pdfDir"->pdfDir|>
 ];
 
 
