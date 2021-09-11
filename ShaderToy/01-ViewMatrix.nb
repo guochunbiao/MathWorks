@@ -1,0 +1,260 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      8989,        252]
+NotebookOptionsPosition[      8561,        236]
+NotebookOutlinePosition[      8905,        251]
+CellTagsIndexPosition[      8862,        248]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"FileNameJoin", "@", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"ParentDirectory", "[", 
+       RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ",", 
+      "\"\<Shared\>\""}], "}"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlots3DEx`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gPlotsEx`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gBRDF`\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<gUtils`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"SetDirectory", "[", 
+    RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ClearAll", "[", 
+   RowBox[{
+   "scene", ",", "camera", ",", "eyePt", ",", "lookPt", ",", "upDir", ",", 
+    "fov", ",", "lights", ",", "prims", ",", "polyList", ",", "i", ",", 
+    "flag2d", ",", "graph3d", ",", "graph2d", ",", "\[IndentingNewLine]", 
+    "plotRange3d", ",", "plotScale3d", ",", "viewMat"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"scene", "=", 
+   RowBox[{"ToExpression", "[", 
+    RowBox[{"Import", "[", "\"\<cornell.scene\>\"", "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"camera", "=", 
+   RowBox[{
+    RowBox[{"scene", "[", "\"\<camera\>\"", "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"eyePt", "=", 
+   RowBox[{"camera", "[", "\"\<eyePt\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lookPt", "=", 
+   RowBox[{"camera", "[", "\"\<lookPt\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"upDir", "=", 
+   RowBox[{"camera", "[", "\"\<upDir\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fov", "=", 
+   RowBox[{"camera", "[", "\"\<fov\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fov", "=", 
+   RowBox[{
+    FractionBox["fov", "180"], "\[Pi]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lights", "=", 
+   RowBox[{"scene", "[", "\"\<lights\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"prims", "=", 
+   RowBox[{"scene", "[", "\"\<prims\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"polyList", "=", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"For", "[", 
+    RowBox[{
+     RowBox[{"i", "=", "1"}], ",", 
+     RowBox[{"i", "\[LessEqual]", "2"}], 
+     RowBox[{"(*", 
+      RowBox[{"Length", "[", "prims", "]"}], "*)"}], ",", 
+     RowBox[{"i", "++"}], ",", 
+     RowBox[{"AppendTo", "[", 
+      RowBox[{"polyList", ",", 
+       RowBox[{
+        RowBox[{"prims", "[", 
+         RowBox[{"[", "i", "]"}], "]"}], "[", "\"\<tri\>\"", "]"}]}], "]"}]}],
+     "]"}], ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"graph3d", "=", 
+   RowBox[{"Graphics3D", "[", 
+    RowBox[{"{", 
+     RowBox[{"Blue", ",", 
+      RowBox[{"{", 
+       RowBox[{"Polygon", "[", "polyList", "]"}], "}"}]}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"graph2d", "=", 
+    RowBox[{"Plot", "[", 
+     RowBox[{"1", ",", 
+      RowBox[{"{", 
+       RowBox[{"x", ",", "0", ",", "1"}], "}"}]}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"plotRange3d", "=", 
+   RowBox[{"PlotRange", "[", 
+    RowBox[{"Graphics3D", "[", "graph3d", "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"plotScale3d", "=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"1", "/", 
+       RowBox[{"Abs", "[", 
+        RowBox[{"#1", "-", "#2"}], "]"}]}], "&"}], "@@@", "plotRange3d"}]}], 
+   ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"viewMat", "=", 
+    RowBox[{"gCreateViewMatrix", "[", 
+     RowBox[{
+     "eyePt", ",", "lookPt", ",", "upDir", ",", "fov", ",", "plotScale3d"}], 
+     "]"}]}], ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"flag2d", "=", "False"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Show", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"If", "[", 
+      RowBox[{"flag2d", ",", "graph2d", ",", "graph3d"}], "]"}], ",", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"Lighting", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"{", 
+        RowBox[{"\"\<Ambient\>\"", ",", "White"}], "}"}], "}"}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Boxed", "\[Rule]", "False"}], ",", " ", 
+     RowBox[{"Axes", "\[Rule]", "False"}], ",", 
+     RowBox[{"AxesLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<X\>\"", ",", "\"\<Y\>\"", ",", "\"\<Z\>\""}], "}"}]}], 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{
+       RowBox[{"ViewVector", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"eyePt", ",", "lookPt"}], "}"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ViewVertical", "\[Rule]", "upDir"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ViewAngle", "\[Rule]", "fov"}], ","}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"ViewMatrix", "\[Rule]", "viewMat"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"ImageSize", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"100", ",", "100"}], "}"}]}]}], "]"}], ",", 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"Button", "[", 
+    RowBox[{"\"\<toggle2d\>\"", ",", 
+     RowBox[{"flag2d", "=", 
+      RowBox[{"!", "flag2d"}]}]}], "]"}]}], "\[IndentingNewLine]", 
+  "]"}]}], "Input",
+ CellChangeTimes->{
+  3.8399018649895525`*^9, 3.839901928633504*^9, {3.8399019908830338`*^9, 
+   3.839902015785107*^9}, {3.8399021317675867`*^9, 3.839902179326847*^9}},
+ CellLabel->
+  "In[1269]:=",ExpressionUUID->"6a6c8ce8-7067-441a-a36e-c4da6ce8aa41"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{
+      Hold[
+       Button["toggle2d", $CellContext`flag2d = Not[$CellContext`flag2d]]], 
+      Manipulate`Dump`ThisIsNotAControl}}, Typeset`size$$ = {
+    100., {47., 53.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {}, "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Show[
+        If[$CellContext`flag2d, $CellContext`graph2d, $CellContext`graph3d], 
+        Lighting -> {{"Ambient", White}}, Boxed -> False, Axes -> False, 
+        AxesLabel -> {"X", "Y", "Z"}, ViewMatrix -> $CellContext`viewMat, 
+        ImageSize -> {100, 100}], "Specifications" :> {
+        Button["toggle2d", $CellContext`flag2d = Not[$CellContext`flag2d]]}, 
+      "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{151., {95., 101.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{
+  3.8399018357730236`*^9, {3.8399021801476707`*^9, 3.839902184789507*^9}, 
+   3.839902220509776*^9},
+ CellLabel->
+  "Out[1293]=",ExpressionUUID->"fcb87fd1-fe3c-4b9f-bb5e-6887bdc7598b"]
+}, Open  ]]
+},
+WindowSize->{1083, 791},
+WindowMargins->{{Automatic, 33}, {-47, Automatic}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 6012, 170, 865, "Input",ExpressionUUID->"6a6c8ce8-7067-441a-a36e-c4da6ce8aa41"],
+Cell[6595, 194, 1950, 39, 215, "Output",ExpressionUUID->"fcb87fd1-fe3c-4b9f-bb5e-6887bdc7598b"]
+}, Open  ]]
+}
+]
+*)
+

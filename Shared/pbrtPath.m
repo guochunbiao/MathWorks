@@ -1,9 +1,9 @@
 (* ::Package:: *)
 
-BeginPackage["pbrtShared`"];
+BeginPackage["pbrtPath`"];
 SetDirectory[FileNameJoin@{ParentDirectory[NotebookDirectory[]],"Shared"}];
 Needs["gUtils`"];
-Needs["pbrtLog`"];
+Needs["pbrtPathLog`"];
 Needs["gPlots3DEx`"];
 ResetDirectory[];
 
@@ -18,7 +18,8 @@ ClearAll[pbrtRayMaxDist,pbrtLoadScene,pbrtRasterToCamera,pbrtGetCameraSample,
 	pbrtEstimateDirect,pbrtUniformSampleOneLight,pbrtPathIntegratorLi,pbrtSamplerIntegratorRender,
 	pbrtRenderTile,pbrtPlotOriginScene,pbrtPlot3DOptions,pbrtValidateSinglePixel,
 	pbrtValidateTilePixels,pbrtGetTestPixelColor,pbrtPathIntegratorLiBounce,pbrtPlotPath,
-	pbrtConcentricSampleDisk];
+	pbrtConcentricSampleDisk,pbrtLightSampleLe,pbrtCosineHemispherePdf,pbrtCoordinateSystemRHS,
+	pbrtSwithRHS];
 pbrtRayMaxDist=10000;
 pbrtLoadScene::usage="pbrtLoadScene";
 pbrtRasterToCamera::usage="pbrtRasterToCamera";
@@ -66,6 +67,10 @@ pbrtValidateTilePixels::usage="pbrtValidateTilePixels";
 pbrtPathIntegratorLiBounce::usage="pbrtPathIntegratorLiBounce";
 pbrtPlotPath::usage="pbrtPlotPath";
 pbrtConcentricSampleDisk::usage="pbrtConcentricSampleDisk";
+pbrtLightSampleLe::usage="pbrtLightSampleLe";
+pbrtCosineHemispherePdf::usage="pbrtCosineHemispherePdf";
+pbrtCoordinateSystemRHS::usage="pbrtCoordinateSystemRHS";
+pbrtSwithRHS::usage="pbrtSwithRHS";
 
 
 Begin["`Private`"];
@@ -76,17 +81,17 @@ pbrtGet2D[]:={0.6,0.6};
 
 
 (*SamplerIntegrator::Render*)
-pbrtSamplerIntegratorRender[pixel_,scene_,maxBounce_:1]:=Module[
+pbrtSamplerIntegratorRender[pixel_,scene_,maxDepth_:1]:=Module[
 	{l,camRayo,camRayd,pixelLog},
 	(*logging*)
 	pixelLog=<|"pixel"->pixel|>;
 
 	camRayo=gAssocData[scene,"eyePt"];
-	camRayd=pbrtRayDifferential[{pixel[[1]],pixel[[2]]},scene];
+	camRayd=pbrtRayDifferential[pixel,scene];
 	pbrtLogInitPixel[pixel,{camRayo,camRayd}];
 
 	(*PathIntegrator::Li*)
-	l=pbrtPathIntegratorLi[{camRayo,camRayd},scene,maxBounce];
+	l=pbrtPathIntegratorLi[{camRayo,camRayd},scene,maxDepth];
 	pbrtLogPixelLi[l];
 
 	l
@@ -94,14 +99,14 @@ pbrtSamplerIntegratorRender[pixel_,scene_,maxBounce_:1]:=Module[
 
 
 (*PathIntegrator::Li*)
-pbrtPathIntegratorLi[{camRayo_,camRayd_},scene_,maxBounce_:1]:=Module[
+pbrtPathIntegratorLi[{camRayo_,camRayd_},scene_,maxDepth_:1]:=Module[
 	{bounces,l,nextBounce,rayo,rayd,beta,bounceL},
 	
 	l={0,0,0};
 	rayo=camRayo;
 	rayd=camRayd;
 	beta={1,1,1};
-	For[bounces=0,bounces<maxBounce,bounces++,
+	For[bounces=0,bounces<maxDepth,bounces++,
 			bounceL=pbrtPathIntegratorLiBounce[{rayo,rayd,beta},scene,bounces];
 			l+=bounceL;
 		
@@ -457,6 +462,63 @@ pbrtLightSampleLi[light_,ref_,u_]:=Module[
 
 	Label[endLabel];
 	<|"li"->l,"wi"->wi,"pdf"->pShape["pdf"]|>
+];
+
+
+(*DiffuseAreaLight::Sample_Le*)
+pbrtLightSampleLe[light_,u1_,u2_]:=Module[
+	{tri,pShape,lightNormal,pdfPos,wLhs,wRhs,pdfDir,v1,v2,ray,l},
+	
+	tri=gAssocData[light,"tri"];
+	pShape=pbrtTriSample[tri,u1];
+	pdfPos=pShape["pdf"];
+	lightNormal=pShape["n"];
+	
+	wLhs=pbrtCosineSampleHemisphereLHS[u2];
+	pdfDir=pbrtCosineHemispherePdf[wLhs[[3]]];
+	
+	{v1,v2}=pbrtCoordinateSystemRHS[lightNormal];
+	wRhs=wLhs[[1]]*v1+wLhs[[2]]*v2+wLhs[[3]]*lightNormal;
+	
+	ray=pbrtInteractionSpawnRay[pShape,wRhs];
+	l=pbrtLightL[pShape["n"],wRhs,light["material"]];
+	
+	<|"l"->l,"photonRay"->ray,"lightNormal"->lightNormal,
+		"pdfPos"->pdfPos,"pdfDir"->pdfDir|>
+];
+
+
+(*CoordinateSystem*)
+pbrtCoordinateSystemRHS[v1RHS_]:=Module[
+	{v1LHS,v2LHS,v3LHS,v2RHS,v3RHS},
+	v1LHS=pbrtSwithRHS[v1RHS];
+	
+	v2LHS=If[
+		Abs@v1LHS[[1]]>Abs@v1LHS[[2]],
+		{-v1LHS[[3]],0,v1LHS[[1]]}/Sqrt[v1LHS[[1]]*v1LHS[[1]]+v1LHS[[3]]*v1LHS[[3]]],
+		{0,v1LHS[[3]],-v1LHS[[2]]}/Sqrt[v1LHS[[2]]*v1LHS[[2]]+v1LHS[[3]]*v1LHS[[3]]]];
+	v3LHS=Cross[v1LHS,v2LHS];
+	
+	v2RHS=pbrtSwithRHS[v2LHS];
+	v3RHS=pbrtSwithRHS[v3LHS];
+	
+	{v2RHS,v3RHS}
+];
+
+
+pbrtSwithRHS[lhsOrRhs_]:=Module[
+	{rhsOrLhs},
+	
+	rhsOrLhs={lhsOrRhs[[1]],lhsOrRhs[[3]],lhsOrRhs[[2]]};
+	rhsOrLhs
+];
+
+
+(*CosineHemispherePdf*)
+pbrtCosineHemispherePdf[cosTheta_]:=Module[
+	{},
+	
+	cosTheta * 1/\[Pi]
 ];
 
 
