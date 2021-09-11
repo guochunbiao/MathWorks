@@ -151,7 +151,8 @@ pltPoint3D[input_]:=Module[
 
 	pos=gAssocData[input,"pos"];
 	size=gAssocData[input,"size"];
-	color=gAssocData[input,"color"];
+	
+	color=gAssocDataOpt[input,"color",Black];
 	
 	Graphics3D[{{color,PointSize[size],Point[pos]}}]
 ];
