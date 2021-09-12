@@ -957,13 +957,17 @@ blPaperIntsDisk10[inCenter_,inNormal_,radius_,calcPointPercent_]:=Module[
 		pltSphere3D[ <|"center"->{0,0,0},"radius"->1,"plotPts"->100,"opacity"->0.3,
 		"lighting"->Automatic,"colorFunc"->Function[{x,y,z,\[Theta],\[Phi]},LightBlue]|>],
 		(*specular peak & disk center*)
-		pltPoint3D[<|"pos"->c,"size"->0.01,"color"->Black|>],
+		pltPoint3D[<|"pos"->c,"size"->0.02,"color"->Red|>],
 		Graphics3D[{Text[Style["y",FontSize->16,Bold,FontFamily->"Times"],c+{0.03,0,-0.03}]}],
+		pltArrow3D[<|"origin"->c+{-0.3,0,0.1},"dir"->-{-0.3,0,0.1},"length"->0.25,"color"->Red|>],
+		Graphics3D[{Text[Style["half-vector equal\nto surface normal",
+			FontSize->18,FontFamily->"Times"],
+			c+{-0.39,0,0.2}]}],
 		(*disk*)
 		pltDisk3D[<|"center"->c,"normal"->n,"radius"->r,"opacity"->0.3,
 			"colorFunc"->Function[{x,y,z},Blue]|>],
 		Graphics3D[{Text[Style["Disk D",FontSize->16,Blue,Bold,FontFamily->"Times"],
-			projQ+{0.3,0,0.3}]}],
+			projQ+{0.1,0,0.2}]}],
 		(*intersection points*)
 		(*Graphics3D[{{Black,PointSize[Large],Point[{intsPt1,intsPt2}]}}],*)
 		(*outside the sphere*)
