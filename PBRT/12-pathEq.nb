@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     50710,        980]
-NotebookOptionsPosition[     50278,        964]
-NotebookOutlinePosition[     50621,        979]
-CellTagsIndexPosition[     50578,        976]
+NotebookDataLength[     51456,        998]
+NotebookOptionsPosition[     50928,        981]
+NotebookOutlinePosition[     51271,        996]
+CellTagsIndexPosition[     51228,        993]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -53,8 +53,8 @@ Cell[BoxData[{
   RowBox[{
    RowBox[{"ClearAll", "[", 
     RowBox[{
-    "rtGetPixelIndex", ",", "rtPathL", ",", "rtPathPlotScene", ",", 
-     "rtPathValidatePixel", ",", "rtPathValidateScene", ",", "testData", ",", 
+    "pbrtGetPixelIndex", ",", "pathCalcL", ",", "pathPlotScene", ",", 
+     "pathValidatePixel", ",", "pathValidateScene", ",", "testData", ",", 
      "debugPixel"}], "]"}], ";"}], "\[IndentingNewLine]", 
   "\[IndentingNewLine]", 
   RowBox[{"(*", 
@@ -63,7 +63,7 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{
-    RowBox[{"rtGetPixelIndex", "[", 
+    RowBox[{"pbrtGetPixelIndex", "[", 
      RowBox[{"pixel_", ",", "resx_"}], "]"}], ":=", 
     RowBox[{"Module", "[", "\[IndentingNewLine]", 
      RowBox[{
@@ -89,7 +89,7 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{
-    RowBox[{"rtPathL", "[", "pixelPath_", "]"}], ":=", 
+    RowBox[{"pathCalcL", "[", "pixelPath_", "]"}], ":=", 
     RowBox[{"Module", "[", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"{", 
@@ -137,7 +137,7 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{
-    RowBox[{"rtPathValidatePixel", "[", 
+    RowBox[{"pathValidatePixel", "[", 
      RowBox[{"pixel_", ",", "testData_"}], "]"}], ":=", 
     RowBox[{"Module", "[", "\[IndentingNewLine]", 
      RowBox[{
@@ -147,7 +147,7 @@ Cell[BoxData[{
        "}"}], ",", "\[IndentingNewLine]", 
       RowBox[{
        RowBox[{"pixelIndex", "=", 
-        RowBox[{"rtGetPixelIndex", "[", 
+        RowBox[{"pbrtGetPixelIndex", "[", 
          RowBox[{"pixel", ",", 
           RowBox[{"testData", "[", "\"\<resx\>\"", "]"}]}], "]"}]}], ";", 
        "\[IndentingNewLine]", "\[IndentingNewLine]", 
@@ -166,7 +166,7 @@ Cell[BoxData[{
          RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
        "\[IndentingNewLine]", 
        RowBox[{"l1", "=", 
-        RowBox[{"rtPathL", "[", "pixelPath", "]"}]}], ";", 
+        RowBox[{"pathCalcL", "[", "pixelPath", "]"}]}], ";", 
        "\[IndentingNewLine]", 
        RowBox[{"l2", "=", 
         RowBox[{"pixelPath", "[", "\"\<l\>\"", "]"}]}], ";", 
@@ -180,7 +180,7 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{
-    RowBox[{"rtPathValidateScene", "[", "testData_", "]"}], ":=", 
+    RowBox[{"pathValidateScene", "[", "testData_", "]"}], ":=", 
     RowBox[{"Module", "[", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"{", 
@@ -220,7 +220,7 @@ Cell[BoxData[{
               RowBox[{"{", 
                RowBox[{"i", ",", "j"}], "}"}]}], ";", "\[IndentingNewLine]", 
              RowBox[{"pixelIndex", "=", 
-              RowBox[{"rtGetPixelIndex", "[", 
+              RowBox[{"pbrtGetPixelIndex", "[", 
                RowBox[{"pixel", ",", "resx"}], "]"}]}], ";", 
              "\[IndentingNewLine]", 
              RowBox[{"If", "[", 
@@ -254,7 +254,7 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{
-    RowBox[{"rtPathPlotScene", "[", 
+    RowBox[{"pathPlotScene", "[", 
      RowBox[{"testData_", ",", "colorMul_"}], "]"}], ":=", 
     RowBox[{"Module", "[", "\[IndentingNewLine]", 
      RowBox[{
@@ -296,7 +296,7 @@ Cell[BoxData[{
                 RowBox[{"i", "-", "1"}]}], "}"}]}], ";", 
              "\[IndentingNewLine]", 
              RowBox[{"pixelIndex", "=", 
-              RowBox[{"rtGetPixelIndex", "[", 
+              RowBox[{"pbrtGetPixelIndex", "[", 
                RowBox[{"pixel", ",", "resx"}], "]"}]}], ";", 
              "\[IndentingNewLine]", 
              RowBox[{
@@ -337,22 +337,37 @@ Cell[BoxData[{
    RowBox[{"{", 
     RowBox[{"58", ",", "10"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{
-   RowBox[{"testData", "=", 
-    RowBox[{"ToExpression", "[", 
-     RowBox[{"Import", "[", "\"\<cornell-tiny.path\>\"", "]"}], "]"}]}], 
-   ";"}], "\[IndentingNewLine]", 
+  RowBox[{"testData", "=", 
+   RowBox[{"ToExpression", "[", 
+    RowBox[{"Import", "[", "\"\<cornell-tiny.path\>\"", "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pathValidatePixel", "[", 
+   RowBox[{"debugPixel", ",", "testData"}], "]"}], "\[IndentingNewLine]", 
   RowBox[{"(*", 
-   RowBox[{"rtPathValidatePixel", "[", 
-    RowBox[{"debugPixel", ",", "testData"}], "]"}], "*)"}], 
-  "\[IndentingNewLine]", 
-  RowBox[{"(*", 
-   RowBox[{"rtPathValidateScene", "[", "testData", "]"}], 
+   RowBox[{"pathValidateScene", "[", "testData", "]"}], 
    "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{"rtPathPlotScene", "[", 
+ RowBox[{"pathPlotScene", "[", 
   RowBox[{"testData", ",", "10"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.84078508089666*^9, 
+  3.840785241887511*^9}},ExpressionUUID->"8413a7a4-63af-48fb-bd0f-\
+1ae6b1a8f312"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"True", ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "22.524349938166495`", ",", "11.203504022347618`", ",", 
+     "2.788321306521488`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"22.5243530273`", ",", "11.2035045624`", ",", "2.7883212566`"}], 
+    "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.8407784357542667`*^9, {3.8407850750952168`*^9, 3.8407850825053587`*^9}, 
+   3.840785174492034*^9, 3.840785231552659*^9},
  CellLabel->
-  "In[3551]:=",ExpressionUUID->"8413a7a4-63af-48fb-bd0f-1ae6b1a8f312"],
+  "Out[3632]=",ExpressionUUID->"68b88659-0eda-41ad-829c-9f9033cd7aac"],
 
 Cell[BoxData[
  GraphicsBox[RasterBox[CompressedData["
@@ -957,9 +972,11 @@ CCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCyH+P/wO6iOyC
          "freeformCursorMode" -> True, 
           "placement" -> {"x" -> "All", "y" -> "None"}}}}, "DefaultPlotStyle" -> 
     Automatic}]], "Output",
- CellChangeTimes->{3.8407784357542667`*^9},
+ CellChangeTimes->{
+  3.8407784357542667`*^9, {3.8407850750952168`*^9, 3.8407850825053587`*^9}, 
+   3.840785174492034*^9, 3.8407852325590105`*^9},
  CellLabel->
-  "Out[3566]=",ExpressionUUID->"3a3fd628-0440-4e9d-9eea-cecc05b7ee41"]
+  "Out[3633]=",ExpressionUUID->"08d6f0c6-73b0-4d01-8512-61299bdb4125"]
 }, Open  ]]
 },
 WindowSize->{754, 704},
@@ -979,8 +996,9 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 13209, 332, 1910, "Input",ExpressionUUID->"8413a7a4-63af-48fb-bd0f-1ae6b1a8f312"],
-Cell[13792, 356, 36470, 605, 376, "Output",ExpressionUUID->"3a3fd628-0440-4e9d-9eea-cecc05b7ee41"]
+Cell[580, 22, 13213, 331, 1910, "Input",ExpressionUUID->"8413a7a4-63af-48fb-bd0f-1ae6b1a8f312"],
+Cell[13796, 355, 540, 14, 32, "Output",ExpressionUUID->"68b88659-0eda-41ad-829c-9f9033cd7aac"],
+Cell[14339, 371, 36573, 607, 376, "Output",ExpressionUUID->"08d6f0c6-73b0-4d01-8512-61299bdb4125"]
 }, Open  ]]
 }
 ]
