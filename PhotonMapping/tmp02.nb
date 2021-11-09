@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     16482,        403]
-NotebookOptionsPosition[     16052,        387]
-NotebookOutlinePosition[     16395,        402]
-CellTagsIndexPosition[     16352,        399]
+NotebookDataLength[     20150,        482]
+NotebookOptionsPosition[     19720,        466]
+NotebookOutlinePosition[     20063,        481]
+CellTagsIndexPosition[     20020,        478]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -32,14 +32,15 @@ Cell[BoxData[{
     RowBox[{
     "lmData", ",", "imgData", ",", "imgTable", ",", "resx", ",", "resy", ",", 
      "plotLightMap", ",", "\[IndentingNewLine]", "texelVertices", ",", 
-     "\[IndentingNewLine]", "scene", ",", "meshList", ",", "graphList", ",", 
-     "tmpGraph", ",", "plot3DScene", ",", "\[IndentingNewLine]", 
-     "resultFlag"}], "]"}], ";"}], 
+     "meshGraphList", ",", "appendAllCachePoints", ",", "\[IndentingNewLine]",
+      "scene", ",", "meshList", ",", "graphList", ",", "tmpGraph", ",", 
+     "plot3DScene", ",", "\[IndentingNewLine]", "switchFlag", ",", 
+     "showAllCacheFlag"}], "]"}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"lmData", "=", 
    RowBox[{"ToExpression", "[", 
-    RowBox[{"Import", "[", "\"\<LMInterpolation.pscene\>\"", "]"}], "]"}]}], 
+    RowBox[{"Import", "[", "\"\<InterpLightMap.pscene\>\"", "]"}], "]"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"resx", "=", 
@@ -61,7 +62,7 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{"scene", "=", 
    RowBox[{"ToExpression", "[", 
-    RowBox[{"Import", "[", "\"\<test.pscene\>\"", "]"}], "]"}]}], 
+    RowBox[{"Import", "[", "\"\<InterpScene.pscene\>\"", "]"}], "]"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -152,8 +153,11 @@ Cell[BoxData[{
        RowBox[{"ArrayPlot", "[", "imgTable", "]"}]}]}], "\[IndentingNewLine]",
       "]"}]}], ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
+  RowBox[{"graphList", "=", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{
-   RowBox[{"graphList", "=", 
+   RowBox[{"meshGraphList", "=", 
     RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
   RowBox[{"(*", 
    RowBox[{"appending", " ", "mesh", " ", "list"}], 
@@ -199,14 +203,62 @@ Cell[BoxData[{
                "]"}], "}"}]}], "]"}]}], "\[IndentingNewLine]", "}"}], "]"}]}],
        ";", "\[IndentingNewLine]", 
       RowBox[{"AppendTo", "[", 
-       RowBox[{"graphList", ",", "tmpGraph"}], "]"}], ";"}]}], 
-    "\[IndentingNewLine]", "]"}], ";"}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+       RowBox[{"meshGraphList", ",", "tmpGraph"}], "]"}], ";"}]}], 
+    "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"appending", " ", "points", " ", "list"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"appendAllCachePoints", "[", "]"}], ":=", 
+    RowBox[{"Module", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"pointsList", ",", "tmpPoints"}], "}"}], ",", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"pointsList", "=", 
+        RowBox[{"scene", "[", "\"\<pointsList\>\"", "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"For", "[", 
+        RowBox[{
+         RowBox[{"i", "=", "1"}], ",", 
+         RowBox[{"i", "\[LessEqual]", 
+          RowBox[{"Length", "[", "pointsList", "]"}]}], ",", 
+         RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"tmpPoints", "=", 
+           RowBox[{"pointsList", "[", 
+            RowBox[{"[", "i", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+          RowBox[{"tmpGraph", "=", 
+           RowBox[{"ListPointPlot3D", "[", 
+            RowBox[{
+             RowBox[{"tmpPoints", "[", "\"\<data\>\"", "]"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"PlotStyle", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"PointSize", "[", 
+                 RowBox[{"tmpPoints", "[", "\"\<size\>\"", "]"}], "]"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"Opacity", "[", 
+                 RowBox[{"tmpPoints", "[", "\"\<opacity\>\"", "]"}], "]"}], 
+                ",", 
+                RowBox[{"tmpPoints", "[", "\"\<color\>\"", "]"}]}], "}"}]}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{"Filling", "\[Rule]", "None"}]}], "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"AppendTo", "[", 
+           RowBox[{"graphList", ",", "tmpGraph"}], "]"}], ";"}]}], 
+        "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}]}],
+    ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{
     RowBox[{"plot3DScene", "[", 
-     RowBox[{"texelX_", ",", "texelY_"}], "]"}], ":=", 
+     RowBox[{"texelX_", ",", "texelY_", ",", "showAllCache_"}], "]"}], ":=", 
     RowBox[{"Module", "[", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"{", 
@@ -216,6 +268,8 @@ Cell[BoxData[{
        RowBox[{"texelIndex", "=", 
         RowBox[{
          RowBox[{"texelX", "*", "resy"}], "+", "texelY"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"graphList", " ", "=", " ", "meshGraphList"}], ";", 
        "\[IndentingNewLine]", "\[IndentingNewLine]", 
        RowBox[{"(*", 
         RowBox[{"append", " ", "texel", " ", "vertex", " ", "point"}], "*)"}],
@@ -236,6 +290,10 @@ Cell[BoxData[{
        "\[IndentingNewLine]", 
        RowBox[{"AppendTo", "[", 
         RowBox[{"graphList", ",", "tmpGraph"}], "]"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{"showAllCache", ",", 
+         RowBox[{"appendAllCachePoints", "[", "]"}]}], "]"}], ";", 
        "\[IndentingNewLine]", "\[IndentingNewLine]", "graphList"}]}], 
      "\[IndentingNewLine]", "]"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -244,19 +302,21 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{"texelY", "=", "2"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"resultFlag", "=", "False"}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"switchFlag", "=", "False"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"showAllCacheFlag", "=", "False"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{"Show", "[", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"If", "[", 
-       RowBox[{"resultFlag", ",", 
+       RowBox[{"switchFlag", ",", 
         RowBox[{"plotLightMap", "[", 
-         RowBox[{"texelX", ",", "texelY"}], "]"}], ",", 
+         RowBox[{"texelX", ",", "texelY"}], "]"}], ",", "\[IndentingNewLine]", 
         RowBox[{"plot3DScene", "[", 
-         RowBox[{"texelX", ",", "texelY"}], "]"}]}], "]"}], ",", 
-      "\[IndentingNewLine]", 
+         RowBox[{"texelX", ",", "texelY", ",", "showAllCacheFlag"}], "]"}]}], 
+       "]"}], ",", "\[IndentingNewLine]", 
       RowBox[{"Lighting", "\[Rule]", 
        RowBox[{"{", 
         RowBox[{"{", 
@@ -271,9 +331,14 @@ Cell[BoxData[{
       RowBox[{"ImageSize", "\[Rule]", "Large"}]}], "]"}], ",", 
     "\[IndentingNewLine]", "\[IndentingNewLine]", 
     RowBox[{"Button", "[", 
-     RowBox[{"\"\<Result\>\"", ",", 
-      RowBox[{"resultFlag", "=", 
-       RowBox[{"!", "resultFlag"}]}]}], "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"\"\<Swith 2D/3D\>\"", ",", 
+      RowBox[{"switchFlag", "=", 
+       RowBox[{"!", "switchFlag"}]}]}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"Button", "[", 
+     RowBox[{"\"\<Show all cache\>\"", ",", 
+      RowBox[{"showAllCacheFlag", "=", 
+       RowBox[{"!", "showAllCacheFlag"}]}]}], "]"}], ",", 
+    "\[IndentingNewLine]", 
     RowBox[{"{", 
      RowBox[{
       RowBox[{"{", 
@@ -318,9 +383,13 @@ Cell[BoxData[{
    3.845435929605693*^9}, {3.8454360277136855`*^9, 3.8454360374322147`*^9}, 
    3.84543610352745*^9, {3.845436157788076*^9, 3.845436176358887*^9}, {
    3.8454364954264965`*^9, 3.8454365021559973`*^9}, {3.845436537899109*^9, 
-   3.845436542992669*^9}},
+   3.845436542992669*^9}, {3.8454435804893017`*^9, 3.845443591680415*^9}, {
+   3.845443629956092*^9, 3.845443658431909*^9}, {3.8454438389036164`*^9, 
+   3.84544388872677*^9}, {3.845443921623189*^9, 3.845443948362741*^9}, {
+   3.8454440852871532`*^9, 3.8454441514388285`*^9}, {3.845444234179108*^9, 
+   3.8454443167352543`*^9}},
  CellLabel->
-  "In[880]:=",ExpressionUUID->"7e377609-005d-4d92-b97b-aafa473c702c"],
+  "In[993]:=",ExpressionUUID->"7e377609-005d-4d92-b97b-aafa473c702c"],
 
 Cell[BoxData[
  TagBox[
@@ -331,37 +400,45 @@ Cell[BoxData[
     1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{
       Hold[
        Button[
-       "Result", $CellContext`resultFlag = Not[$CellContext`resultFlag]]], 
+       "Swith 2D/3D", $CellContext`switchFlag = 
+        Not[$CellContext`switchFlag]]], Manipulate`Dump`ThisIsNotAControl}, {
+      Hold[
+       Button[
+       "Show all cache", $CellContext`showAllCacheFlag = 
+        Not[$CellContext`showAllCacheFlag]]], 
       Manipulate`Dump`ThisIsNotAControl}, {{
        Hold[$CellContext`texelX$$], 55}, 2, 125, 1}, {{
        Hold[$CellContext`texelY$$], 34}, 2, 125, 1}}, Typeset`size$$ = {
-    576., {218., 223.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`texelX$26618$$ = 
-    0, $CellContext`texelY$26619$$ = 0}, 
+    576., {195., 200.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`texelX$31107$$ = 
+    0, $CellContext`texelY$31108$$ = 0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
       "Variables" :> {$CellContext`texelX$$ = 55, $CellContext`texelY$$ = 34},
        "ControllerVariables" :> {
-        Hold[$CellContext`texelX$$, $CellContext`texelX$26618$$, 0], 
-        Hold[$CellContext`texelY$$, $CellContext`texelY$26619$$, 0]}, 
+        Hold[$CellContext`texelX$$, $CellContext`texelX$31107$$, 0], 
+        Hold[$CellContext`texelY$$, $CellContext`texelY$31108$$, 0]}, 
       "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
         Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
          Typeset`skipInitDone$$}, "Body" :> Show[
-        If[$CellContext`resultFlag, 
+        If[$CellContext`switchFlag, 
          $CellContext`plotLightMap[$CellContext`texelX$$, \
 $CellContext`texelY$$], 
          $CellContext`plot3DScene[$CellContext`texelX$$, \
-$CellContext`texelY$$]], Lighting -> {{"Ambient", White}}, Boxed -> False, 
-        Axes -> False, AxesLabel -> {"X", "Y", "Z"}, ImageSize -> Large], 
-      "Specifications" :> {
+$CellContext`texelY$$, $CellContext`showAllCacheFlag]], 
+        Lighting -> {{"Ambient", White}}, Boxed -> False, Axes -> False, 
+        AxesLabel -> {"X", "Y", "Z"}, ImageSize -> Large], "Specifications" :> {
         Button[
-        "Result", $CellContext`resultFlag = 
-         Not[$CellContext`resultFlag]], {{$CellContext`texelX$$, 55}, 2, 125, 
-         1}, {{$CellContext`texelY$$, 34}, 2, 125, 1}}, "Options" :> {}, 
-      "DefaultOptions" :> {}],
-     ImageSizeCache->{627., {294., 300.}},
+        "Swith 2D/3D", $CellContext`switchFlag = 
+         Not[$CellContext`switchFlag]], 
+        Button[
+        "Show all cache", $CellContext`showAllCacheFlag = 
+         Not[$CellContext`showAllCacheFlag]], {{$CellContext`texelX$$, 55}, 2,
+          125, 1}, {{$CellContext`texelY$$, 34}, 2, 125, 1}}, "Options" :> {},
+       "DefaultOptions" :> {}],
+     ImageSizeCache->{627., {285., 291.}},
      SingleEvaluation->True],
     Deinitialization:>None,
     DynamicModuleValues:>{},
@@ -380,9 +457,11 @@ $CellContext`texelY$$]], Lighting -> {{"Ambient", White}}, Boxed -> False,
    3.8454349777101293`*^9, 3.845435011585597*^9}, {3.845435829390783*^9, 
    3.845435930405865*^9}, {3.8454359870954046`*^9, 3.8454360495181665`*^9}, {
    3.8454361339356027`*^9, 3.845436183799568*^9}, {3.8454364963842893`*^9, 
-   3.8454365032444544`*^9}, 3.845436543959543*^9},
+   3.8454365032444544`*^9}, 3.845436543959543*^9, {3.8454436067647886`*^9, 
+   3.8454436593359027`*^9}, 3.8454441552843437`*^9, {3.8454442937423024`*^9, 
+   3.845444317559461*^9}},
  CellLabel->
-  "Out[897]=",ExpressionUUID->"135241c4-2444-4a65-ac92-33d8c3c1ec20"]
+  "Out[1013]=",ExpressionUUID->"41cbb363-8b37-45b7-8db3-ed11a1dec2be"]
 }, Open  ]]
 },
 WindowSize->{759, 833},
@@ -402,8 +481,8 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 12314, 300, 1530, "Input",ExpressionUUID->"7e377609-005d-4d92-b97b-aafa473c702c"],
-Cell[12897, 324, 3139, 60, 613, "Output",ExpressionUUID->"135241c4-2444-4a65-ac92-33d8c3c1ec20"]
+Cell[580, 22, 15508, 369, 1967, "Input",ExpressionUUID->"7e377609-005d-4d92-b97b-aafa473c702c"],
+Cell[16091, 393, 3613, 70, 595, "Output",ExpressionUUID->"41cbb363-8b37-45b7-8db3-ed11a1dec2be"]
 }, Open  ]]
 }
 ]
