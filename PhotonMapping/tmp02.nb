@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      7165,        197]
-NotebookOptionsPosition[      6356,        177]
-NotebookOutlinePosition[      6701,        192]
-CellTagsIndexPosition[      6658,        189]
+NotebookDataLength[     16482,        403]
+NotebookOptionsPosition[     16052,        387]
+NotebookOutlinePosition[     16395,        402]
+CellTagsIndexPosition[     16352,        399]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -31,12 +31,15 @@ Cell[BoxData[{
    RowBox[{"ClearAll", "[", 
     RowBox[{
     "lmData", ",", "imgData", ",", "imgTable", ",", "resx", ",", "resy", ",", 
-     "plotImgTable"}], "]"}], ";"}], 
+     "plotLightMap", ",", "\[IndentingNewLine]", "texelVertices", ",", 
+     "\[IndentingNewLine]", "scene", ",", "meshList", ",", "graphList", ",", 
+     "tmpGraph", ",", "plot3DScene", ",", "\[IndentingNewLine]", 
+     "resultFlag"}], "]"}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"lmData", "=", 
    RowBox[{"ToExpression", "[", 
-    RowBox[{"Import", "[", "\"\<LQ_Lightmap.pscene\>\"", "]"}], "]"}]}], 
+    RowBox[{"Import", "[", "\"\<LMInterpolation.pscene\>\"", "]"}], "]"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"resx", "=", 
@@ -47,9 +50,23 @@ Cell[BoxData[{
    RowBox[{"lmData", "[", "\"\<sizeY\>\"", "]"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
+  RowBox[{"imgData", "=", 
+   RowBox[{"lmData", "[", "\"\<sampleData\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{
-   RowBox[{"imgData", "=", 
-    RowBox[{"lmData", "[", "\"\<sampleData\>\"", "]"}]}], ";"}], 
+   RowBox[{"texelVertices", "=", 
+    RowBox[{"lmData", "[", "\"\<texelVertex\>\"", "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"scene", "=", 
+   RowBox[{"ToExpression", "[", 
+    RowBox[{"Import", "[", "\"\<test.pscene\>\"", "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"meshList", "=", 
+    RowBox[{"scene", "[", "\"\<meshList\>\"", "]"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -60,8 +77,8 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{
-    RowBox[{"plotImgTable", "[", 
-     RowBox[{"mul_:", "1"}], "]"}], ":=", 
+    RowBox[{"plotLightMap", "[", 
+     RowBox[{"texelX_", ",", "texelY_"}], "]"}], ":=", 
     RowBox[{"Module", "[", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"{", 
@@ -85,25 +102,197 @@ Cell[BoxData[{
                RowBox[{"[", "i", "]"}], "]"}], "[", 
               RowBox[{"[", "j", "]"}], "]"}], "=", 
              RowBox[{"RGBColor", "[", 
-              RowBox[{"mul", "*", 
-               RowBox[{"imgData", "[", 
-                RowBox[{"[", 
+              RowBox[{"imgData", "[", 
+               RowBox[{"[", 
+                RowBox[{
+                 RowBox[{"(", 
+                  RowBox[{"i", "-", "1"}], ")"}], "+", 
                  RowBox[{
                   RowBox[{"(", 
-                   RowBox[{"i", "-", "1"}], ")"}], "+", 
-                  RowBox[{
-                   RowBox[{"(", 
-                    RowBox[{"j", "-", "1"}], ")"}], "*", "resx"}], "+", "1"}],
-                  "]"}], "]"}]}], "]"}]}], ";"}]}], "\[IndentingNewLine]", 
+                   RowBox[{"j", "-", "1"}], ")"}], "*", "resx"}], "+", "1"}], 
+                "]"}], "]"}], "]"}]}], ";"}]}], "\[IndentingNewLine]", 
           "]"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
        "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{"debug", " ", "cross"}], "*)"}], "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"imgTable", "[", 
+          RowBox[{"[", "texelX", "]"}], "]"}], "[", 
+         RowBox[{"[", "texelY", "]"}], "]"}], "=", "Red"}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"imgTable", "[", 
+          RowBox[{"[", 
+           RowBox[{"texelX", "-", "1"}], "]"}], "]"}], "[", 
+         RowBox[{"[", "texelY", "]"}], "]"}], "=", "Red"}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"imgTable", "[", 
+          RowBox[{"[", 
+           RowBox[{"texelX", "+", "1"}], "]"}], "]"}], "[", 
+         RowBox[{"[", "texelY", "]"}], "]"}], "=", "Red"}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"imgTable", "[", 
+          RowBox[{"[", "texelX", "]"}], "]"}], "[", 
+         RowBox[{"[", 
+          RowBox[{"texelY", "-", "1"}], "]"}], "]"}], "=", "Red"}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"imgTable", "[", 
+          RowBox[{"[", "texelX", "]"}], "]"}], "[", 
+         RowBox[{"[", 
+          RowBox[{"texelY", "+", "1"}], "]"}], "]"}], "=", "Red"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
        RowBox[{"ArrayPlot", "[", "imgTable", "]"}]}]}], "\[IndentingNewLine]",
       "]"}]}], ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{"Show", "[", 
+ RowBox[{
   RowBox[{
-   RowBox[{"plotImgTable", "[", "]"}], ",", 
-   RowBox[{"ImageSize", "\[Rule]", "Large"}]}], 
-  "]"}], "\[IndentingNewLine]"}], "Input",
+   RowBox[{"graphList", "=", 
+    RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"appending", " ", "mesh", " ", "list"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"For", "[", 
+    RowBox[{
+     RowBox[{"i", "=", "1"}], ",", 
+     RowBox[{"i", "\[LessEqual]", 
+      RowBox[{"Length", "[", "meshList", "]"}]}], ",", 
+     RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"tmpGraph", "=", 
+       RowBox[{"Graphics3D", "[", 
+        RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"meshList", "[", 
+            RowBox[{"[", "i", "]"}], "]"}], "[", "\"\<color\>\"", "]"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{"True", ",", 
+            RowBox[{"Opacity", "[", "0.3", "]"}], ",", 
+            RowBox[{"Nothing", "[", "]"}]}], "]"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{"True", ",", 
+            RowBox[{"EdgeForm", "[", "None", "]"}], ",", 
+            RowBox[{"Nothing", "[", "]"}]}], "]"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"GraphicsComplex", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"meshList", "[", 
+              RowBox[{"[", "i", "]"}], "]"}], "[", "\"\<vertices\>\"", "]"}], 
+            ",", 
+            RowBox[{"{", 
+             RowBox[{"Polygon", "[", 
+              RowBox[{
+               RowBox[{"meshList", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "[", "\"\<indices\>\"", "]"}],
+               "]"}], "}"}]}], "]"}]}], "\[IndentingNewLine]", "}"}], "]"}]}],
+       ";", "\[IndentingNewLine]", 
+      RowBox[{"AppendTo", "[", 
+       RowBox[{"graphList", ",", "tmpGraph"}], "]"}], ";"}]}], 
+    "\[IndentingNewLine]", "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"plot3DScene", "[", 
+     RowBox[{"texelX_", ",", "texelY_"}], "]"}], ":=", 
+    RowBox[{"Module", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"texelIndex", ",", "texelWorldPos"}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"texelIndex", "=", 
+        RowBox[{
+         RowBox[{"texelX", "*", "resy"}], "+", "texelY"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{"append", " ", "texel", " ", "vertex", " ", "point"}], "*)"}],
+        "\[IndentingNewLine]", 
+       RowBox[{"texelWorldPos", "=", 
+        RowBox[{"texelVertices", "[", "texelIndex", "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"tmpGraph", "=", 
+        RowBox[{"ListPointPlot3D", "[", 
+         RowBox[{
+          RowBox[{"{", "texelWorldPos", "}"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"PlotStyle", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"PointSize", "[", "0.01", "]"}], ",", "Red"}], "}"}]}], 
+          ",", "\[IndentingNewLine]", 
+          RowBox[{"Filling", "\[Rule]", "None"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"AppendTo", "[", 
+        RowBox[{"graphList", ",", "tmpGraph"}], "]"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", "graphList"}]}], 
+     "\[IndentingNewLine]", "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"texelX", "=", "2"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"texelY", "=", "2"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"resultFlag", "=", "False"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Show", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"If", "[", 
+       RowBox[{"resultFlag", ",", 
+        RowBox[{"plotLightMap", "[", 
+         RowBox[{"texelX", ",", "texelY"}], "]"}], ",", 
+        RowBox[{"plot3DScene", "[", 
+         RowBox[{"texelX", ",", "texelY"}], "]"}]}], "]"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Lighting", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"{", 
+         RowBox[{"\"\<Ambient\>\"", ",", "White"}], "}"}], "}"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Boxed", "\[Rule]", "False"}], ",", " ", 
+      RowBox[{"Axes", "\[Rule]", "False"}], ",", 
+      RowBox[{"AxesLabel", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"\"\<X\>\"", ",", "\"\<Y\>\"", ",", "\"\<Z\>\""}], "}"}]}], 
+      ",", "\[IndentingNewLine]", 
+      RowBox[{"ImageSize", "\[Rule]", "Large"}]}], "]"}], ",", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"Button", "[", 
+     RowBox[{"\"\<Result\>\"", ",", 
+      RowBox[{"resultFlag", "=", 
+       RowBox[{"!", "resultFlag"}]}]}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"texelX", ",", "55"}], "}"}], ",", "2", ",", 
+      RowBox[{"resx", "-", "1"}], ",", "1"}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"texelY", ",", "34"}], "}"}], ",", "2", ",", 
+      RowBox[{"resy", "-", "1"}], ",", "1"}], "}"}]}], "\[IndentingNewLine]", 
+   "]"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Show", "[", 
+    RowBox[{
+     RowBox[{"plotLightMap", "[", 
+      RowBox[{"2", ",", "2"}], "]"}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Large"}]}], "]"}], 
+   "*)"}]}], "\[IndentingNewLine]"}], "Input",
  CellChangeTimes->{{3.8429325629928284`*^9, 3.84293265398615*^9}, {
    3.842932689408988*^9, 3.8429328261293364`*^9}, {3.8429328584124737`*^9, 
    3.8429328695214376`*^9}, {3.8429329055077925`*^9, 3.842933010049203*^9}, {
@@ -111,72 +300,93 @@ Cell[BoxData[{
    3.84293696025233*^9}, {3.84293704925918*^9, 3.842937053102403*^9}, {
    3.8429371134658966`*^9, 3.8429371305649576`*^9}, {3.842937162161843*^9, 
    3.8429371625243254`*^9}, {3.8429942294451838`*^9, 3.842994229643073*^9}, 
-   3.8429942803074064`*^9},ExpressionUUID->"7e377609-005d-4d92-b97b-\
-aafa473c702c"],
-
-Cell[BoxData[
- TemplateBox[{
-  "Import","nffil",
-   "\"File \\!\\(\\*RowBox[{\\\"\\\\\\\"LQ_Lightmap.pscene\\\\\\\"\\\"}]\\) \
-not found during \\!\\(\\*RowBox[{\\\"Import\\\"}]\\).\"",2,2,1,
-   30232097021508896730,"Local"},
-  "MessageTemplate"]], "Message", "MSG",
- CellChangeTimes->{3.8429942214071207`*^9},
+   3.8429942803074064`*^9, 3.8454272369854484`*^9, {3.845427377201228*^9, 
+   3.8454273903021927`*^9}, {3.845427693499481*^9, 3.845427882281325*^9}, {
+   3.8454279799737077`*^9, 3.8454280086924095`*^9}, {3.8454281869007607`*^9, 
+   3.8454281890236497`*^9}, {3.8454283693901234`*^9, 
+   3.8454285965839405`*^9}, {3.845428634428793*^9, 3.8454286685191965`*^9}, {
+   3.845429970663904*^9, 3.8454300796941576`*^9}, {3.8454320368488936`*^9, 
+   3.8454320558945117`*^9}, 3.845432298709669*^9, {3.845432448703024*^9, 
+   3.845432454321365*^9}, {3.845432489012285*^9, 3.845432499000458*^9}, {
+   3.845432549311138*^9, 3.845432674237732*^9}, {3.8454328189330564`*^9, 
+   3.84543291001594*^9}, {3.8454330213166704`*^9, 3.8454330767251587`*^9}, {
+   3.8454333428595715`*^9, 3.845433409041729*^9}, {3.845433569353491*^9, 
+   3.8454335706223097`*^9}, {3.845433608742181*^9, 3.845433622981945*^9}, {
+   3.845434094106086*^9, 3.8454341564124613`*^9}, {3.8454346058957977`*^9, 
+   3.8454347505575676`*^9}, {3.845434813979601*^9, 3.8454348224576287`*^9}, {
+   3.8454349514123397`*^9, 3.845435010875189*^9}, {3.8454358263526735`*^9, 
+   3.845435929605693*^9}, {3.8454360277136855`*^9, 3.8454360374322147`*^9}, 
+   3.84543610352745*^9, {3.845436157788076*^9, 3.845436176358887*^9}, {
+   3.8454364954264965`*^9, 3.8454365021559973`*^9}, {3.845436537899109*^9, 
+   3.845436542992669*^9}},
  CellLabel->
-  "During evaluation of \
-In[1]:=",ExpressionUUID->"af8d5d52-516a-4ee6-8b20-933b1544bf1c"],
+  "In[880]:=",ExpressionUUID->"7e377609-005d-4d92-b97b-aafa473c702c"],
 
 Cell[BoxData[
- TemplateBox[{
-  "Table","nliter",
-   "\"Non-list iterator \\!\\(\\*RowBox[{\\\"resx\\\"}]\\) at position \\!\\(\
-\\*RowBox[{\\\"2\\\"}]\\) does not evaluate to a real numeric value.\"",2,6,2,
-   30232097021508896730,"Local"},
-  "MessageTemplate"]], "Message", "MSG",
- CellChangeTimes->{3.842994221533887*^9},
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`texelX$$ = 55, $CellContext`texelY$$ = 34, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{
+      Hold[
+       Button[
+       "Result", $CellContext`resultFlag = Not[$CellContext`resultFlag]]], 
+      Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`texelX$$], 55}, 2, 125, 1}, {{
+       Hold[$CellContext`texelY$$], 34}, 2, 125, 1}}, Typeset`size$$ = {
+    576., {218., 223.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`texelX$26618$$ = 
+    0, $CellContext`texelY$26619$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`texelX$$ = 55, $CellContext`texelY$$ = 34},
+       "ControllerVariables" :> {
+        Hold[$CellContext`texelX$$, $CellContext`texelX$26618$$, 0], 
+        Hold[$CellContext`texelY$$, $CellContext`texelY$26619$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Show[
+        If[$CellContext`resultFlag, 
+         $CellContext`plotLightMap[$CellContext`texelX$$, \
+$CellContext`texelY$$], 
+         $CellContext`plot3DScene[$CellContext`texelX$$, \
+$CellContext`texelY$$]], Lighting -> {{"Ambient", White}}, Boxed -> False, 
+        Axes -> False, AxesLabel -> {"X", "Y", "Z"}, ImageSize -> Large], 
+      "Specifications" :> {
+        Button[
+        "Result", $CellContext`resultFlag = 
+         Not[$CellContext`resultFlag]], {{$CellContext`texelX$$, 55}, 2, 125, 
+         1}, {{$CellContext`texelY$$, 34}, 2, 125, 1}}, "Options" :> {}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{627., {294., 300.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.845432644488595*^9, 3.845432676824581*^9}, 
+   3.8454327269369483`*^9, {3.8454328233738537`*^9, 3.8454329006094685`*^9}, {
+   3.845433022361809*^9, 3.845433077451399*^9}, {3.845433344454465*^9, 
+   3.845433409814912*^9}, 3.8454334630769434`*^9, {3.845433561222343*^9, 
+   3.8454335712231236`*^9}, {3.8454341443495884`*^9, 3.845434157039616*^9}, {
+   3.8454349777101293`*^9, 3.845435011585597*^9}, {3.845435829390783*^9, 
+   3.845435930405865*^9}, {3.8454359870954046`*^9, 3.8454360495181665`*^9}, {
+   3.8454361339356027`*^9, 3.845436183799568*^9}, {3.8454364963842893`*^9, 
+   3.8454365032444544`*^9}, 3.845436543959543*^9},
  CellLabel->
-  "During evaluation of \
-In[1]:=",ExpressionUUID->"8f3d87f0-dec0-48b9-a9b6-454e8bd6d076"],
-
-Cell[BoxData[
- TemplateBox[{
-  "ArrayPlot","mat",
-   "\"Argument \\!\\(\\*RowBox[{\\\"Table\\\", \\\"[\\\", RowBox[{\\\"1\\\", \
-\\\",\\\", \\\"resx\\\", \\\",\\\", \\\"resy\\\"}], \\\"]\\\"}]\\) at \
-position \\!\\(\\*RowBox[{\\\"1\\\"}]\\) is not a list of lists.\"",2,8,3,
-   30232097021508896730,"Local"},
-  "MessageTemplate"]], "Message", "MSG",
- CellChangeTimes->{3.8429942215981073`*^9},
- CellLabel->
-  "During evaluation of \
-In[1]:=",ExpressionUUID->"990eb91b-f5ec-4040-a25e-594369ee8cfe"],
-
-Cell[BoxData[
- TemplateBox[{
-  "Show","gtype",
-   "\"\\!\\(\\*RowBox[{\\\"ArrayPlot\\\"}]\\) is not a type of graphics.\"",2,
-   8,4,30232097021508896730,"Local"},
-  "MessageTemplate"]], "Message", "MSG",
- CellChangeTimes->{3.842994221617058*^9},
- CellLabel->
-  "During evaluation of \
-In[1]:=",ExpressionUUID->"f647177a-4248-452b-b7da-dd1ffb8003f6"],
-
-Cell[BoxData[
- RowBox[{"Show", "[", 
-  RowBox[{
-   RowBox[{"ArrayPlot", "[", 
-    RowBox[{"Table", "[", 
-     RowBox[{"1", ",", "resx", ",", "resy"}], "]"}], "]"}], ",", 
-   RowBox[{"ImageSize", "\[Rule]", "Large"}]}], "]"}]], "Output",
- CellChangeTimes->{
-  3.8429370536895237`*^9, {3.84293712372553*^9, 3.842937131277769*^9}, 
-   3.8429942216220446`*^9},
- CellLabel->"Out[8]=",ExpressionUUID->"10fc3ccf-6417-4d7d-aed8-c41d9ff6e101"]
+  "Out[897]=",ExpressionUUID->"135241c4-2444-4a65-ac92-33d8c3c1ec20"]
 }, Open  ]]
 },
 WindowSize->{759, 833},
-WindowMargins->{{497, Automatic}, {-200, Automatic}},
+WindowMargins->{{Automatic, 453}, {48, Automatic}},
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
 ]
@@ -192,12 +402,8 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 3622, 92, 485, "Input",ExpressionUUID->"7e377609-005d-4d92-b97b-aafa473c702c"],
-Cell[4205, 116, 414, 10, 21, "Message",ExpressionUUID->"af8d5d52-516a-4ee6-8b20-933b1544bf1c"],
-Cell[4622, 128, 427, 10, 21, "Message",ExpressionUUID->"8f3d87f0-dec0-48b9-a9b6-454e8bd6d076"],
-Cell[5052, 140, 498, 11, 23, "Message",ExpressionUUID->"990eb91b-f5ec-4040-a25e-594369ee8cfe"],
-Cell[5553, 153, 350, 9, 21, "Message",ExpressionUUID->"f647177a-4248-452b-b7da-dd1ffb8003f6"],
-Cell[5906, 164, 434, 10, 32, "Output",ExpressionUUID->"10fc3ccf-6417-4d7d-aed8-c41d9ff6e101"]
+Cell[580, 22, 12314, 300, 1530, "Input",ExpressionUUID->"7e377609-005d-4d92-b97b-aafa473c702c"],
+Cell[12897, 324, 3139, 60, 613, "Output",ExpressionUUID->"135241c4-2444-4a65-ac92-33d8c3c1ec20"]
 }, Open  ]]
 }
 ]
