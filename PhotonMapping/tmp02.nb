@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     20150,        482]
-NotebookOptionsPosition[     19720,        466]
-NotebookOutlinePosition[     20063,        481]
-CellTagsIndexPosition[     20020,        478]
+NotebookDataLength[     23801,        556]
+NotebookOptionsPosition[     23371,        540]
+NotebookOutlinePosition[     23714,        555]
+CellTagsIndexPosition[     23671,        552]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -32,11 +32,12 @@ Cell[BoxData[{
     RowBox[{
     "lmData", ",", "imgData", ",", "imgTable", ",", "resx", ",", "resy", ",", 
      "plotLightMap", ",", "\[IndentingNewLine]", "texelVertices", ",", 
-     "meshGraphList", ",", "appendAllCachePoints", ",", "\[IndentingNewLine]",
-      "scene", ",", "meshList", ",", "graphList", ",", "tmpGraph", ",", 
-     "plot3DScene", ",", "\[IndentingNewLine]", "switchFlag", ",", 
-     "showAllCacheFlag"}], "]"}], ";"}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+     "meshGraphList", ",", "appendAllCachePoints", ",", 
+     "appendRelatedCachePoints", ",", "\[IndentingNewLine]", "scene", ",", 
+     "meshList", ",", "graphList", ",", "tmpGraph", ",", "plot3DScene", ",", 
+     "\[IndentingNewLine]", "texelWorldPos", ",", "texelWorldColor", ",", 
+     "\[IndentingNewLine]", "switchFlag", ",", "showAllCacheFlag"}], "]"}], 
+   ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"lmData", "=", 
    RowBox[{"ToExpression", "[", 
@@ -253,7 +254,48 @@ Cell[BoxData[{
           RowBox[{"AppendTo", "[", 
            RowBox[{"graphList", ",", "tmpGraph"}], "]"}], ";"}]}], 
         "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}]}],
-    ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+    ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+   "append", " ", "surfel", " ", "related", " ", "cache", " ", "points"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"appendRelatedCachePoints", "[", 
+     RowBox[{"texelX_", ",", "texelY_"}], "]"}], ":=", 
+    RowBox[{"Module", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"texelIndex", ",", "texelVertex", ",", "texelCachePoints"}], 
+       "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"texelIndex", "=", 
+        RowBox[{
+         RowBox[{"texelX", "*", "resy"}], "+", "texelY"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"texelVertex", "=", 
+        RowBox[{"texelVertices", "[", "texelIndex", "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"texelCachePoints", "=", 
+        RowBox[{"texelVertex", "[", "\"\<cache\>\"", "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"tmpGraph", "=", 
+        RowBox[{"ListPointPlot3D", "[", 
+         RowBox[{"texelCachePoints", ",", "\[IndentingNewLine]", 
+          RowBox[{"PlotStyle", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"PointSize", "[", "0.01", "]"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"Opacity", "[", "0.5", "]"}], ",", "Blue"}], "}"}]}], 
+          ",", "\[IndentingNewLine]", 
+          RowBox[{"Filling", "\[Rule]", "None"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"AppendTo", "[", 
+        RowBox[{"graphList", ",", "tmpGraph"}], "]"}], ";"}]}], 
+     "\[IndentingNewLine]", "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{
@@ -262,7 +304,7 @@ Cell[BoxData[{
     RowBox[{"Module", "[", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"{", 
-       RowBox[{"texelIndex", ",", "texelWorldPos"}], "}"}], ",", 
+       RowBox[{"texelIndex", ",", "texelVertex"}], "}"}], ",", 
       "\[IndentingNewLine]", 
       RowBox[{
        RowBox[{"texelIndex", "=", 
@@ -274,8 +316,14 @@ Cell[BoxData[{
        RowBox[{"(*", 
         RowBox[{"append", " ", "texel", " ", "vertex", " ", "point"}], "*)"}],
         "\[IndentingNewLine]", 
-       RowBox[{"texelWorldPos", "=", 
+       RowBox[{"texelVertex", "=", 
         RowBox[{"texelVertices", "[", "texelIndex", "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"texelWorldPos", "=", 
+        RowBox[{"texelVertex", "[", "\"\<p\>\"", "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"texelWorldColor", "=", 
+        RowBox[{"texelVertex", "[", "\"\<c\>\"", "]"}]}], ";", 
        "\[IndentingNewLine]", 
        RowBox[{"tmpGraph", "=", 
         RowBox[{"ListPointPlot3D", "[", 
@@ -284,7 +332,7 @@ Cell[BoxData[{
           RowBox[{"PlotStyle", "\[Rule]", 
            RowBox[{"{", 
             RowBox[{
-             RowBox[{"PointSize", "[", "0.01", "]"}], ",", "Red"}], "}"}]}], 
+             RowBox[{"PointSize", "[", "0.015", "]"}], ",", "Red"}], "}"}]}], 
           ",", "\[IndentingNewLine]", 
           RowBox[{"Filling", "\[Rule]", "None"}]}], "]"}]}], ";", 
        "\[IndentingNewLine]", 
@@ -293,7 +341,9 @@ Cell[BoxData[{
        "\[IndentingNewLine]", "\[IndentingNewLine]", 
        RowBox[{"If", "[", 
         RowBox[{"showAllCache", ",", 
-         RowBox[{"appendAllCachePoints", "[", "]"}]}], "]"}], ";", 
+         RowBox[{"appendAllCachePoints", "[", "]"}], ",", 
+         RowBox[{"appendRelatedCachePoints", "[", 
+          RowBox[{"texelX", ",", "texelY"}], "]"}]}], "]"}], ";", 
        "\[IndentingNewLine]", "\[IndentingNewLine]", "graphList"}]}], 
      "\[IndentingNewLine]", "]"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -349,8 +399,16 @@ Cell[BoxData[{
      RowBox[{
       RowBox[{"{", 
        RowBox[{"texelY", ",", "34"}], "}"}], ",", "2", ",", 
-      RowBox[{"resy", "-", "1"}], ",", "1"}], "}"}]}], "\[IndentingNewLine]", 
-   "]"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"resy", "-", "1"}], ",", "1"}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{"{", 
+      RowBox[{"texelWorldPosD", ",", "texelWorldPos"}], "}"}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{"{", 
+      RowBox[{"texelWorldColorD", ",", "texelWorldColor"}], "}"}], "}"}]}], 
+   "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
   RowBox[{"(*", 
    RowBox[{"Show", "[", 
     RowBox[{
@@ -387,14 +445,21 @@ Cell[BoxData[{
    3.845443629956092*^9, 3.845443658431909*^9}, {3.8454438389036164`*^9, 
    3.84544388872677*^9}, {3.845443921623189*^9, 3.845443948362741*^9}, {
    3.8454440852871532`*^9, 3.8454441514388285`*^9}, {3.845444234179108*^9, 
-   3.8454443167352543`*^9}},
+   3.8454443167352543`*^9}, {3.845501227558153*^9, 3.8455012613759794`*^9}, {
+   3.8455013526305184`*^9, 3.8455014154383836`*^9}, {3.845501624946623*^9, 
+   3.8455016482472286`*^9}, {3.8455043927457185`*^9, 
+   3.8455044534716964`*^9}, {3.845504593192467*^9, 3.8455046092001286`*^9}, {
+   3.845504738807835*^9, 3.8455048385950294`*^9}, {3.8455048835244775`*^9, 
+   3.8455049193833327`*^9}, {3.8455049699926043`*^9, 3.8455049712985888`*^9}},
  CellLabel->
-  "In[993]:=",ExpressionUUID->"7e377609-005d-4d92-b97b-aafa473c702c"],
+  "In[1294]:=",ExpressionUUID->"7e377609-005d-4d92-b97b-aafa473c702c"],
 
 Cell[BoxData[
  TagBox[
   StyleBox[
-   DynamicModuleBox[{$CellContext`texelX$$ = 55, $CellContext`texelY$$ = 34, 
+   DynamicModuleBox[{$CellContext`texelWorldColorD$$ = {0.29, 0.42, 
+    0.76}, $CellContext`texelWorldPosD$$ = {-100.18, 32.34, 
+    20.}, $CellContext`texelX$$ = 29, $CellContext`texelY$$ = 37, 
     Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
     Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
     1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{
@@ -408,16 +473,20 @@ Cell[BoxData[
         Not[$CellContext`showAllCacheFlag]]], 
       Manipulate`Dump`ThisIsNotAControl}, {{
        Hold[$CellContext`texelX$$], 55}, 2, 125, 1}, {{
-       Hold[$CellContext`texelY$$], 34}, 2, 125, 1}}, Typeset`size$$ = {
-    576., {195., 200.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`texelX$31107$$ = 
-    0, $CellContext`texelY$31108$$ = 0}, 
+       Hold[$CellContext`texelY$$], 34}, 2, 125, 1}, {{
+       Hold[$CellContext`texelWorldPosD$$], {-100.18, 32.34, 20.}}}, {{
+       Hold[$CellContext`texelWorldColorD$$], {0.29, 0.42, 0.76}}}}, 
+    Typeset`size$$ = {576., {195., 200.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`texelX$56156$$ = 0, $CellContext`texelY$56157$$ = 0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
-      "Variables" :> {$CellContext`texelX$$ = 55, $CellContext`texelY$$ = 34},
-       "ControllerVariables" :> {
-        Hold[$CellContext`texelX$$, $CellContext`texelX$31107$$, 0], 
-        Hold[$CellContext`texelY$$, $CellContext`texelY$31108$$, 0]}, 
+      "Variables" :> {$CellContext`texelWorldColorD$$ = \
+$CellContext`texelWorldColor, $CellContext`texelWorldPosD$$ = \
+$CellContext`texelWorldPos, $CellContext`texelX$$ = 55, $CellContext`texelY$$ = 
+        34}, "ControllerVariables" :> {
+        Hold[$CellContext`texelX$$, $CellContext`texelX$56156$$, 0], 
+        Hold[$CellContext`texelY$$, $CellContext`texelY$56157$$, 0]}, 
       "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
@@ -436,9 +505,11 @@ $CellContext`texelY$$, $CellContext`showAllCacheFlag]],
         Button[
         "Show all cache", $CellContext`showAllCacheFlag = 
          Not[$CellContext`showAllCacheFlag]], {{$CellContext`texelX$$, 55}, 2,
-          125, 1}, {{$CellContext`texelY$$, 34}, 2, 125, 1}}, "Options" :> {},
-       "DefaultOptions" :> {}],
-     ImageSizeCache->{627., {285., 291.}},
+          125, 1}, {{$CellContext`texelY$$, 34}, 2, 125, 
+         1}, {{$CellContext`texelWorldPosD$$, $CellContext`texelWorldPos}}, \
+{{$CellContext`texelWorldColorD$$, $CellContext`texelWorldColor}}}, 
+      "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{627., {307., 313.}},
      SingleEvaluation->True],
     Deinitialization:>None,
     DynamicModuleValues:>{},
@@ -459,13 +530,16 @@ $CellContext`texelY$$, $CellContext`showAllCacheFlag]],
    3.8454361339356027`*^9, 3.845436183799568*^9}, {3.8454364963842893`*^9, 
    3.8454365032444544`*^9}, 3.845436543959543*^9, {3.8454436067647886`*^9, 
    3.8454436593359027`*^9}, 3.8454441552843437`*^9, {3.8454442937423024`*^9, 
-   3.845444317559461*^9}},
+   3.845444317559461*^9}, 3.845501264504899*^9, 3.845501322395132*^9, 
+   3.845501417093314*^9, 3.845501649868402*^9, 3.845501698302264*^9, 
+   3.84550436203273*^9, 3.845504806021038*^9, {3.8455048393105087`*^9, 
+   3.8455049202680473`*^9}, 3.845504972669296*^9},
  CellLabel->
-  "Out[1013]=",ExpressionUUID->"41cbb363-8b37-45b7-8db3-ed11a1dec2be"]
+  "Out[1315]=",ExpressionUUID->"9810fbef-4ab5-4783-97ac-02ba1e036159"]
 }, Open  ]]
 },
 WindowSize->{759, 833},
-WindowMargins->{{Automatic, 453}, {48, Automatic}},
+WindowMargins->{{Automatic, 167}, {41, Automatic}},
 FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
 ]
@@ -481,8 +555,8 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 15508, 369, 1967, "Input",ExpressionUUID->"7e377609-005d-4d92-b97b-aafa473c702c"],
-Cell[16091, 393, 3613, 70, 595, "Output",ExpressionUUID->"41cbb363-8b37-45b7-8db3-ed11a1dec2be"]
+Cell[580, 22, 18388, 432, 2347, "Input",ExpressionUUID->"7e377609-005d-4d92-b97b-aafa473c702c"],
+Cell[18971, 456, 4384, 81, 639, "Output",ExpressionUUID->"9810fbef-4ab5-4783-97ac-02ba1e036159"]
 }, Open  ]]
 }
 ]
