@@ -1,0 +1,271 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      9770,        263]
+NotebookOptionsPosition[      9345,        247]
+NotebookOutlinePosition[      9688,        262]
+CellTagsIndexPosition[      9645,        259]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"SetDirectory", "[", 
+    RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"https", ":"}], "//", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"patapom", ".", "com"}], "/", "blog"}], "/", "SHPortal"}], 
+     "/"}]}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ClearAll", "[", 
+    RowBox[{
+    "kFunc", ",", "pFunc", ",", "shFunc", ",", "yFunc", ",", "theta", ",", 
+     "phi"}], "]"}], ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"kFunc", "[", 
+     RowBox[{"l_", ",", "m_"}], "]"}], ":=", 
+    RowBox[{"Module", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", "temp", "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"temp", "=", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"2", "*", "l"}], "+", "1"}], ")"}], "*", 
+           RowBox[{"Factorial", "[", 
+            RowBox[{"l", "-", "m"}], "]"}]}], ")"}], "/", 
+         RowBox[{"(", 
+          RowBox[{"4", "\[Pi]", "*", 
+           RowBox[{"Factorial", "[", 
+            RowBox[{"l", "+", "m"}], "]"}]}], ")"}]}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Sqrt", "[", "temp", "]"}]}]}], "\[IndentingNewLine]", "]"}]}],
+    ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"pFunc", "[", 
+     RowBox[{"l_", ",", "m_", ",", "x_"}], "]"}], ":=", 
+    RowBox[{"Module", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "pmm", ",", "somx2", ",", "fact", ",", "i", ",", "pmmp1", ",", "pll", 
+        ",", "ll"}], "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"pmm", "=", "1"}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"m", ">", "0"}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"somx2", "=", 
+           RowBox[{"Sqrt", "[", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"1", "-", "x"}], ")"}], "*", 
+             RowBox[{"(", 
+              RowBox[{"1", "+", "x"}], ")"}]}], "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"fact", "=", "1"}], ";", "\[IndentingNewLine]", 
+          RowBox[{"For", "[", 
+           RowBox[{
+            RowBox[{"i", "=", "1"}], ",", 
+            RowBox[{"i", "\[LessEqual]", "m"}], ",", 
+            RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"pmm", "*=", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"-", "fact"}], ")"}], "*", "somx2"}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"fact", "+=", "2"}], ";"}]}], "\[IndentingNewLine]", 
+           "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"l", "\[Equal]", "m"}], ",", 
+         RowBox[{"Return", "[", "pmm", "]"}]}], "]"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"pmmp1", "=", 
+        RowBox[{"x", "*", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"2", "*", "m"}], "+", "1"}], ")"}], "*", "pmm"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"l", "\[Equal]", 
+          RowBox[{"m", "+", "1"}]}], ",", 
+         RowBox[{"Return", "[", "pmmp1", "]"}]}], "]"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"pll", "=", "0"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"For", "[", 
+        RowBox[{
+         RowBox[{"ll", "=", 
+          RowBox[{"m", "+", "2"}]}], ",", 
+         RowBox[{"ll", "\[LessEqual]", "l"}], ",", 
+         RowBox[{"ll", "++"}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"pll", "=", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"2", "*", "ll"}], "-", "1"}], ")"}], "*", "x", "*", 
+               "pmmp1"}], "-", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"ll", "+", "m", "-", "1"}], ")"}], "*", "pmm"}]}], 
+             ")"}], "/", 
+            RowBox[{"(", 
+             RowBox[{"ll", "-", "m"}], ")"}]}]}], ";", "\[IndentingNewLine]", 
+          RowBox[{"pmm", "=", "pmmp1"}], ";", "\[IndentingNewLine]", 
+          RowBox[{"pmmp1", "=", "pll"}], ";"}]}], "\[IndentingNewLine]", 
+        "]"}], ";", "\[IndentingNewLine]", "pll"}]}], "\[IndentingNewLine]", 
+     "]"}]}], ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"shFunc", "[", 
+    RowBox[{"l_", ",", "m_", ",", "\[Theta]_", ",", "\[Phi]_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", "sqrt2", "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"sqrt2", "=", 
+       RowBox[{"Sqrt", "[", "2", "]"}]}], ";", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"m", "\[Equal]", "0"}], ",", 
+        RowBox[{"Return", "[", 
+         RowBox[{
+          RowBox[{"kFunc", "[", 
+           RowBox[{"l", ",", "0"}], "]"}], "*", 
+          RowBox[{"pFunc", "[", 
+           RowBox[{"l", ",", "m", ",", 
+            RowBox[{"Cos", "[", "\[Theta]", "]"}]}], "]"}]}], "]"}]}], "]"}], 
+      ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"m", ">", "0"}], ",", 
+        RowBox[{"Return", "[", 
+         RowBox[{"sqrt2", "*", 
+          RowBox[{"kFunc", "[", 
+           RowBox[{"l", ",", "m"}], "]"}], "*", 
+          RowBox[{"Cos", "[", 
+           RowBox[{"m", "*", "\[Phi]"}], "]"}], "*", 
+          RowBox[{"pFunc", "[", 
+           RowBox[{"l", ",", "m", ",", 
+            RowBox[{"Cos", "[", "\[Theta]", "]"}]}], "]"}]}], "]"}]}], "]"}], 
+      ";", "\[IndentingNewLine]", 
+      RowBox[{"(*", 
+       RowBox[{"m", "<", "0"}], "*)"}], "\[IndentingNewLine]", 
+      RowBox[{"sqrt2", "*", 
+       RowBox[{"kFunc", "[", 
+        RowBox[{"l", ",", 
+         RowBox[{"-", "m"}]}], "]"}], "*", 
+       RowBox[{"Sin", "[", 
+        RowBox[{
+         RowBox[{"-", "m"}], "*", "\[Phi]"}], "]"}], "*", 
+       RowBox[{"pFunc", "[", 
+        RowBox[{"l", ",", 
+         RowBox[{"-", "m"}], ",", 
+         RowBox[{"Cos", "[", "\[Theta]", "]"}]}], "]"}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"yFunc", "[", 
+     RowBox[{"l_", ",", "m_", ",", "\[Theta]_", ",", "\[Phi]_"}], "]"}], ":=", 
+    RowBox[{"shFunc", "[", 
+     RowBox[{"l", ",", "m", ",", "\[Theta]", ",", "\[Phi]"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"Simplify", "[", 
+  RowBox[{
+   RowBox[{"yFunc", "[", 
+    RowBox[{"1", ",", "1", ",", "theta", ",", "phi"}], "]"}], ",", 
+   RowBox[{"0", "\[LessEqual]", "theta", "\[LessEqual]", "\[Pi]"}]}], 
+  "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.8472431331394877`*^9, 3.847243136985527*^9}, {
+  3.8472431920984645`*^9, 3.847243194328427*^9}, {3.847243250248787*^9, 
+  3.8472432959123755`*^9}, {3.8472433480344043`*^9, 3.8472434862100315`*^9}, {
+  3.8472435271226597`*^9, 3.847243600648803*^9}, {3.8472438515715213`*^9, 
+  3.8472439098971014`*^9}, {3.847243951608474*^9, 3.847244029065*^9}, {
+  3.847244071616991*^9, 3.847244140320719*^9}, {3.847244190506571*^9, 
+  3.8472443856166377`*^9}, {3.847244461472854*^9, 3.847244537984467*^9}, {
+  3.8472445984976044`*^9, 3.847244619975993*^9}, {3.8472446556015816`*^9, 
+  3.847244679594082*^9}, {3.8472450405787687`*^9, 3.8472453419994698`*^9}, {
+  3.847245379793525*^9, 3.8472454089052005`*^9}, {3.847245525938484*^9, 
+  3.847245547087707*^9}},
+ CellLabel->
+  "In[169]:=",ExpressionUUID->"7ea9525d-0c00-4265-a1f9-5eeaebe1d58e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"-", 
+   FractionBox["1", "2"]}], " ", 
+  SqrtBox[
+   FractionBox["3", "\[Pi]"]], " ", 
+  RowBox[{"Cos", "[", "phi", "]"}], " ", 
+  RowBox[{"Sin", "[", "theta", "]"}]}]], "Output",
+ CellChangeTimes->{
+  3.8472442638611383`*^9, {3.8472446075956583`*^9, 3.847244620410733*^9}, {
+   3.8472446588427916`*^9, 3.847244680102418*^9}, {3.847245182378637*^9, 
+   3.8472452108893566`*^9}, {3.8472452491794376`*^9, 3.847245252089712*^9}, {
+   3.8472453060787506`*^9, 3.8472453426961308`*^9}, {3.8472455317511945`*^9, 
+   3.8472455477020564`*^9}},
+ CellLabel->
+  "Out[175]=",ExpressionUUID->"c7c28646-d9d4-40c6-8d79-bc9770615519"]
+}, Open  ]]
+},
+WindowSize->{833, 680},
+WindowMargins->{{Automatic, 34}, {-57, Automatic}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 8094, 205, 979, "Input",ExpressionUUID->"7ea9525d-0c00-4265-a1f9-5eeaebe1d58e"],
+Cell[8677, 229, 652, 15, 59, "Output",ExpressionUUID->"c7c28646-d9d4-40c6-8d79-bc9770615519"]
+}, Open  ]]
+}
+]
+*)
+
